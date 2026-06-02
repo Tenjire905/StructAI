@@ -1,0 +1,82 @@
+[
+  {
+    "phase": "1 – Shared Foundation",
+    "task": "Erstelle src/shared/theme/typography.ts. Definiere ein TypeScript-Objekt 'AppTypography' mit Schriftgrößen (xs, sm, md, lg, xl, xxl, display) und Schriftgewichten (regular: '400', medium: '500', semibold: '600', bold: '700'). Dark Mode First, SwiftUI-Style. Named Export.",
+    "path": "src/shared/theme/typography.ts"
+  },
+  {
+    "phase": "1 – Shared Foundation",
+    "task": "Erstelle src/shared/theme/index.ts als zentralen Re-Export für alle Theme-Dateien. Importiere und re-exportiere AppColors aus './colors' und AppTypography aus './typography'. Exportiere außerdem ein kombiniertes 'theme'-Objekt mit colors und typography.",
+    "path": "src/shared/theme/index.ts"
+  },
+  {
+    "phase": "1 – Shared Foundation",
+    "task": "Erstelle src/shared/ui/PressableCard.tsx. Eine wiederverwendbare React Native Karte mit borderRadius 20, Glassmorphismus-Look (rgba Background + rgba Border), Scale-Feedback bei Press (0.97) via react-native Animated, Props: children, onPress (optional), style (optional), accentColor (optional string für Border-Glow). TypeScript Interface für Props. Named Export.",
+    "path": "src/shared/ui/PressableCard.tsx"
+  },
+  {
+    "phase": "1 – Shared Foundation",
+    "task": "Erstelle src/shared/ui/GradientButton.tsx. Ein Premium-Button mit LinearGradient (expo-linear-gradient), Scale-Feedback bei Press via Animated, Props: label (string), onPress, gradientColors (string[]), disabled (optional boolean). Disabled-State: 50% Opacity. TypeScript Interface. Named Export.",
+    "path": "src/shared/ui/GradientButton.tsx"
+  },
+  {
+    "phase": "2 – Gamification Store",
+    "task": "Erstelle src/features/Gamification/model/types.ts. Definiere und exportiere folgende TypeScript Interfaces/Types: UserStats (xp: number, level: number, streak: number, lastActiveDate: string), EnergyState (currentOrbs: number, maxOrbs: number, lastRegenTimestamp: number), GamificationStore (userStats, energy, isPremium: boolean, addXP: (amount: number) => void, useOrb: () => boolean, regenOrbs: () => void, incrementStreak: () => void, setPremium: (val: boolean) => void). Nur Types/Interfaces, keine Implementierung.",
+    "path": "src/features/Gamification/model/types.ts"
+  },
+  {
+    "phase": "2 – Gamification Store",
+    "task": "Erstelle src/features/Gamification/model/store.ts mit Zustand (zustand) und persist-Middleware (AsyncStorage). Importiere GamificationStore aus './types'. Implementiere: maxOrbs=5, startOrbs=5, addXP, useOrb, regenOrbs (1 Orb pro 30 Minuten), incrementStreak, isPremium default false. Persistiere unter Key 'structai-gamification'. Kein 'any'. Named Export: useGamificationStore. Inkludiere validateStoreLogic().",
+    "path": "src/features/Gamification/model/store.ts"
+  },
+  {
+    "phase": "3 – App Layout & Navigation",
+    "task": "Erstelle src/app/_layout.tsx als Root-Layout für Expo Router mit StatusBar light-content, Font-Loading, Regen-Orbs beim Start, Stack ohne Header und dunklem Ladebildschirm. Default Export.",
+    "path": "src/app/_layout.tsx"
+  },
+  {
+    "phase": "3 – App Layout & Navigation",
+    "task": "Erstelle src/app/(tabs)/_layout.tsx mit Tabs akademie/lab/profil, iOS-like Dark Tabbar und Ionicons. Default Export.",
+    "path": "src/app/(tabs)/_layout.tsx"
+  },
+  {
+    "phase": "4 – Screen Skeletons",
+    "task": "Erstelle src/app/(tabs)/akademie.tsx mit Lernpfad-Karten und Fortschritt in SwiftUI-Look, streng typisiert, Default Export.",
+    "path": "src/app/(tabs)/akademie.tsx"
+  },
+  {
+    "phase": "4 – Screen Skeletons",
+    "task": "Erstelle src/app/(tabs)/lab.tsx mit Energy-Orbs, Prompt-Eingabe, Optimieren-Button und Orb-Verbrauchslogik, streng typisiert, Default Export.",
+    "path": "src/app/(tabs)/lab.tsx"
+  },
+  {
+    "phase": "4 – Screen Skeletons",
+    "task": "Erstelle src/app/(tabs)/profil.tsx mit XP/Level/Streak/Energie/Premium-Status in SwiftUI-Look, streng typisiert, Default Export.",
+    "path": "src/app/(tabs)/profil.tsx"
+  },
+  {
+    "phase": "5 – Feature APIs",
+    "task": "Erstelle src/features/PromptLab/api/optimizer.ts. Implementiere streng typisierten Optimizer-Service mit BYOK-Unterstützung, try-catch und robustem Fehlerobjekt.",
+    "path": "src/features/PromptLab/api/optimizer.ts"
+  },
+  {
+    "phase": "5 – Feature APIs",
+    "task": "Erstelle src/features/APIKeyManager/model/secureKeyStore.ts mit save/get/remove/list auf expo-secure-store, 100% typisiert und fehlertolerant.",
+    "path": "src/features/APIKeyManager/model/secureKeyStore.ts"
+  },
+  {
+    "phase": "5 – Feature APIs",
+    "task": "Erstelle src/processes/promptLab/runPromptComparison.ts mit Promise.all-basiertem Multi-Model-Flow und Fehlerisolierung pro Modell.",
+    "path": "src/processes/promptLab/runPromptComparison.ts"
+  },
+  {
+    "phase": "6 – Backend Stubs",
+    "task": "Erstelle backend/src/types/contracts.ts mit streng typisierten Request/Response-Verträgen für Optimizer und ModelComparer sowie APIError.",
+    "path": "backend/src/types/contracts.ts"
+  },
+  {
+    "phase": "6 – Backend Stubs",
+    "task": "Erstelle backend/src/health/healthcheck.ts mit typisiertem Healthcheck-Resultat und try-catch.",
+    "path": "backend/src/health/healthcheck.ts"
+  }
+]
