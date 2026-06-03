@@ -1,0 +1,77 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+.expo/
+.expo-shared/
+dist/
+web-build/
+*.tsbuildinfo
+
+# Native build artifacts
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+*.ipa
+*.apk
+*.aab
+*.dSYM.zip
+*.dSYM
+
+# Metro / Watchman
+.metro-health-check*
+.metro-cache/
+.expo-shared/
+
+# Misc
+.DS_Store
+*.pem
+.env
+.env.local
+.env.*.local
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# Python (orchestrator.py)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+.env.python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Local config / secrets
+*.local
+.structai-cache/
