@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npm run *)",
+      "PowerShell(gh *)",
+      "PowerShell(Test-Path *)",
+      "PowerShell(Write-Output \"winget-Status:\"; \\(Get-Command winget -ErrorAction SilentlyContinue\\).Source; Write-Output \"---\"; \\(Get-Command winget -ErrorAction SilentlyContinue\\).Version 2>&1)",
+      "PowerShell(winget install *)"
+    ]
+  }
+}

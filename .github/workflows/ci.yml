@@ -1,0 +1,176 @@
+name: StructAI CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+# Eine einzelne laufende CI pro Branch (keine Duplikate)
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  EXPO_NO_INTERACTIVE: '1'
+  CI: '1'
+
+jobs:
+  # === STAGE 1: Typecheck (schnellster Fail-First) ===
+  typecheck:
+    name: TypeScript Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: tsc --noEmit
+        run: npm run typecheck
+
+  # === STAGE 2: Lint (Custom-Regeln) ===
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: typecheck
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: ESLint
+        run: npm run lint
+
+  # === STAGE 3: Unit Tests (Jest) ===
+  test:
+    name: Jest Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: typecheck
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Jest
+        run: npm test -- --ci --coverage
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
+
+  # === STAGE 4: Triple-Consistency Check ===
+  consistency:
+    name: Triple-Consistency (Disk ≡ Checkpoint ≡ Report)
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    needs: typecheck
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Verify Report ≡ Checkpoint ≡ Disk
+        shell: pwsh
+        run: |
+          $root = $env:GITHUB_WORKSPACE
+          $disk = Get-ChildItem -Path "$root/src","$root/backend" -Recurse -File -Include "*.ts","*.tsx" |
+            Where-Object { $_.FullName -notmatch "node_modules|__pycache__" } |
+            ForEach-Object { $_.FullName.Replace("$root\", "").Replace("\", "/") } | Sort-Object
+          $report = Get-Content "$root/orchestrator.report.json" | ConvertFrom-Json
+          $checkpoint = Get-Content "$root/orchestrator.checkpoint.json" | ConvertFrom-Json
+          $succeeded = $report.tasks_succeeded | Sort-Object
+          $completed = $checkpoint.completed_paths | Sort-Object
+          $diskCount = $disk.Count
+          $reportCount = $succeeded.Count
+          $checkpointCount = $completed.Count
+          Write-Host "Disk: $diskCount | Checkpoint: $checkpointCount | Report: $reportCount"
+          if (($diskCount -ne $reportCount) -or ($diskCount -ne $checkpointCount)) {
+            Write-Host "::error::Triple-Consistency verletzt!"
+            exit 1
+          }
+          Write-Host "✓ Triple-Consistency ok"
+
+  # === STAGE 5: Expo Doctor (volle Konfig-Validierung) ===
+  expo-doctor:
+    name: Expo Doctor
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [lint, test, consistency]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Expo Doctor
+        run: npx expo-doctor || npx expo doctor
+        continue-on-error: true
+
+  # === STAGE 6: Pipeline-Report Gate ===
+  release-ready:
+    name: Release Ready Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: [typecheck, lint, test, consistency, expo-doctor]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify release_ready: true
+        shell: pwsh
+        run: |
+          $report = Get-Content "orchestrator.report.json" | ConvertFrom-Json
+          if (-not $report.release_ready) {
+            Write-Host "::error::Release-Ready Gate fehlgeschlagen: report.release_ready ist nicht true"
+            exit 1
+          }
+          if ($report.tasks_failed.Count -gt 0) {
+            Write-Host "::error::Es gibt $($report.tasks_failed.Count) fehlgeschlagene Tasks"
+            exit 1
+          }
+          Write-Host "✓ Release-Ready Gate ok"
