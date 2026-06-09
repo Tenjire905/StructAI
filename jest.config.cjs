@@ -7,7 +7,7 @@
  */
 module.exports = {
   preset: 'jest-expo',
-  setupFilesAfterEach: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testPathIgnorePatterns: [
     '/node_modules/',
     '/dist/',

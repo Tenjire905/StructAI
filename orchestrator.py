@@ -12,6 +12,21 @@ from typing import Dict, List, Optional, Set, Tuple
 
 import ollama
 
+
+def configure_console_encoding() -> None:
+    """Windows cp1252 consoles cannot print pipeline emoji without UTF-8."""
+    if sys.platform == "win32":
+        for stream in (sys.stdout, sys.stderr):
+            reconfigure = getattr(stream, "reconfigure", None)
+            if callable(reconfigure):
+                try:
+                    reconfigure(encoding="utf-8", errors="replace")
+                except Exception:
+                    pass
+
+
+configure_console_encoding()
+
 # LLM-Backend: ollama (default) | claude (requires ANTHROPIC_API_KEY)
 LLM_PROVIDER_NAME = os.getenv("STRUCTAI_LLM_PROVIDER", "ollama").strip().lower()
 
@@ -30,6 +45,12 @@ STRICT_MODE = os.getenv("STRUCTAI_STRICT_MODE", "true").strip().lower() in {
     "on",
 }
 DRY_RUN = os.getenv("STRUCTAI_DRY_RUN", "false").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+GATES_ONLY = os.getenv("STRUCTAI_GATES_ONLY", "false").strip().lower() in {
     "1",
     "true",
     "yes",
@@ -1016,14 +1037,33 @@ def is_model_available(required_model: str, available_models: List[str]) -> bool
     return False
 
 
+def resolve_command(command: List[str]) -> List[str]:
+    """Resolve npm/npx to .cmd shims on Windows for subprocess without shell."""
+    if not command:
+        return command
+    if sys.platform != "win32":
+        return command
+    executable = command[0].lower()
+    if executable in {"npm", "npx", "node"}:
+        resolved = shutil.which(f"{executable}.cmd") or shutil.which(executable)
+        if resolved:
+            return [resolved, *command[1:]]
+    return command
+
+
 def command_exists(command_name: str) -> bool:
-    return shutil.which(command_name) is not None
+    if shutil.which(command_name) is not None:
+        return True
+    if sys.platform == "win32":
+        return shutil.which(f"{command_name}.cmd") is not None
+    return False
 
 
 def run_command(command: List[str], cwd: str) -> Tuple[bool, str]:
+    resolved_command = resolve_command(command)
     try:
         completed = subprocess.run(
-            command,
+            resolved_command,
             cwd=cwd,
             check=False,
             capture_output=True,
@@ -1031,6 +1071,7 @@ def run_command(command: List[str], cwd: str) -> Tuple[bool, str]:
             encoding="utf-8",
             errors="replace",
             timeout=QUALITY_GATE_TIMEOUT_SECONDS,
+            shell=False,
         )
         output = f"{completed.stdout}\n{completed.stderr}".strip()
         return completed.returncode == 0, output
@@ -1069,7 +1110,6 @@ def run_quality_gates(cwd: str) -> List[Dict[str, str]]:
         ("Typecheck", ["npm", "run", "typecheck"]),
         ("Lint", ["npm", "run", "lint"]),
         ("Test", ["npm", "run", "test"]),
-        ("Expo Doctor", ["npx", "expo", "doctor"]),
     ]
     for gate_name, command in gate_commands:
         if not command_exists(command[0]):
@@ -1093,7 +1133,31 @@ def run_quality_gates(cwd: str) -> List[Dict[str, str]]:
                 "output": output[-2000:],
             }
         )
+
+    expo_gate = run_expo_doctor_gate(cwd)
+    results.append(expo_gate)
     return results
+
+
+def run_expo_doctor_gate(cwd: str) -> Dict[str, str]:
+    gate_name = "Expo Doctor"
+    if not command_exists("npx"):
+        return {
+            "gate": gate_name,
+            "status": "SKIPPED",
+            "reason": "Command 'npx' nicht gefunden.",
+        }
+
+    for command in (["npx", "expo-doctor"], ["npx", "expo", "doctor"]):
+        ok, output = run_command(command, cwd)
+        if ok:
+            return {"gate": gate_name, "status": "PROVED", "output": output[-2000:]}
+
+    return {
+        "gate": gate_name,
+        "status": "REJECTED",
+        "output": output[-2000:] if output else "Expo Doctor fehlgeschlagen.",
+    }
 
 
 def get_task_paths(tasks: List[Dict[str, object]]) -> List[str]:
@@ -1321,13 +1385,14 @@ def compute_task_fingerprint(tasks: List[Dict[str, object]]) -> str:
                 "phase": str(task.get("phase", "")),
                 "task": str(task.get("task", "")),
                 "path": normalize_path(str(task.get("path", ""))),
-                "depends_on": [
+                "depends_on": sorted(
                     normalize_path(str(dep))
                     for dep in task.get("depends_on", [])
                     if isinstance(dep, str)
-                ],
+                ),
             }
         )
+    normalized_tasks.sort(key=lambda item: str(item.get("path", "")))
     payload = json.dumps(normalized_tasks, ensure_ascii=False, sort_keys=True)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
@@ -1565,7 +1630,7 @@ def preflight_check(
     provider = get_llm_provider()
     print(f"  🔌 LLM Provider: {provider.name}")
 
-    if provider.name == "ollama":
+    if provider.name == "ollama" and not DRY_RUN and not GATES_ONLY:
         local_models = detect_local_models()
         required_models = {
             CODER_MODEL,
@@ -1581,11 +1646,13 @@ def preflight_check(
         ]
         if missing_models:
             issues.append(f"Fehlende lokale Ollama-Modelle: {', '.join(missing_models)}")
+    elif provider.name == "ollama" and (DRY_RUN or GATES_ONLY):
+        print("  🧪 DRY-RUN/GATES-ONLY: Ollama-Modell-Check übersprungen.")
 
     if not os.path.exists("instructions.md"):
         issues.append("instructions.md fehlt.")
 
-    if tasks and task_fingerprint:
+    if tasks and task_fingerprint and not GATES_ONLY and not DRY_RUN:
         issues.extend(verify_triple_consistency_preflight(tasks, task_fingerprint))
 
     return len(issues) == 0, issues
@@ -2325,6 +2392,76 @@ Halte TypeScript strikt, vermeide any/TODOs, beachte FSD und nutze Default-Expor
 
 DEFAULT_TASKS_JSON = json.dumps(TASK_QUEUE, ensure_ascii=False, indent=2)
  
+def refresh_quality_report_only(
+    ordered_task_queue: List[Dict[str, object]],
+    task_fingerprint: str,
+) -> int:
+    """Run quality gates and refresh orchestrator.report.json without LLM builds."""
+    checkpoint = load_checkpoint_for_tasks(task_fingerprint)
+    completed_raw = checkpoint.get("completed_paths", [])
+    completed_paths = sorted(
+        {
+            normalize_path(path)
+            for path in completed_raw
+            if isinstance(path, str) and path.strip()
+        }
+    )
+    task_paths = get_task_paths(ordered_task_queue)
+
+    existing_report: Dict[str, object] = {}
+    if os.path.exists(BUILD_REPORT_PATH):
+        try:
+            parsed = json.loads(read_file(BUILD_REPORT_PATH))
+            if isinstance(parsed, dict):
+                existing_report = parsed
+        except Exception:
+            existing_report = {}
+
+    succeeded = completed_paths
+    triple = compute_triple_consistency(task_paths, completed_paths, succeeded)
+
+    print("\n  🧪 Quality-Gate-Refresh (ohne LLM-Build)...")
+    gate_results = run_quality_gates(os.getcwd())
+    release_ready = triple.get("consistent", False) and len(completed_paths) == len(task_paths)
+
+    for result in gate_results:
+        status = result.get("status", "UNKNOWN")
+        print(f"     - {result.get('gate', 'Unknown')}: {status}")
+        if status in {"REJECTED", "SKIPPED"}:
+            release_ready = False
+
+    build_report: Dict[str, object] = {
+        "timestamp": datetime.now(UTC).isoformat(),
+        "models": existing_report.get(
+            "models",
+            {
+                "coder": CODER_MODEL,
+                "architect": ARCHITECT_MODEL,
+                "critic": CRITIC_MODEL,
+                "debugger": DEBUGGER_MODEL,
+                "auditor": AUDITOR_MODEL,
+            },
+        ),
+        "tasks_total": len(ordered_task_queue),
+        "tasks_succeeded": succeeded,
+        "tasks_failed": list(checkpoint.get("failed_paths", [])),
+        "tasks_skipped": [],
+        "failure_reasons": existing_report.get("failure_reasons", {}),
+        "triple_consistency": triple,
+        "quality_gates": gate_results,
+        "release_ready": release_ready,
+        "notes": [
+            "Report via STRUCTAI_GATES_ONLY aktualisiert — nur Quality Gates, kein LLM-Build.",
+            f"Triple-Consistency: {'ok' if triple.get('consistent') else 'REJECTED'}.",
+        ],
+    }
+
+    print(f"\n  🚦 Release-Ready: {'JA' if release_ready else 'NEIN'}")
+    write_file_atomic(BUILD_REPORT_PATH, json.dumps(build_report, ensure_ascii=False, indent=2))
+    print(f"  📄 Build-Report gespeichert: {BUILD_REPORT_PATH}")
+    return 0 if release_ready else 1
+
+
 # ---------------------------------------------------------------------
 # MAIN – Startet die autonome Produktionskette
 # ---------------------------------------------------------------------
@@ -2354,6 +2491,10 @@ if __name__ == "__main__":
             print(f"- {issue}")
         print("\nBuild abgebrochen. Bitte Preflight-Probleme beheben und neu starten.")
         sys.exit(1)
+
+    if GATES_ONLY:
+        sys.exit(refresh_quality_report_only(ordered_task_queue, task_fingerprint))
+
     checkpoint = load_checkpoint_for_tasks(task_fingerprint)
     completed_paths = set(
         p for p in checkpoint.get("completed_paths", []) if isinstance(p, str) and p.strip()
@@ -2420,9 +2561,9 @@ if __name__ == "__main__":
 
         if task_path in completed_paths and os.path.exists(task_path):
             print(f"  ⏭️  SKIP (bereits erledigt): {task_path}")
-            cast_skipped = build_report["tasks_skipped"]
-            if isinstance(cast_skipped, list):
-                cast_skipped.append(task_path)
+            cast_succeeded = build_report["tasks_succeeded"]
+            if isinstance(cast_succeeded, list) and task_path not in cast_succeeded:
+                cast_succeeded.append(task_path)
             continue
 
         # Phase-Header ausgeben wenn neu
@@ -2435,6 +2576,9 @@ if __name__ == "__main__":
         if DRY_RUN:
             print(f"\n  🧪 DRY-RUN VALID: {task_path}")
             completed_paths.add(task_path)
+            cast_succeeded = build_report["tasks_succeeded"]
+            if isinstance(cast_succeeded, list) and task_path not in cast_succeeded:
+                cast_succeeded.append(task_path)
             if task_path in failed_paths_from_checkpoint:
                 failed_paths_from_checkpoint.remove(task_path)
             save_checkpoint_for_tasks(
@@ -2499,7 +2643,7 @@ if __name__ == "__main__":
         save_checkpoint_for_tasks(list(completed_paths), [], task_fingerprint)
  
     print("\n  🧪 Starte finale Quality Gates...")
-    gate_results = [] if DRY_RUN else run_quality_gates(os.getcwd())
+    gate_results = run_quality_gates(os.getcwd())
     release_ready = len(failed_files) == 0
 
     succeeded_paths = build_report.get("tasks_succeeded", [])
@@ -2538,11 +2682,8 @@ if __name__ == "__main__":
             if status in {"REJECTED", "SKIPPED"}:
                 release_ready = False
     else:
-        if DRY_RUN:
-            print("     - DRY-RUN aktiv: Quality Gates bewusst übersprungen.")
-        else:
-            print("     - Keine package.json gefunden, Gates übersprungen.")
-            release_ready = False
+        print("     - Keine package.json gefunden, Gates übersprungen.")
+        release_ready = False
 
     build_report["release_ready"] = release_ready
     print(f"\n  🚦 Release-Ready: {'JA' if release_ready else 'NEIN'}")

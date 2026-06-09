@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-08T14:30:00+00:00",
+  "timestamp": "2026-06-09T13:58:56.744440+00:00",
   "models": {
     "coder": "qwen3-coder:30b",
     "architect": "gemma4",
@@ -12,61 +12,56 @@
     "src/shared/theme/colors.ts",
     "src/shared/theme/typography.ts",
     "src/shared/theme/index.ts",
-    "src/shared/ui/PressableCard.tsx",
     "src/shared/ui/GradientButton.tsx",
+    "src/shared/ui/PressableCard.tsx",
     "src/features/Gamification/model/types.ts",
     "src/features/Gamification/model/store.ts",
-    "src/features/PromptLab/api/optimizer.ts",
     "src/features/APIKeyManager/model/secureKeyStore.ts",
-    "src/processes/promptLab/runPromptComparison.ts",
+    "src/features/PromptLab/api/optimizer.ts",
     "src/app/_layout.tsx",
     "src/app/index.tsx",
     "src/app/(tabs)/_layout.tsx",
     "src/app/(tabs)/akademie.tsx",
     "src/app/(tabs)/lab.tsx",
     "src/app/(tabs)/profil.tsx",
+    "src/processes/promptLab/runPromptComparison.ts",
     "backend/src/types/contracts.ts",
     "backend/src/health/healthcheck.ts"
   ],
   "tasks_failed": [],
   "tasks_skipped": [],
   "failure_reasons": {},
-  "triple_consistency": {
-    "disk_count": 18,
-    "checkpoint_count": 18,
-    "report_count_succeeded": 18,
-    "consistent": true
-  },
   "quality_gates": [
     {
       "gate": "Typecheck",
       "status": "PROVED",
-      "output": "tsc --noEmit exit 0 – keine TypeScript-Fehler (17 Frontend-Files + 2 Backend-Files kompilieren)"
+      "output": "> typecheck\n> tsc --noEmit\n\n\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
     },
     {
       "gate": "Lint",
       "status": "PROVED",
-      "output": "eslint . exit 0 – keine Lint-Fehler (eslint-config-expo + custom any/TODO/cross-feature Regeln)"
+      "output": "> lint\n> eslint . --ext .ts,.tsx --max-warnings 0\n\n\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
     },
     {
       "gate": "Test",
       "status": "PROVED",
-      "output": "jest exit 0 – validateStoreLogic, optimizePrompt, secureKeyStore Tests grün"
+      "output": "d\n      √ startet mit 5/5 Orbs (2 ms)\n      √ startet mit Level 1 und 0 XP\n      √ startet mit isPremium = false\n    addXP\n      √ erhöht XP ohne Level-Up\n      √ löst Level-Up aus, wenn xp >= 100 * level\n      √ akzeptiert 0 XP idempotent\n    useOrb\n      √ reduziert Orbs um 1\n      √ gibt false zurück, wenn 0 Orbs vorhanden\n      √ bypassed Orb-Limit für Premium\n    regenOrbs\n      √ regeneriert 1 Orb nach 30 Min\n      √ regeneriert 2 Orbs nach 60 Min, capped auf max\n      √ regenoriert bei Premium\n      √ macht nichts, wenn weniger als 30 Min vergangen sind (1 ms)\n    incrementStreak\n      √ erhöht Streak am ersten Tag\n      √ ist idempotent am selben Tag\n    setPremium\n      √ setzt isPremium auf true (1 ms)\n      √ setzt isPremium zurück auf false\n    validateStoreLogic\n      √ läuft ohne Fehler\n      √ stellt Store-Invariante sicher (Orb-Reduktion)\n      √ stellt Store-Invariante sicher (Level-Up)\n\nPASS __tests__/features/APIKeyManager/secureKeyStore.test.ts\n  secureKeyStore\n    saveApiKey\n      √ speichert Key und aktualisiert Provider-Index (1 ms)\n      √ fügt Provider nur einmal zum Index hinzu\n      √ wirft bei SecureStore-Fehler (4 ms)\n    getApiKey\n      √ liest gespeicherten Key\n      √ gibt null zurück wenn kein Key existiert\n      √ gibt null zurück bei Lesefehler\n    removeApiKey\n      √ entfernt Key und Provider aus Index\n      √ wirft bei Löschfehler (1 ms)\n    listApiKeyProviders\n      √ listet alle gespeicherten Provider\n      √ gibt leeres Array bei leerem Index\n\nPASS __tests__/features/PromptLab/optimizer.test.ts\n  optimizePrompt\n    √ gibt optimierten Prompt bei erfolgreicher Antwort zurück (1 ms)\n    √ sendet BYOK-Header wenn apiKey gesetzt ist (1 ms)\n    √ wirft OptimizerError bei HTTP-Fehler\n    √ wirft OptimizerError bei ungültigem Response-Schema\n    √ wirft OptimizerError bei Netzwerkfehler (1 ms)\n\nTest Suites: 3 passed, 3 total\nTests:       35 passed, 35 total\nSnapshots:   0 total\nTime:        0.469 s, estimated 1 s\nRan all test suites."
     },
     {
       "gate": "Expo Doctor",
       "status": "PROVED",
-      "output": "npx expo doctor exit 0 – keine Konfigurationsprobleme"
+      "output": "Running 18 checks on your project...\n18/18 checks passed. No issues detected!\n\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
     }
   ],
   "release_ready": true,
-  "notes": [
-    "Triple-Konsistenz hergestellt: Disk (18 Files) ≡ Checkpoint (18 completed_paths) ≡ Report (18 tasks_succeeded).",
-    "Vorherige Inkonsistenz korrigiert: backend/src/health/healthcheck.ts war im Report fälschlich als 'skipped' geführt, ist nun korrekt in 'tasks_succeeded'.",
-    "TypeScript-Compilation (tsc --noEmit) ist grün – alle 17 Frontend-Files und 2 Backend-Files kompilieren ohne Fehler.",
-    "FSD-Architektur, Theme-Token-Pflicht, 'any'-Verbot, try-catch-Pflicht und validateStoreLogic()-Pflicht sind im aktuellen Code eingehalten.",
-    "CI-Workflow unter .github/workflows/ci.yml führt typecheck + lint + test + expo doctor bei jedem Push aus.",
-    "ESLint-Setup mit eslint-config-expo + Custom-Regeln (no-restricted-syntax für any/TODO, no-restricted-imports für Cross-Feature-Imports).",
-    "Jest-Setup mit echten Unit-Tests für Stores, Optimizer-API und SecureKeyStore."
-  ]
+  "triple_consistency": {
+    "disk_count": 18,
+    "checkpoint_count": 18,
+    "report_count_succeeded": 18,
+    "tasks_total": 18,
+    "consistent": true,
+    "disk_only": [],
+    "checkpoint_only": [],
+    "report_only": []
+  }
 }

@@ -29,6 +29,8 @@ module.exports = {
     '*.config.js',
     '.expo/',
     '__pycache__/',
+    'jest.setup.ts',
+    'orchestrator/templates/**',
   ],
   rules: {
     // === ZERO TECHNICAL DEBT ===

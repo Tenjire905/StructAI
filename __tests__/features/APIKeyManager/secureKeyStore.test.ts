@@ -6,9 +6,9 @@ import {
   saveApiKey,
 } from '../../../src/features/APIKeyManager/model/secureKeyStore';
 
-const mockGetItem = SecureStore.getItemAsync as jest.Mock;
-const mockSetItem = SecureStore.setItemAsync as jest.Mock;
-const mockDeleteItem = SecureStore.deleteItemAsync as jest.Mock;
+const mockGetItem = jest.mocked(SecureStore.getItemAsync);
+const mockSetItem = jest.mocked(SecureStore.setItemAsync);
+const mockDeleteItem = jest.mocked(SecureStore.deleteItemAsync);
 
 const storage = new Map<string, string>();
 

@@ -1,8 +1,7 @@
 import {
   useGamificationStore,
   validateStoreLogic,
-} from '../../src/features/Gamification/model/store';
-import type { GamificationStore } from '../../src/features/Gamification/model/types';
+} from '../../../src/features/Gamification/model/store';
 
 describe('Gamification Store', () => {
   beforeEach(() => {

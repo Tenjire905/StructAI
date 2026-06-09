@@ -47,7 +47,7 @@ function EnergyOrbs({
 export default function LabScreen() {
   const energy = useGamificationStore((state) => state.energy);
   const isPremium = useGamificationStore((state) => state.isPremium);
-  const useOrb = useGamificationStore((state) => state.useOrb);
+  const consumeOrb = useGamificationStore((state) => state.useOrb);
 
   const [prompt, setPrompt] = useState('');
   const [score, setScore] = useState<number | null>(null);
@@ -58,7 +58,7 @@ export default function LabScreen() {
     setErrorBanner(null);
 
     try {
-      const hasEnergy = isPremium || useOrb();
+      const hasEnergy = isPremium || consumeOrb();
       if (!hasEnergy) {
         Alert.alert('Keine Energie', 'Upgrade auf Premium!');
         return;
@@ -86,7 +86,7 @@ export default function LabScreen() {
     } finally {
       setIsOptimizing(false);
     }
-  }, [isPremium, prompt, useOrb]);
+  }, [isPremium, prompt, consumeOrb]);
 
   const listHeader = (
     <View style={styles.content}>

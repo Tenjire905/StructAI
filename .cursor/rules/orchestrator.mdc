@@ -1,0 +1,54 @@
+---
+description: Orchestrator Layer 1 — Agenten-System Regeln
+globs: ["packages/orchestrator/**"]
+alwaysApply: false
+---
+
+# Orchestrator — Core Rules
+
+## Agenten-Reihenfolge (IMMER einhalten)
+1. Architect → definiert Struktur und Contracts
+2. Coder → implementiert nach Architect-Vorgabe
+3. Critic → prüft Coder-Output (Score 0-100)
+4. Auditor → nur wenn Critic-Score < 80
+5. Debugger → max 3 Iterationen, dann Eskalation
+
+## Architect Agent
+- Output: NUR TypeScript Interfaces und Dateistruktur
+- KEIN ausführbarer Code
+- Dateinamen-Format: [feature].types.ts + [feature].contracts.ts
+- Jede Schnittstelle dokumentieren mit JSDoc
+
+## Coder Agent
+- Implementiert EXAKT nach Architect-Contracts
+- Keine eigenen Architektur-Entscheidungen
+- Immer: tsc --noEmit Kompatibilität sicherstellen
+
+## Critic Agent — Bewertungsmatrix
+Score 0-100, Ausgabe als JSON:
+{
+  "score": number,
+  "typeCheck": boolean,
+  "contractCompliance": boolean,
+  "securityIssues": string[],
+  "recommendations": string[]
+}
+Unter 80: automatisch Auditor triggern
+
+## Debugger Loop
+- Max 3 Iterationen
+- Jede Iteration: Root Cause analysieren, minimal fixen
+- Nach jeder Iteration: tsc --noEmit ausführen
+- Bei Fehler nach 3 Iterationen: STOPP, manuell eskalieren
+
+## Task Queue
+- FIFO — keine Prioritäts-Overrides ohne explizite Genehmigung
+- Checkpoint nach jeder abgeschlossenen Agent-Phase
+- Checkpoint-Format: git commit -m "[phase]: [AgentName] abgeschlossen"
+
+## Output-Pflicht — SwiftUI in generierten Apps
+Jede App die der Orchestrator via App Generator erzeugt MUSS:
+- Das SwiftUI Design System aus global.mdc verwenden
+- NativeWind (React Native) ODER Tailwind-Klassen die SF-Design nachahmen
+- SF Pro Font-Stack laden
+- iOS-Animationskurven für alle Transitions nutzen
