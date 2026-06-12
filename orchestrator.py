@@ -665,8 +665,12 @@ TS_BUILTIN_TYPE_NAMES = frozenset(
 # [Orchestrator]: RN types/events that are value-imported but valid in type positions
 RN_TYPE_AND_EVENT_NAMES = frozenset(
     {
+        "DimensionValue",
+        "FlatList",
         "GestureResponderEvent",
         "LayoutChangeEvent",
+        "ListRenderItem",
+        "ListRenderItemInfo",
         "NativeSyntheticEvent",
         "TextLayoutEvent",
     }
@@ -822,6 +826,8 @@ def _check_const_used_as_type(code: str, file_path: str) -> List[str]:
         for match in re.finditer(r"<\s*(?!typeof\s)([A-Z][A-Za-z0-9_]*)\b", line):
             ident = match.group(1)
             if ident in TS_BUILTIN_TYPE_NAMES:
+                continue
+            if ident in RN_TYPE_AND_EVENT_NAMES:
                 continue
             if _is_jsx_opening_tag(line, ident, match.start()):
                 continue
