@@ -662,6 +662,16 @@ TS_BUILTIN_TYPE_NAMES = frozenset(
     }
 )
 
+# [Orchestrator]: RN types/events that are value-imported but valid in type positions
+RN_TYPE_AND_EVENT_NAMES = frozenset(
+    {
+        "GestureResponderEvent",
+        "LayoutChangeEvent",
+        "NativeSyntheticEvent",
+        "TextLayoutEvent",
+    }
+)
+
 
 def _strip_line_comment(line: str) -> str:
     in_single = False
@@ -721,6 +731,31 @@ def _is_object_literal_property_value_line(line: str, symbol: str) -> bool:
     return bool(re.match(rf"^[A-Za-z_][\w]*\s*:\s*{symbol}\s*,?\s*$", stripped))
 
 
+def _is_theme_value_property_access(line: str, symbol: str) -> bool:
+    """Erlaubt `color: theme.colors.*` in StyleSheet — kein Typ-Kontext."""
+    return bool(re.search(rf":\s*{symbol}\.", line))
+
+
+def _is_jsx_opening_tag(line: str, ident: str, match_start: int) -> bool:
+    """`<Pressable onPress=...>` ist JSX, kein TypeScript-Generic."""
+    rest = line[match_start:]
+    opener = re.match(rf"<\s*{re.escape(ident)}\b(.*)$", rest)
+    if not opener:
+        return False
+    tail = opener.group(1).lstrip()
+    # Animated.View, React.Fragment, etc.
+    if tail.startswith("."):
+        return True
+    if tail == "" or tail.startswith("/") or tail.startswith(">"):
+        return True
+    prop_match = re.match(r"^(\w+)", tail)
+    if prop_match:
+        prop_name = prop_match.group(1)
+        if prop_name[0].islower() or prop_name.startswith("on"):
+            return True
+    return False
+
+
 def _is_type_context_before(code: str, index: int) -> bool:
     line = _line_at_index(code, index)
     symbol_match = re.search(r"\b([A-Z][A-Za-z0-9_]*)\b", code[index : index + 40])
@@ -754,6 +789,8 @@ def _check_const_used_as_type(code: str, file_path: str) -> List[str]:
                     continue
                 if _is_object_literal_property_value_line(line, symbol):
                     continue
+                if _is_theme_value_property_access(line, symbol):
+                    continue
                 if re.search(rf":\s*{symbol}\b", line) or re.search(
                     rf"<\s*{symbol}\s*>", line
                 ):
@@ -767,7 +804,11 @@ def _check_const_used_as_type(code: str, file_path: str) -> List[str]:
             ident = match.group(1)
             if ident in TS_BUILTIN_TYPE_NAMES:
                 continue
+            if ident in RN_TYPE_AND_EVENT_NAMES:
+                continue
             if _is_object_literal_property_value_line(line, ident):
+                continue
+            if _is_theme_value_property_access(line, ident):
                 continue
             if ident in value_symbols or (
                 ident in THEME_CONST_SYMBOLS
@@ -781,6 +822,8 @@ def _check_const_used_as_type(code: str, file_path: str) -> List[str]:
         for match in re.finditer(r"<\s*(?!typeof\s)([A-Z][A-Za-z0-9_]*)\b", line):
             ident = match.group(1)
             if ident in TS_BUILTIN_TYPE_NAMES:
+                continue
+            if _is_jsx_opening_tag(line, ident, match.start()):
                 continue
             if ident in value_symbols:
                 issues.append(
