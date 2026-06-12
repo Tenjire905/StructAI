@@ -1,4 +1,4 @@
-name: StructAI Orchestrator (Cloud Build)
+name: StructAI Orchestrator Cloud Build
 
 on:
   workflow_dispatch:
@@ -8,13 +8,18 @@ on:
         type: boolean
         default: false
       fast_path:
-        description: "Fast-Path (validierte Templates statt LLM fuer unveraenderte Dateien)"
+        description: "Fast-Path (Templates statt LLM fuer unveraenderte Dateien)"
         type: boolean
         default: true
       full_rebuild:
-        description: "Full Rebuild (Checkpoint loeschen, alles neu bauen)"
+        description: "Full Rebuild (Checkpoint loeschen)"
         type: boolean
         default: false
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/orchestrator.yml'
 
 permissions:
   contents: write
@@ -29,42 +34,18 @@ jobs:
     name: Multi-Agent Build (Claude Hybrid)
     runs-on: ubuntu-latest
     timeout-minutes: 120
-    env:
-      # ── LLM-Provider: Claude API (Hybrid-Strategie laut Masterprompt) ──
-      STRUCTAI_LLM_PROVIDER: claude
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      # Opus 4.8 — kritisch-komplexe Architektur-Entscheidungen
-      STRUCTAI_ARCHITECT_MODEL: claude-opus-4-8
-      # Sonnet 4.6 — Kern-Code-Generierung und Debugging
-      STRUCTAI_CODER_MODEL: claude-sonnet-4-6
-      STRUCTAI_DEBUGGER_MODEL: claude-sonnet-4-6
-      # Haiku 4.5 — Review, Audit, statische Checks (regelbasiert)
-      STRUCTAI_CRITIC_MODEL: claude-haiku-4-5-20251001
-      STRUCTAI_AUDITOR_MODEL: claude-haiku-4-5-20251001
-      # Eskalation: nach 3 erfolglosen Debug-Cycles auf Opus hochschalten
-      STRUCTAI_CODER_ESCALATION_MODEL: claude-opus-4-8
-      STRUCTAI_CODER_ESCALATION_CYCLE: "4"
-      # ── Pipeline-Konfiguration ──
-      STRUCTAI_MAX_CYCLES: "7"
-      STRUCTAI_DEBUG_PASSES: "3"
-      STRUCTAI_COOLDOWN_SECONDS: "2"
-      STRUCTAI_STRICT_MODE: "true"
-      STRUCTAI_MODEL_CALL_RETRIES: "3"
-      STRUCTAI_MODEL_RETRY_BASE_SECONDS: "1.5"
-      STRUCTAI_QUALITY_GATE_TIMEOUT_SECONDS: "300"
-      STRUCTAI_TEMPLATE_FALLBACK: "true"
-      STRUCTAI_DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
-      STRUCTAI_FAST_PATH: ${{ inputs.fast_path && 'true' || 'false' }}
-      PYTHONIOENCODING: utf-8
-
+    # Skip auto-runs on workflow file push — only manual dispatch builds the app
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: API-Key pruefen
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           if [ -z "$ANTHROPIC_API_KEY" ]; then
-            echo "::error::Secret ANTHROPIC_API_KEY fehlt. Repo Settings -> Secrets and variables -> Actions -> New repository secret."
+            echo "::error::Secret ANTHROPIC_API_KEY fehlt. Repo Settings -> Secrets -> Actions -> New repository secret."
             exit 1
           fi
 
@@ -83,11 +64,32 @@ jobs:
         run: npm ci
 
       - name: Checkpoint loeschen (Full Rebuild)
-        if: ${{ inputs.full_rebuild }}
+        if: ${{ inputs.full_rebuild == true }}
         run: rm -f orchestrator.checkpoint.json
 
       - name: Orchestrator starten
         id: orchestrator
+        env:
+          STRUCTAI_LLM_PROVIDER: claude
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          STRUCTAI_ARCHITECT_MODEL: claude-opus-4-8
+          STRUCTAI_CODER_MODEL: claude-sonnet-4-6
+          STRUCTAI_DEBUGGER_MODEL: claude-sonnet-4-6
+          STRUCTAI_CRITIC_MODEL: claude-haiku-4-5-20251001
+          STRUCTAI_AUDITOR_MODEL: claude-haiku-4-5-20251001
+          STRUCTAI_CODER_ESCALATION_MODEL: claude-opus-4-8
+          STRUCTAI_CODER_ESCALATION_CYCLE: "4"
+          STRUCTAI_MAX_CYCLES: "7"
+          STRUCTAI_DEBUG_PASSES: "3"
+          STRUCTAI_COOLDOWN_SECONDS: "2"
+          STRUCTAI_STRICT_MODE: "true"
+          STRUCTAI_MODEL_CALL_RETRIES: "3"
+          STRUCTAI_MODEL_RETRY_BASE_SECONDS: "1.5"
+          STRUCTAI_QUALITY_GATE_TIMEOUT_SECONDS: "300"
+          STRUCTAI_TEMPLATE_FALLBACK: "true"
+          STRUCTAI_DRY_RUN: ${{ inputs.dry_run == true && 'true' || 'false' }}
+          STRUCTAI_FAST_PATH: ${{ inputs.fast_path == true && 'true' || 'false' }}
+          PYTHONIOENCODING: utf-8
         run: |
           set -o pipefail
           python orchestrator.py 2>&1 | tee orchestrator.log
@@ -113,7 +115,7 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Artefakte hochladen (Report, Checkpoint, Log)
+      - name: Artefakte hochladen
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -125,7 +127,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Ergebnisse als Pull Request einreichen
-        if: always() && !cancelled() && !inputs.dry_run
+        if: ${{ always() && !cancelled() && inputs.dry_run != true }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -135,7 +137,7 @@ jobs:
           git checkout -b "$BRANCH"
           git add -A src backend orchestrator.report.json orchestrator.checkpoint.json
           if git diff --cached --quiet; then
-            echo "Keine Aenderungen durch diesen Run — kein PR noetig."
+            echo "Keine Aenderungen durch diesen Run."
             exit 0
           fi
           RELEASE_READY="unbekannt"
@@ -146,6 +148,14 @@ jobs:
           git push -u origin "$BRANCH"
           gh pr create \
             --title "Orchestrator Cloud Run #${{ github.run_number }}" \
-            --body "Automatischer StructAI Orchestrator-Run. Release-Ready: **$RELEASE_READY**. Report und Log als Workflow-Artefakt verfuegbar." \
+            --body "Automatischer StructAI Orchestrator-Run. Release-Ready: **$RELEASE_READY**." \
             --base "${{ github.ref_name }}" \
-            --head "$BRANCH" || echo "PR existiert bereits oder konnte nicht erstellt werden."
+            --head "$BRANCH" || echo "PR konnte nicht erstellt werden."
+
+  register-workflow:
+    name: Register workflow on GitHub
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - name: Workflow registered
+        run: echo "Orchestrator workflow file updated on main."
