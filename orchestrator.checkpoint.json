@@ -1,25 +1,12 @@
 {
-  "timestamp": "2026-06-09T13:58:56.745056+00:00",
-  "task_fingerprint": "89f1c5f0c784a9c7f0ae2401987ee45cd450b6dd36738b92f988e02f222f6835",
+  "timestamp": "2026-06-12T13:38:26.123476+00:00",
+  "task_fingerprint": "a5985c77c42f1e533404f7449023610b4cfda856a0a4d622fec6abe862412eff",
   "completed_paths": [
-    "backend/src/health/healthcheck.ts",
-    "backend/src/types/contracts.ts",
-    "src/app/(tabs)/_layout.tsx",
-    "src/app/(tabs)/akademie.tsx",
-    "src/app/(tabs)/lab.tsx",
-    "src/app/(tabs)/profil.tsx",
-    "src/app/_layout.tsx",
-    "src/app/index.tsx",
-    "src/features/APIKeyManager/model/secureKeyStore.ts",
-    "src/features/Gamification/model/store.ts",
-    "src/features/Gamification/model/types.ts",
-    "src/features/PromptLab/api/optimizer.ts",
-    "src/processes/promptLab/runPromptComparison.ts",
     "src/shared/theme/colors.ts",
     "src/shared/theme/index.ts",
-    "src/shared/theme/typography.ts",
-    "src/shared/ui/GradientButton.tsx",
-    "src/shared/ui/PressableCard.tsx"
+    "src/shared/theme/typography.ts"
   ],
-  "failed_paths": []
+  "failed_paths": [
+    "src/shared/ui/GradientButton.tsx"
+  ]
 }

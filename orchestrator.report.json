@@ -1,66 +1,73 @@
 {
-  "timestamp": "2026-06-09T13:58:56.744440+00:00",
+  "timestamp": "2026-06-12T13:34:57.742317+00:00",
+  "provider": "claude",
+  "dry_run": false,
   "models": {
-    "coder": "qwen3-coder:30b",
-    "architect": "gemma4",
-    "critic": "gemma4",
-    "debugger": "gemma4",
-    "auditor": "gemma4"
+    "coder": "claude-sonnet-4-6",
+    "architect": "claude-opus-4-8",
+    "critic": "claude-haiku-4-5-20251001",
+    "debugger": "claude-sonnet-4-6",
+    "auditor": "claude-haiku-4-5-20251001"
   },
-  "tasks_total": 18,
+  "tasks_total": 22,
   "tasks_succeeded": [
     "src/shared/theme/colors.ts",
     "src/shared/theme/typography.ts",
-    "src/shared/theme/index.ts",
-    "src/shared/ui/GradientButton.tsx",
-    "src/shared/ui/PressableCard.tsx",
-    "src/features/Gamification/model/types.ts",
-    "src/features/Gamification/model/store.ts",
-    "src/features/APIKeyManager/model/secureKeyStore.ts",
-    "src/features/PromptLab/api/optimizer.ts",
-    "src/app/_layout.tsx",
-    "src/app/index.tsx",
-    "src/app/(tabs)/_layout.tsx",
-    "src/app/(tabs)/akademie.tsx",
-    "src/app/(tabs)/lab.tsx",
-    "src/app/(tabs)/profil.tsx",
-    "src/processes/promptLab/runPromptComparison.ts",
-    "backend/src/types/contracts.ts",
-    "backend/src/health/healthcheck.ts"
+    "src/shared/theme/index.ts"
   ],
-  "tasks_failed": [],
+  "tasks_failed": [
+    "src/shared/ui/GradientButton.tsx"
+  ],
   "tasks_skipped": [],
-  "failure_reasons": {},
+  "failure_reasons": {
+    "src/shared/ui/GradientButton.tsx": "1. Zeile 77: Generics dürfen 'Pressable' nicht als Typ nutzen — verwende 'typeof Pressable' wenn es ein const-Wert ist.\n2. Zeile 85: Generics dürfen 'LinearGradient' nicht als Typ nutzen — verwende 'typeof LinearGradient' wenn es ein const-Wert ist.\n3. Zeile 91: Generics dürfen 'Text' nicht als Typ nutzen — verwende 'typeof Text' wenn es ein const-Wert ist.\n4. Zeile 116: 'theme' ist ein const-Wert, kein Typ — verwende 'typeof theme' in Typannotationen.\n5. Zeile 117: 'theme' ist ein const-Wert, k"
+  },
   "quality_gates": [
     {
       "gate": "Typecheck",
       "status": "PROVED",
-      "output": "> typecheck\n> tsc --noEmit\n\n\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+      "output": "> typecheck\n> tsc --noEmit"
     },
     {
       "gate": "Lint",
       "status": "PROVED",
-      "output": "> lint\n> eslint . --ext .ts,.tsx --max-warnings 0\n\n\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+      "output": "> lint\n> eslint . --ext .ts,.tsx --max-warnings 0"
     },
     {
       "gate": "Test",
       "status": "PROVED",
-      "output": "d\n      √ startet mit 5/5 Orbs (2 ms)\n      √ startet mit Level 1 und 0 XP\n      √ startet mit isPremium = false\n    addXP\n      √ erhöht XP ohne Level-Up\n      √ löst Level-Up aus, wenn xp >= 100 * level\n      √ akzeptiert 0 XP idempotent\n    useOrb\n      √ reduziert Orbs um 1\n      √ gibt false zurück, wenn 0 Orbs vorhanden\n      √ bypassed Orb-Limit für Premium\n    regenOrbs\n      √ regeneriert 1 Orb nach 30 Min\n      √ regeneriert 2 Orbs nach 60 Min, capped auf max\n      √ regenoriert bei Premium\n      √ macht nichts, wenn weniger als 30 Min vergangen sind (1 ms)\n    incrementStreak\n      √ erhöht Streak am ersten Tag\n      √ ist idempotent am selben Tag\n    setPremium\n      √ setzt isPremium auf true (1 ms)\n      √ setzt isPremium zurück auf false\n    validateStoreLogic\n      √ läuft ohne Fehler\n      √ stellt Store-Invariante sicher (Orb-Reduktion)\n      √ stellt Store-Invariante sicher (Level-Up)\n\nPASS __tests__/features/APIKeyManager/secureKeyStore.test.ts\n  secureKeyStore\n    saveApiKey\n      √ speichert Key und aktualisiert Provider-Index (1 ms)\n      √ fügt Provider nur einmal zum Index hinzu\n      √ wirft bei SecureStore-Fehler (4 ms)\n    getApiKey\n      √ liest gespeicherten Key\n      √ gibt null zurück wenn kein Key existiert\n      √ gibt null zurück bei Lesefehler\n    removeApiKey\n      √ entfernt Key und Provider aus Index\n      √ wirft bei Löschfehler (1 ms)\n    listApiKeyProviders\n      √ listet alle gespeicherten Provider\n      √ gibt leeres Array bei leerem Index\n\nPASS __tests__/features/PromptLab/optimizer.test.ts\n  optimizePrompt\n    √ gibt optimierten Prompt bei erfolgreicher Antwort zurück (1 ms)\n    √ sendet BYOK-Header wenn apiKey gesetzt ist (1 ms)\n    √ wirft OptimizerError bei HTTP-Fehler\n    √ wirft OptimizerError bei ungültigem Response-Schema\n    √ wirft OptimizerError bei Netzwerkfehler (1 ms)\n\nTest Suites: 3 passed, 3 total\nTests:       35 passed, 35 total\nSnapshots:   0 total\nTime:        0.469 s, estimated 1 s\nRan all test suites."
+      "output": "y gesetzt ist (1 ms)\n    ✓ wirft OptimizerError bei HTTP-Fehler (1 ms)\n    ✓ wirft OptimizerError bei ungültigem Response-Schema (1 ms)\n    ✓ wirft OptimizerError bei Netzwerkfehler (1 ms)\n\nPASS __tests__/features/APIKeyManager/secureKeyStore.test.ts\n  secureKeyStore\n    saveApiKey\n      ✓ speichert Key und aktualisiert Provider-Index (12 ms)\n      ✓ fügt Provider nur einmal zum Index hinzu (1 ms)\n      ✓ wirft bei SecureStore-Fehler (18 ms)\n    getApiKey\n      ✓ liest gespeicherten Key (1 ms)\n      ✓ gibt null zurück wenn kein Key existiert (1 ms)\n      ✓ gibt null zurück bei Lesefehler\n    removeApiKey\n      ✓ entfernt Key und Provider aus Index (1 ms)\n      ✓ wirft bei Löschfehler (1 ms)\n    listApiKeyProviders\n      ✓ listet alle gespeicherten Provider (1 ms)\n      ✓ gibt leeres Array bei leerem Index (1 ms)\n\nPASS __tests__/features/Gamification/store.test.ts\n  Gamification Store\n    Initialzustand\n      ✓ startet mit 5/5 Orbs (3 ms)\n      ✓ startet mit Level 1 und 0 XP\n      ✓ startet mit isPremium = false\n    addXP\n      ✓ erhöht XP ohne Level-Up (1 ms)\n      ✓ löst Level-Up aus, wenn xp >= 100 * level\n      ✓ akzeptiert 0 XP idempotent (1 ms)\n    useOrb\n      ✓ reduziert Orbs um 1\n      ✓ gibt false zurück, wenn 0 Orbs vorhanden (1 ms)\n      ✓ bypassed Orb-Limit für Premium\n    regenOrbs\n      ✓ regeneriert 1 Orb nach 30 Min (1 ms)\n      ✓ regeneriert 2 Orbs nach 60 Min, capped auf max\n      ✓ regenoriert bei Premium\n      ✓ macht nichts, wenn weniger als 30 Min vergangen sind (1 ms)\n    incrementStreak\n      ✓ erhöht Streak am ersten Tag\n      ✓ ist idempotent am selben Tag\n    setPremium\n      ✓ setzt isPremium auf true (1 ms)\n      ✓ setzt isPremium zurück auf false\n    validateStoreLogic\n      ✓ läuft ohne Fehler (1 ms)\n      ✓ stellt Store-Invariante sicher (Orb-Reduktion)\n      ✓ stellt Store-Invariante sicher (Level-Up) (1 ms)\n\nTest Suites: 3 passed, 3 total\nTests:       35 passed, 35 total\nSnapshots:   0 total\nTime:        2.333 s\nRan all test suites."
     },
     {
       "gate": "Expo Doctor",
       "status": "PROVED",
-      "output": "Running 18 checks on your project...\n18/18 checks passed. No issues detected!\n\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+      "output": "Running 18 checks on your project...\n18/18 checks passed. No issues detected!"
     }
   ],
-  "release_ready": true,
+  "release_ready": false,
   "triple_consistency": {
     "disk_count": 18,
-    "checkpoint_count": 18,
-    "report_count_succeeded": 18,
-    "tasks_total": 18,
-    "consistent": true,
-    "disk_only": [],
+    "checkpoint_count": 3,
+    "report_count_succeeded": 3,
+    "tasks_total": 22,
+    "consistent": false,
+    "disk_only": [
+      "backend/src/health/healthcheck.ts",
+      "backend/src/types/contracts.ts",
+      "src/app/(tabs)/_layout.tsx",
+      "src/app/(tabs)/akademie.tsx",
+      "src/app/(tabs)/lab.tsx",
+      "src/app/(tabs)/profil.tsx",
+      "src/app/_layout.tsx",
+      "src/app/index.tsx",
+      "src/features/APIKeyManager/model/secureKeyStore.ts",
+      "src/features/Gamification/model/store.ts",
+      "src/features/Gamification/model/types.ts",
+      "src/features/PromptLab/api/optimizer.ts",
+      "src/processes/promptLab/runPromptComparison.ts",
+      "src/shared/ui/GradientButton.tsx",
+      "src/shared/ui/PressableCard.tsx"
+    ],
     "checkpoint_only": [],
     "report_only": []
   }
