@@ -56,7 +56,7 @@ function resolveSafeXp(rawXp: number): number {
 }
 
 export default function AkademieScreen() {
-  const xp = useGamificationStore((state) => state.xp);
+  const xp = useGamificationStore((state) => state.userStats.xp);
 
   const safeXp: number = resolveSafeXp(xp);
 

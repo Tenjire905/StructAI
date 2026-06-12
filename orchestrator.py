@@ -348,13 +348,19 @@ def extract_ollama_message_text(response: object) -> str:
 
 
 def clean_code(raw: str) -> str:
-    """Entfernt Markdown-Blöcke die das LLM manchmal trotzdem ausgibt."""
+    """Entfernt Markdown-Blöcke und deutsche LLM-Einleitungen vor dem ersten Code."""
     lines = raw.strip().splitlines()
     if lines and lines[0].startswith("```"):
         lines = lines[1:]
     if lines and lines[-1].startswith("```"):
         lines = lines[:-1]
-    return "\n".join(lines).strip()
+    code_start = 0
+    for idx, line in enumerate(lines):
+        stripped = line.lstrip()
+        if stripped.startswith(("import ", "export ")):
+            code_start = idx
+            break
+    return "\n".join(lines[code_start:]).strip()
 
 
 def extract_status(review_text: str) -> str:

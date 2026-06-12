@@ -40,7 +40,7 @@ export default function LabScreen() {
   const currentOrbs = useGamificationStore((s) => s.energy.currentOrbs);
   const maxOrbs = useGamificationStore((s) => s.energy.maxOrbs);
   const isPremium = useGamificationStore((s) => s.isPremium);
-  const useOrb = useGamificationStore((s) => s.useOrb);
+  const spendOrb = useGamificationStore((s) => s.useOrb);
   const addXP = useGamificationStore((s) => s.addXP);
 
   const handleOptimize = useCallback(async () => {
@@ -49,7 +49,7 @@ export default function LabScreen() {
       return;
     }
 
-    if (!isPremium && !useOrb()) {
+    if (!isPremium && !spendOrb()) {
       Alert.alert(
         'Keine Energie',
         'Warte auf Regeneration oder upgrade auf Premium ✨',
@@ -94,7 +94,7 @@ export default function LabScreen() {
     } finally {
       setIsLoading(false);
     }
-  }, [prompt, isPremium, useOrb, addXP]);
+  }, [prompt, isPremium, spendOrb, addXP]);
 
   const renderHistoryItem = useCallback(
     ({ item }: ListRenderItemInfo<OptimizationHistoryEntry>) => {

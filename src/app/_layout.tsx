@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
+import { StatusBar } from 'react-native';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useGamificationStore } from '../features/Gamification/model/store';
 import { theme } from '../shared/theme';
 
@@ -19,7 +19,7 @@ export default function RootLayout() {
 
   return (
     <>
-      <StatusBar style="light" />
+      <StatusBar barStyle="light-content" />
       <Stack
         screenOptions={{
           headerShown: false,
