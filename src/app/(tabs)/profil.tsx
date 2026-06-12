@@ -1,336 +1,364 @@
-import { useCallback } from 'react';
-import {
-  FlatList,
-  ListRenderItem,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+import type { ListRenderItem } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { useGamificationStore } from 'src/features/Gamification/model/store';
 import { PressableCard } from 'src/shared/ui/PressableCard';
 import { GradientButton } from 'src/shared/ui/GradientButton';
 import { theme } from 'src/shared/theme/index';
-import { useGamificationStore } from 'src/features/Gamification/model/store';
 
-const WEEKDAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-const ORB_INDICES = [0, 1, 2, 3, 4];
+const LEARNING_PATHS_COUNT = 3;
+const WEEK_DAYS = ['M', 'D', 'M', 'D', 'F', 'S', 'S'] as const;
 
-type ProfilSection =
-  | { id: 'header' }
-  | { id: 'stats' }
-  | { id: 'streak' }
-  | { id: 'energy' }
-  | { id: 'premium' };
+type ProfilSection = {
+  id: string;
+  type: 'level' | 'stats' | 'streak' | 'energy' | 'settings' | 'premium';
+};
 
 const SECTIONS: ProfilSection[] = [
-  { id: 'header' },
-  { id: 'stats' },
-  { id: 'streak' },
-  { id: 'energy' },
-  { id: 'premium' },
+  { id: 'level', type: 'level' },
+  { id: 'stats', type: 'stats' },
+  { id: 'streak', type: 'streak' },
+  { id: 'energy', type: 'energy' },
+  { id: 'settings', type: 'settings' },
+  { id: 'premium', type: 'premium' },
 ];
 
-const LERNPFAD_COUNT = 3;
+export default function ProfilScreen() {
+  const router = useRouter();
 
-function EnergyOrbs({
-  currentOrbs,
-  maxOrbs,
-}: {
-  currentOrbs: number;
-  maxOrbs: number;
-}) {
-  return (
-    <View style={styles.orbRow}>
-      {ORB_INDICES.slice(0, maxOrbs).map((index) => {
-        const filled = index < currentOrbs;
-        return (
+  const level = useGamificationStore((s) => s.userStats.level);
+  const xp = useGamificationStore((s) => s.userStats.xp);
+  const streak = useGamificationStore((s) => s.userStats.streak);
+  const currentOrbs = useGamificationStore((s) => s.energy.currentOrbs);
+  const maxOrbs = useGamificationStore((s) => s.energy.maxOrbs);
+  const isPremium = useGamificationStore((s) => s.isPremium);
+
+  const xpThreshold = 100 * level;
+  const xpProgress = useMemo(
+    () => Math.min(xp / xpThreshold, 1),
+    [xp, xpThreshold],
+  );
+
+  const handlePremium = useCallback(() => {
+    router.push('/paywall');
+  }, [router]);
+
+  const handleSettings = useCallback(() => {
+    router.push('/settings');
+  }, [router]);
+
+  const renderLevel = useCallback(
+    () => (
+      <PressableCard style={styles.card}>
+        <Text style={styles.levelTitle}>Level {level}</Text>
+        <Text style={styles.xpLabel}>{xp} XP</Text>
+        <View style={styles.xpTrack}>
           <View
-            key={index}
             style={[
-              styles.orb,
-              filled ? styles.orbFilled : styles.orbEmpty,
+              styles.xpFill,
+              { width: `${xpProgress * 100}%` as `${number}%` },
             ]}
           />
-        );
-      })}
-    </View>
+        </View>
+        <Text style={styles.xpSubLabel}>
+          {xp} / {xpThreshold} XP bis Level {level + 1}
+        </Text>
+      </PressableCard>
+    ),
+    [level, xp, xpProgress, xpThreshold],
   );
-}
 
-export default function ProfilScreen() {
-  const level = useGamificationStore((state) => state.userStats.level);
-  const xp = useGamificationStore((state) => state.userStats.xp);
-  const streak = useGamificationStore((state) => state.userStats.streak);
-  const currentOrbs = useGamificationStore((state) => state.energy.currentOrbs);
-  const maxOrbs = useGamificationStore((state) => state.energy.maxOrbs);
-  const isPremium = useGamificationStore((state) => state.isPremium);
-  const setPremium = useGamificationStore((state) => state.setPremium);
+  const renderStats = useCallback(
+    () => (
+      <View style={styles.statsRow}>
+        <PressableCard style={styles.statCard}>
+          <Text style={styles.statValue}>{LEARNING_PATHS_COUNT}</Text>
+          <Text style={styles.statLabel}>Lernpfade</Text>
+        </PressableCard>
+        <PressableCard style={styles.statCard}>
+          <Text style={styles.statValue}>{streak}</Text>
+          <Text style={styles.statLabel}>Streak Tage</Text>
+        </PressableCard>
+      </View>
+    ),
+    [streak],
+  );
 
-  const xpThreshold = level * 100;
-  const xpProgress = Math.min((xp / xpThreshold) * 100, 100);
+  const renderStreak = useCallback(
+    () => (
+      <PressableCard style={styles.card}>
+        <Text style={styles.sectionTitle}>Wochen-Streak</Text>
+        <View style={styles.orbRow}>
+          {WEEK_DAYS.map((day, index) => {
+            const filled = index < Math.min(streak, 7);
+            return (
+              <View key={`streak-${index}`} style={styles.orbColumn}>
+                <View
+                  style={[
+                    styles.orb,
+                    filled ? styles.orbFilled : styles.orbEmpty,
+                  ]}
+                />
+                <Text style={styles.dayLabel}>{day}</Text>
+              </View>
+            );
+          })}
+        </View>
+      </PressableCard>
+    ),
+    [streak],
+  );
 
-  const handleUpgrade = useCallback(() => {
-    try {
-      setPremium(true);
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : 'Unbekannter Fehler';
-      console.error('[ProfilScreen] Premium-Aktivierung fehlgeschlagen:', message);
-    }
-  }, [setPremium]);
-
-  const renderSection: ListRenderItem<ProfilSection> = useCallback(
-    ({ item }) => {
-      if (item.id === 'header') {
-        return (
-          <View style={styles.header}>
-            <Text style={styles.brand}>StructAI</Text>
-            <Text style={styles.slogan}>
-              Master Prompting. Build Real Intelligence.
-            </Text>
-            <Text style={styles.levelTitle}>Level {level}</Text>
-            <Text style={styles.xpSubtitle}>{xp} XP</Text>
-            <View style={styles.progressTrack}>
+  const renderEnergy = useCallback(
+    () => (
+      <PressableCard style={styles.card}>
+        <Text style={styles.sectionTitle}>Energie</Text>
+        <View style={styles.orbRow}>
+          {Array.from({ length: maxOrbs }).map((_, index) => {
+            const filled = index < currentOrbs;
+            return (
               <View
+                key={`energy-${index}`}
                 style={[
-                  styles.progressFill,
-                  {
-                    width: `${xpProgress}%`,
-                    backgroundColor: theme.colors.feedback.warning,
-                  },
+                  styles.orb,
+                  filled ? styles.orbFilled : styles.orbEmpty,
                 ]}
               />
-            </View>
-          </View>
-        );
-      }
-
-      if (item.id === 'stats') {
-        return (
-          <View style={styles.statsRow}>
-            <PressableCard style={styles.statCard}>
-              <Text style={styles.statLabel}>Lernpfade</Text>
-              <Text style={styles.statValue}>{LERNPFAD_COUNT}</Text>
-            </PressableCard>
-            <PressableCard
-              style={styles.statCard}
-              accentColor={theme.colors.accent.everyday}
-            >
-              <Text style={styles.statLabel}>Streak</Text>
-              <Text style={styles.statValue}>{streak} Tage</Text>
-            </PressableCard>
-          </View>
-        );
-      }
-
-      if (item.id === 'streak') {
-        return (
-          <PressableCard style={styles.sectionCard}>
-            <Text style={styles.streakTitle}>🔥 {streak} Tage</Text>
-            <View style={styles.weekRow}>
-              {WEEKDAY_LABELS.map((label, index) => {
-                const filled = index < Math.min(streak, 7);
-                return (
-                  <View key={`${label}-${index}`} style={styles.dayCell}>
-                    <View
-                      style={[
-                        styles.dayDot,
-                        filled ? styles.dayDotFilled : styles.dayDotEmpty,
-                      ]}
-                    />
-                    <Text style={styles.dayLabel}>{label}</Text>
-                  </View>
-                );
-              })}
-            </View>
-          </PressableCard>
-        );
-      }
-
-      if (item.id === 'energy') {
-        return (
-          <PressableCard style={styles.sectionCard}>
-            <Text style={styles.energyTitle}>
-              ⚡ {currentOrbs}/{maxOrbs} Orbs
-            </Text>
-            <EnergyOrbs currentOrbs={currentOrbs} maxOrbs={maxOrbs} />
-          </PressableCard>
-        );
-      }
-
-      return (
-        <View style={styles.premiumSection}>
-          {isPremium ? (
-            <GradientButton
-              label="Premium Aktiv ✨"
-              onPress={() => undefined}
-              disabled
-              gradientColors={[
-                theme.colors.feedback.warning,
-                theme.colors.feedback.warning,
-              ]}
-            />
-          ) : (
-            <GradientButton
-              label="Upgrade auf Premium"
-              onPress={handleUpgrade}
-              gradientColors={[
-                theme.colors.accent.everyday,
-                theme.colors.accent.visual,
-              ]}
-            />
-          )}
+            );
+          })}
         </View>
-      );
-    },
-    [
-      currentOrbs,
-      handleUpgrade,
-      isPremium,
-      level,
-      maxOrbs,
-      streak,
-      xp,
-      xpProgress,
-    ],
+        <Text style={styles.energyLabel}>
+          {isPremium ? 'Unbegrenzt ✨' : `${currentOrbs}/${maxOrbs} Orbs`}
+        </Text>
+      </PressableCard>
+    ),
+    [currentOrbs, maxOrbs, isPremium],
   );
 
-  const keyExtractor = useCallback((item: ProfilSection) => item.id, []);
+  const renderSettings = useCallback(
+    () => (
+      <PressableCard onPress={handleSettings} style={styles.card}>
+        <View style={styles.settingsRow}>
+          <Text style={styles.settingsText}>Einstellungen</Text>
+          <Text style={styles.chevron}>›</Text>
+        </View>
+      </PressableCard>
+    ),
+    [handleSettings],
+  );
+
+  const renderPremium = useCallback(
+    () => (
+      <View style={styles.premiumWrapper}>
+        <GradientButton
+          label={isPremium ? 'Premium Aktiv ✨' : 'Upgrade auf Premium'}
+          onPress={handlePremium}
+          gradientColors={
+            [
+              theme.colors.accent.everyday,
+              theme.colors.accent.code,
+            ] as const
+          }
+          disabled={isPremium}
+        />
+      </View>
+    ),
+    [isPremium, handlePremium],
+  );
+
+  const renderItem: ListRenderItem<ProfilSection> = useCallback(
+    ({ item }) => {
+      switch (item.type) {
+        case 'level':
+          return renderLevel();
+        case 'stats':
+          return renderStats();
+        case 'streak':
+          return renderStreak();
+        case 'energy':
+          return renderEnergy();
+        case 'settings':
+          return renderSettings();
+        case 'premium':
+          return renderPremium();
+        default:
+          return null;
+      }
+    },
+    [renderLevel, renderStats, renderStreak, renderEnergy, renderSettings, renderPremium],
+  );
+
+  const ListHeader = useCallback(
+    () => (
+      <View style={styles.header}>
+        <Text style={styles.brandTitle}>StructAI</Text>
+        <Text style={styles.slogan}>
+          Master Prompting. Build Real Intelligence.
+        </Text>
+      </View>
+    ),
+    [],
+  );
+
+  const ItemSeparator = useCallback(
+    () => <View style={styles.separator} />,
+    [],
+  );
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.root}>
       <FlatList
         data={SECTIONS}
-        keyExtractor={keyExtractor}
-        renderItem={renderSection}
-        contentContainerStyle={styles.listContent}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        ListHeaderComponent={ListHeader}
+        ItemSeparatorComponent={ItemSeparator}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
     backgroundColor: theme.colors.background.primary,
   },
-  listContent: {
-    padding: 20,
-    gap: 16,
+  contentContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 32,
   },
   header: {
-    marginBottom: 8,
+    paddingTop: 16,
+    paddingBottom: 20,
+    alignItems: 'center',
   },
-  brand: {
-    color: theme.colors.text.primary,
-    fontSize: theme.typography.fontSize.xl,
+  brandTitle: {
+    fontSize: theme.typography.fontSize.xxl,
     fontWeight: theme.typography.fontWeight.bold,
+    color: theme.colors.text.primary,
+    marginBottom: 6,
   },
   slogan: {
-    marginTop: 4,
-    marginBottom: 12,
-    color: theme.colors.text.secondary,
     fontSize: theme.typography.fontSize.sm,
+    fontWeight: theme.typography.fontWeight.regular,
+    color: theme.colors.text.secondary,
+    textAlign: 'center',
+  },
+  card: {
+    borderRadius: 20,
+  },
+  separator: {
+    height: 12,
+  },
+  levelTitle: {
+    fontSize: theme.typography.fontSize.xl,
+    fontWeight: theme.typography.fontWeight.bold,
+    color: theme.colors.text.primary,
+    marginBottom: 4,
+  },
+  xpLabel: {
+    fontSize: theme.typography.fontSize.md,
+    fontWeight: theme.typography.fontWeight.semibold,
+    color: theme.colors.feedback.warning,
+    marginBottom: 10,
+  },
+  xpTrack: {
+    height: 10,
+    borderRadius: 8,
+    backgroundColor: theme.colors.background.secondary,
+    overflow: 'hidden',
+    marginBottom: 6,
+  },
+  xpFill: {
+    height: '100%',
+    borderRadius: 8,
+    backgroundColor: theme.colors.feedback.warning,
+  },
+  xpSubLabel: {
+    fontSize: theme.typography.fontSize.xs,
+    fontWeight: theme.typography.fontWeight.regular,
+    color: theme.colors.text.muted,
+    marginTop: 2,
   },
   statsRow: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 4,
   },
   statCard: {
     flex: 1,
-  },
-  statLabel: {
-    color: theme.colors.text.muted,
-    fontSize: theme.typography.fontSize.sm,
-    marginBottom: 6,
+    alignItems: 'center',
+    borderRadius: 20,
   },
   statValue: {
-    color: theme.colors.text.primary,
     fontSize: theme.typography.fontSize.xxl,
     fontWeight: theme.typography.fontWeight.bold,
-  },
-  levelTitle: {
     color: theme.colors.text.primary,
-    fontSize: theme.typography.fontSize.display,
-    fontWeight: theme.typography.fontWeight.bold,
-  },
-  xpSubtitle: {
-    marginTop: 6,
-    color: theme.colors.text.secondary,
-    fontSize: theme.typography.fontSize.lg,
-  },
-  progressTrack: {
-    marginTop: 16,
-    height: 8,
-    borderRadius: 8,
-    backgroundColor: theme.colors.background.secondary,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    borderRadius: 8,
-  },
-  sectionCard: {
     marginBottom: 4,
   },
-  streakTitle: {
-    color: theme.colors.text.primary,
-    fontSize: theme.typography.fontSize.xl,
-    fontWeight: theme.typography.fontWeight.bold,
-    marginBottom: 16,
-  },
-  weekRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  dayCell: {
-    alignItems: 'center',
-    gap: 6,
-  },
-  dayDot: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: theme.colors.border.subtle,
-  },
-  dayDotFilled: {
-    backgroundColor: theme.colors.accent.everyday,
-    borderColor: theme.colors.accent.everyday,
-  },
-  dayDotEmpty: {
-    backgroundColor: theme.colors.background.card,
-  },
-  dayLabel: {
+  statLabel: {
+    fontSize: theme.typography.fontSize.sm,
+    fontWeight: theme.typography.fontWeight.regular,
     color: theme.colors.text.muted,
-    fontSize: theme.typography.fontSize.xs,
   },
-  energyTitle: {
-    color: theme.colors.text.primary,
-    fontSize: theme.typography.fontSize.xl,
+  sectionTitle: {
+    fontSize: theme.typography.fontSize.lg,
     fontWeight: theme.typography.fontWeight.semibold,
-    marginBottom: 12,
+    color: theme.colors.text.primary,
+    marginBottom: 14,
   },
   orbRow: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
   },
+  orbColumn: {
+    alignItems: 'center',
+    gap: 4,
+  },
   orb: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: theme.colors.border.subtle,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
   },
   orbFilled: {
     backgroundColor: theme.colors.accent.everyday,
-    borderColor: theme.colors.accent.everyday,
   },
   orbEmpty: {
     backgroundColor: theme.colors.background.card,
+    borderWidth: 1,
+    borderColor: theme.colors.border.subtle,
   },
-  premiumSection: {
-    marginTop: 8,
+  dayLabel: {
+    fontSize: theme.typography.fontSize.xs,
+    fontWeight: theme.typography.fontWeight.regular,
+    color: theme.colors.text.muted,
+  },
+  energyLabel: {
+    marginTop: 12,
+    fontSize: theme.typography.fontSize.sm,
+    fontWeight: theme.typography.fontWeight.medium,
+    color: theme.colors.text.secondary,
+  },
+  settingsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  settingsText: {
+    fontSize: theme.typography.fontSize.md,
+    fontWeight: theme.typography.fontWeight.medium,
+    color: theme.colors.text.primary,
+  },
+  chevron: {
+    fontSize: theme.typography.fontSize.xl,
+    fontWeight: theme.typography.fontWeight.regular,
+    color: theme.colors.text.muted,
+  },
+  premiumWrapper: {
+    marginTop: 4,
   },
 });

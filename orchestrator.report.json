@@ -1,13 +1,15 @@
 {
-  "timestamp": "2026-06-09T13:58:56.744440+00:00",
+  "timestamp": "2026-06-12T14:18:07.878710+00:00",
+  "provider": "claude",
+  "dry_run": false,
   "models": {
-    "coder": "qwen3-coder:30b",
-    "architect": "gemma4",
-    "critic": "gemma4",
-    "debugger": "gemma4",
-    "auditor": "gemma4"
+    "coder": "claude-sonnet-4-6",
+    "architect": "claude-opus-4-8",
+    "critic": "claude-haiku-4-5-20251001",
+    "debugger": "claude-sonnet-4-6",
+    "auditor": "claude-haiku-4-5-20251001"
   },
-  "tasks_total": 18,
+  "tasks_total": 22,
   "tasks_succeeded": [
     "src/shared/theme/colors.ts",
     "src/shared/theme/typography.ts",
@@ -26,40 +28,46 @@
     "src/app/(tabs)/profil.tsx",
     "src/processes/promptLab/runPromptComparison.ts",
     "backend/src/types/contracts.ts",
-    "backend/src/health/healthcheck.ts"
+    "backend/src/health/healthcheck.ts",
+    "src/features/Paywall/ui/PaywallScreen.tsx",
+    "src/app/paywall.tsx"
   ],
-  "tasks_failed": [],
+  "tasks_failed": [
+    "src/features/Settings/ui/SettingsScreen.tsx"
+  ],
   "tasks_skipped": [],
-  "failure_reasons": {},
+  "failure_reasons": {
+    "src/features/Settings/ui/SettingsScreen.tsx": "1. Unbekannter Theme-Pfad 'theme.typography.display' — nur definierte Tokens nutzen.\n2. Unbekannter Theme-Pfad 'theme.typography.bodyMedium' — nur definierte Tokens nutzen.\n3. Unbekannter Theme-Pfad 'theme.typography.bodyMedium' — nur definierte Tokens nutzen.\n4. Unbekannter Theme-Pfad 'theme.typography.bodyMedium' — nur definierte Tokens nutzen.\n5. Unbekannter Theme-Pfad 'theme.typography.caption' — nur definierte Tokens nutzen."
+  },
   "quality_gates": [
     {
       "gate": "Typecheck",
-      "status": "PROVED",
-      "output": "> typecheck\n> tsc --noEmit\n\n\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+      "status": "REJECTED",
+      "output": "1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,634): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,640): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,642): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,646): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,660): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,670): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,679): error TS1127: Invalid character.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,702): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,706): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,722): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,749): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,759): error TS1005: ',' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,772): error TS1005: ')' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,774): error TS1434: Unexpected keyword or identifier.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,782): error TS1434: Unexpected keyword or identifier.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,786): error TS1434: Unexpected keyword or identifier.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,816): error TS1005: ';' expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,820): error TS1434: Unexpected keyword or identifier.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,827): error TS1434: Unexpected keyword or identifier.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,838): error TS1434: Unexpected keyword or identifier.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,841): error TS1434: Unexpected keyword or identifier.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,848): error TS1128: Declaration or statement expected.\nsrc/features/Paywall/ui/PaywallScreen.tsx(1,849): error TS1128: Declaration or statement expected."
     },
     {
       "gate": "Lint",
-      "status": "PROVED",
-      "output": "> lint\n> eslint . --ext .ts,.tsx --max-warnings 0\n\n\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+      "status": "REJECTED",
+      "output": "> lint\n> eslint . --ext .ts,.tsx --max-warnings 0\n\n\n/home/runner/work/StructAI/StructAI/src/app/(tabs)/lab.tsx\n  52:24  error  React Hook \"useOrb\" cannot be called inside a callback. React Hooks must be called in a React function component or a custom React Hook function  react-hooks/rules-of-hooks\n\n/home/runner/work/StructAI/StructAI/src/app/_layout.tsx\n  3:27  error  Unable to resolve path to module 'expo-status-bar'  import/no-unresolved\n\n/home/runner/work/StructAI/StructAI/src/app/paywall.tsx\n  1:0  error  Parsing error: Unexpected keyword or identifier\n\n/home/runner/work/StructAI/StructAI/src/features/Paywall/ui/PaywallScreen.tsx\n  1:0  error  Parsing error: Unexpected keyword or identifier\n\n✖ 4 problems (4 errors, 0 warnings)"
     },
     {
       "gate": "Test",
       "status": "PROVED",
-      "output": "d\n      √ startet mit 5/5 Orbs (2 ms)\n      √ startet mit Level 1 und 0 XP\n      √ startet mit isPremium = false\n    addXP\n      √ erhöht XP ohne Level-Up\n      √ löst Level-Up aus, wenn xp >= 100 * level\n      √ akzeptiert 0 XP idempotent\n    useOrb\n      √ reduziert Orbs um 1\n      √ gibt false zurück, wenn 0 Orbs vorhanden\n      √ bypassed Orb-Limit für Premium\n    regenOrbs\n      √ regeneriert 1 Orb nach 30 Min\n      √ regeneriert 2 Orbs nach 60 Min, capped auf max\n      √ regenoriert bei Premium\n      √ macht nichts, wenn weniger als 30 Min vergangen sind (1 ms)\n    incrementStreak\n      √ erhöht Streak am ersten Tag\n      √ ist idempotent am selben Tag\n    setPremium\n      √ setzt isPremium auf true (1 ms)\n      √ setzt isPremium zurück auf false\n    validateStoreLogic\n      √ läuft ohne Fehler\n      √ stellt Store-Invariante sicher (Orb-Reduktion)\n      √ stellt Store-Invariante sicher (Level-Up)\n\nPASS __tests__/features/APIKeyManager/secureKeyStore.test.ts\n  secureKeyStore\n    saveApiKey\n      √ speichert Key und aktualisiert Provider-Index (1 ms)\n      √ fügt Provider nur einmal zum Index hinzu\n      √ wirft bei SecureStore-Fehler (4 ms)\n    getApiKey\n      √ liest gespeicherten Key\n      √ gibt null zurück wenn kein Key existiert\n      √ gibt null zurück bei Lesefehler\n    removeApiKey\n      √ entfernt Key und Provider aus Index\n      √ wirft bei Löschfehler (1 ms)\n    listApiKeyProviders\n      √ listet alle gespeicherten Provider\n      √ gibt leeres Array bei leerem Index\n\nPASS __tests__/features/PromptLab/optimizer.test.ts\n  optimizePrompt\n    √ gibt optimierten Prompt bei erfolgreicher Antwort zurück (1 ms)\n    √ sendet BYOK-Header wenn apiKey gesetzt ist (1 ms)\n    √ wirft OptimizerError bei HTTP-Fehler\n    √ wirft OptimizerError bei ungültigem Response-Schema\n    √ wirft OptimizerError bei Netzwerkfehler (1 ms)\n\nTest Suites: 3 passed, 3 total\nTests:       35 passed, 35 total\nSnapshots:   0 total\nTime:        0.469 s, estimated 1 s\nRan all test suites."
+      "output": "ey gesetzt ist (1 ms)\n    ✓ wirft OptimizerError bei HTTP-Fehler (1 ms)\n    ✓ wirft OptimizerError bei ungültigem Response-Schema (1 ms)\n    ✓ wirft OptimizerError bei Netzwerkfehler (1 ms)\n\nPASS __tests__/features/APIKeyManager/secureKeyStore.test.ts\n  secureKeyStore\n    saveApiKey\n      ✓ speichert Key und aktualisiert Provider-Index (6 ms)\n      ✓ fügt Provider nur einmal zum Index hinzu (1 ms)\n      ✓ wirft bei SecureStore-Fehler (10 ms)\n    getApiKey\n      ✓ liest gespeicherten Key (1 ms)\n      ✓ gibt null zurück wenn kein Key existiert (1 ms)\n      ✓ gibt null zurück bei Lesefehler (1 ms)\n    removeApiKey\n      ✓ entfernt Key und Provider aus Index (2 ms)\n      ✓ wirft bei Löschfehler (1 ms)\n    listApiKeyProviders\n      ✓ listet alle gespeicherten Provider (1 ms)\n      ✓ gibt leeres Array bei leerem Index\n\nPASS __tests__/features/Gamification/store.test.ts\n  Gamification Store\n    Initialzustand\n      ✓ startet mit 5/5 Orbs (4 ms)\n      ✓ startet mit Level 1 und 0 XP\n      ✓ startet mit isPremium = false\n    addXP\n      ✓ erhöht XP ohne Level-Up\n      ✓ löst Level-Up aus, wenn xp >= 100 * level (1 ms)\n      ✓ akzeptiert 0 XP idempotent\n    useOrb\n      ✓ reduziert Orbs um 1\n      ✓ gibt false zurück, wenn 0 Orbs vorhanden (1 ms)\n      ✓ bypassed Orb-Limit für Premium\n    regenOrbs\n      ✓ regeneriert 1 Orb nach 30 Min (1 ms)\n      ✓ regeneriert 2 Orbs nach 60 Min, capped auf max\n      ✓ regenoriert bei Premium (1 ms)\n      ✓ macht nichts, wenn weniger als 30 Min vergangen sind\n    incrementStreak\n      ✓ erhöht Streak am ersten Tag (1 ms)\n      ✓ ist idempotent am selben Tag\n    setPremium\n      ✓ setzt isPremium auf true (1 ms)\n      ✓ setzt isPremium zurück auf false\n    validateStoreLogic\n      ✓ läuft ohne Fehler (1 ms)\n      ✓ stellt Store-Invariante sicher (Orb-Reduktion)\n      ✓ stellt Store-Invariante sicher (Level-Up) (1 ms)\n\nTest Suites: 3 passed, 3 total\nTests:       35 passed, 35 total\nSnapshots:   0 total\nTime:        2.411 s\nRan all test suites."
     },
     {
       "gate": "Expo Doctor",
       "status": "PROVED",
-      "output": "Running 18 checks on your project...\n18/18 checks passed. No issues detected!\n\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+      "output": "Running 18 checks on your project...\n18/18 checks passed. No issues detected!"
     }
   ],
-  "release_ready": true,
+  "release_ready": false,
   "triple_consistency": {
-    "disk_count": 18,
-    "checkpoint_count": 18,
-    "report_count_succeeded": 18,
-    "tasks_total": 18,
-    "consistent": true,
+    "disk_count": 20,
+    "checkpoint_count": 20,
+    "report_count_succeeded": 20,
+    "tasks_total": 22,
+    "consistent": false,
     "disk_only": [],
     "checkpoint_only": [],
     "report_only": []
