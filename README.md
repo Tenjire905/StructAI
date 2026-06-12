@@ -59,17 +59,31 @@ backend/                  # Stubs für spätere Server-Anbindung
 Dieses Repo enthält eine **autonome Multi-Agent-Pipeline** (`orchestrator.py`), die den gesamten Code per LLM generiert, prüft und in Iterationen debuggt:
 
 - **Architect** (Plan) → **Coder** (Code) → **Static Checks** → **Critic** (Regel-Audit) → **Auditor** (Integrationsrisiko) → **Debugger** (Fix-Loop)
-- Lokale Modelle: `qwen3-coder:30b` (Coder), `gemma4` (Critic/Debugger/Architect/Auditor)
-- Quality-Gates am Ende: `tsc --noEmit`, `expo doctor`
+- **Claude Hybrid (empfohlen):** Architect = `claude-opus-4-8`, Coder/Debugger = `claude-sonnet-4-6`, Critic/Auditor = `claude-haiku-4-5-20251001`, automatische Opus-Eskalation ab Cycle 4
+- Alternativ lokale Modelle: `qwen2.5-coder:7b` (Coder), `gemma4` (Rest) via Ollama
+- Quality-Gates am Ende: `tsc --noEmit`, `eslint`, `jest`, `expo doctor`
 - Verträge unter `orchestrator/contracts/` (Theme, Produkt, Screens, Design, Backend)
 - Templates unter `orchestrator/templates/` (Fast-Path)
 - Checkpoint/Resume in `orchestrator.checkpoint.json`
 
 ### Pipeline starten
 
+**Cloud (GitHub Actions — empfohlen, von überall überwachbar):**
+Actions-Tab → „StructAI Orchestrator (Cloud Build)" → „Run workflow".
+Voraussetzung: Repo-Secret `ANTHROPIC_API_KEY`. Ergebnis kommt als Pull Request
+`orchestrator/run-<N>` plus Report-Artefakt.
+
+**Lokal mit Claude API:**
+
 ```powershell
-# Voraussetzung: Ollama läuft lokal mit qwen3-coder:30b + gemma4
-py -3 orchestrator.py
+$env:ANTHROPIC_API_KEY = "sk-ant-..."
+.\scripts\start-orchestrator-claude.ps1
+```
+
+**Lokal mit Ollama:**
+
+```powershell
+.\scripts\start-orchestrator.ps1
 ```
 
 Details siehe `PIPELINE_RUNBOOK.md`.

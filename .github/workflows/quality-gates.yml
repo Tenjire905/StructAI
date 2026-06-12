@@ -1,0 +1,36 @@
+name: Quality Gates
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  gates:
+    name: Typecheck / Lint / Test / Expo Doctor
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node 20 einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: NPM Dependencies installieren
+        run: npm ci
+
+      - name: Typecheck (tsc --noEmit)
+        run: npm run typecheck
+
+      - name: Lint (eslint, 0 Warnings)
+        run: npm run lint
+
+      - name: Tests (Jest)
+        run: npm test
+
+      - name: Expo Doctor
+        run: npx expo-doctor

@@ -10,7 +10,11 @@ from abc import ABC, abstractmethod
 from datetime import UTC, datetime
 from typing import Dict, List, Optional, Set, Tuple
 
-import ollama
+try:
+    import ollama
+except ImportError:
+    # [Orchestrator]: ollama package is optional — cloud runs use STRUCTAI_LLM_PROVIDER=claude
+    ollama = None  # type: ignore[assignment]
 
 
 def configure_console_encoding() -> None:
@@ -30,7 +34,7 @@ configure_console_encoding()
 # LLM-Backend: ollama (default) | claude (requires ANTHROPIC_API_KEY)
 LLM_PROVIDER_NAME = os.getenv("STRUCTAI_LLM_PROVIDER", "ollama").strip().lower()
 
-CODER_MODEL = os.getenv("STRUCTAI_CODER_MODEL", "qwen3-coder:30b")
+CODER_MODEL = os.getenv("STRUCTAI_CODER_MODEL", "qwen2.5-coder:7b")
 CRITIC_MODEL = os.getenv("STRUCTAI_CRITIC_MODEL", "gemma4")
 DEBUGGER_MODEL = os.getenv("STRUCTAI_DEBUGGER_MODEL", "gemma4")
 ARCHITECT_MODEL = os.getenv("STRUCTAI_ARCHITECT_MODEL", "gemma4")
@@ -68,9 +72,25 @@ FAST_PATH_ENABLED = os.getenv("STRUCTAI_FAST_PATH", "true").strip().lower() in {
     "yes",
     "on",
 }
+CONSTANTS_TEMPLATE_ALWAYS = os.getenv("STRUCTAI_CONSTANTS_TEMPLATE", "true").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+CRITIC_AUTO_PROVE_ON_STATIC = os.getenv("STRUCTAI_CRITIC_AUTO_PROVE", "true").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
 MODEL_CALL_RETRIES = int(os.getenv("STRUCTAI_MODEL_CALL_RETRIES", "3"))
 MODEL_CALL_RETRY_BASE_SECONDS = float(os.getenv("STRUCTAI_MODEL_RETRY_BASE_SECONDS", "1.5"))
 QUALITY_GATE_TIMEOUT_SECONDS = int(os.getenv("STRUCTAI_QUALITY_GATE_TIMEOUT_SECONDS", "300"))
+CLAUDE_MAX_TOKENS = int(os.getenv("STRUCTAI_CLAUDE_MAX_TOKENS", "8192"))
+# [Orchestrator]: optional Opus escalation — used for coder/debugger from this cycle on
+CODER_ESCALATION_MODEL = os.getenv("STRUCTAI_CODER_ESCALATION_MODEL", "").strip()
+CODER_ESCALATION_CYCLE = int(os.getenv("STRUCTAI_CODER_ESCALATION_CYCLE", "4"))
 
 # ---------------------------------------------------------------------
 # LLM PROVIDER ABSTRACTION (Ollama today, Claude-ready tomorrow)
@@ -92,6 +112,13 @@ class LLMProvider(ABC):
 
 
 class OllamaProvider(LLMProvider):
+    def __init__(self) -> None:
+        if ollama is None:
+            raise RuntimeError(
+                "Python-Paket 'ollama' fehlt — 'pip install ollama' ausführen "
+                "oder STRUCTAI_LLM_PROVIDER=claude setzen."
+            )
+
     @property
     def name(self) -> str:
         return "ollama"
@@ -107,30 +134,10 @@ class OllamaProvider(LLMProvider):
                         {"role": "user", "content": user_prompt},
                     ],
                 )
-                content: Optional[str] = None
-                if isinstance(response, dict):
-                    message = response.get("message")
-                    if isinstance(message, dict):
-                        raw_content = message.get("content")
-                        if isinstance(raw_content, str):
-                            content = raw_content
-                else:
-                    message_obj = getattr(response, "message", None)
-                    raw_content = getattr(message_obj, "content", None)
-                    if isinstance(raw_content, str):
-                        content = raw_content
-                    elif hasattr(response, "model_dump"):
-                        dumped = response.model_dump()
-                        if isinstance(dumped, dict):
-                            dumped_message = dumped.get("message")
-                            if isinstance(dumped_message, dict):
-                                dumped_content = dumped_message.get("content")
-                                if isinstance(dumped_content, str):
-                                    content = dumped_content
-
-                if not isinstance(content, str) or not content.strip():
+                content = extract_ollama_message_text(response)
+                if not content.strip():
                     raise ValueError(
-                        f"Ungültige Modell-Antwortstruktur: {type(response).__name__}"
+                        f"Leere Modell-Antwort ({type(response).__name__})"
                     )
                 return content
             except Exception as error:
@@ -197,7 +204,7 @@ class ClaudeProvider(LLMProvider):
         payload = json.dumps(
             {
                 "model": model_name,
-                "max_tokens": 8192,
+                "max_tokens": CLAUDE_MAX_TOKENS,
                 "system": system_prompt,
                 "messages": [{"role": "user", "content": user_prompt}],
             }
@@ -229,6 +236,23 @@ class ClaudeProvider(LLMProvider):
                 if not content.strip():
                     raise ValueError("Leere Claude-Antwort")
                 return content
+            except urllib.error.HTTPError as error:
+                try:
+                    error_body = error.read().decode("utf-8", errors="replace")[:500]
+                except Exception:
+                    error_body = ""
+                last_error = f"HTTP {error.code}: {error_body or error.reason}"
+                # [Orchestrator]: auth/request errors are permanent — retrying wastes budget
+                if error.code in {400, 401, 403, 404}:
+                    break
+                if attempt >= MODEL_CALL_RETRIES:
+                    break
+                backoff = MODEL_CALL_RETRY_BASE_SECONDS * (2 ** (attempt - 1))
+                print(
+                    f"  ⚠️  Claude-Call fehlgeschlagen ({model_name}, Versuch {attempt}/{MODEL_CALL_RETRIES}): {last_error}"
+                )
+                print(f"  ↻ Retry in {backoff:.1f}s...")
+                time.sleep(backoff)
             except (urllib.error.URLError, ValueError, json.JSONDecodeError) as error:
                 last_error = str(error)
                 if attempt >= MODEL_CALL_RETRIES:
@@ -292,6 +316,37 @@ def write_file_atomic(path: str, content: str) -> None:
         temp_file.write(content)
     os.replace(temp_path, path)
  
+def extract_ollama_message_text(response: object) -> str:
+    """Extract assistant text from Ollama SDK dict / ChatResponse / thinking models."""
+    message: object = None
+    if isinstance(response, dict):
+        message = response.get("message")
+    else:
+        message = getattr(response, "message", None)
+        if message is None and hasattr(response, "model_dump"):
+            dumped = response.model_dump()
+            if isinstance(dumped, dict):
+                message = dumped.get("message")
+
+    def read_field(source: object, key: str) -> str:
+        if isinstance(source, dict):
+            value = source.get(key)
+        else:
+            value = getattr(source, key, None)
+        return value.strip() if isinstance(value, str) else ""
+
+    if message is None:
+        return ""
+
+    content = read_field(message, "content")
+    thinking = read_field(message, "thinking")
+    if content:
+        return content
+    if thinking:
+        return thinking
+    return ""
+
+
 def clean_code(raw: str) -> str:
     """Entfernt Markdown-Blöcke die das LLM manchmal trotzdem ausgibt."""
     lines = raw.strip().splitlines()
@@ -311,9 +366,38 @@ def extract_status(review_text: str) -> str:
     if match:
         return match.group(1).upper()
     upper_text = review_text.upper()
-    if "PROVED" in upper_text:
+    if "PROVED" in upper_text and "REJECTED" not in upper_text:
         return "PROVED"
+    if "REJECTED" in upper_text:
+        return "REJECTED"
     return "REJECTED"
+
+
+def is_malformed_agent_status(review_text: str) -> bool:
+    stripped = review_text.strip()
+    if not stripped:
+        return True
+    if re.fullmatch(r"STATUS\s*:?\s*", stripped, re.IGNORECASE):
+        return True
+    if not re.search(r"STATUS\s*:\s*(PROVED|REJECTED)", stripped, re.IGNORECASE):
+        return True
+    return False
+
+
+def resolve_critic_verdict(critic_result: str, static_checks_passed: bool) -> Tuple[str, str]:
+    """Returns (status, display_text). Auto-PROVED when LLM output malformed but static is green."""
+    if is_malformed_agent_status(critic_result):
+        preview = critic_result.strip().replace("\n", " ")[:240]
+        print(f"  ⚠️  Kritiker-Antwort unvollständig/malformed: {preview!r}")
+        if static_checks_passed and CRITIC_AUTO_PROVE_ON_STATIC:
+            escalated = (
+                "STATUS: PROVED\n"
+                "BEGRÜNDUNG: Auto-Eskalation — Static Checks grün, Kritiker-Output malformed."
+            )
+            print("  ✅ Static Checks grün → Kritiker-Eskalation auf PROVED.")
+            return "PROVED", escalated
+        return "REJECTED", critic_result
+    return extract_status(critic_result), critic_result
 
 
 def normalize_review_text(review_text: str) -> str:
@@ -325,8 +409,12 @@ def normalize_review_text(review_text: str) -> str:
     if not lines:
         return review_text.strip()
     status_index = -1
+    status_line_pattern = re.compile(
+        r"^\s*STATUS\s*:\s*(PROVED|REJECTED)\b", re.IGNORECASE
+    )
+    begruendung_pattern = re.compile(r"^\s*BEGR[ÜU]?NDUNG\s*:", re.IGNORECASE)
     for idx, line in enumerate(lines):
-        if re.match(r"^\s*STATUS\s*:\s*(PROVED|REJECTED)\s*$", line, re.IGNORECASE):
+        if status_line_pattern.match(line):
             status_index = idx
             break
     if status_index == -1:
@@ -336,9 +424,9 @@ def normalize_review_text(review_text: str) -> str:
     begruendung_added = False
     for idx in range(status_index + 1, len(lines)):
         current = lines[idx]
-        if re.match(r"^\s*STATUS\s*:\s*(PROVED|REJECTED)\s*$", current, re.IGNORECASE):
+        if status_line_pattern.match(current):
             break
-        if not begruendung_added and re.match(r"^\s*BEGRÜNDUNG\s*:", current, re.IGNORECASE):
+        if not begruendung_added and begruendung_pattern.match(current):
             selected.append(current)
             begruendung_added = True
             continue
@@ -350,7 +438,10 @@ def normalize_review_text(review_text: str) -> str:
             if current.strip().startswith("**"):
                 break
             selected.append(current)
-    return "\n".join(selected).strip()
+    normalized = "\n".join(selected).strip()
+    if is_malformed_agent_status(normalized):
+        return review_text.strip()
+    return normalized
 
 
 def extract_begruendung(review_text: str) -> str:
@@ -467,6 +558,8 @@ CATEGORY_RULES: Dict[str, List[str]] = {
 CODER_FOCUS_RULES: Dict[str, str] = {
     "constants": (
         "DEINE AUFGABE IST EINE 'constants'-DATEI. Exakte Regeln:\n"
+        "- NUR reine TypeScript-Konstanten — KEIN React, KEIN JSX, KEINE Komponenten.\n"
+        "- KEIN import aus 'react', 'react-native' oder anderen UI-Paketen.\n"
         "- export const NAME = {...} as const;\n"
         "- export type TypeName = typeof NAME; (niemals bare Typ-Name)\n"
         "- Kein 'any', keine TODOs, keine Funktionen, keine Logik.\n"
@@ -879,6 +972,14 @@ def run_static_checks(code: str, file_path: str) -> List[str]:
         if has_async and not has_try_catch:
             issues.append("Async/API ohne try-catch erkannt.")
 
+    if category == "constants":
+        if re.search(r"from\s+['\"]react", code, re.IGNORECASE):
+            issues.append("constants-Datei: React-Import verboten.")
+        if re.search(r"from\s+['\"]react-native", code, re.IGNORECASE):
+            issues.append("constants-Datei: react-native-Import verboten.")
+        if "<" in code and ">" in code and "typeof" not in code:
+            issues.append("constants-Datei: JSX/Komponenten-Syntax verboten.")
+
     issues.extend(_check_import_paths(code, file_path))
     issues.extend(_check_theme_access_paths(code, file_path))
     issues.extend(_check_component_contract(code, file_path, category))
@@ -1085,6 +1186,95 @@ def run_command(command: List[str], cwd: str) -> Tuple[bool, str]:
         )
     except Exception as error:
         return False, str(error)
+
+
+PIPELINE_PROGRESS_WIDTH = int(os.getenv("STRUCTAI_PROGRESS_WIDTH", "28"))
+
+
+def format_eta(seconds: float) -> str:
+    if seconds < 0 or not (seconds < float("inf")):
+        return "?"
+    total_seconds = int(seconds)
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, secs = divmod(remainder, 60)
+    if hours > 0:
+        return f"{hours}h {minutes}m"
+    if minutes > 0:
+        return f"{minutes}m {secs}s"
+    return f"{secs}s"
+
+
+def estimate_pipeline_duration(
+    total_tasks: int,
+    *,
+    fast_path: bool,
+    resume_skip: int,
+    dry_run: bool,
+) -> str:
+    remaining = max(total_tasks - resume_skip, 0)
+    if dry_run:
+        return "~1–3 Min (Dry-Run + Quality Gates)"
+    if remaining == 0:
+        return "~2–5 Min (Checkpoint vollständig, nur Quality Gates)"
+    if fast_path:
+        low = max(5, remaining * 1)
+        high = max(10, remaining * 5)
+        return f"~{low}–{high} Min (Fast-Path/Templates, {remaining} offene Tasks)"
+    low = max(30, remaining * 10)
+    high = max(60, remaining * 40)
+    return (
+        f"~{low}–{high} Min volle LLM-Pipeline ({remaining} Tasks, "
+        "hardwareabhängig — qwen2.5-coder:7b typisch 3–10 Min pro Datei)"
+    )
+
+
+class PipelineProgress:
+    def __init__(self, total: int) -> None:
+        self.total = max(total, 1)
+        self.processed = 0
+        self.started_at = time.time()
+
+    def advance(self, path: str, status: str) -> None:
+        self.processed = min(self.processed + 1, self.total)
+        elapsed = time.time() - self.started_at
+        pct = (self.processed / self.total) * 100.0
+        filled = int(PIPELINE_PROGRESS_WIDTH * self.processed / self.total)
+        bar = "█" * filled + "░" * (PIPELINE_PROGRESS_WIDTH - filled)
+        remaining_tasks = self.total - self.processed
+        if self.processed > 0 and remaining_tasks > 0:
+            eta = format_eta((elapsed / self.processed) * remaining_tasks)
+        elif remaining_tasks == 0:
+            eta = "0s"
+        else:
+            eta = "…"
+        print(
+            f"\n  📊 [{bar}] {pct:5.1f}% "
+            f"({self.processed}/{self.total}) "
+            f"ETA ~{eta} | {status}\n"
+            f"      → {path}"
+        )
+
+    def active(self, path: str, detail: str) -> None:
+        elapsed = time.time() - self.started_at
+        pct = (self.processed / self.total) * 100.0
+        filled = int(PIPELINE_PROGRESS_WIDTH * self.processed / self.total)
+        bar = "█" * filled + "░" * (PIPELINE_PROGRESS_WIDTH - filled)
+        print(
+            f"  ⏳ [{bar}] {pct:5.1f}% ({self.processed}/{self.total}) "
+            f"{detail} | {path} | elapsed {format_eta(elapsed)}"
+        )
+
+
+_pipeline_progress: Optional[PipelineProgress] = None
+
+
+def set_pipeline_progress(progress: Optional[PipelineProgress]) -> None:
+    global _pipeline_progress
+    _pipeline_progress = progress
+
+
+def get_pipeline_progress() -> Optional[PipelineProgress]:
+    return _pipeline_progress
 
 
 STUB_GATE_MARKERS = (
@@ -1334,14 +1524,18 @@ def load_task_queue(default_queue: List[Dict[str, object]]) -> List[Dict[str, ob
                 for dependency in depends_on:
                     if isinstance(dependency, str) and dependency.strip():
                         normalized_dependencies.append(normalize_path(dependency))
-            valid_tasks.append(
-                {
-                    "phase": phase,
-                    "task": task,
-                    "path": normalize_path(path),
-                    "depends_on": normalized_dependencies,
-                }
-            )
+            valid_task: Dict[str, object] = {
+                "phase": phase,
+                "task": task,
+                "path": normalize_path(path),
+                "depends_on": normalized_dependencies,
+            }
+            if isinstance(item.get("force_llm"), bool):
+                valid_task["force_llm"] = item["force_llm"]
+            coder_model_value = item.get("coder_model")
+            if isinstance(coder_model_value, str) and coder_model_value.strip():
+                valid_task["coder_model"] = coder_model_value.strip()
+            valid_tasks.append(valid_task)
 
     if not valid_tasks:
         print(f"⚠️  {TASKS_CONFIG_PATH} enthält keine gültigen Tasks. Nutze Default-Queue.")
@@ -1447,7 +1641,11 @@ def are_dependencies_ready(
         if not isinstance(dependency, str):
             continue
         dep = normalize_path(dependency)
-        if dep not in completed_paths or not os.path.exists(dep):
+        if dep not in completed_paths:
+            missing.append(dep)
+            continue
+        # [Orchestrator]: dry runs never write files — disk check only for real builds
+        if not DRY_RUN and not os.path.exists(dep):
             missing.append(dep)
     return len(missing) == 0, missing
 
@@ -1547,6 +1745,24 @@ def get_template_for_path(file_path: str) -> Optional[str]:
     return None
 
 
+def try_validated_template(file_path: str) -> Optional[str]:
+    template_code = get_template_for_path(file_path)
+    if not template_code:
+        return None
+    static_issues = run_static_checks(template_code, file_path)
+    if static_issues:
+        return None
+    return template_code
+
+
+def should_use_template_for_file(file_path: str) -> bool:
+    if FAST_PATH_ENABLED:
+        return True
+    if CONSTANTS_TEMPLATE_ALWAYS and infer_file_category(file_path) == "constants":
+        return True
+    return False
+
+
 def load_dependency_sources(task: Dict[str, object]) -> str:
     blocks: List[str] = []
     dependencies = task.get("depends_on", [])
@@ -1627,7 +1843,10 @@ def preflight_check(
     task_fingerprint: Optional[str] = None,
 ) -> Tuple[bool, List[str]]:
     issues: List[str] = []
-    provider = get_llm_provider()
+    try:
+        provider = get_llm_provider()
+    except RuntimeError as provider_error:
+        return False, [str(provider_error)]
     print(f"  🔌 LLM Provider: {provider.name}")
 
     if provider.name == "ollama" and not DRY_RUN and not GATES_ONLY:
@@ -1646,6 +1865,12 @@ def preflight_check(
         ]
         if missing_models:
             issues.append(f"Fehlende lokale Ollama-Modelle: {', '.join(missing_models)}")
+        if "30b" in CODER_MODEL.lower() or "32b" in CODER_MODEL.lower():
+            print(
+                "  ⚠️  Hinweis: Großes Coder-Modell erkannt (30B+). "
+                "Auf RTX 3060 Ti (16GB VRAM) empfohlen: "
+                "STRUCTAI_CODER_MODEL=qwen2.5-coder:7b"
+            )
     elif provider.name == "ollama" and (DRY_RUN or GATES_ONLY):
         print("  🧪 DRY-RUN/GATES-ONLY: Ollama-Modell-Check übersprungen.")
 
@@ -1667,6 +1892,7 @@ def ask_coder(
     build_context: str = "",
     past_critic_feedback: str = "",
     past_static_feedback: str = "",
+    model_override: str = "",
 ) -> str:
     rules = read_file("instructions.md")
     focus = _build_coder_focus_rules(file_path)
@@ -1714,7 +1940,7 @@ WICHTIG:
 
 
     raw_content = call_local_model(
-        model_name=CODER_MODEL,
+        model_name=model_override or CODER_MODEL,
         system_prompt=(
             "Du bist ein hochqualifizierter Senior React Native Entwickler. "
             "Schreibe präzisen, sauberen Code gemäß den Anweisungen."
@@ -1728,7 +1954,14 @@ WICHTIG:
 # AGENT 2: Der Kritiker (Lokal - Ollama Gemma 4)
 # ---------------------------------------------------------------------
 def ask_critic(generated_code: str, file_path: str) -> str:
-    rules = read_file("instructions.md")
+    category = infer_file_category(file_path)
+    if category == "constants":
+        rules = (
+            "Prüfe NUR constants-Regeln: as const, typeof-Typen, kein any/TODO, "
+            "kein React/JSX, keine Funktionen, Named Exports."
+        )
+    else:
+        rules = read_file("instructions.md")
 
     prompt = f"""Du bist der unerbarmherzige Code-Kritiker für StructAI.
 
@@ -1748,21 +1981,35 @@ PRÜF-PROTOKOLL:
 4. Nenne maximal 3 Ablehnungsgründe (die kritischsten zuerst).
 5. Lehne NUR bei objektiven, nachweisbaren Regelverstößen ab. Keine Spekulationen.
 
-ANTWORTE NUR IN DIESEM FORMAT:
-STATUS: [PROVED oder REJECTED]
-BEGRÜNDUNG: [Bei REJECTED: exakte Mängelliste. Bei PROVED: schreibe nur 'Perfekt.']
+ANTWORTE NUR IN DIESEM FORMAT (zwei Zeilen, exakt):
+STATUS: PROVED
+BEGRÜNDUNG: Perfekt.
+
+ODER bei Fehlern:
+STATUS: REJECTED
+BEGRÜNDUNG: 1) ...
 """
 
-    review = call_local_model(
-        model_name=CRITIC_MODEL,
-        system_prompt=(
-            "Du bist ein extrem kritischer Tech-Lead. "
-            "Analysiere den Code tiefgründig, aber lehne nur bei klaren Regelverstößen ab. "
-            "Keine hypothetischen Risiken."
-        ),
-        user_prompt=prompt,
-    )
-    return normalize_review_text(review)
+    for attempt in range(1, MODEL_CALL_RETRIES + 1):
+        review = call_local_model(
+            model_name=CRITIC_MODEL,
+            system_prompt=(
+                "Du bist ein extrem kritischer Tech-Lead. "
+                "Antworte IMMER mit exakt 'STATUS: PROVED' oder 'STATUS: REJECTED' in Zeile 1. "
+                "Keine Einleitung, kein Markdown."
+            ),
+            user_prompt=prompt,
+        )
+        normalized = normalize_review_text(review)
+        if not is_malformed_agent_status(normalized):
+            return normalized
+        preview = normalized.strip().replace("\n", " ")[:200]
+        print(
+            f"  ⚠️  Kritiker lieferte malformed Output (Versuch {attempt}/{MODEL_CALL_RETRIES}): {preview!r}"
+        )
+        if attempt < MODEL_CALL_RETRIES:
+            time.sleep(MODEL_CALL_RETRY_BASE_SECONDS)
+    return normalized
 
 
 # ---------------------------------------------------------------------
@@ -1775,6 +2022,7 @@ def ask_debugger(
     critic_feedback: str,
     build_context: str = "",
     previous_debugger_feedback: str = "",
+    model_override: str = "",
 ) -> str:
     rules = read_file("instructions.md")
 
@@ -1813,7 +2061,7 @@ WICHTIG:
 """
 
     raw_content = call_local_model(
-        model_name=DEBUGGER_MODEL,
+        model_name=model_override or DEBUGGER_MODEL,
         system_prompt=(
             "Du bist ein präziser Senior Debugger für TypeScript/React Native. "
             "Du fixst sauber und minimal-invasiv, ohne neue Fehler zu erzeugen."
@@ -1945,10 +2193,24 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
     task_description = str(task.get("task", ""))
     file_path = normalize_path(str(task.get("path", "")))
     build_context = build_agent_context(task)
+    # [Orchestrator]: force_llm skips stale templates when task requirements changed
+    force_llm = bool(task.get("force_llm"))
+    task_coder_model = str(task.get("coder_model", "")).strip()
+
+    def resolve_coder_model(cycle_number: int) -> str:
+        """Per-task model override + Opus escalation (Claude provider only)."""
+        if LLM_PROVIDER_NAME != "claude":
+            return ""
+        if CODER_ESCALATION_MODEL and cycle_number >= CODER_ESCALATION_CYCLE:
+            return CODER_ESCALATION_MODEL
+        return task_coder_model
 
     print(f"\n{'='*60}")
     print(f"🚀 BUILD: {file_path}")
     print(f"{'='*60}")
+    progress = get_pipeline_progress()
+    if progress is not None:
+        progress.active(file_path, "Architect → Coder → Critic → Auditor")
     if build_context.strip():
         print("  📎 Dependency/Contract-Kontext geladen.")
  
@@ -1959,17 +2221,20 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
         os.getenv("STRUCTAI_MAX_SUBJECTIVE_AUDITOR_REJECTIONS", "2")
     )
 
-    if FAST_PATH_ENABLED:
-        template_code = get_template_for_path(file_path)
+    if not force_llm and should_use_template_for_file(file_path):
+        template_code = try_validated_template(file_path)
         if template_code:
-            static_issues = run_static_checks(template_code, file_path)
-            if not static_issues:
-                print(f"  ⚡ FAST PATH: Template für {file_path} gefunden und validiert.")
-                write_file(file_path, template_code)
-                print(f"\n  ✅ APPROVED (Fast Path Template) & GESPEICHERT: {file_path}")
-                return True, ""
-            print(f"  ⚠️  Template für {file_path} hat Static-Check-Fehler — nutze LLM-Pipeline.")
-            print(f"  {static_issues}")
+            label = (
+                "Constants-Template"
+                if infer_file_category(file_path) == "constants"
+                else "Fast Path Template"
+            )
+            print(f"  ⚡ {label} für {file_path} gefunden und validiert.")
+            write_file(file_path, template_code)
+            print(f"\n  ✅ APPROVED ({label}) & GESPEICHERT: {file_path}")
+            return True, ""
+        if FAST_PATH_ENABLED:
+            print(f"  ⚠️  Template für {file_path} fehlt oder hat Static-Check-Fehler — nutze LLM-Pipeline.")
 
     architect_plan = ask_architect(task_description, file_path, build_context)
     print("  🧭 Architect-Plan erstellt.")
@@ -1981,8 +2246,19 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
     current_code: Optional[str] = None
     subjective_auditor_rejections = 0
 
+    escalation_announced = False
     for cycle in range(1, max_cycles + 1):
         print(f"\n  🔁 [Cycle {cycle}/{max_cycles}]")
+
+        cycle_model = resolve_coder_model(cycle)
+        if (
+            cycle_model
+            and CODER_ESCALATION_MODEL
+            and cycle >= CODER_ESCALATION_CYCLE
+            and not escalation_announced
+        ):
+            print(f"  🚀 Modell-Eskalation aktiv: Coder/Debugger → {cycle_model}")
+            escalation_announced = True
 
         if cycle == 4 and last_critic_feedback:
             print("  🧭 Re-Architect: Frischer Plan mit Fehler-Kontext...")
@@ -2001,6 +2277,7 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
                 build_context=build_context,
                 past_critic_feedback=last_critic_feedback,
                 past_static_feedback=last_static_feedback,
+                model_override=cycle_model,
             )
         else:
             print("  🧰 Debugger startet direkt vom letzten Stand...")
@@ -2011,6 +2288,7 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
                 critic_feedback=last_critic_feedback,
                 build_context=build_context,
                 previous_debugger_feedback=last_debugger_feedback,
+                model_override=cycle_model,
             )
 
         if cooldown_seconds > 0:
@@ -2030,6 +2308,7 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
                 critic_feedback=f"STATIC CHECK FEHLER:\n{last_static_feedback}",
                 build_context=build_context,
                 previous_debugger_feedback=last_debugger_feedback,
+                model_override=cycle_model,
             )
             if cooldown_seconds > 0:
                 time.sleep(cooldown_seconds)
@@ -2048,9 +2327,11 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
 
         print("  🔍 Kritiker prüft aktuellen Stand...")
         critic_result = ask_critic(current_code, file_path)
-        critic_status = extract_status(critic_result)
+        critic_status, critic_display = resolve_critic_verdict(
+            critic_result, static_checks_passed=True
+        )
         print("\n  --- KRITIKER ERGEBNIS ---")
-        print(f"  {critic_result.strip()}")
+        print(f"  {critic_display.strip()}")
         print("  -------------------------")
 
         if critic_status == "PROVED":
@@ -2097,6 +2378,7 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
                 critic_feedback=merged_feedback,
                 build_context=build_context,
                 previous_debugger_feedback=last_debugger_feedback,
+                model_override=cycle_model,
             )
 
             if cooldown_seconds > 0:
@@ -2118,9 +2400,11 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
 
             print("    🔍 Kritiker re-checkt Debug-Pass...")
             critic_result = ask_critic(current_code, file_path)
-            critic_status = extract_status(critic_result)
+            critic_status, critic_display = resolve_critic_verdict(
+                critic_result, static_checks_passed=True
+            )
             print("    --- RE-CHECK ---")
-            print(f"    {critic_result.strip()}")
+            print(f"    {critic_display.strip()}")
             print("    ---------------")
 
             if critic_status == "PROVED":
@@ -2153,7 +2437,7 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
             last_critic_feedback = critic_result
             last_auditor_feedback = ""
 
-    if try_finalize_with_contract_template(file_path, task_description):
+    if not force_llm and try_finalize_with_contract_template(file_path, task_description):
         return True, ""
 
     failure_feedback = "\n".join(
@@ -2504,6 +2788,8 @@ if __name__ == "__main__":
     )
     build_report: Dict[str, object] = {
         "timestamp": datetime.now(UTC).isoformat(),
+        "provider": LLM_PROVIDER_NAME,
+        "dry_run": DRY_RUN,
         "models": {
             "coder": CODER_MODEL,
             "architect": ARCHITECT_MODEL,
@@ -2536,7 +2822,23 @@ if __name__ == "__main__":
  
     failed_files = []
     current_phase = ""
- 
+    resume_skip = sum(
+        1
+        for task in ordered_task_queue
+        if normalize_path(str(task.get("path", ""))) in completed_paths
+        and os.path.exists(normalize_path(str(task.get("path", ""))))
+    )
+    duration_hint = estimate_pipeline_duration(
+        len(ordered_task_queue),
+        fast_path=FAST_PATH_ENABLED,
+        resume_skip=resume_skip,
+        dry_run=DRY_RUN,
+    )
+    print(f"  ⏱️  Geschätzte Dauer: {duration_hint}\n")
+
+    pipeline_progress = PipelineProgress(len(ordered_task_queue))
+    set_pipeline_progress(pipeline_progress)
+
     for i, task in enumerate(ordered_task_queue):
         task_path = normalize_path(str(task.get("path", "")))
         dependencies_ready, missing_dependencies = are_dependencies_ready(task, completed_paths)
@@ -2557,6 +2859,7 @@ if __name__ == "__main__":
             if STRICT_MODE:
                 print("\n  🛑 STRICT_MODE aktiv: Abbruch bei Dependency-Block.")
                 break
+            pipeline_progress.advance(task_path, "BLOCKED (Dependency)")
             continue
 
         if task_path in completed_paths and os.path.exists(task_path):
@@ -2564,6 +2867,7 @@ if __name__ == "__main__":
             cast_succeeded = build_report["tasks_succeeded"]
             if isinstance(cast_succeeded, list) and task_path not in cast_succeeded:
                 cast_succeeded.append(task_path)
+            pipeline_progress.advance(task_path, "SKIP (Checkpoint)")
             continue
 
         # Phase-Header ausgeben wenn neu
@@ -2581,11 +2885,8 @@ if __name__ == "__main__":
                 cast_succeeded.append(task_path)
             if task_path in failed_paths_from_checkpoint:
                 failed_paths_from_checkpoint.remove(task_path)
-            save_checkpoint_for_tasks(
-                list(completed_paths),
-                list(failed_paths_from_checkpoint),
-                task_fingerprint,
-            )
+            # [Orchestrator]: dry runs must not persist phantom completions to the checkpoint
+            pipeline_progress.advance(task_path, "DRY-RUN OK")
             continue
 
         success, last_feedback = build_file_with_quality_gate(task)
@@ -2608,7 +2909,9 @@ if __name__ == "__main__":
                     list(failed_paths_from_checkpoint),
                     task_fingerprint,
                 )
+                pipeline_progress.advance(task_path, "FAILED")
                 break
+            pipeline_progress.advance(task_path, "FAILED (weiter)")
         else:
             completed_paths.add(task_path)
             cast_succeeded = build_report["tasks_succeeded"]
@@ -2621,9 +2924,12 @@ if __name__ == "__main__":
                 list(failed_paths_from_checkpoint),
                 task_fingerprint,
             )
- 
+            pipeline_progress.advance(task_path, "APPROVED")
+
         # Kurze Pause zwischen Dateien
         time.sleep(2)
+
+    set_pipeline_progress(None)
  
     # Abschlussbericht
     print("\n\n" + "█"*60)
@@ -2640,7 +2946,8 @@ if __name__ == "__main__":
         print("\n  → Diese Dateien manuell prüfen oder Task-Beschreibung verfeinern.")
     else:
         print("\n  🎉 Alle Dateien erfolgreich gebaut!")
-        save_checkpoint_for_tasks(list(completed_paths), [], task_fingerprint)
+        if not DRY_RUN:
+            save_checkpoint_for_tasks(list(completed_paths), [], task_fingerprint)
  
     print("\n  🧪 Starte finale Quality Gates...")
     gate_results = run_quality_gates(os.getcwd())
@@ -2663,13 +2970,19 @@ if __name__ == "__main__":
     )
     build_report["triple_consistency"] = triple
     if not triple.get("consistent"):
-        release_ready = False
-        print(
-            "     - Triple-Consistency: REJECTED "
-            f"(disk={triple.get('disk_count')}, "
-            f"checkpoint={triple.get('checkpoint_count')}, "
-            f"report={triple.get('report_count_succeeded')})"
-        )
+        if DRY_RUN:
+            # [Orchestrator]: dry runs write no files — triple consistency is informational only
+            print(
+                "     - Triple-Consistency: SKIPPED (Dry-Run, keine Dateien geschrieben)"
+            )
+        else:
+            release_ready = False
+            print(
+                "     - Triple-Consistency: REJECTED "
+                f"(disk={triple.get('disk_count')}, "
+                f"checkpoint={triple.get('checkpoint_count')}, "
+                f"report={triple.get('report_count_succeeded')})"
+            )
     else:
         print("     - Triple-Consistency: PROVED")
 
@@ -2693,3 +3006,6 @@ if __name__ == "__main__":
 
     print("\n  Nächster Schritt: 'npx expo start' um die App zu sehen.")
     print("█"*60 + "\n")
+
+    # [Orchestrator]: honest exit code so CI/cloud runs fail visibly when not release-ready
+    sys.exit(0 if release_ready else 1)

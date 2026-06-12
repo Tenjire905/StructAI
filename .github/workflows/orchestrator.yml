@@ -1,0 +1,151 @@
+name: StructAI Orchestrator (Cloud Build)
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry-Run (keine LLM-Calls, nur Validierung)"
+        type: boolean
+        default: false
+      fast_path:
+        description: "Fast-Path (validierte Templates statt LLM fuer unveraenderte Dateien)"
+        type: boolean
+        default: true
+      full_rebuild:
+        description: "Full Rebuild (Checkpoint loeschen, alles neu bauen)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: structai-orchestrator
+  cancel-in-progress: false
+
+jobs:
+  orchestrate:
+    name: Multi-Agent Build (Claude Hybrid)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      # ── LLM-Provider: Claude API (Hybrid-Strategie laut Masterprompt) ──
+      STRUCTAI_LLM_PROVIDER: claude
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      # Opus 4.8 — kritisch-komplexe Architektur-Entscheidungen
+      STRUCTAI_ARCHITECT_MODEL: claude-opus-4-8
+      # Sonnet 4.6 — Kern-Code-Generierung und Debugging
+      STRUCTAI_CODER_MODEL: claude-sonnet-4-6
+      STRUCTAI_DEBUGGER_MODEL: claude-sonnet-4-6
+      # Haiku 4.5 — Review, Audit, statische Checks (regelbasiert)
+      STRUCTAI_CRITIC_MODEL: claude-haiku-4-5-20251001
+      STRUCTAI_AUDITOR_MODEL: claude-haiku-4-5-20251001
+      # Eskalation: nach 3 erfolglosen Debug-Cycles auf Opus hochschalten
+      STRUCTAI_CODER_ESCALATION_MODEL: claude-opus-4-8
+      STRUCTAI_CODER_ESCALATION_CYCLE: "4"
+      # ── Pipeline-Konfiguration ──
+      STRUCTAI_MAX_CYCLES: "7"
+      STRUCTAI_DEBUG_PASSES: "3"
+      STRUCTAI_COOLDOWN_SECONDS: "2"
+      STRUCTAI_STRICT_MODE: "true"
+      STRUCTAI_MODEL_CALL_RETRIES: "3"
+      STRUCTAI_MODEL_RETRY_BASE_SECONDS: "1.5"
+      STRUCTAI_QUALITY_GATE_TIMEOUT_SECONDS: "300"
+      STRUCTAI_TEMPLATE_FALLBACK: "true"
+      STRUCTAI_DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+      STRUCTAI_FAST_PATH: ${{ inputs.fast_path && 'true' || 'false' }}
+      PYTHONIOENCODING: utf-8
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: API-Key pruefen
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::Secret ANTHROPIC_API_KEY fehlt. Repo Settings -> Secrets and variables -> Actions -> New repository secret."
+            exit 1
+          fi
+
+      - name: Node 20 einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Python 3.12 einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: NPM Dependencies installieren
+        run: npm ci
+
+      - name: Checkpoint loeschen (Full Rebuild)
+        if: ${{ inputs.full_rebuild }}
+        run: rm -f orchestrator.checkpoint.json
+
+      - name: Orchestrator starten
+        id: orchestrator
+        run: |
+          set -o pipefail
+          python orchestrator.py 2>&1 | tee orchestrator.log
+
+      - name: Build-Report in Summary schreiben
+        if: always()
+        run: |
+          {
+            echo "## StructAI Orchestrator Report"
+            echo ""
+            if [ -f orchestrator.report.json ]; then
+              echo "- Release-Ready: $(jq -r '.release_ready' orchestrator.report.json)"
+              echo "- Tasks erfolgreich: $(jq -r '.tasks_succeeded | length' orchestrator.report.json) / $(jq -r '.tasks_total' orchestrator.report.json)"
+              echo "- Tasks fehlgeschlagen: $(jq -r '.tasks_failed | length' orchestrator.report.json)"
+              echo ""
+              echo "### Quality Gates"
+              jq -r '.quality_gates[]? | "- \(.gate): \(.status)"' orchestrator.report.json
+              echo ""
+              echo "### Fehlgeschlagene Tasks"
+              jq -r '.tasks_failed[]? | "- \(.)"' orchestrator.report.json
+            else
+              echo "Kein orchestrator.report.json gefunden."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Artefakte hochladen (Report, Checkpoint, Log)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: orchestrator-run-${{ github.run_number }}
+          path: |
+            orchestrator.report.json
+            orchestrator.checkpoint.json
+            orchestrator.log
+          if-no-files-found: warn
+
+      - name: Ergebnisse als Pull Request einreichen
+        if: always() && !cancelled() && !inputs.dry_run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "structai-orchestrator[bot]"
+          git config user.email "structai-orchestrator@users.noreply.github.com"
+          BRANCH="orchestrator/run-${{ github.run_number }}"
+          git checkout -b "$BRANCH"
+          git add -A src backend orchestrator.report.json orchestrator.checkpoint.json
+          if git diff --cached --quiet; then
+            echo "Keine Aenderungen durch diesen Run — kein PR noetig."
+            exit 0
+          fi
+          RELEASE_READY="unbekannt"
+          if [ -f orchestrator.report.json ]; then
+            RELEASE_READY=$(jq -r '.release_ready' orchestrator.report.json)
+          fi
+          git commit -m "Orchestrator Cloud Run #${{ github.run_number }} (release_ready=$RELEASE_READY)"
+          git push -u origin "$BRANCH"
+          gh pr create \
+            --title "Orchestrator Cloud Run #${{ github.run_number }}" \
+            --body "Automatischer StructAI Orchestrator-Run. Release-Ready: **$RELEASE_READY**. Report und Log als Workflow-Artefakt verfuegbar." \
+            --base "${{ github.ref_name }}" \
+            --head "$BRANCH" || echo "PR existiert bereits oder konnte nicht erstellt werden."

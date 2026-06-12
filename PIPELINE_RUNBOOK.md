@@ -1,15 +1,70 @@
 # StructAI Pipeline Runbook
 
-## 1) Lokale Modelle prüfen
+## 0) Claude API Hybrid (empfohlen — Masterprompt-Strategie)
+
+Modell-Zuweisung pro Agent (bindend):
+
+| Agent | Modell | Begründung |
+|-------|--------|------------|
+| Architect | `claude-opus-4-8` | Fehler im Plan pflanzen sich durch alle Agents fort |
+| Coder, Debugger | `claude-sonnet-4-6` | Teuerster Teil der Pipeline, maximale Code-Qualität |
+| Critic, Auditor | `claude-haiku-4-5-20251001` | Regelbasiertes Matching, ~70 % günstiger |
+
+Eskalation: Nach 3 erfolglosen Debug-Cycles schaltet der Orchestrator Coder/Debugger
+automatisch auf `claude-opus-4-8` hoch (`STRUCTAI_CODER_ESCALATION_MODEL`).
+Einzelne Tasks können in `orchestrator.tasks.json` per `"coder_model": "claude-opus-4-8"`
+fest auf Opus gepinnt werden (z. B. Gamification-Store, Paywall).
+
+**Pflicht vor dem ersten Run:** Anthropic Console → Billing → Usage Limits →
+Hard Limit $20, Notification $15.
+
+Lokaler Start:
+
+```powershell
+$env:ANTHROPIC_API_KEY = "sk-ant-..."   # NIE committen!
+.\scripts\start-orchestrator-claude.ps1
+# Optionen: -FullRebuild (Checkpoint löschen), -DryRun (nur Validierung)
+```
+
+## 0b) Cloud-Run via GitHub Actions
+
+Workflow: `.github/workflows/orchestrator.yml` (manuell startbar, läuft komplett in der Cloud).
+
+1. Repo-Secret anlegen: GitHub → Settings → Secrets and variables → Actions →
+   `ANTHROPIC_API_KEY`
+2. Actions-Tab → „StructAI Orchestrator (Cloud Build)" → „Run workflow"
+   (Optionen: Dry-Run, Fast-Path, Full Rebuild)
+3. Fortschritt live im Job-Log verfolgen (auch mobil via GitHub-App)
+4. Ergebnis: Build-Report im Job-Summary, Artefakte (`orchestrator.report.json`,
+   `orchestrator.log`, Checkpoint) und ein automatischer Pull Request
+   `orchestrator/run-<N>` mit allen generierten Dateien
+5. Zusätzlich laufen `Quality Gates` (`.github/workflows/quality-gates.yml`)
+   bei jedem Push/PR: Typecheck, Lint, Test, Expo Doctor
+
+Hinweis: Das Python-Paket `ollama` wird in der Cloud nicht benötigt —
+der Orchestrator importiert es nur noch optional.
+
+## 1) Lokale Modelle prüfen (nur für Ollama-Betrieb)
 
 Stelle sicher, dass diese Ollama-Modelle lokal vorhanden sind:
-- `qwen3-coder:30b`
-- `gemma4`
+- `qwen2.5-coder:7b` (Coder — optimiert für 16 GB VRAM)
+- `gemma4` (Architect, Critic, Debugger, Auditor)
+
+```powershell
+ollama pull qwen2.5-coder:7b
+ollama pull gemma4
+```
+
+Altes Modell entfernen (optional, spart ~18 GB):
+
+```powershell
+ollama rm qwen3-coder:30b
+```
 
 ## 2) Empfohlene Environment-Variablen (PowerShell)
 
 ```powershell
-$env:STRUCTAI_CODER_MODEL="qwen3-coder:30b"
+$env:STRUCTAI_CODER_MODEL="qwen2.5-coder:7b"
 $env:STRUCTAI_ARCHITECT_MODEL="gemma4"
 $env:STRUCTAI_CRITIC_MODEL="gemma4"
 $env:STRUCTAI_DEBUGGER_MODEL="gemma4"

@@ -46,14 +46,16 @@
     "phase": "2 – Gamification Store",
     "task": "Erstelle src/features/Gamification/model/store.ts: Zustand+persist AsyncStorage, maxOrbs=5, addXP Level-Up, useOrb, regenOrbs 30min, incrementStreak, setPremium, Key structai-gamification, validateStoreLogic() exportieren.",
     "path": "src/features/Gamification/model/store.ts",
+    "coder_model": "claude-opus-4-8",
     "depends_on": [
       "src/features/Gamification/model/types.ts"
     ]
   },
   {
     "phase": "3 – App Layout & Navigation",
-    "task": "Erstelle src/app/_layout.tsx: StructAI Root — StatusBar light, regenOrbs+incrementStreak beim Start, Stack headerShown false, theme.colors.background.primary, Font-Loader mit dunklem Fallback. Default Export.",
+    "task": "Aktualisiere src/app/_layout.tsx: StructAI Root — StatusBar light, regenOrbs+incrementStreak beim Start in useEffect (try-catch), Stack headerShown false, contentStyle backgroundColor theme.colors.background.primary. KEIN useFonts({}) mit leerer Map — System-Fonts werden ohne künstlichen Loader genutzt, d.h. expo-font komplett weglassen und Stack direkt rendern. Registriere Stack.Screen name='(tabs)' sowie Stack.Screen name='settings' und name='paywall' jeweils mit options presentation 'modal'. Default Export.",
     "path": "src/app/_layout.tsx",
+    "force_llm": true,
     "depends_on": [
       "src/shared/theme/index.ts",
       "src/features/Gamification/model/store.ts"
@@ -89,22 +91,27 @@
   },
   {
     "phase": "4 – Screen Skeletons",
-    "task": "Erstelle src/app/(tabs)/lab.tsx für StructAI Prompt-Lab: 5 Energie-Orbs, multiline Prompt-Input, GradientButton Optimieren, useOrb/Premium-Logik, optimizePrompt try-catch, Score-Karte, Fehler-Banner. Default Export.",
+    "task": "Aktualisiere src/app/(tabs)/lab.tsx für StructAI Prompt-Lab: 5 Energie-Orbs, multiline Prompt-Input, GradientButton 'Optimieren ✨', useOrb/Premium-Logik, optimizePrompt aus src/features/PromptLab/api/optimizer in try-catch, Score-Karte, Fehler-Banner. PFLICHT: Die FlatList rendert eine ECHTE History-Liste — useState<OptimizationHistoryEntry[]> mit Interface { id: string; prompt: string; score: number; timestamp: number }, jeder erfolgreiche Optimize-Lauf wird vorne angefügt, renderItem via useCallback zeigt PressableCard mit gekürztem Prompt + Score, keyExtractor über id, ListEmptyComponent mit Hinweistext 'Noch keine Optimierungen'. Kein data={[]}. Default Export.",
     "path": "src/app/(tabs)/lab.tsx",
+    "force_llm": true,
     "depends_on": [
       "src/app/(tabs)/_layout.tsx",
       "src/shared/ui/GradientButton.tsx",
+      "src/shared/ui/PressableCard.tsx",
+      "src/features/PromptLab/api/optimizer.ts",
       "src/features/Gamification/model/store.ts",
       "src/shared/theme/index.ts"
     ]
   },
   {
     "phase": "4 – Screen Skeletons",
-    "task": "Erstelle src/app/(tabs)/profil.tsx für StructAI: Slogan, Level/XP-Balken, Stat-Grid (Lernpfade 3 + Streak), Wochen-Streak, Energie-Orbs, Premium GradientButton. FlatList-Sektionen, präzise Store-Selektoren. Default Export.",
+    "task": "Aktualisiere src/app/(tabs)/profil.tsx für StructAI: Slogan, Level/XP-Balken, Stat-Grid (Lernpfade 3 + Streak), Wochen-Streak, Energie-Orbs, Premium GradientButton. FlatList-Sektionen, präzise Store-Selektoren. NAVIGATION-PFLICHT: useRouter aus expo-router — der Premium-Button (wenn nicht isPremium) navigiert via router.push('/paywall') statt setPremium direkt zu setzen; zusätzlich eine 'Einstellungen'-Zeile als PressableCard mit onPress router.push('/settings'). Default Export.",
     "path": "src/app/(tabs)/profil.tsx",
+    "force_llm": true,
     "depends_on": [
       "src/app/(tabs)/_layout.tsx",
       "src/shared/ui/PressableCard.tsx",
+      "src/shared/ui/GradientButton.tsx",
       "src/features/Gamification/model/store.ts",
       "src/shared/theme/index.ts"
     ]
@@ -141,6 +148,47 @@
     "path": "backend/src/health/healthcheck.ts",
     "depends_on": [
       "backend/src/types/contracts.ts"
+    ]
+  },
+  {
+    "phase": "7 – P0 Release Blockers",
+    "task": "Erstelle src/features/Settings/ui/SettingsScreen.tsx (FSD: features/Settings/ui, Kategorie component). Präsentations-Komponente OHNE Store-Import (kein Cross-Feature-Import!): export interface SettingsScreenProps { isPremium: boolean; appVersion: string; apiKeyProviders: string[]; onClose: () => void }. Named Export, React.memo. UI: Titel 'Einstellungen' (display, bold), Sektion 'Premium' als PressableCard mit Status-Text ('Premium Aktiv ✨' wenn isPremium, sonst 'Free Plan — 5 Orbs Limit'), Sektion 'API-Keys (BYOK)' als PressableCard die apiKeyProviders als Text-Liste zeigt (oder 'Keine Keys hinterlegt'), Sektion 'App-Info' als PressableCard mit 'StructAI', Slogan 'Master Prompting. Build Real Intelligence.' und Version aus appVersion. Schließen-Button oben rechts (Pressable mit Text '✕', onClose, scale 0.97). FlatList für die Sektionen mit keyExtractor und useCallback renderItem. Nur theme.colors.*/theme.typography.*, kein Hex/rgba, kein any, kein TODO.",
+    "path": "src/features/Settings/ui/SettingsScreen.tsx",
+    "depends_on": [
+      "src/shared/theme/index.ts",
+      "src/shared/ui/PressableCard.tsx"
+    ]
+  },
+  {
+    "phase": "7 – P0 Release Blockers",
+    "task": "Erstelle src/app/settings.tsx als Expo-Router-Modal-Screen (Kategorie screen, Default Export Pflicht). Verdrahtet die Settings-Feature-UI: importiere SettingsScreen aus src/features/Settings/ui/SettingsScreen, useGamificationStore aus src/features/Gamification/model/store mit Selektor (state) => state.isPremium, listApiKeyProviders aus src/features/APIKeyManager/model/secureKeyStore. Lade die Provider-Liste in useEffect mit try-catch in useState<string[]> (Fehler → leeres Array + console.error). onClose via useRouter().back() in try-catch. appVersion als Konstante '1.0.0'. SafeAreaView mit theme.colors.background.primary. Kein any, kein Hex/rgba.",
+    "path": "src/app/settings.tsx",
+    "depends_on": [
+      "src/features/Settings/ui/SettingsScreen.tsx",
+      "src/features/Gamification/model/store.ts",
+      "src/features/APIKeyManager/model/secureKeyStore.ts",
+      "src/app/_layout.tsx"
+    ]
+  },
+  {
+    "phase": "7 – P0 Release Blockers",
+    "task": "Erstelle src/features/Paywall/ui/PaywallScreen.tsx (FSD: features/Paywall/ui, Kategorie component). Präsentations-Komponente OHNE Store-Import (kein Cross-Feature-Import!): export type PaywallPlan = 'monthly' | 'yearly' | 'lifetime'. export interface PaywallScreenProps { isPremium: boolean; onPurchase: (plan: PaywallPlan) => void; onClose: () => void }. Named Export, React.memo. UI: Schließen-Button oben (Pressable '✕', onClose), Titel 'StructAI Premium' (display, bold), Subline 'Unbegrenzte Energie. High-End-Modelle.', drei Preis-Karten via FlatList (keyExtractor, useCallback renderItem): Monatlich 4,99€/Monat, Jährlich 39€/Jahr (Badge 'Beliebt'), Lifetime 99€ einmalig — jede Karte als PressableCard mit GradientButton ('Wählen', gradientColors aus theme.colors.accent.everyday und theme.colors.accent.visual, onPress ruft onPurchase mit dem Plan, useCallback). Wenn isPremium: stattdessen Status-Karte 'Premium Aktiv ✨'. Nur theme.colors.*/theme.typography.*, kein Hex/rgba, kein any, kein TODO, kein externer Payment-Provider.",
+    "path": "src/features/Paywall/ui/PaywallScreen.tsx",
+    "coder_model": "claude-opus-4-8",
+    "depends_on": [
+      "src/shared/theme/index.ts",
+      "src/shared/ui/PressableCard.tsx",
+      "src/shared/ui/GradientButton.tsx"
+    ]
+  },
+  {
+    "phase": "7 – P0 Release Blockers",
+    "task": "Erstelle src/app/paywall.tsx als Expo-Router-Modal-Screen (Kategorie screen, Default Export Pflicht). Verdrahtet die Paywall-Feature-UI: importiere PaywallScreen und PaywallPlan aus src/features/Paywall/ui/PaywallScreen, useGamificationStore aus src/features/Gamification/model/store mit Selektoren (state) => state.isPremium und (state) => state.setPremium. onPurchase: useCallback, try-catch, Demo-Kauf via setPremium(true) und danach router.back(). onClose via useRouter().back() in try-catch. SafeAreaView mit theme.colors.background.primary. Kein any, kein Hex/rgba.",
+    "path": "src/app/paywall.tsx",
+    "depends_on": [
+      "src/features/Paywall/ui/PaywallScreen.tsx",
+      "src/features/Gamification/model/store.ts",
+      "src/app/_layout.tsx"
     ]
   }
 ]

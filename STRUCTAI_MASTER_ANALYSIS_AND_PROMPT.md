@@ -48,7 +48,7 @@ Die Mindmap gliedert das StructAI-Ökosystem in **6 konzentrische Schichten + 3 
 - Theme-const vs. Typ-Disziplin: `as const` Werte, `typeof` für Typen (ts2749-Verbot).
 
 ### A.6 Schicht 6 – **Multi-Agent-Build-Pipeline**
-- **Architect (gemma4)** → **Coder (qwen3-coder:30b)** → **Static Checks** → **Critic (gemma4)** → **Auditor (gemma4)** → **Debugger (gemma4)**-Loop.
+- **Architect (gemma4)** → **Coder (qwen2.5-coder:7b)** → **Static Checks** → **Critic (gemma4)** → **Auditor (gemma4)** → **Debugger (gemma4)**-Loop.
 - Quality-Gates: `tsc --noEmit` → Expo Doctor.
 - Verträge: `orchestrator/contracts/*.contract.md` (Theme, Produkt, Screens, Design-Ref, Backend).
 - Templates: `orchestrator/templates/` mit Fast-Path-Spiegelung.
