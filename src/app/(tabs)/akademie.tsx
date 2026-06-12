@@ -1,53 +1,71 @@
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import {
   FlatList,
-  ListRenderItem,
-  StyleSheet,
-  Text,
   View,
+  Text,
+  StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PressableCard } from 'src/shared/ui/PressableCard';
 import { theme } from 'src/shared/theme/index';
 import { useGamificationStore } from 'src/features/Gamification/model/store';
 
-interface LernpfadItem {
+interface LearningPath {
   id: string;
   title: string;
   description: string;
-  accentColor: string;
   progress: number;
+  accentColor: string;
 }
 
-const LERNPFADE: LernpfadItem[] = [
+interface RenderItemArg {
+  item: LearningPath;
+}
+
+const LEARNING_PATHS: readonly LearningPath[] = [
   {
     id: 'everyday',
     title: 'Everyday Mastery',
-    description: 'Alltags-Prompting meistern – klar, strukturiert, wirksam.',
-    accentColor: theme.colors.accent.everyday,
+    description: 'Alltags-Prompting für klare, effektive Ergebnisse.',
     progress: 0,
+    accentColor: theme.colors.accent.everyday,
   },
   {
     id: 'code',
     title: 'Code & Development',
-    description: 'Technische Prompts für Entwickler und Power-User.',
-    accentColor: theme.colors.accent.code,
+    description: 'Dev-Prompting für sauberen, präzisen Code.',
     progress: 0,
+    accentColor: theme.colors.accent.code,
   },
   {
     id: 'visual',
     title: 'Visual Creation',
-    description: 'Bildprompting und visuelle KI-Kreation.',
-    accentColor: theme.colors.accent.visual,
+    description: 'Bild- und KI-Design via durchdachte Prompts.',
     progress: 0,
+    accentColor: theme.colors.accent.visual,
   },
 ];
 
-export default function AkademieScreen() {
-  const xp = useGamificationStore((state) => state.userStats.xp);
+function resolveSafeXp(rawXp: number): number {
+  try {
+    return typeof rawXp === 'number' && Number.isFinite(rawXp) ? rawXp : 0;
+  } catch (error) {
+    console.error('AkademieScreen: Fehler beim Lesen der XP.', error);
+    return 0;
+  }
+}
 
-  const renderItem: ListRenderItem<LernpfadItem> = useCallback(
-    ({ item }) => (
+export default function AkademieScreen() {
+  const xp = useGamificationStore((state) => state.xp);
+
+  const safeXp: number = resolveSafeXp(xp);
+
+  const keyExtractor = useCallback((item: LearningPath): string => item.id, []);
+
+  // renderItem benötigt keine Dependencies: alle dynamischen Werte
+  // (inkl. item.accentColor) stammen ausschließlich aus dem item-Argument.
+  const renderItem = useCallback(
+    ({ item }: RenderItemArg) => (
       <PressableCard accentColor={item.accentColor} style={styles.card}>
         <Text style={styles.cardTitle}>{item.title}</Text>
         <Text style={styles.cardDescription}>{item.description}</Text>
@@ -62,96 +80,82 @@ export default function AkademieScreen() {
             ]}
           />
         </View>
-        <Text style={styles.progressLabel}>{item.progress}% abgeschlossen</Text>
+        <Text style={styles.progressLabel}>
+          {`${item.progress}% abgeschlossen`}
+        </Text>
       </PressableCard>
     ),
     [],
   );
 
-  const keyExtractor = useCallback((item: LernpfadItem) => item.id, []);
-
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={styles.root} edges={['top']}>
       <FlatList
-        data={LERNPFADE}
+        data={LEARNING_PATHS}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
-        contentContainerStyle={styles.listContent}
         ListHeaderComponent={
           <View style={styles.header}>
-            <Text style={styles.brand}>StructAI</Text>
-            <Text style={styles.slogan}>
-              Master Prompting. Build Real Intelligence.
-            </Text>
-            <Text style={styles.title}>Deine Lernpfade</Text>
-            <Text style={styles.subtitle}>{xp} XP gesammelt</Text>
+            <Text style={styles.headerTitle}>Deine Lernpfade</Text>
+            <Text style={styles.headerSubtitle}>{`${safeXp} XP gesammelt`}</Text>
           </View>
         }
+        contentContainerStyle={styles.listContent}
       />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
     backgroundColor: theme.colors.background.primary,
   },
   listContent: {
-    padding: 20,
-    gap: 16,
+    padding: 16,
   },
   header: {
-    marginBottom: 8,
+    marginBottom: 24,
   },
-  brand: {
-    color: theme.colors.text.primary,
-    fontSize: theme.typography.fontSize.xxl,
-    fontWeight: theme.typography.fontWeight.bold,
-  },
-  slogan: {
-    marginTop: 4,
-    marginBottom: 16,
-    color: theme.colors.text.secondary,
-    fontSize: theme.typography.fontSize.sm,
-  },
-  title: {
-    color: theme.colors.text.primary,
+  headerTitle: {
     fontSize: theme.typography.fontSize.display,
     fontWeight: theme.typography.fontWeight.bold,
+    color: theme.colors.text.primary,
   },
-  subtitle: {
-    marginTop: 8,
-    color: theme.colors.text.secondary,
-    fontSize: theme.typography.fontSize.md,
+  headerSubtitle: {
+    fontSize: theme.typography.fontSize.sm,
+    fontWeight: theme.typography.fontWeight.regular,
+    color: theme.colors.text.muted,
+    marginTop: 4,
   },
   card: {
-    marginBottom: 4,
+    gap: 8,
+    marginBottom: 16,
   },
   cardTitle: {
-    color: theme.colors.text.primary,
-    fontSize: theme.typography.fontSize.lg,
+    fontSize: theme.typography.fontSize.xl,
     fontWeight: theme.typography.fontWeight.semibold,
-    marginBottom: 6,
+    color: theme.colors.text.primary,
   },
   cardDescription: {
+    fontSize: theme.typography.fontSize.md,
+    fontWeight: theme.typography.fontWeight.regular,
     color: theme.colors.text.secondary,
-    fontSize: theme.typography.fontSize.sm,
-    marginBottom: 14,
   },
   progressTrack: {
     height: 8,
     borderRadius: 8,
     backgroundColor: theme.colors.background.secondary,
     overflow: 'hidden',
+    marginTop: 4,
   },
   progressFill: {
-    height: '100%',
+    height: 8,
     borderRadius: 8,
   },
   progressLabel: {
-    marginTop: 8,
-    color: theme.colors.text.muted,
     fontSize: theme.typography.fontSize.xs,
+    fontWeight: theme.typography.fontWeight.medium,
+    color: theme.colors.text.muted,
   },
 });

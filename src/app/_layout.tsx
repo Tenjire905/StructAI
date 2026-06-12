@@ -1,56 +1,35 @@
-import { Stack } from 'expo-router';
-import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
-import { ActivityIndicator, StatusBar, StyleSheet, View } from 'react-native';
-import { theme } from 'src/shared/theme/index';
-import { useGamificationStore } from 'src/features/Gamification/model/store';
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useGamificationStore } from '../features/Gamification/model/store';
+import { theme } from '../shared/theme';
 
 export default function RootLayout() {
   const regenOrbs = useGamificationStore((state) => state.regenOrbs);
   const incrementStreak = useGamificationStore((state) => state.incrementStreak);
 
-  const [fontsLoaded, fontError] = useFonts({});
-
   useEffect(() => {
-    regenOrbs();
-    incrementStreak();
-  }, [regenOrbs, incrementStreak]);
-
-  useEffect(() => {
-    if (fontError) {
-      const message =
-        fontError instanceof Error ? fontError.message : 'Unbekannter Fehler';
-      console.error('[RootLayout] Font-Loading fehlgeschlagen:', message);
+    try {
+      regenOrbs();
+      incrementStreak();
+    } catch (error) {
+      console.error('[RootLayout] init failed', error);
     }
-  }, [fontError]);
-
-  if (!fontsLoaded) {
-    return (
-      <View style={styles.loading}>
-        <StatusBar barStyle="light-content" />
-        <ActivityIndicator color={theme.colors.accent.everyday} />
-      </View>
-    );
-  }
+  }, [regenOrbs, incrementStreak]);
 
   return (
     <>
-      <StatusBar barStyle="light-content" />
+      <StatusBar style="light" />
       <Stack
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: theme.colors.background.primary },
         }}
-      />
+      >
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="settings" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
+      </Stack>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  loading: {
-    flex: 1,
-    backgroundColor: theme.colors.background.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
