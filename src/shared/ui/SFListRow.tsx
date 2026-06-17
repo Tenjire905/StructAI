@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRef } from 'react';
+import { useMemo } from 'react';
 import {
   Animated,
   Pressable,
@@ -22,7 +22,7 @@ export function SFListRow({
   icon,
   showChevron = true,
 }: SFListRowProps): React.JSX.Element {
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useMemo(() => new Animated.Value(1), []);
 
   const content = (
     <Animated.View style={[styles.row, { transform: [{ scale }] }]}>

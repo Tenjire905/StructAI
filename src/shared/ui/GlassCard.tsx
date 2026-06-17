@@ -1,5 +1,5 @@
 import { BlurView } from 'expo-blur';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, useMemo } from 'react';
 import {
   Animated,
   Pressable,
@@ -23,7 +23,7 @@ export function GlassCard({
   style,
   accentColor,
 }: GlassCardProps): React.JSX.Element {
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useMemo(() => new Animated.Value(1), []);
   const borderColor = accentColor ?? theme.colors.border.subtle;
 
   const handlePressIn = (): void => {

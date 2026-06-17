@@ -190,7 +190,6 @@ export default function LabScreen(): React.JSX.Element {
           data={history}
           renderItem={renderHistoryItem}
           keyExtractor={keyExtractor}
-          estimatedItemSize={100}
           ListHeaderComponent={ListHeader}
           ListEmptyComponent={ListEmpty}
           contentContainerStyle={styles.content}

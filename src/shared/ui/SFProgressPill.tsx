@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     minWidth: 4,
   },
   fill: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   cap: {
     position: 'absolute',

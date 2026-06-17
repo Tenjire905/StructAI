@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { useRef } from 'react';
+import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs/types';
+import { useMemo } from 'react';
 import {
   Animated,
   Pressable,
@@ -17,6 +17,12 @@ const TAB_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
   akademie: 'book-outline',
   lab: 'flask-outline',
   profil: 'person-outline',
+};
+
+const TAB_ICONS_ACTIVE: Record<string, keyof typeof Ionicons.glyphMap> = {
+  akademie: 'book',
+  lab: 'flask',
+  profil: 'person',
 };
 
 export function FloatingTabBar({
@@ -43,7 +49,7 @@ export function FloatingTabBar({
           const isFocused = state.index === index;
           const iconName = TAB_ICONS[route.name] ?? 'ellipse-outline';
           const activeIcon = isFocused
-            ? (iconName.replace('-outline', '') as keyof typeof Ionicons.glyphMap)
+            ? (TAB_ICONS_ACTIVE[route.name] ?? iconName)
             : iconName;
 
           const onPress = (): void => {
@@ -85,7 +91,7 @@ function TabItem({
   isFocused,
   onPress,
 }: TabItemProps): React.JSX.Element {
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useMemo(() => new Animated.Value(1), []);
 
   return (
     <Pressable

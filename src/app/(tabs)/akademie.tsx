@@ -122,7 +122,6 @@ export default function AkademieScreen(): React.JSX.Element {
           data={LEARNING_PATHS as LearningPath[]}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          estimatedItemSize={160}
           ListHeaderComponent={ListHeader}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
