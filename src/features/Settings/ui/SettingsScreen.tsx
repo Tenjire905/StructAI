@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Animated,
   FlatList,
@@ -27,7 +27,7 @@ const SECTIONS: SettingsSection[] = [
 ];
 
 const CloseButton = ({ onClose }: { onClose: () => void }) => {
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useMemo(() => new Animated.Value(1), []);
 
   const handlePressIn = (): void => {
     Animated.spring(scale, {

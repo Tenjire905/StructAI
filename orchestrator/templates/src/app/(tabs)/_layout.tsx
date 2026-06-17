@@ -1,20 +1,23 @@
 import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Book, FlaskConical, User } from 'lucide-react-native';
 import { theme } from 'src/shared/theme/index';
 
-type TabIconName = keyof typeof Ionicons.glyphMap;
-
 function TabIcon({
-  name,
+  Icon,
   color,
   focused,
 }: {
-  name: TabIconName;
+  Icon: typeof Book;
   color: string;
   focused: boolean;
 }) {
-  const iconName = focused ? name.replace('-outline', '') as TabIconName : name;
-  return <Ionicons name={iconName} size={24} color={color} />;
+  return (
+    <Icon
+      color={color}
+      size={24}
+      strokeWidth={focused ? 2.5 : 2}
+    />
+  );
 }
 
 export default function TabsLayout() {
@@ -36,7 +39,7 @@ export default function TabsLayout() {
         options={{
           title: 'Akademie',
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="book-outline" color={color} focused={focused} />
+            <TabIcon Icon={Book} color={color} focused={focused} />
           ),
         }}
       />
@@ -45,7 +48,7 @@ export default function TabsLayout() {
         options={{
           title: 'Prompt Lab',
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="flask-outline" color={color} focused={focused} />
+            <TabIcon Icon={FlaskConical} color={color} focused={focused} />
           ),
         }}
       />
@@ -54,7 +57,7 @@ export default function TabsLayout() {
         options={{
           title: 'Profil',
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon name="person-outline" color={color} focused={focused} />
+            <TabIcon Icon={User} color={color} focused={focused} />
           ),
         }}
       />

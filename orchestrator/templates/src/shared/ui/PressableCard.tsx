@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useMemo } from 'react';
 import {
   Animated,
   Pressable,
@@ -21,7 +21,7 @@ const PressableCardComponent = ({
   style,
   accentColor,
 }: PressableCardProps) => {
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useMemo(() => new Animated.Value(1), []);
 
   const handlePressIn = () => {
     Animated.spring(scale, {

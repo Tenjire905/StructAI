@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   Animated,
   FlatList,
@@ -82,7 +82,7 @@ type CloseButtonProps = {
 };
 
 const CloseButtonComponent = ({ onClose }: CloseButtonProps) => {
-  const scale = useRef(new Animated.Value(1)).current;
+  const scale = useMemo(() => new Animated.Value(1), []);
 
   const handlePressIn = useCallback(() => {
     Animated.spring(scale, {

@@ -36,13 +36,13 @@ export default function Paywall() {
     transform: [{ scale: withSpring(bannerScale.value, { damping: 15, stiffness: 300 }) }],
   }));
 
-  const handleBannerPressIn = useCallback(() => {
+  const handleBannerPressIn = () => {
     bannerScale.value = 0.97;
-  }, [bannerScale]);
+  };
 
-  const handleBannerPressOut = useCallback(() => {
+  const handleBannerPressOut = () => {
     bannerScale.value = 1;
-  }, [bannerScale]);
+  };
 
   const onClose = useCallback(() => {
     try {

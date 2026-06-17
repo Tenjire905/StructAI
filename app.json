@@ -6,8 +6,10 @@
     "scheme": "structai",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router",
+      "expo-asset"
+    ],
     "experiments": {
       "typedRoutes": true
     }

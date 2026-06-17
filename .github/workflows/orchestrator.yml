@@ -72,7 +72,11 @@ jobs:
           python-version: "3.12"
 
       - name: NPM Dependencies installieren
-        run: npm ci
+        timeout-minutes: 20
+        run: |
+          echo "npm ci startet (Cold Install bei Expo/RN: 5–15 Min normal, danach npm-Cache schneller)"
+          npm ci --no-audit --no-fund --loglevel=info
+          echo "npm ci abgeschlossen — Quality-Gates-Toolchain bereit"
 
       - name: Task-Queue und Budget-Modus setzen
         run: |
