@@ -107,5 +107,41 @@ describe('secureKeyStore', () => {
       const providers = await listApiKeyProviders();
       expect(providers).toEqual([]);
     });
+
+    it('gibt leeres Array bei ungültigem JSON im Index', async () => {
+      storage.set('structai-api-key-providers', '{invalid');
+
+      const providers = await listApiKeyProviders();
+      expect(providers).toEqual([]);
+    });
+
+    it('gibt leeres Array wenn Index kein Array ist', async () => {
+      storage.set('structai-api-key-providers', JSON.stringify('not-an-array'));
+
+      const providers = await listApiKeyProviders();
+      expect(providers).toEqual([]);
+    });
+  });
+
+  describe('Fehlerpfade', () => {
+    it('wirft bei Index-Schreibfehler mit nicht-Error-Ablehnung', async () => {
+      mockSetItem.mockImplementation(async (key: string, value: string) => {
+        if (key === 'structai-api-key-providers') {
+          throw 'storage-full';
+        }
+        storage.set(key, value);
+      });
+
+      await expect(saveApiKey('openai', 'sk-new')).rejects.toThrow(
+        'Provider-Index konnte nicht gespeichert werden: Unbekannter Fehler',
+      );
+    });
+
+    it('nutzt Unbekannter Fehler bei nicht-Error-Lesefehler', async () => {
+      mockGetItem.mockRejectedValueOnce('read-blocked');
+
+      const key = await getApiKey('openai');
+      expect(key).toBeNull();
+    });
   });
 });

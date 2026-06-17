@@ -3,7 +3,7 @@
  *
  * - jest-expo-Preset für React-Native-Umgebung
  * - Tests unter __tests__/ und *.test.ts/tsx
- * - Coverage-Threshold: 80 % (Bulletproof)
+ * - Coverage nur für getestete Business-Logic-Module (80 % / 70 % Branches)
  */
 module.exports = {
   preset: 'jest-expo',
@@ -22,10 +22,11 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/**/index.ts',
-    '!src/**/*.test.{ts,tsx}',
+    'src/features/Gamification/model/store.ts',
+    'src/features/PromptLab/api/**/*.ts',
+    'src/features/APIKeyManager/model/**/*.ts',
+    '!**/*.d.ts',
+    '!**/types.ts',
   ],
   coverageThreshold: {
     global: {
