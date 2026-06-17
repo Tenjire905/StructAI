@@ -1,0 +1,32 @@
+[
+  {
+    "phase": "P0 – Premium UI Library",
+    "task": "Aktualisiere src/shared/ui/* gemäß design-reference.contract.md v2.1: ScreenBackground, SFLargeTitle, GlassCard (BlurView intensity 50, borderRadius 24), SFProgressPill (Gradient-Glow), SFListRow (44px), SFTextInput, SFStreakDot, SFOrbIndicator, SFStatCard, SFErrorBanner, FloatingTabBar (marginHorizontal 16, marginBottom 20, borderRadius 32). Nur theme.colors/typography. Named exports. React.memo wo sinnvoll.",
+    "path": "src/shared/ui/index.ts",
+    "depends_on": ["src/shared/theme/index.ts"]
+  },
+  {
+    "phase": "P0 – Navigation",
+    "task": "Aktualisiere src/app/(tabs)/_layout.tsx: FloatingTabBar aus src/shared/ui, tabBar prop, Ionicons book/flask/person outline, identisch iOS/Android. Default Export.",
+    "path": "src/app/(tabs)/_layout.tsx",
+    "depends_on": ["src/shared/ui/FloatingTabBar.tsx"]
+  },
+  {
+    "phase": "P0 – Profil Dashboard",
+    "task": "Aktualisiere src/app/(tabs)/profil.tsx: ScreenBackground, Level-Karte mit SFProgressPill (warning), SFStatCard Grid, SFStreakDot M–S, SFOrbIndicator, GradientButton → /paywall, SFListRow → /settings. Store-Selektoren. Default Export.",
+    "path": "src/app/(tabs)/profil.tsx",
+    "depends_on": ["src/shared/ui/index.ts"]
+  },
+  {
+    "phase": "P0 – Akademie",
+    "task": "Aktualisiere src/app/(tabs)/akademie.tsx: SFLargeTitle, FlashList mit 3 GlassCards (Icon, Titel, Beschreibung, SFProgressPill, Pfeil), Pfad-Akzentfarben everyday/code/visual. Default Export.",
+    "path": "src/app/(tabs)/akademie.tsx",
+    "depends_on": ["src/shared/ui/index.ts"]
+  },
+  {
+    "phase": "P0 – Prompt Lab",
+    "task": "Aktualisiere src/app/(tabs)/lab.tsx: SFOrbIndicator, SFTextInput in GlassCard, GradientButton + expo-haptics, Score-Karte, SFErrorBanner, FlashList History. optimizePrompt try-catch. Default Export.",
+    "path": "src/app/(tabs)/lab.tsx",
+    "depends_on": ["src/shared/ui/index.ts"]
+  }
+]

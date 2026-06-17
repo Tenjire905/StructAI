@@ -1,43 +1,50 @@
-# StructAI – UI/UX Design-Referenz (visuell, ohne Fremd-Branding)
+# StructAI – UI/UX Design-Referenz v2.1 (Academix-Layout, StructAI-Branding)
 
-> Referenz-Mockups in `assets/` zeigen **nur** Kompositionsmuster (dunkle Premium-App mit Karten, Streaks, Fortschritt).
-> Umsetzung immer mit **StructAI**-Copy und **theme.colors** aus `theme.contract.md`.
+> Mockups in `assets/` = Layout/Hierarchie only. Copy + Farben = StructAI.
+> Markenfarben: Everyday `#007AFF` · Code `#00E5FF` · Visual `#FF007F`.
+> Hintergrund: `#0F172A` + radialer Glow (`gradient.hero`, `glow.ambient`).
 
 ## Globale Ästhetik
 - **Dark First:** `theme.colors.background.primary`
-- **Glassmorphismus:** `background.card` + `border.subtle`, `borderRadius` 16–24
-- **Press:** Scale `0.97` (Animated oder Reanimated)
-- **Keine harten Schatten** – subtile Border/Glow über `accentColor` an Karten
-- **Typografie-Hierarchie:** display → lg/xl Titel → sm/md Body → xs muted
+- **Glassmorphismus:** `GlassCard` + `background.card` + `border.subtle`, `borderRadius` 24–32
+- **Press:** Scale `0.97` (Animated)
+- **Floating Tab Bar:** marginHorizontal 16, marginBottom 20, borderRadius 32, BlurView
+- **Progress:** `SFProgressPill` — Pill mit Gradient-Glow, Höhe 10–14px
+- **Typografie:** `SFLargeTitle` + `theme.typography.fontSize.*`
 
-## Screen-Mapping (StructAI)
+## Komponenten-Pflicht (shared/ui)
+| Pattern | Komponente |
+|---------|------------|
+| Large Title | `SFLargeTitle` |
+| Glass Card | `GlassCard` |
+| Pressable Card | `PressableCard` |
+| CTA | `GradientButton` |
+| Pill Progress | `SFProgressPill` |
+| List Row 44px | `SFListRow` |
+| Text Input | `SFTextInput` |
+| Streak Dot | `SFStreakDot` |
+| Orb Indicator | `SFOrbIndicator` |
+| Stat Card | `SFStatCard` |
+| Error Banner | `SFErrorBanner` |
+| Screen BG | `ScreenBackground` |
+| Tab Bar | `FloatingTabBar` |
 
-### Profil (Dashboard-Muster aus Referenz)
-- Begrüßung + Markenzeile (StructAI / Slogan)
-- **Level-Karte:** „Level {n}“, „{xp} XP“, XP-Balken (`feedback.warning` als Gold-Akzent)
-- **Stat-Grid (2 Spalten):** z. B. „Lernpfade: 3“, „Streak: {n} Tage“
-- **Daily Streaks:** Wochenreihe M–S, gefüllte Kreise = erreicht (`accent.everyday`)
-- **Energie:** Orb-Reihe + „{current}/{max} Orbs“
-- **Premium-Banner:** GradientButton
+## Screen-Mapping
 
-### Akademie (Kurs-Karten-Muster)
-- Header: „Deine Lernpfade“ + XP-Zeile
-- Sektion „Weiterlernen“ optional als erster hervorgehobener Pfad
-- Karten: Titel, Beschreibung, **dünner Progress-Balken** (Track: `background.secondary`, Fill: Pfad-Akzent), „{n}% abgeschlossen“
-- **FlatList** für die Pfad-Liste (kein ScrollView + map)
+### Profil (= Academix Dashboard)
+`ScreenBackground` → Begrüßung + Slogan → Level-Karte (`SFProgressPill` warning) →
+`SFStatCard` Grid → `SFStreakDot` M–S → `SFOrbIndicator` → `GradientButton` Premium → `SFListRow` Settings.
 
-### Prompt Lab (Continue-Learning / Input-Muster)
-- Oben: **5 Orb-Kreise** (gefüllt = `accent.everyday`, leer = `background.card`)
-- Großes **multiline TextInput** (card background, border subtle)
-- **GradientButton** „Optimieren ✨“ (`accent.everyday` → `accent.code`)
-- Score-Karte + **Fehler-Banner** (`feedback.danger` Border/Text)
+### Akademie (= Course Cards)
+`SFLargeTitle` „Deine Lernpfade“. FlashList + `GlassCard`: Icon, Titel, Beschreibung,
+`SFProgressPill` mit Pfad-Akzent, „{n}% abgeschlossen“, Pfeil-Button.
 
-### Tab Bar (Referenz: dunkle Leiste)
-- Hintergrund `background.primary`, Border top `border.subtle`
-- Aktiv `accent.everyday`, inaktiv `text.muted`
-- Ionicons: `book-outline`, `flask-outline`, `person-outline` (outline inaktiv, gefüllt aktiv)
+### Prompt Lab
+`SFOrbIndicator` + Energie-Label. `SFTextInput` in `GlassCard`. `GradientButton` + haptics.
+Score-Karte + `SFErrorBanner`. FlashList History.
 
-## Komponenten-Pflicht
-- Karten: `PressableCard` (borderRadius 20)
-- CTAs: `GradientButton` (borderRadius 16)
-- Listen: `FlatList` + `keyExtractor` + `useCallback` renderItem
+### Tab Bar
+Identisch iOS/Android. Kein Material You. Ionicons book/flask/person outline.
+
+## Listen
+FlashList oder FlatList mit `keyExtractor` + `useCallback` renderItem.

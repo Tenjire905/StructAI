@@ -87,7 +87,7 @@ CRITIC_AUTO_PROVE_ON_STATIC = os.getenv("STRUCTAI_CRITIC_AUTO_PROVE", "true").st
 MODEL_CALL_RETRIES = int(os.getenv("STRUCTAI_MODEL_CALL_RETRIES", "3"))
 MODEL_CALL_RETRY_BASE_SECONDS = float(os.getenv("STRUCTAI_MODEL_RETRY_BASE_SECONDS", "1.5"))
 QUALITY_GATE_TIMEOUT_SECONDS = int(os.getenv("STRUCTAI_QUALITY_GATE_TIMEOUT_SECONDS", "300"))
-CLAUDE_MAX_TOKENS = int(os.getenv("STRUCTAI_CLAUDE_MAX_TOKENS", "8192"))
+CLAUDE_MAX_TOKENS = int(os.getenv("STRUCTAI_CLAUDE_MAX_TOKENS", "4096"))
 # [Orchestrator]: optional Opus escalation — used for coder/debugger from this cycle on
 CODER_ESCALATION_MODEL = os.getenv("STRUCTAI_CODER_ESCALATION_MODEL", "").strip()
 CODER_ESCALATION_CYCLE = int(os.getenv("STRUCTAI_CODER_ESCALATION_CYCLE", "4"))
@@ -2269,8 +2269,8 @@ def build_file_with_quality_gate(task: Dict[str, object]) -> Tuple[bool, str]:
     if build_context.strip():
         print("  📎 Dependency/Contract-Kontext geladen.")
  
-    max_cycles = int(os.getenv("STRUCTAI_MAX_CYCLES", "7"))
-    max_debug_passes_per_cycle = int(os.getenv("STRUCTAI_DEBUG_PASSES", "3"))
+    max_cycles = int(os.getenv("STRUCTAI_MAX_CYCLES", "2"))
+    max_debug_passes_per_cycle = int(os.getenv("STRUCTAI_DEBUG_PASSES", "2"))
     cooldown_seconds = int(os.getenv("STRUCTAI_COOLDOWN_SECONDS", "2"))
     max_subjective_auditor_rejections = int(
         os.getenv("STRUCTAI_MAX_SUBJECTIVE_AUDITOR_REJECTIONS", "2")

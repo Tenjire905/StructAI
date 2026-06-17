@@ -6,6 +6,7 @@ export const AppColors = {
   },
   border: {
     subtle: 'rgba(255,255,255,0.08)',
+    glow: 'rgba(0,122,255,0.35)',
   },
   text: {
     primary: '#FFFFFF',
@@ -21,6 +22,19 @@ export const AppColors = {
     success: '#22C55E',
     warning: '#F59E0B',
     danger: '#EF4444',
+  },
+  gradient: {
+    hero: ['#0F172A', '#020617', '#0F172A'] as const,
+    button: ['#007AFF', '#00E5FF'] as const,
+  },
+  glow: {
+    ambient: 'rgba(0,122,255,0.12)',
+    accent: 'rgba(0,122,255,0.25)',
+  },
+  tabBar: {
+    background: 'rgba(15,23,42,0.92)',
+    active: '#007AFF',
+    inactive: 'rgba(255,255,255,0.45)',
   },
 } as const;
 
