@@ -1,6 +1,5 @@
 import {
   optimizePrompt,
-  type OptimizerError,
   type OptimizeResponse,
 } from '../../../src/features/PromptLab/api/optimizer';
 
@@ -59,42 +58,42 @@ describe('optimizePrompt', () => {
     expect(headers.Authorization).toBe('Bearer sk-test-key');
   });
 
-  it('wirft OptimizerError bei HTTP-Fehler', async () => {
+  it('fällt bei HTTP-Fehler auf lokale Demo-Optimierung zurück', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: false,
       status: 503,
     }) as jest.Mock;
 
-    await expect(
-      optimizePrompt({ rawPrompt: 'Test', provider: 'google' }),
-    ).rejects.toMatchObject({
-      code: 'OPTIMIZER_ERROR',
-      provider: 'google',
-    } satisfies Partial<OptimizerError>);
+    const result = await optimizePrompt({ rawPrompt: 'Test', provider: 'google' });
+
+    expect(result.optimizedPrompt).toContain('## Rolle');
+    expect(result.optimizedPrompt).toContain('Test');
+    expect(result.score).toBeGreaterThan(0);
+    expect(result.rationale).toContain('Lokale Demo-Optimierung');
   });
 
-  it('wirft OptimizerError bei ungültigem Response-Schema', async () => {
+  it('fällt bei ungültigem Response-Schema auf lokale Demo zurück', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ optimizedPrompt: 'nur Text' }),
     }) as jest.Mock;
 
-    await expect(
-      optimizePrompt({ rawPrompt: 'Test', provider: 'grok' }),
-    ).rejects.toMatchObject({
-      code: 'OPTIMIZER_ERROR',
-      message: expect.stringContaining('Ungültige Antwort'),
-    });
+    const result = await optimizePrompt({ rawPrompt: 'Test', provider: 'grok' });
+
+    expect(result.optimizedPrompt).toContain('## Aufgabe');
+    expect(result.optimizedPrompt).toContain('Test');
+    expect(typeof result.score).toBe('number');
+    expect(result.rationale).toContain('Lokale Demo-Optimierung');
   });
 
-  it('wirft OptimizerError bei Netzwerkfehler', async () => {
+  it('fällt bei Netzwerkfehler auf lokale Demo zurück', async () => {
     global.fetch = jest.fn().mockRejectedValue(new Error('Network down')) as jest.Mock;
 
-    await expect(
-      optimizePrompt({ rawPrompt: 'Test', provider: 'openai' }),
-    ).rejects.toMatchObject({
-      code: 'OPTIMIZER_ERROR',
-      message: 'Network down',
-    });
+    const result = await optimizePrompt({ rawPrompt: 'Test', provider: 'openai' });
+
+    expect(result.optimizedPrompt).toContain('StructAI');
+    expect(result.optimizedPrompt).toContain('Test');
+    expect(result.score).toBe(35);
+    expect(result.rationale).toContain('Lokale Demo-Optimierung');
   });
 });
