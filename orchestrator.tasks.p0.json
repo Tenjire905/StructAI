@@ -3,13 +3,13 @@
     "phase": "P0 – Premium UI Library",
     "task": "Aktualisiere src/shared/ui/* gemäß design-reference.contract.md v2.1: ScreenBackground, SFLargeTitle, GlassCard (BlurView intensity 50, borderRadius 24), SFProgressPill (Gradient-Glow), SFListRow (44px), SFTextInput, SFStreakDot, SFOrbIndicator, SFStatCard, SFErrorBanner, FloatingTabBar (marginHorizontal 16, marginBottom 20, borderRadius 32). Nur theme.colors/typography. Named exports. React.memo wo sinnvoll.",
     "path": "src/shared/ui/index.ts",
-    "depends_on": ["src/shared/theme/index.ts"]
+    "depends_on": []
   },
   {
     "phase": "P0 – Navigation",
     "task": "Aktualisiere src/app/(tabs)/_layout.tsx: FloatingTabBar aus src/shared/ui, tabBar prop, Ionicons book/flask/person outline, identisch iOS/Android. Default Export.",
     "path": "src/app/(tabs)/_layout.tsx",
-    "depends_on": ["src/shared/ui/FloatingTabBar.tsx"]
+    "depends_on": ["src/shared/ui/index.ts"]
   },
   {
     "phase": "P0 – Profil Dashboard",
