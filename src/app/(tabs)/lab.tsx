@@ -1,5 +1,5 @@
 import * as Haptics from 'expo-haptics';
-import { FlashList } from '@shopify/flash-list';
+import { FlashList, type ListRenderItem } from '@shopify/flash-list';
 import { useCallback, useState } from 'react';
 import {
   Alert,
@@ -7,7 +7,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import type { ListRenderItemInfo } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useGamificationStore } from 'src/features/Gamification/model/store';
@@ -95,8 +94,8 @@ export default function LabScreen(): React.JSX.Element {
     }
   }, [prompt, isPremium, spendOrb, addXP]);
 
-  const renderHistoryItem = useCallback(
-    ({ item }: ListRenderItemInfo<OptimizationHistoryEntry>) => {
+  const renderHistoryItem = useCallback<ListRenderItem<OptimizationHistoryEntry>>(
+    ({ item }) => {
       const displayPrompt =
         item.prompt.length > 80
           ? `${item.prompt.slice(0, 80)}…`
