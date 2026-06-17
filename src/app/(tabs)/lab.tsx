@@ -1,257 +1,232 @@
-import * as Haptics from 'expo-haptics';
-import { FlashList, type ListRenderItem } from '@shopify/flash-list';
 import { useCallback, useState } from 'react';
 import {
   Alert,
+  FlatList,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { GradientButton } from 'src/shared/ui/GradientButton';
+import { PressableCard } from 'src/shared/ui/PressableCard';
+import { theme } from 'src/shared/theme/index';
 import { useGamificationStore } from 'src/features/Gamification/model/store';
 import {
   optimizePrompt,
-  type OptimizeResponse,
+  type OptimizerError,
 } from 'src/features/PromptLab/api/optimizer';
-import { theme } from 'src/shared/theme';
-import {
-  GlassCard,
-  GradientButton,
-  ScreenBackground,
-  SFErrorBanner,
-  SFOrbIndicator,
-  SFTextInput,
-  SFLargeTitle,
-} from 'src/shared/ui';
 
-interface OptimizationHistoryEntry {
-  id: string;
-  prompt: string;
-  score: number;
-  timestamp: number;
+const ORB_INDICES = [0, 1, 2, 3, 4];
+
+function EnergyOrbs({
+  currentOrbs,
+  maxOrbs,
+}: {
+  currentOrbs: number;
+  maxOrbs: number;
+}) {
+  return (
+    <View style={styles.orbRow}>
+      {ORB_INDICES.slice(0, maxOrbs).map((index) => {
+        const filled = index < currentOrbs;
+        return (
+          <View
+            key={index}
+            style={[
+              styles.orb,
+              filled ? styles.orbFilled : styles.orbEmpty,
+            ]}
+          />
+        );
+      })}
+    </View>
+  );
 }
 
-export default function LabScreen(): React.JSX.Element {
+export default function LabScreen() {
+  const energy = useGamificationStore((state) => state.energy);
+  const isPremium = useGamificationStore((state) => state.isPremium);
+  const consumeOrb = useGamificationStore((state) => state.useOrb);
+
   const [prompt, setPrompt] = useState('');
   const [score, setScore] = useState<number | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [history, setHistory] = useState<OptimizationHistoryEntry[]>([]);
+  const [errorBanner, setErrorBanner] = useState<string | null>(null);
+  const [isOptimizing, setIsOptimizing] = useState(false);
 
-  const currentOrbs = useGamificationStore((s) => s.energy.currentOrbs);
-  const maxOrbs = useGamificationStore((s) => s.energy.maxOrbs);
-  const isPremium = useGamificationStore((s) => s.isPremium);
-  const spendOrb = useGamificationStore((s) => s.useOrb);
-  const addXP = useGamificationStore((s) => s.addXP);
-
-  const handleOptimize = useCallback(async (): Promise<void> => {
-    if (prompt.trim() === '') {
-      setErrorMessage('Bitte gib zuerst einen Prompt ein.');
-      return;
-    }
-
-    if (!isPremium && !spendOrb()) {
-      Alert.alert(
-        'Keine Energie',
-        'Warte auf Regeneration oder upgrade auf Premium ✨',
-      );
-      return;
-    }
-
-    setIsLoading(true);
-    setErrorMessage(null);
+  const handleOptimize = useCallback(async () => {
+    setErrorBanner(null);
 
     try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      const result: OptimizeResponse = await optimizePrompt({
-        rawPrompt: prompt,
+      const hasEnergy = isPremium || consumeOrb();
+      if (!hasEnergy) {
+        Alert.alert('Keine Energie', 'Upgrade auf Premium!');
+        return;
+      }
+
+      if (!prompt.trim()) {
+        setErrorBanner('Bitte gib zuerst einen Prompt ein.');
+        return;
+      }
+
+      setIsOptimizing(true);
+      const result = await optimizePrompt({
+        rawPrompt: prompt.trim(),
         provider: 'openai',
       });
-
       setScore(result.score);
-      addXP(10);
-
-      setHistory((prev) => [
-        {
-          id: Date.now().toString(),
-          prompt,
-          score: result.score,
-          timestamp: Date.now(),
-        },
-        ...prev,
-      ]);
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    } catch (err: unknown) {
-      let message = 'Optimierung fehlgeschlagen';
-      if (err instanceof Error) {
-        message = err.message;
-      }
-      setErrorMessage(message);
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      setPrompt(result.optimizedPrompt);
+    } catch (error: unknown) {
+      const optimizerError = error as OptimizerError;
+      const message =
+        optimizerError.message ??
+        (error instanceof Error ? error.message : 'Unbekannter Fehler');
+      setErrorBanner(message);
+      setScore(null);
     } finally {
-      setIsLoading(false);
+      setIsOptimizing(false);
     }
-  }, [prompt, isPremium, spendOrb, addXP]);
+  }, [isPremium, prompt, consumeOrb]);
 
-  const renderHistoryItem = useCallback<ListRenderItem<OptimizationHistoryEntry>>(
-    ({ item }) => {
-      const displayPrompt =
-        item.prompt.length > 80
-          ? `${item.prompt.slice(0, 80)}…`
-          : item.prompt;
+  const listHeader = (
+    <View style={styles.content}>
+      <Text style={styles.screenTitle}>Prompt-Lab</Text>
+      <Text style={styles.screenSubtitle}>
+        Optimiere Prompts und verbrauche Energie-Orbs.
+      </Text>
+      <Text style={styles.sectionTitle}>Energie</Text>
+      <EnergyOrbs
+        currentOrbs={energy.currentOrbs}
+        maxOrbs={energy.maxOrbs}
+      />
+      <Text style={styles.energyLabel}>
+        {energy.currentOrbs}/{energy.maxOrbs} Energie
+      </Text>
 
-      return (
-        <GlassCard style={styles.historyCard}>
-          <Text style={styles.historyPrompt}>{displayPrompt}</Text>
-          <Text style={styles.historyScore}>Score {item.score}</Text>
-        </GlassCard>
-      );
-    },
-    [],
-  );
+      <TextInput
+        style={styles.input}
+        multiline
+        value={prompt}
+        onChangeText={setPrompt}
+        placeholder="Gib deinen Prompt ein..."
+        placeholderTextColor={theme.colors.text.muted}
+        selectionColor={theme.colors.accent.code}
+      />
 
-  const keyExtractor = useCallback(
-    (item: OptimizationHistoryEntry) => item.id,
-    [],
-  );
+      <GradientButton
+        label={isOptimizing ? 'Optimiere…' : 'Optimieren ✨'}
+        onPress={handleOptimize}
+        disabled={isOptimizing}
+        gradientColors={[
+          theme.colors.accent.everyday,
+          theme.colors.accent.code,
+        ]}
+      />
 
-  const ListHeader = useCallback(
-    () => (
-      <View style={styles.header}>
-        <SFLargeTitle subtitle="Optimiere deine Prompts mit StructAI">
-          Prompt Lab
-        </SFLargeTitle>
+      {errorBanner ? (
+        <View style={styles.errorBanner}>
+          <Text style={styles.errorText}>{errorBanner}</Text>
+        </View>
+      ) : null}
 
-        <GlassCard>
-          <SFOrbIndicator
-            current={isPremium ? maxOrbs : currentOrbs}
-            max={maxOrbs}
-            label={`${isPremium ? maxOrbs : currentOrbs}/${maxOrbs} Energie`}
-          />
-        </GlassCard>
-
-        <GlassCard>
-          <SFTextInput
-            value={prompt}
-            onChangeText={setPrompt}
-            multiline
-            numberOfLines={6}
-            placeholder="Beschreibe, was du erreichen willst…"
-          />
-        </GlassCard>
-
-        <GradientButton
-          label="Optimieren ✨"
-          onPress={() => {
-            void handleOptimize();
-          }}
-          gradientColors={theme.colors.gradient.button}
-          disabled={isLoading}
-        />
-
-        {score !== null ? (
-          <GlassCard accentColor={theme.colors.feedback.success}>
-            <Text style={styles.scoreLabel}>Score</Text>
-            <Text style={styles.scoreValue}>{score}</Text>
-          </GlassCard>
-        ) : null}
-
-        {errorMessage !== null ? (
-          <SFErrorBanner message={errorMessage} />
-        ) : null}
-
-        <Text style={styles.sectionTitle}>Verlauf</Text>
-      </View>
-    ),
-    [
-      currentOrbs,
-      errorMessage,
-      handleOptimize,
-      isLoading,
-      isPremium,
-      maxOrbs,
-      prompt,
-      score,
-    ],
-  );
-
-  const ListEmpty = useCallback(
-    () => (
-      <Text style={styles.emptyText}>Noch keine Optimierungen</Text>
-    ),
-    [],
+      <PressableCard style={styles.scoreCard}>
+        <Text style={styles.scoreTitle}>
+          Prompt Score: {score !== null ? score : '–'}
+        </Text>
+      </PressableCard>
+    </View>
   );
 
   return (
-    <ScreenBackground>
-      <SafeAreaView style={styles.safe}>
-        <FlashList
-          data={history}
-          renderItem={renderHistoryItem}
-          keyExtractor={keyExtractor}
-          ListHeaderComponent={ListHeader}
-          ListEmptyComponent={ListEmpty}
-          contentContainerStyle={styles.content}
-          showsVerticalScrollIndicator={false}
-        />
-      </SafeAreaView>
-    </ScreenBackground>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <FlatList
+        data={[]}
+        renderItem={() => null}
+        ListHeaderComponent={listHeader}
+        keyExtractor={() => 'lab-header'}
+        contentContainerStyle={styles.listContent}
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
+  container: {
     flex: 1,
+    backgroundColor: theme.colors.background.primary,
+  },
+  listContent: {
+    paddingBottom: 24,
   },
   content: {
-    paddingBottom: 120,
+    padding: 20,
+    gap: 16,
   },
-  header: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    gap: 14,
-  },
-  scoreLabel: {
-    fontSize: theme.typography.fontSize.md,
-    fontWeight: theme.typography.fontWeight.medium,
-    color: theme.colors.text.secondary,
-    textAlign: 'center',
-  },
-  scoreValue: {
+  screenTitle: {
+    color: theme.colors.text.primary,
     fontSize: theme.typography.fontSize.display,
     fontWeight: theme.typography.fontWeight.bold,
-    color: theme.colors.feedback.success,
-    textAlign: 'center',
-    marginTop: 4,
+  },
+  screenSubtitle: {
+    color: theme.colors.text.secondary,
+    fontSize: theme.typography.fontSize.sm,
+    marginBottom: 4,
   },
   sectionTitle: {
+    color: theme.colors.text.primary,
     fontSize: theme.typography.fontSize.lg,
     fontWeight: theme.typography.fontWeight.semibold,
-    color: theme.colors.text.primary,
-    marginTop: 4,
   },
-  historyCard: {
-    marginHorizontal: 16,
-    marginTop: 10,
+  orbRow: {
+    flexDirection: 'row',
+    gap: 10,
   },
-  historyPrompt: {
-    fontSize: theme.typography.fontSize.sm,
-    fontWeight: theme.typography.fontWeight.regular,
+  orb: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: theme.colors.border.subtle,
+  },
+  orbFilled: {
+    backgroundColor: theme.colors.accent.everyday,
+    borderColor: theme.colors.accent.everyday,
+  },
+  orbEmpty: {
+    backgroundColor: theme.colors.background.card,
+  },
+  energyLabel: {
     color: theme.colors.text.secondary,
-    marginBottom: 8,
-  },
-  historyScore: {
-    fontSize: theme.typography.fontSize.md,
-    fontWeight: theme.typography.fontWeight.semibold,
-    color: theme.colors.accent.everyday,
-  },
-  emptyText: {
     fontSize: theme.typography.fontSize.sm,
-    fontWeight: theme.typography.fontWeight.regular,
-    color: theme.colors.text.muted,
-    textAlign: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 8,
+  },
+  input: {
+    minHeight: 140,
+    backgroundColor: theme.colors.background.card,
+    borderWidth: 1,
+    borderColor: theme.colors.border.subtle,
+    borderRadius: 16,
+    padding: 16,
+    color: theme.colors.text.primary,
+    fontSize: theme.typography.fontSize.md,
+    textAlignVertical: 'top',
+  },
+  errorBanner: {
+    backgroundColor: theme.colors.background.card,
+    borderWidth: 1,
+    borderColor: theme.colors.feedback.danger,
+    borderRadius: 16,
+    padding: 12,
+  },
+  errorText: {
+    color: theme.colors.feedback.danger,
+    fontSize: theme.typography.fontSize.sm,
+  },
+  scoreCard: {
+    borderRadius: 16,
+  },
+  scoreTitle: {
+    color: theme.colors.text.primary,
+    fontSize: theme.typography.fontSize.lg,
+    fontWeight: theme.typography.fontWeight.medium,
   },
 });

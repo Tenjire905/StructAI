@@ -1,6 +1,5 @@
 import { Tabs } from 'expo-router';
 import { Book, FlaskConical, User } from 'lucide-react-native';
-import type { ColorValue } from 'react-native';
 import { theme } from 'src/shared/theme/index';
 
 function TabIcon({
@@ -9,7 +8,7 @@ function TabIcon({
   focused,
 }: {
   Icon: typeof Book;
-  color: ColorValue;
+  color: string;
   focused: boolean;
 }) {
   return (

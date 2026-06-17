@@ -1,187 +1,157 @@
-import { Ionicons } from '@expo/vector-icons';
-import { FlashList } from '@shopify/flash-list';
 import { useCallback } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { useGamificationStore } from 'src/features/Gamification/model/store';
-import { theme } from 'src/shared/theme';
 import {
-  GlassCard,
-  ScreenBackground,
-  SFProgressPill,
-  SFLargeTitle,
-} from 'src/shared/ui';
+  FlatList,
+  ListRenderItem,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { PressableCard } from 'src/shared/ui/PressableCard';
+import { theme } from 'src/shared/theme/index';
+import { useGamificationStore } from 'src/features/Gamification/model/store';
 
-interface LearningPath {
+interface LernpfadItem {
   id: string;
   title: string;
   description: string;
-  progress: number;
   accentColor: string;
-  icon: keyof typeof Ionicons.glyphMap;
+  progress: number;
 }
 
-const LEARNING_PATHS: readonly LearningPath[] = [
+const LERNPFADE: LernpfadItem[] = [
   {
     id: 'everyday',
     title: 'Everyday Mastery',
-    description: 'Alltags-Prompting für klare, effektive Ergebnisse.',
-    progress: 0.62,
+    description: 'Alltags-Prompting meistern – klar, strukturiert, wirksam.',
     accentColor: theme.colors.accent.everyday,
-    icon: 'book-outline',
+    progress: 0,
   },
   {
     id: 'code',
     title: 'Code & Development',
-    description: 'Dev-Prompting für sauberen, präzisen Code.',
-    progress: 0.35,
+    description: 'Technische Prompts für Entwickler und Power-User.',
     accentColor: theme.colors.accent.code,
-    icon: 'code-slash-outline',
+    progress: 0,
   },
   {
     id: 'visual',
     title: 'Visual Creation',
-    description: 'Bild- und KI-Design via durchdachte Prompts.',
-    progress: 0.18,
+    description: 'Bildprompting und visuelle KI-Kreation.',
     accentColor: theme.colors.accent.visual,
-    icon: 'color-palette-outline',
+    progress: 0,
   },
 ];
 
-export default function AkademieScreen(): React.JSX.Element {
+export default function AkademieScreen() {
   const xp = useGamificationStore((state) => state.userStats.xp);
-  const safeXp =
-    typeof xp === 'number' && Number.isFinite(xp) ? xp : 0;
 
-  const keyExtractor = useCallback((item: LearningPath): string => item.id, []);
-
-  const renderItem = useCallback(
-    ({ item }: { item: LearningPath }) => {
-      const percent = Math.round(item.progress * 100);
-      return (
-        <GlassCard accentColor={item.accentColor} style={styles.card}>
-          <View style={styles.cardHeader}>
-            <View
-              style={[
-                styles.iconWrap,
-                {
-                  borderColor: item.accentColor,
-                  shadowColor: item.accentColor,
-                },
-              ]}
-            >
-              <Ionicons name={item.icon} size={20} color={item.accentColor} />
-            </View>
-            <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{item.title}</Text>
-              <Text style={styles.cardDescription}>{item.description}</Text>
-            </View>
-            <Pressable
-              accessibilityRole="button"
-              style={styles.arrowButton}
-              hitSlop={8}
-            >
-              <Ionicons
-                name="chevron-forward"
-                size={20}
-                color={theme.colors.text.muted}
-              />
-            </Pressable>
-          </View>
-          <SFProgressPill
-            progress={item.progress}
-            height={12}
-            accentColor={item.accentColor}
-            label={`${percent}% abgeschlossen`}
-            showPercent
+  const renderItem: ListRenderItem<LernpfadItem> = useCallback(
+    ({ item }) => (
+      <PressableCard accentColor={item.accentColor} style={styles.card}>
+        <Text style={styles.cardTitle}>{item.title}</Text>
+        <Text style={styles.cardDescription}>{item.description}</Text>
+        <View style={styles.progressTrack}>
+          <View
+            style={[
+              styles.progressFill,
+              {
+                width: `${item.progress}%`,
+                backgroundColor: item.accentColor,
+              },
+            ]}
           />
-        </GlassCard>
-      );
-    },
+        </View>
+        <Text style={styles.progressLabel}>{item.progress}% abgeschlossen</Text>
+      </PressableCard>
+    ),
     [],
   );
 
-  const ListHeader = useCallback(
-    () => (
-      <View style={styles.header}>
-        <SFLargeTitle
-          subtitle={`${safeXp} XP gesammelt`}
-        >
-          Deine Lernpfade
-        </SFLargeTitle>
-      </View>
-    ),
-    [safeXp],
-  );
+  const keyExtractor = useCallback((item: LernpfadItem) => item.id, []);
 
   return (
-    <ScreenBackground>
-      <SafeAreaView style={styles.safe} edges={['top']}>
-        <FlashList
-          data={LEARNING_PATHS as LearningPath[]}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          ListHeaderComponent={ListHeader}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-        />
-      </SafeAreaView>
-    </ScreenBackground>
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <FlatList
+        data={LERNPFADE}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        contentContainerStyle={styles.listContent}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <Text style={styles.brand}>StructAI</Text>
+            <Text style={styles.slogan}>
+              Master Prompting. Build Real Intelligence.
+            </Text>
+            <Text style={styles.title}>Deine Lernpfade</Text>
+            <Text style={styles.subtitle}>{xp} XP gesammelt</Text>
+          </View>
+        }
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
+  container: {
     flex: 1,
+    backgroundColor: theme.colors.background.primary,
   },
   listContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 120,
+    padding: 20,
+    gap: 16,
   },
   header: {
-    marginBottom: 20,
-    paddingTop: 8,
+    marginBottom: 8,
+  },
+  brand: {
+    color: theme.colors.text.primary,
+    fontSize: theme.typography.fontSize.xxl,
+    fontWeight: theme.typography.fontWeight.bold,
+  },
+  slogan: {
+    marginTop: 4,
+    marginBottom: 16,
+    color: theme.colors.text.secondary,
+    fontSize: theme.typography.fontSize.sm,
+  },
+  title: {
+    color: theme.colors.text.primary,
+    fontSize: theme.typography.fontSize.display,
+    fontWeight: theme.typography.fontWeight.bold,
+  },
+  subtitle: {
+    marginTop: 8,
+    color: theme.colors.text.secondary,
+    fontSize: theme.typography.fontSize.md,
   },
   card: {
-    marginBottom: 14,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-    marginBottom: 14,
-  },
-  iconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.colors.background.card,
-    borderWidth: 1,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-  },
-  cardText: {
-    flex: 1,
-    gap: 4,
+    marginBottom: 4,
   },
   cardTitle: {
-    fontSize: theme.typography.fontSize.xl,
-    fontWeight: theme.typography.fontWeight.semibold,
     color: theme.colors.text.primary,
+    fontSize: theme.typography.fontSize.lg,
+    fontWeight: theme.typography.fontWeight.semibold,
+    marginBottom: 6,
   },
   cardDescription: {
-    fontSize: theme.typography.fontSize.md,
-    fontWeight: theme.typography.fontWeight.regular,
     color: theme.colors.text.secondary,
+    fontSize: theme.typography.fontSize.sm,
+    marginBottom: 14,
   },
-  arrowButton: {
-    width: 32,
-    height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
+  progressTrack: {
+    height: 8,
+    borderRadius: 8,
+    backgroundColor: theme.colors.background.secondary,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 8,
+  },
+  progressLabel: {
+    marginTop: 8,
+    color: theme.colors.text.muted,
+    fontSize: theme.typography.fontSize.xs,
   },
 });

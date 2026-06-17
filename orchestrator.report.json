@@ -1,50 +1,21 @@
 {
-  "timestamp": "2026-06-17T15:45:00.000000+00:00",
+  "timestamp": "2026-06-17T16:03:15.952254+00:00",
   "provider": "claude",
   "dry_run": false,
   "models": {
     "coder": "claude-sonnet-4-6",
-    "architect": "claude-opus-4-8",
+    "architect": "claude-haiku-4-5-20251001",
     "critic": "claude-haiku-4-5-20251001",
     "debugger": "claude-sonnet-4-6",
     "auditor": "claude-haiku-4-5-20251001"
   },
-  "tasks_total": 34,
+  "tasks_total": 5,
   "tasks_succeeded": [
-    "backend/src/health/healthcheck.ts",
-    "backend/src/types/contracts.ts",
+    "src/shared/ui/index.ts",
     "src/app/(tabs)/_layout.tsx",
     "src/app/(tabs)/akademie.tsx",
-    "src/app/(tabs)/lab.tsx",
     "src/app/(tabs)/profil.tsx",
-    "src/app/_layout.tsx",
-    "src/app/index.tsx",
-    "src/app/paywall.tsx",
-    "src/app/settings.tsx",
-    "src/features/APIKeyManager/model/secureKeyStore.ts",
-    "src/features/Gamification/model/store.ts",
-    "src/features/Gamification/model/types.ts",
-    "src/features/Paywall/ui/PaywallScreen.tsx",
-    "src/features/PromptLab/api/optimizer.ts",
-    "src/features/Settings/ui/SettingsScreen.tsx",
-    "src/processes/promptLab/runPromptComparison.ts",
-    "src/shared/theme/colors.ts",
-    "src/shared/theme/index.ts",
-    "src/shared/theme/typography.ts",
-    "src/shared/ui/FloatingTabBar.tsx",
-    "src/shared/ui/GlassCard.tsx",
-    "src/shared/ui/GradientButton.tsx",
-    "src/shared/ui/PressableCard.tsx",
-    "src/shared/ui/ScreenBackground.tsx",
-    "src/shared/ui/SFErrorBanner.tsx",
-    "src/shared/ui/SFLargeTitle.tsx",
-    "src/shared/ui/SFListRow.tsx",
-    "src/shared/ui/SFOrbIndicator.tsx",
-    "src/shared/ui/SFProgressPill.tsx",
-    "src/shared/ui/SFStatCard.tsx",
-    "src/shared/ui/SFStreakDot.tsx",
-    "src/shared/ui/SFTextInput.tsx",
-    "src/shared/ui/index.ts"
+    "src/app/(tabs)/lab.tsx"
   ],
   "tasks_failed": [],
   "tasks_skipped": [],
@@ -52,31 +23,31 @@
   "quality_gates": [
     {
       "gate": "Typecheck",
-      "status": "PROVED",
-      "output": "tsc --noEmit: 0 errors"
+      "status": "REJECTED",
+      "output": "> typecheck\n> tsc --noEmit\n\nsrc/app/(tabs)/_layout.tsx(42,34): error TS2322: Type 'ColorValue' is not assignable to type 'string'.\n  Type 'OpaqueColorValue' is not assignable to type 'string'.\nsrc/app/(tabs)/_layout.tsx(51,42): error TS2322: Type 'ColorValue' is not assignable to type 'string'.\n  Type 'OpaqueColorValue' is not assignable to type 'string'.\nsrc/app/(tabs)/_layout.tsx(60,34): error TS2322: Type 'ColorValue' is not assignable to type 'string'.\n  Type 'OpaqueColorValue' is not assignable to type 'string'."
     },
     {
       "gate": "Lint",
       "status": "PROVED",
-      "output": "eslint . --ext .ts,.tsx --max-warnings 0: 0 errors"
+      "output": "> lint\n> eslint . --ext .ts,.tsx --max-warnings 0"
     },
     {
       "gate": "Test",
       "status": "PROVED",
-      "output": "Test Suites: 3 passed, 3 total\nTests:       39 passed, 39 total"
+      "output": " wirft bei Löschfehler\n    listApiKeyProviders\n      ✓ listet alle gespeicherten Provider (1 ms)\n      ✓ gibt leeres Array bei leerem Index\n      ✓ gibt leeres Array bei ungültigem JSON im Index (1 ms)\n      ✓ gibt leeres Array wenn Index kein Array ist\n    Fehlerpfade\n      ✓ wirft bei Index-Schreibfehler mit nicht-Error-Ablehnung\n      ✓ nutzt Unbekannter Fehler bei nicht-Error-Lesefehler\n\nPASS __tests__/features/PromptLab/optimizer.test.ts\n  optimizePrompt\n    ✓ gibt optimierten Prompt bei erfolgreicher Antwort zurück (7 ms)\n    ✓ sendet BYOK-Header wenn apiKey gesetzt ist (1 ms)\n    ✓ fällt bei HTTP-Fehler auf lokale Demo-Optimierung zurück (4 ms)\n    ✓ fällt bei ungültigem Response-Schema auf lokale Demo zurück (2 ms)\n    ✓ fällt bei Netzwerkfehler auf lokale Demo zurück (8 ms)\n\nPASS __tests__/features/Gamification/store.test.ts\n  Gamification Store\n    Initialzustand\n      ✓ startet mit 5/5 Orbs (15 ms)\n      ✓ startet mit Level 1 und 0 XP (1 ms)\n      ✓ startet mit isPremium = false (1 ms)\n    addXP\n      ✓ erhöht XP ohne Level-Up (1 ms)\n      ✓ löst Level-Up aus, wenn xp >= 100 * level (6 ms)\n      ✓ akzeptiert 0 XP idempotent\n    useOrb\n      ✓ reduziert Orbs um 1 (1 ms)\n      ✓ gibt false zurück, wenn 0 Orbs vorhanden (1 ms)\n      ✓ bypassed Orb-Limit für Premium\n    regenOrbs\n      ✓ regeneriert 1 Orb nach 30 Min\n      ✓ regeneriert 2 Orbs nach 60 Min, capped auf max\n      ✓ regenoriert bei Premium\n      ✓ macht nichts, wenn weniger als 30 Min vergangen sind (1 ms)\n    incrementStreak\n      ✓ erhöht Streak am ersten Tag (1 ms)\n      ✓ ist idempotent am selben Tag (12 ms)\n    setPremium\n      ✓ setzt isPremium auf true (1 ms)\n      ✓ setzt isPremium zurück auf false\n    validateStoreLogic\n      ✓ läuft ohne Fehler (3 ms)\n      ✓ stellt Store-Invariante sicher (Orb-Reduktion)\n      ✓ stellt Store-Invariante sicher (Level-Up) (1 ms)\n\nTest Suites: 3 passed, 3 total\nTests:       39 passed, 39 total\nSnapshots:   0 total\nTime:        4.538 s\nRan all test suites."
     },
     {
       "gate": "Expo Doctor",
       "status": "PROVED",
-      "output": "Running checks on project...\n21/21 checks passed."
+      "output": "Running 21 checks on your project...\n21/21 checks passed. No issues detected!"
     }
   ],
-  "release_ready": true,
+  "release_ready": false,
   "triple_consistency": {
-    "disk_count": 34,
-    "checkpoint_count": 34,
-    "report_count_succeeded": 34,
-    "tasks_total": 34,
+    "disk_count": 5,
+    "checkpoint_count": 5,
+    "report_count_succeeded": 5,
+    "tasks_total": 5,
     "consistent": true,
     "disk_only": [],
     "checkpoint_only": [],
