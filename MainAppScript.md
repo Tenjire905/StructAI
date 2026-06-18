@@ -46,13 +46,7 @@ Der gesamte Code MUSS sich strikt ohne Ausnahme in die Feature-Sliced-Struktur u
 ---
 
 ## 5. DESIGN-RICHTLINIEN (STRIKTES SWIFTUI LOOK & FEEL)
-Obwohl plattformübergreifend gebaut, MUSS die App die Ästhetik einer hochglanzpolierten, nativen iOS-App besitzen:
-* **Formen:** Konsequenter Einsatz stark abgerundeter Ecken (`borderRadius: 16` bis `24`) für Karten und interaktive Elemente.
-* **Haptik & Physisches Feedback:** Jedes `Pressable` MUSS bei Berührung sofort minimal mitskalieren (`scale: 0.97` via `react-native-reanimated` oder nativem `Animated`), um physisches, elastisches Button-Feedback zu geben.
-* **Tiefenwirkung & Kontrast:** Tiefschwarzer/dunkelblauer Premium-Hintergrund (`#0F172A` oder `#020617`). Nutzung feiner, semitransparenten Rahmen (`borderWidth: 1`, `borderColor: 'rgba(255,255,255,0.08)'`) für edlen Glassmorphismus.
-* **Farben-Einklang:** - Everyday Mastery -> `#007AFF` (Elektrisches Blau)
-  - Code & Development -> `#00E5FF` (Neon-Cyan)
-  - Visual Creation -> `#FF007F` (Vibrant-Pink)
+Obwohl plattformübergreifend gebaut, MUSS die App die Ästhetik einer hochglanzpolierten, nativen iOS-App besitzen: SwiftUI-Design anhand bildlichen Referenzen anpassen als auch die library @expo/ui nutzen um designz im SwiftUI look und feel zu verwirklichen. 
 
 ---
 
