@@ -1,67 +1,30 @@
-import { Tabs } from 'expo-router';
-import { Book, FlaskConical, User } from 'lucide-react-native';
-import type { ColorValue } from 'react-native';
+import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { theme } from 'src/shared/theme/index';
-
-function TabIcon({
-  Icon,
-  color,
-  focused,
-}: {
-  Icon: typeof Book;
-  color: ColorValue;
-  focused: boolean;
-}) {
-  return (
-    <Icon
-      color={color}
-      size={24}
-      strokeWidth={focused ? 2.5 : 2}
-    />
-  );
-}
 
 export default function TabsLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: theme.colors.background.primary,
-          borderTopColor: theme.colors.border.subtle,
-          borderTopWidth: 1,
-        },
-        tabBarActiveTintColor: theme.colors.accent.everyday,
-        tabBarInactiveTintColor: theme.colors.text.muted,
-      }}
-    >
-      <Tabs.Screen
-        name="akademie"
-        options={{
-          title: 'Akademie',
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon Icon={Book} color={color} focused={focused} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="lab"
-        options={{
-          title: 'Prompt Lab',
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon Icon={FlaskConical} color={color} focused={focused} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profil"
-        options={{
-          title: 'Profil',
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon Icon={User} color={color} focused={focused} />
-          ),
-        }}
-      />
-    </Tabs>
+    <NativeTabs tintColor={theme.colors.accent.everyday}>
+      <NativeTabs.Trigger name="akademie">
+        <NativeTabs.Trigger.Label>Akademie</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'book', selected: 'book.fill' }}
+          md="menu_book"
+        />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="lab">
+        <NativeTabs.Trigger.Label>Prompt Lab</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'flask', selected: 'flask.fill' }}
+          md="science"
+        />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="profil">
+        <NativeTabs.Trigger.Label>Profil</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon
+          sf={{ default: 'person', selected: 'person.fill' }}
+          md="person"
+        />
+      </NativeTabs.Trigger>
+    </NativeTabs>
   );
 }

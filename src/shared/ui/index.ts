@@ -1,4 +1,3 @@
-export { FloatingTabBar } from './FloatingTabBar';
 export { GlassCard } from './GlassCard';
 export { GradientButton } from './GradientButton';
 export { PressableCard } from './PressableCard';

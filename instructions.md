@@ -102,10 +102,13 @@ Named Exports werden bevorzugt. Default Exports nur bei Expo-Router-Screens und 
   - *Everyday Mastery* → `#007AFF` (Elektrisches Blau)
   - *Code & Development* → `#00E5FF` (Neon-Cyan)
   - *Visual Creation* → `#FF007F` (Vibrant-Pink)
-- **SwiftUI-Verhaltensparität (bindend):**
-  - Obwohl die App mit React Native gebaut wird, MUSS sie sich in Interaktion und Anmutung wie eine hochwertige SwiftUI-App verhalten.
-  - Das bedeutet: weiche Animationen, sofortiges haptisches Press-Feedback, klare Zustandsübergänge, konsistente Abstände, ruhige Typografie und visuelle Hierarchie.
-  - Ziel ist ein ausgewogenes Ergebnis aus **SwiftUI-Look** und **stabiler React-Native-Funktionalität**, ohne Trade-off zugunsten nur einer Seite.
+- **Native-First (bindend, ersetzt Hand-Bau-Parität):**
+  - Vollständige Regeln: `STRUCTAI_MASTERPROMPT_v3_NATIVE_UI.md` Abschnitt 2.
+  - Steuerelemente (Tabs, Buttons, Menüs, Picker, Progress) über **echte native APIs** (`NativeTabs`, `@expo/ui/swift-ui`), nicht als Fake-Glass-`StyleSheet` nachbauen.
+  - Marken-Flächen (Gradient-Karten, Lernpfad-Glow) bleiben themed RN (`shared/ui` + `theme.colors`).
+  - Plattform-Chrome darf iOS/Android divergieren; Branding (Akzentfarben, Copy) bleibt identisch.
+- **SwiftUI-Verhaltensparität (eingeschränkt):**
+  - Weiche Animationen, haptisches Feedback, klare Zustandsübergänge und Typografie-Hierarchie gelten weiterhin — aber **nicht** durch Nachbau der System-Tab-Bar oder nativer Buttons in reinem RN.
 - **Design-Token-Pflicht:**
   - Farbcodes dürfen in App-/Feature-/UI-Dateien NICHT direkt hardcodiert werden.
   - Alle Farben kommen zentral aus `src/shared/theme/*` (z.B. `AppColors`/`theme.colors`).
@@ -130,9 +133,10 @@ Named Exports werden bevorzugt. Default Exports nur bei Expo-Router-Screens und 
 Der Coder darf **ausschließlich** Libraries aus dieser Liste verwenden.
 Nicht gelistete Pakete → sofortiges `REJECTED`.
 
-- **Core & Navigation:** `expo`, `expo-router`, `react-native`, `react-native-screens`, `react-native-safe-area-context`
+- **Core & Navigation:** `expo`, `expo-router`, `expo-router/unstable-native-tabs`, `react-native`, `react-native-screens`, `react-native-safe-area-context`
 - **Zustand & Speicher:** `zustand` (mit persist-Middleware), `@react-native-async-storage/async-storage`, `expo-secure-store`
-- **Animationen & UI:** `react-native-reanimated`, `lucide-react-native`, `expo-linear-gradient`, `lottie-react-native`
+- **Native UI & Controls:** `@expo/ui`, `@expo/vector-icons`
+- **Animationen & UI:** `react-native-reanimated`, `lucide-react-native`, `expo-linear-gradient`, `lottie-react-native`, `expo-blur`, `expo-haptics`, `@shopify/flash-list`
 - **Netzwerk & KI:** `expo-crypto`, native `fetch`-API (kein Axios)
 
 ---

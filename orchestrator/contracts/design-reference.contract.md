@@ -8,7 +8,7 @@
 - **Dark First:** `theme.colors.background.primary`
 - **Glassmorphismus:** `GlassCard` + `background.card` + `border.subtle`, `borderRadius` 24–32
 - **Press:** Scale `0.97` (Animated)
-- **Floating Tab Bar:** marginHorizontal 16, marginBottom 20, borderRadius 32, BlurView
+- **Tab Bar:** `NativeTabs` (`expo-router/unstable-native-tabs`) — native System-Chrome (Liquid Glass iOS / Material Android)
 - **Progress:** `SFProgressPill` — Pill mit Gradient-Glow, Höhe 10–14px
 - **Typografie:** `SFLargeTitle` + `theme.typography.fontSize.*`
 
@@ -27,7 +27,7 @@
 | Stat Card | `SFStatCard` |
 | Error Banner | `SFErrorBanner` |
 | Screen BG | `ScreenBackground` |
-| Tab Bar | `FloatingTabBar` |
+| Tab Bar | `NativeTabs` (expo-router) |
 
 ## Screen-Mapping
 
@@ -44,7 +44,7 @@
 Score-Karte + `SFErrorBanner`. FlashList History.
 
 ### Tab Bar
-Identisch iOS/Android. Kein Material You. Ionicons book/flask/person outline.
+`NativeTabs` in `src/app/(tabs)/_layout.tsx`. SF Symbols (`book`/`flask`/`person`) auf iOS, Material Symbols (`menu_book`/`science`/`person`) auf Android via `md`-Prop. **Branding** (Akzent `tintColor`, Tab-Labels) plattformübergreifend identisch; **native Chrome** (Blur, Schatten, Tab-Bar-Form) darf pro Plattform divergieren — kein erzwungenes „identisches RN-StyleSheet“ mehr.
 
 ## Listen
 FlashList oder FlatList mit `keyExtractor` + `useCallback` renderItem.

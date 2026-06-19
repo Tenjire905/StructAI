@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-06-17T15:45:00.000000+00:00",
+  "timestamp": "2026-06-17T16:00:00.000000+00:00",
   "provider": "claude",
   "dry_run": false,
   "models": {
@@ -9,7 +9,7 @@
     "debugger": "claude-sonnet-4-6",
     "auditor": "claude-haiku-4-5-20251001"
   },
-  "tasks_total": 34,
+  "tasks_total": 33,
   "tasks_succeeded": [
     "backend/src/health/healthcheck.ts",
     "backend/src/types/contracts.ts",
@@ -31,7 +31,6 @@
     "src/shared/theme/colors.ts",
     "src/shared/theme/index.ts",
     "src/shared/theme/typography.ts",
-    "src/shared/ui/FloatingTabBar.tsx",
     "src/shared/ui/GlassCard.tsx",
     "src/shared/ui/GradientButton.tsx",
     "src/shared/ui/PressableCard.tsx",
@@ -73,10 +72,10 @@
   ],
   "release_ready": true,
   "triple_consistency": {
-    "disk_count": 34,
-    "checkpoint_count": 34,
-    "report_count_succeeded": 34,
-    "tasks_total": 34,
+    "disk_count": 33,
+    "checkpoint_count": 33,
+    "report_count_succeeded": 33,
+    "tasks_total": 33,
     "consistent": true,
     "disk_only": [],
     "checkpoint_only": [],

@@ -1,48 +1,12 @@
 ---
-description: Globale StructAI Regeln — gilt für alle Dateien
+description: StructAI globale Regeln — siehe Masterprompt v3
 alwaysApply: true
 ---
 
 # StructAI — Globale Standards
 
-## Stack
-- TypeScript strict (noImplicitAny: true, strictNullChecks: true)
-- Next.js 14 App Router
-- Tailwind CSS + shadcn/ui
-- Supabase (Auth, DB, Realtime, Storage)
-- Anthropic SDK (claude-sonnet-4-20250514)
+**Diese Datei ist ersetzt.** Bindende Quelle für Stack, UI-Architektur und Feature-Gaps:
 
-## Pflicht-Regeln
-- Immer vollständige Dateien ausgeben, KEINE Snippets oder Auszüge
-- Kein `any` in TypeScript — niemals
-- Alle Kommentare auf Englisch im Format: // [AgentName]: Beschreibung
-- API-Keys NUR über process.env lesen, NIE hardcoden
-- Jede Funktion hat einen expliziten Return-Type
-- Imports immer alphabetisch sortiert
+→ `STRUCTAI_MASTERPROMPT_v3_NATIVE_UI.md`
 
-## UI-Pflicht — SwiftUI-Look für ALLE generierten Apps
-Jede App, Komponente und jedes Interface das der Orchestrator
-erstellt, MUSS SwiftUI-Designprinzipien folgen:
-
-### SwiftUI Design Tokens (in jede generierte App einbetten)
-- Radius: 12px (Cards), 10px (Buttons), 8px (Inputs), 999px (Pills/Tags)
-- Spacing: 4, 8, 12, 16, 20, 24, 32, 40, 48px (SF-Spacing-Scale)
-- Font: -apple-system, BlinkMacSystemFont, "SF Pro Display" (Fallback: Inter)
-- Font-Weights: 400 (body), 500 (subheadline), 600 (headline), 700 (title)
-- Transitions: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) — SF-Kurve
-- Background Primary: rgba(255,255,255,0.8) mit backdrop-blur(20px)
-- Background Secondary: rgba(242,242,247,1) — iOS systemGray6
-- Background Tertiary: rgba(255,255,255,1)
-- Separator: rgba(60,60,67,0.12) — iOS separator Farbe
-- Tint/Accent: #007AFF — iOS systemBlue
-
-### SwiftUI Komponenten-Regeln
-- Navigation: Immer Large Title (34px, weight 700) oben links
-- Buttons: Filled Primary = #007AFF Hintergrund, weiß Text, 10px radius
-- Cards: Weiß, 12px radius, 0.5px border rgba(60,60,67,0.12), kein shadow
-- Lists: Inset Grouped Style (16px margin, 12px radius, weiß bg)
-- Inputs: 44px Mindesthöhe (Touch-Target), 12px radius, iOS-Grau border
-- Tab Bar: Symbole + Labels, aktiv = #007AFF, inaktiv = rgba(60,60,67,0.3)
-- Modals: Sheet-Style von unten, Handle-Indicator (36x4px, grau, oben)
-- Toggle: iOS Switch-Style (51x31px), #34C759 wenn aktiv
-- Alerts/Toasts: Zentriert, max 270px Breite, 14px radius, SF-Typografie
+Kurz: React Native / Expo SDK 56, Expo Router, Zustand, Dark-Mode-First (`theme.colors`), **Native-First** für Steuerelemente (`NativeTabs`, `@expo/ui/swift-ui`). Kein Next.js, kein Tailwind/shadcn, kein Supabase.

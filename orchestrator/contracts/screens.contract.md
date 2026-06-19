@@ -7,9 +7,11 @@
 - Font-Loading mit dunklem Loader (`ActivityIndicator` + theme)
 
 ## `src/app/(tabs)/_layout.tsx`
-- Tabs: `akademie` (Akademie), `lab` (Prompt Lab), `profil` (Profil)
-- Tab-Bar nur via `theme.colors.*` (keine Hex-Literale)
-- Ionicons wie in `design-reference.contract.md`
+- **Native-First:** `NativeTabs` aus `expo-router/unstable-native-tabs` (kein custom `FloatingTabBar`, kein JS-`Tabs.tabBar`)
+- Routen: `akademie` (Akademie), `lab` (Prompt Lab), `profil` (Profil)
+- `tintColor`: `theme.colors.accent.everyday`; Labels wie oben
+- Icons: `NativeTabs.Trigger.Icon` mit `sf` (iOS) + `md` (Android Material Symbols) — siehe `design-reference.contract.md`
+- Default Export
 
 ## `src/app/(tabs)/akademie.tsx`
 - Copy: „Deine Lernpfade“, Untertitel mit XP aus Store-Selektor

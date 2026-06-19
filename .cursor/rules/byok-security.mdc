@@ -1,32 +1,16 @@
 ---
-description: BYOK Layer Sicherheitsregeln — API Keys und SecureStore
-globs: ["packages/app/byok/**", "**/api/**", "**/*.env*"]
-alwaysApply: false
+description: BYOK-Sicherheit — siehe instructions.md + secureKeyStore
+alwaysApply: true
 ---
 
-# BYOK Security Rules
+# StructAI BYOK-Sicherheit
 
-## ABSOLUT VERBOTEN
-- API Keys als String-Literal im Code: "sk-ant-..." VERBOTEN
-- API Keys in git-tracked Dateien: VERBOTEN
-- API Keys im Frontend/Client-Bundle: VERBOTEN
-- console.log mit Key-Variablen: VERBOTEN
+**Diese Datei ist ersetzt** (Altlast Next.js/Supabase).
 
-## Pflicht-Pattern für API Key Zugriff
-// RICHTIG:
-const apiKey = await SecureStore.getItemAsync('anthropic_api_key')
-const key = process.env.ANTHROPIC_API_KEY // nur server-side
+Bindend:
 
-// FALSCH:
-const apiKey = "sk-ant-api03-..."
-const key = "hardcoded"
+→ `instructions.md` (API-Keys, Secure Store)
+→ `src/features/APIKeyManager/model/secureKeyStore.ts`
+→ `STRUCTAI_MASTERPROMPT_v3_NATIVE_UI.md` für UI-Rollout
 
-## SecureStore Implementation
-- React Native: expo-secure-store
-- Web: Supabase Vault oder verschlüsselte DB-Spalte
-- Kein localStorage für Keys — NIEMALS
-
-## Supabase RLS für Key-Tabellen
-- Row Level Security: IMMER aktiviert
-- Policy: user kann nur eigene Keys lesen
-- Service Role Key: NUR serverseitig, nie im Client
+API-Keys nur via `expo-secure-store`, nie hardcoden, nie in Logs.

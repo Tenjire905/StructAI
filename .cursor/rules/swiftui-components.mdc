@@ -1,84 +1,14 @@
 ---
-description: SwiftUI Komponenten-Bibliothek für React/React Native
-globs: ["**/*.tsx", "**/*.jsx", "packages/app/**", "packages/community/**"]
-alwaysApply: false
+description: UI-Komponenten — Native-First laut Masterprompt v3
+alwaysApply: true
 ---
 
-# SwiftUI Component Patterns — React & React Native
+# StructAI UI-Komponenten
 
-## React Native — NativeWind SwiftUI-Klassen
-Wenn React Native + NativeWind: diese Klassen bevorzugen:
+**Diese Datei ist ersetzt.** Kein Hand-Bau von Fake-SwiftUI-Tabbars mehr.
 
-### Card (iOS Grouped List Card)
-className="bg-white rounded-xl mx-4 overflow-hidden
-           border border-black/5"
+→ `STRUCTAI_MASTERPROMPT_v3_NATIVE_UI.md` Abschnitt 2 (Entscheidungs-Matrix)
 
-### Primary Button (iOS Filled Button)
-className="bg-blue-500 rounded-[10px] h-[50px] px-6
-           items-center justify-center active:scale-95"
-Text: className="text-white font-semibold text-[17px]"
-
-### Input (iOS Text Field)
-className="h-[44px] bg-[#F2F2F7] rounded-[10px] px-4
-           text-[17px] font-normal"
-
-### Navigation Large Title
-className="text-[34px] font-bold text-black px-4 pt-2 pb-1"
-
-### List Row
-className="flex-row items-center px-4 h-[44px] bg-white
-           border-b border-black/[0.08]"
-
-### Tab Bar Icon (aktiv)
-className="text-[#007AFF]" size={24}
-
-## React (Web) — SwiftUI-Look mit Tailwind
-Tailwind-Config muss diese Custom-Tokens haben:
-
-### tailwind.config.ts Ergänzung
-extend: {
-  colors: {
-    'sf-blue':   '#007AFF',
-    'sf-green':  '#34C759',
-    'sf-red':    '#FF3B30',
-    'sf-orange': '#FF9500',
-    'sf-gray1':  '#8E8E93',
-    'sf-gray6':  '#F2F2F7',
-    'sf-sep':    'rgba(60,60,67,0.12)',
-  },
-  borderRadius: {
-    'ios-card':   '12px',
-    'ios-btn':    '10px',
-    'ios-input':  '10px',
-    'ios-modal':  '16px',
-  },
-  fontFamily: {
-    'sf': ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"',
-           '"SF Pro Text"', 'Inter', 'sans-serif'],
-  },
-  transitionTimingFunction: {
-    'ios': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-  }
-}
-
-## iOS Sheet Modal (React)
-- Position: fixed bottom-0, volle Breite
-- Handle: 36x4px, grau, border-radius 2px, oben zentriert, 8px margin
-- Hintergrund: weiß, border-radius 16px 16px 0 0
-- Animation: translateY(100%) → translateY(0), iOS-Kurve, 0.3s
-
-## Spacing-Regel
-IMMER SF-Spacing-Scale nutzen: 4, 8, 12, 16, 20, 24, 32, 40, 48px
-Kein freies Spacing wie 15px, 22px, 37px — nicht iOS-nativ
-
-## Schriften-Hierarchie
-- Large Title:  34px / 700 / -0.4px letter-spacing
-- Title 1:      28px / 700
-- Title 2:      22px / 700
-- Title 3:      20px / 600
-- Headline:     17px / 600
-- Body:         17px / 400
-- Callout:      16px / 400
-- Subheadline:  15px / 400
-- Footnote:     13px / 400
-- Caption:      12px / 400
+- Tabs: `expo-router/unstable-native-tabs` (`NativeTabs`)
+- Native Buttons/Menus: `@expo/ui/swift-ui` + `Host`
+- Marken-Flächen: bestehendes `src/shared/ui` + `theme.colors`
