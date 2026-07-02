@@ -43,6 +43,9 @@ secrets/
 # logs
 *.log
 
+# local dev screenshots
+.screenshots/
+
 # CocoaPods (when ios/ is present)
 ios/Pods/
 

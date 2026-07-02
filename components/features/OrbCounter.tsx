@@ -105,7 +105,7 @@ export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
                 stroke={tokens.colors.border.subtle}
                 strokeWidth={strokeWidth}
               />
-              <G origin={`${center}, ${center}`} rotation="-90">
+              <G transform={`rotate(-90 ${center} ${center})`}>
                 <Circle
                   cx={center}
                   cy={center}
