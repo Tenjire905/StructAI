@@ -19,9 +19,8 @@ import {
 } from '@/lib/aiScoring';
 import { getApiKey } from '@/lib/secureKeyStore';
 import { scorePrompt, type PromptScore } from '@/lib/promptScoring';
+import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
-
-const MOCK_SCORE_HISTORY = [58, 64, 71, 69, 76];
 
 const HINT_COPY_KEY = {
   structure: 'promptLab.hintStructure',
@@ -37,11 +36,12 @@ const FALLBACK_COPY_KEY: Record<ScoringError['reason'], string> = {
 };
 
 export default function PromptLabScreen() {
-  const { tokens, t } = useThemeMode();
+  const { tokens, t, locale } = useThemeMode();
   const router = useRouter();
+  const history = useProgressStore((state) => state.promptScoreHistory);
+  const addPromptScore = useProgressStore((state) => state.addPromptScore);
   const [promptInput, setPromptInput] = useState('');
   const [score, setScore] = useState<PromptScore | null>(null);
-  const [history, setHistory] = useState<number[]>(MOCK_SCORE_HISTORY);
   const [storedKey, setStoredKey] = useState<string | null>(null);
   const [isScoring, setIsScoring] = useState(false);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
@@ -92,14 +92,14 @@ export default function PromptLabScreen() {
         const reason =
           error instanceof ScoringError ? error.reason : ('generic' as const);
         setFallbackNotice(FALLBACK_COPY_KEY[reason]);
-        result = scorePrompt(promptInput);
+        result = scorePrompt(promptInput, locale);
       }
     } else {
-      result = scorePrompt(promptInput);
+      result = scorePrompt(promptInput, locale);
     }
 
     setScore(result);
-    setHistory((previous) => [...previous.slice(-9), result.total]);
+    addPromptScore(result.total);
     setIsScoring(false);
   };
 

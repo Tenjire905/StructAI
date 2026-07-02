@@ -2,15 +2,18 @@ import { useRouter } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 
 import { PathCard } from '@/components/features';
-import { MOCK_PATHS } from '@/data/mockPaths';
+import { getMergedPaths, pathTitleKey } from '@/lib/pathProgress';
+import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
 export default function LernpfadeScreen() {
   const { tokens, t } = useThemeMode();
   const router = useRouter();
+  const pathProgress = useProgressStore((state) => state.pathProgress);
+  const mergedPaths = getMergedPaths(pathProgress);
 
-  const activePaths = MOCK_PATHS.filter((path) => path.progress !== undefined);
-  const availablePaths = MOCK_PATHS.filter((path) => path.progress === undefined);
+  const activePaths = mergedPaths.filter((path) => path.progress !== undefined);
+  const availablePaths = mergedPaths.filter((path) => path.progress === undefined);
 
   return (
     <ScrollView
@@ -47,7 +50,7 @@ export default function LernpfadeScreen() {
               key={path.id}
               onPress={() => router.push(`/lernpfad/${path.id}`)}
               progress={path.progress}
-              title={path.title}
+              title={t(pathTitleKey(path.id))}
               totalChapters={path.totalChapters}
             />
           ))
@@ -70,7 +73,7 @@ export default function LernpfadeScreen() {
             badgeTone="primary"
             key={path.id}
             onPress={() => router.push(`/lernpfad/${path.id}`)}
-            title={path.title}
+            title={t(pathTitleKey(path.id))}
             totalChapters={path.totalChapters}
           />
         ))}

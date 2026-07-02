@@ -4,18 +4,23 @@ import { ScrollView, Text, View } from 'react-native';
 
 import { Button, Card } from '@/components/ui';
 import { ProgressBar } from '@/components/ui';
-import { getMockPath, type MockChapter } from '@/data/mockPaths';
+import { getLessonText } from '@/data/lessonContent';
+import { type MockChapter } from '@/data/mockPaths';
+import { getMergedPath, pathTitleKey } from '@/lib/pathProgress';
+import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
 export default function LernpfadDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { tokens, t } = useThemeMode();
+  const pathId = id ?? '';
+  const { tokens, t, locale } = useThemeMode();
   const router = useRouter();
-  const path = getMockPath(id ?? '');
+  const pathProgress = useProgressStore((state) => state.pathProgress);
+  const path = getMergedPath(pathId, pathProgress);
 
   const headerOptions = {
     headerShown: true,
-    title: path?.title ?? '',
+    title: path ? t(pathTitleKey(path.id)) : '',
     headerStyle: { backgroundColor: tokens.colors.background.elevated },
     headerTintColor: tokens.colors.text.primary,
     headerTitleStyle: { fontFamily: tokens.typography.fontFamily.heading },
@@ -133,6 +138,7 @@ export default function LernpfadDetailScreen() {
                   isLast={index === path.chapters.length - 1}
                   key={chapter.id}
                   number={index + 1}
+                  title={getLessonText(`${chapter.id}.title`, locale)}
                 />
               ))}
             </View>
@@ -147,9 +153,10 @@ type ChapterRowProps = {
   chapter: MockChapter;
   number: number;
   isLast: boolean;
+  title: string;
 };
 
-function ChapterRow({ chapter, number, isLast }: ChapterRowProps) {
+function ChapterRow({ chapter, number, isLast, title }: ChapterRowProps) {
   const { tokens } = useThemeMode();
 
   const statusIcon = {
@@ -211,7 +218,7 @@ function ChapterRow({ chapter, number, isLast }: ChapterRowProps) {
               : tokens.typography.fontFamily.body,
           fontSize: tokens.typography.fontSize.bodyLg,
         }}>
-        {chapter.title}
+        {title}
       </Text>
       {statusIcon}
     </View>

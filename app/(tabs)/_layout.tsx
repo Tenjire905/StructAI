@@ -6,9 +6,7 @@ import { isOnboardingCompleted } from '@/lib/appStorage';
 import { useThemeMode } from '@/theme';
 
 export default function TabLayout() {
-  const { tokens } = useThemeMode();
-  // Einmal pro Mount lesen: nach Onboarding-Abschluss wird per router.replace('/')
-  // neu gemountet und der Flag frisch ausgewertet.
+  const { tokens, t } = useThemeMode();
   const [onboarded] = useState(() => isOnboardingCompleted());
 
   if (!onboarded) {
@@ -36,7 +34,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: t('tabs.home'),
           tabBarIcon: ({ color, size }) => (
             <Home color={color} size={size} strokeWidth={tokens.icons.strokeWidth} />
           ),
@@ -45,7 +43,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="lernpfade"
         options={{
-          title: 'Lernpfade',
+          title: t('tabs.paths'),
           tabBarIcon: ({ color, size }) => (
             <BookOpen color={color} size={size} strokeWidth={tokens.icons.strokeWidth} />
           ),
@@ -54,7 +52,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="prompt-lab"
         options={{
-          title: 'Prompt Lab',
+          title: t('tabs.promptLab'),
           tabBarIcon: ({ color, size }) => (
             <Beaker color={color} size={size} strokeWidth={tokens.icons.strokeWidth} />
           ),
@@ -63,7 +61,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profil"
         options={{
-          title: 'Profil',
+          title: t('tabs.profile'),
           tabBarIcon: ({ color, size }) => (
             <User color={color} size={size} strokeWidth={tokens.icons.strokeWidth} />
           ),

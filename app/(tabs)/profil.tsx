@@ -9,12 +9,16 @@ import {
   validateApiKey,
 } from '@/lib/aiScoring';
 import { deleteApiKey, getApiKey, saveApiKey } from '@/lib/secureKeyStore';
-import { useThemeMode, type ThemeMode } from '@/theme';
+import { useProgressStore } from '@/store/progressStore';
+import {
+  LOCALE_LABEL_KEYS,
+  LOCALES,
+  useThemeMode,
+  type ThemeMode,
+} from '@/theme';
 
 const MOCK_PROFILE = {
   name: 'Alex Muster',
-  completedLessons: 24,
-  currentStreak: 4,
 };
 
 type KeyStatus =
@@ -25,7 +29,9 @@ type KeyStatus =
   | { state: 'invalid' };
 
 export default function ProfilScreen() {
-  const { tokens, t, mode, setMode } = useThemeMode();
+  const { tokens, t, mode, setMode, locale, setLocale } = useThemeMode();
+  const completedLessons = useProgressStore((state) => state.completedLessons);
+  const currentStreak = useProgressStore((state) => state.currentStreak);
   const [apiKeyInput, setApiKeyInput] = useState('');
   const [keyStatus, setKeyStatus] = useState<KeyStatus>({ state: 'none' });
 
@@ -148,14 +154,8 @@ export default function ProfilScreen() {
           {t('profile.statsSection')}
         </Text>
         <View style={{ flexDirection: 'row', gap: tokens.spacing.space3 }}>
-          <StatBlock
-            copyKey="statBlock.completedLessons"
-            value={MOCK_PROFILE.completedLessons}
-          />
-          <StatBlock
-            copyKey="statBlock.currentStreak"
-            value={MOCK_PROFILE.currentStreak}
-          />
+          <StatBlock copyKey="statBlock.completedLessons" value={completedLessons} />
+          <StatBlock copyKey="statBlock.currentStreak" value={currentStreak} />
         </View>
       </View>
 
@@ -193,6 +193,41 @@ export default function ProfilScreen() {
                 lineHeight: tokens.typography.fontSize.bodySm * 1.5,
               }}>
               {t('profile.modeDescription')}
+            </Text>
+          </View>
+        </Card>
+      </View>
+
+      <View style={{ gap: tokens.spacing.space3 }}>
+        <Text
+          style={{
+            color: tokens.colors.text.primary,
+            fontFamily: tokens.typography.fontFamily.heading,
+            fontSize: tokens.typography.fontSize.headingMd,
+          }}>
+          {t('profile.languageSection')}
+        </Text>
+
+        <Card variant="solid">
+          <View style={{ gap: tokens.spacing.space3 }}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.space2 }}>
+              {LOCALES.map((targetLocale) => (
+                <LocaleOption
+                  isActive={locale === targetLocale}
+                  key={targetLocale}
+                  label={t(LOCALE_LABEL_KEYS[targetLocale])}
+                  onSelect={() => setLocale(targetLocale)}
+                />
+              ))}
+            </View>
+            <Text
+              style={{
+                color: tokens.colors.text.secondary,
+                fontFamily: tokens.typography.fontFamily.body,
+                fontSize: tokens.typography.fontSize.bodySm,
+                lineHeight: tokens.typography.fontSize.bodySm * 1.5,
+              }}>
+              {t('profile.languageDescription')}
             </Text>
           </View>
         </Card>
@@ -319,6 +354,24 @@ type ModeOptionProps = {
 function ModeOption({ label, isActive, onSelect }: ModeOptionProps) {
   return (
     <View style={{ flex: 1 }}>
+      <Button
+        label={label}
+        onPress={onSelect}
+        variant={isActive ? 'primary' : 'ghost'}
+      />
+    </View>
+  );
+}
+
+type LocaleOptionProps = {
+  label: string;
+  isActive: boolean;
+  onSelect: () => void;
+};
+
+function LocaleOption({ label, isActive, onSelect }: LocaleOptionProps) {
+  return (
+    <View style={{ minWidth: '47%' }}>
       <Button
         label={label}
         onPress={onSelect}
