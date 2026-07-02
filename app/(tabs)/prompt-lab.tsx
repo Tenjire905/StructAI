@@ -1,15 +1,16 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { KeyRound } from 'lucide-react-native';
 import { useCallback, useEffect, useState } from 'react';
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { ScrollView, Text, TextInput, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
 import { ScoreChart } from '@/components/features';
-import { Badge, Button, Card, ProgressBar } from '@/components/ui';
+import { Badge, Button, Card, PressableScale, ProgressBar } from '@/components/ui';
 import {
   ScoringError,
   detectProvider,
@@ -121,7 +122,7 @@ export default function PromptLabScreen() {
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       {storedKey === null ? (
-        <Pressable
+        <PressableScale
           accessibilityRole="button"
           onPress={() => router.push('/profil')}
           style={{
@@ -158,7 +159,7 @@ export default function PromptLabScreen() {
               {t('promptLab.addKeyCta')}
             </Text>
           </View>
-        </Pressable>
+        </PressableScale>
       ) : provider !== null ? (
         <View style={{ alignSelf: 'flex-start' }}>
           <Badge
@@ -259,18 +260,16 @@ type ScoreResultProps = {
 
 function ScoreResult({ score, feedbackKey }: ScoreResultProps) {
   const { tokens, t } = useThemeMode();
-  const scale = useSharedValue(0.9);
+  const scale = useSharedValue(0.97);
+  const opacity = useSharedValue(0);
 
   useEffect(() => {
-    scale.value = withSpring(
-      1,
-      tokens.presentation.allowCelebrationSpring
-        ? tokens.motion.spring.bouncy
-        : tokens.motion.spring.default,
-    );
-  }, [scale, score, tokens.motion.spring, tokens.presentation.allowCelebrationSpring]);
+    opacity.value = withTiming(1, { duration: tokens.motion.duration.fast });
+    scale.value = withSpring(1, tokens.motion.spring.default);
+  }, [opacity, scale, score, tokens.motion.duration.fast, tokens.motion.spring.default]);
 
   const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
     transform: [{ scale: scale.value }],
   }));
 

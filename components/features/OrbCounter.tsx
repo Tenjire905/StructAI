@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 import Animated, {
   runOnJS,
@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { Circle, G } from 'react-native-svg';
 
-import { getShadow, useThemeMode } from '@/theme';
+import { getShadow, useCelebration, useThemeMode } from '@/theme';
 
 import { OrbIcon } from './OrbIcon';
 
@@ -22,8 +22,10 @@ type OrbCounterProps = {
 
 export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
   const { tokens, t } = useThemeMode();
+  const { celebrate } = useCelebration();
   const animatedCount = useSharedValue(count);
   const orbScale = useSharedValue(1);
+  const previousCountRef = useRef(count);
   const [displayCount, setDisplayCount] = useState(count);
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
   const energyRatio = Math.min(1, Math.max(0, count / max));
@@ -33,14 +35,29 @@ export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
       duration: tokens.motion.duration.medium,
     });
 
-    // withSequence statt Callback-Chaining – siehe StreakTracker (Web-Rekursion)
-    if (isPlayful) {
-      orbScale.value = withSequence(
-        withSpring(1.08, tokens.motion.spring.bouncy),
-        withSpring(1, tokens.motion.spring.default),
-      );
+    const previousCount = previousCountRef.current;
+    if (count > previousCount) {
+      const gained = count - previousCount;
+      celebrate('orb_gain', { orbCount: gained });
+
+      if (tokens.presentation.allowCelebrationSpring) {
+        orbScale.value = withSequence(
+          withSpring(1.12, tokens.motion.spring.bouncy),
+          withSpring(1, tokens.motion.spring.default),
+        );
+      }
     }
-  }, [animatedCount, count, isPlayful, orbScale, tokens.motion]);
+
+    previousCountRef.current = count;
+  }, [
+    animatedCount,
+    celebrate,
+    count,
+    orbScale,
+    tokens.motion.duration.medium,
+    tokens.motion.spring,
+    tokens.presentation.allowCelebrationSpring,
+  ]);
 
   useAnimatedReaction(
     () => Math.round(animatedCount.value),

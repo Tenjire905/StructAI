@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -8,9 +8,11 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 
-import { streakWeekdayCopyKeys, useThemeMode } from '@/theme';
+import { streakWeekdayCopyKeys, useCelebration, useThemeMode } from '@/theme';
 
 import { OrbIcon } from './OrbIcon';
+
+const STREAK_MILESTONE_DAYS = 7;
 
 type StreakTrackerProps = {
   completedDays: boolean[];
@@ -18,11 +20,26 @@ type StreakTrackerProps = {
 
 export function StreakTracker({ completedDays }: StreakTrackerProps) {
   const { tokens, t } = useThemeMode();
+  const { celebrate } = useCelebration();
   const days = [...completedDays.slice(0, 7)];
 
   while (days.length < 7) {
     days.push(false);
   }
+
+  const completedCount = days.filter(Boolean).length;
+  const previousCountRef = useRef(completedCount);
+
+  useEffect(() => {
+    if (
+      completedCount === STREAK_MILESTONE_DAYS &&
+      previousCountRef.current < STREAK_MILESTONE_DAYS
+    ) {
+      celebrate('streak_milestone');
+    }
+
+    previousCountRef.current = completedCount;
+  }, [celebrate, completedCount]);
 
   return (
     <View style={{ gap: tokens.spacing.space3 }}>
@@ -39,6 +56,9 @@ export function StreakTracker({ completedDays }: StreakTrackerProps) {
         {days.map((completed, index) => (
           <StreakDay
             completed={completed}
+            isMilestoneDay={
+              completedCount === STREAK_MILESTONE_DAYS && completed
+            }
             key={streakWeekdayCopyKeys[index]}
             label={t(streakWeekdayCopyKeys[index])}
           />
@@ -50,19 +70,17 @@ export function StreakTracker({ completedDays }: StreakTrackerProps) {
 
 type StreakDayProps = {
   completed: boolean;
+  isMilestoneDay: boolean;
   label: string;
 };
 
-function StreakDay({ completed, label }: StreakDayProps) {
+function StreakDay({ completed, isMilestoneDay, label }: StreakDayProps) {
   const { tokens } = useThemeMode();
   const scale = useSharedValue(completed ? 1 : 0.92);
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
 
-  // withSequence statt Spring-Start im Animations-Callback: das Callback-Muster
-  // rekursiert auf dem Web-Renderer endlos, wenn ein Modus-Wechsel die laufende
-  // Animation abbricht (Callback feuert sofort und startet erneut).
   useEffect(() => {
-    if (completed && isPlayful) {
+    if (completed && isMilestoneDay && tokens.presentation.allowCelebrationSpring) {
       scale.value = withSequence(
         withSpring(1.12, tokens.motion.spring.bouncy),
         withSpring(1, tokens.motion.spring.default),
@@ -70,8 +88,14 @@ function StreakDay({ completed, label }: StreakDayProps) {
       return;
     }
 
-    scale.value = withSpring(1, tokens.motion.spring.default);
-  }, [completed, isPlayful, scale, tokens.motion.spring]);
+    scale.value = withSpring(completed ? 1 : 0.92, tokens.motion.spring.default);
+  }, [
+    completed,
+    isMilestoneDay,
+    scale,
+    tokens.motion.spring,
+    tokens.presentation.allowCelebrationSpring,
+  ]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

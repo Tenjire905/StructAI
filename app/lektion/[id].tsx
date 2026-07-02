@@ -1,18 +1,19 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Check, X } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
 
 import { OrbIcon } from '@/components/features';
-import { Button, Card, ProgressBar } from '@/components/ui';
+import { Button, Card, PressableScale, ProgressBar } from '@/components/ui';
 import { getMockLesson, type LessonChoiceStep } from '@/data/mockLessons';
-import { getShadow, useThemeMode } from '@/theme';
+import { getShadow, useCelebration, useThemeMode } from '@/theme';
 
 export default function LektionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -223,7 +224,7 @@ function ChoiceStepView({
               : tokens.colors.border.subtle;
 
         return (
-          <Pressable
+          <PressableScale
             accessibilityRole="button"
             disabled={isChecked}
             key={option}
@@ -263,7 +264,7 @@ function ChoiceStepView({
                 strokeWidth={tokens.icons.strokeWidth}
               />
             ) : null}
-          </Pressable>
+          </PressableScale>
         );
       })}
     </View>
@@ -282,13 +283,8 @@ function FeedbackBanner({ isCorrect, explanation }: FeedbackBannerProps) {
 
   useEffect(() => {
     opacity.value = withTiming(1, { duration: tokens.motion.duration.fast });
-
-    if (tokens.presentation.allowCelebrationSpring && isCorrect) {
-      scale.value = withSpring(1, tokens.motion.spring.bouncy);
-    } else {
-      scale.value = withSpring(1, tokens.motion.spring.default);
-    }
-  }, [isCorrect, opacity, scale, tokens.motion, tokens.presentation]);
+    scale.value = withSpring(1, tokens.motion.spring.default);
+  }, [isCorrect, opacity, scale, tokens.motion]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -340,15 +336,28 @@ type CompletionViewProps = {
 
 function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
   const { tokens, t } = useThemeMode();
+  const { celebrate } = useCelebration();
   const scale = useSharedValue(0.6);
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
 
   useEffect(() => {
-    scale.value = withSpring(
-      1,
-      isPlayful ? tokens.motion.spring.bouncy : tokens.motion.spring.default,
-    );
-  }, [isPlayful, scale, tokens.motion.spring]);
+    celebrate('lesson_complete', { orbCount: orbsReward });
+
+    if (tokens.presentation.allowCelebrationSpring) {
+      scale.value = withSequence(
+        withSpring(1.08, tokens.motion.spring.bouncy),
+        withSpring(1, tokens.motion.spring.default),
+      );
+    } else {
+      scale.value = withSpring(1, tokens.motion.spring.default);
+    }
+  }, [
+    celebrate,
+    orbsReward,
+    scale,
+    tokens.motion.spring,
+    tokens.presentation.allowCelebrationSpring,
+  ]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],

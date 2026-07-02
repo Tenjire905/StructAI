@@ -1,3 +1,4 @@
+export { CelebrationOverlay } from './CelebrationOverlay';
 export { OrbCounter } from './OrbCounter';
 export { OrbIcon } from './OrbIcon';
 export { PathCard } from './PathCard';

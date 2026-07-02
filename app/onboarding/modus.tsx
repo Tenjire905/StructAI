@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { OrbIcon } from '@/components/features';
-import { Button, ProgressBar } from '@/components/ui';
+import { Button, PressableScale, ProgressBar } from '@/components/ui';
 import { setOnboardingCompleted } from '@/lib/appStorage';
 import { ThemeModeScope, useThemeMode, type ThemeMode } from '@/theme';
 
@@ -94,7 +94,7 @@ function ModePreviewCard({ mode, label, isSelected, onSelect }: ModePreviewCardP
   const { tokens: outerTokens } = useThemeMode();
 
   return (
-    <Pressable
+    <PressableScale
       accessibilityRole="button"
       accessibilityState={{ selected: isSelected }}
       onPress={onSelect}
@@ -123,7 +123,7 @@ function ModePreviewCard({ mode, label, isSelected, onSelect }: ModePreviewCardP
         }}>
         {label}
       </Text>
-    </Pressable>
+    </PressableScale>
   );
 }
 
