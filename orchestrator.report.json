@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-06-17T16:00:00.000000+00:00",
+  "provider": "claude",
+  "dry_run": false,
+  "models": {
+    "coder": "claude-sonnet-4-6",
+    "architect": "claude-opus-4-8",
+    "critic": "claude-haiku-4-5-20251001",
+    "debugger": "claude-sonnet-4-6",
+    "auditor": "claude-haiku-4-5-20251001"
+  },
+  "tasks_total": 33,
+  "tasks_succeeded": [
+    "backend/src/health/healthcheck.ts",
+    "backend/src/types/contracts.ts",
+    "src/app/(tabs)/_layout.tsx",
+    "src/app/(tabs)/akademie.tsx",
+    "src/app/(tabs)/lab.tsx",
+    "src/app/(tabs)/profil.tsx",
+    "src/app/_layout.tsx",
+    "src/app/index.tsx",
+    "src/app/paywall.tsx",
+    "src/app/settings.tsx",
+    "src/features/APIKeyManager/model/secureKeyStore.ts",
+    "src/features/Gamification/model/store.ts",
+    "src/features/Gamification/model/types.ts",
+    "src/features/Paywall/ui/PaywallScreen.tsx",
+    "src/features/PromptLab/api/optimizer.ts",
+    "src/features/Settings/ui/SettingsScreen.tsx",
+    "src/processes/promptLab/runPromptComparison.ts",
+    "src/shared/theme/colors.ts",
+    "src/shared/theme/index.ts",
+    "src/shared/theme/typography.ts",
+    "src/shared/ui/GlassCard.tsx",
+    "src/shared/ui/GradientButton.tsx",
+    "src/shared/ui/PressableCard.tsx",
+    "src/shared/ui/ScreenBackground.tsx",
+    "src/shared/ui/SFErrorBanner.tsx",
+    "src/shared/ui/SFLargeTitle.tsx",
+    "src/shared/ui/SFListRow.tsx",
+    "src/shared/ui/SFOrbIndicator.tsx",
+    "src/shared/ui/SFProgressPill.tsx",
+    "src/shared/ui/SFStatCard.tsx",
+    "src/shared/ui/SFStreakDot.tsx",
+    "src/shared/ui/SFTextInput.tsx",
+    "src/shared/ui/index.ts"
+  ],
+  "tasks_failed": [],
+  "tasks_skipped": [],
+  "failure_reasons": {},
+  "quality_gates": [
+    {
+      "gate": "Typecheck",
+      "status": "PROVED",
+      "output": "tsc --noEmit: 0 errors"
+    },
+    {
+      "gate": "Lint",
+      "status": "PROVED",
+      "output": "eslint . --ext .ts,.tsx --max-warnings 0: 0 errors"
+    },
+    {
+      "gate": "Test",
+      "status": "PROVED",
+      "output": "Test Suites: 3 passed, 3 total\nTests:       39 passed, 39 total"
+    },
+    {
+      "gate": "Expo Doctor",
+      "status": "PROVED",
+      "output": "Running checks on project...\n21/21 checks passed."
+    }
+  ],
+  "release_ready": true,
+  "triple_consistency": {
+    "disk_count": 33,
+    "checkpoint_count": 33,
+    "report_count_succeeded": 33,
+    "tasks_total": 33,
+    "consistent": true,
+    "disk_only": [],
+    "checkpoint_only": [],
+    "report_only": []
+  }
+}

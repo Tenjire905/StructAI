@@ -1,0 +1,26 @@
+[
+  {
+    "phase": "P0 – Native Tabs (Phase A)",
+    "task": "Stelle src/app/(tabs)/_layout.tsx auf NativeTabs aus expo-router/unstable-native-tabs um. SF Symbols + md Material Symbols für Akademie/Lab/Profil. tintColor theme.colors.accent.everyday. Entferne FloatingTabBar (nicht mehr exportieren). Default Export.",
+    "path": "src/app/(tabs)/_layout.tsx",
+    "depends_on": []
+  },
+  {
+    "phase": "P0 – Profil Dashboard",
+    "task": "Aktualisiere src/app/(tabs)/profil.tsx: ScreenBackground, Level-Karte mit SFProgressPill (warning), SFStatCard Grid, SFStreakDot M–S, SFOrbIndicator, GradientButton → /paywall, SFListRow → /settings. Store-Selektoren. Default Export.",
+    "path": "src/app/(tabs)/profil.tsx",
+    "depends_on": ["src/app/(tabs)/_layout.tsx"]
+  },
+  {
+    "phase": "P0 – Akademie",
+    "task": "Aktualisiere src/app/(tabs)/akademie.tsx: SFLargeTitle, FlashList mit 3 GlassCards (Icon, Titel, Beschreibung, SFProgressPill, Pfeil), Pfad-Akzentfarben everyday/code/visual. Default Export.",
+    "path": "src/app/(tabs)/akademie.tsx",
+    "depends_on": ["src/app/(tabs)/_layout.tsx"]
+  },
+  {
+    "phase": "P0 – Prompt Lab",
+    "task": "Aktualisiere src/app/(tabs)/lab.tsx: SFOrbIndicator, SFTextInput in GlassCard, GradientButton + expo-haptics, Score-Karte, SFErrorBanner, FlashList History. optimizePrompt try-catch. Default Export.",
+    "path": "src/app/(tabs)/lab.tsx",
+    "depends_on": ["src/app/(tabs)/_layout.tsx"]
+  }
+]

@@ -1,0 +1,12 @@
+---
+description: Orchestrator-Regeln — siehe Masterprompt v3
+alwaysApply: true
+---
+
+# StructAI Orchestrator
+
+**Diese Datei ist ersetzt.** Bindende Quelle:
+
+→ `STRUCTAI_MASTERPROMPT_v3_NATIVE_UI.md` (Stufenplan, Abnahme, Native-First)
+
+Zusätzlich: `instructions.md`, `orchestrator/contracts/*.md`, `orchestrator.tasks.json` / `orchestrator.tasks.p0.json`.

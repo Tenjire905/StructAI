@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "StructAI",
+    "slug": "structai",
+    "version": "1.0.0",
+    "scheme": "structai",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "plugins": [
+      "expo-router",
+      "expo-asset"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
