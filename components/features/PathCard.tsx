@@ -1,7 +1,14 @@
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
 import { Badge, ProgressBar } from '@/components/ui';
 import { getShadow, useThemeMode } from '@/theme';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type PathCardProps = {
   title: string;
@@ -11,6 +18,7 @@ type PathCardProps = {
   progress?: number;
   badgeLabel?: string;
   badgeTone?: 'primary' | 'structure' | 'warning' | 'success';
+  onPress?: () => void;
 };
 
 export function PathCard({
@@ -20,13 +28,37 @@ export function PathCard({
   progress,
   badgeLabel,
   badgeTone = 'primary',
+  onPress,
 }: PathCardProps) {
   const { tokens, t } = useThemeMode();
+  const scale = useSharedValue(1);
   const isStarted = currentChapter !== undefined && progress !== undefined;
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    if (onPress) {
+      scale.value = withSpring(0.97, tokens.motion.spring.default);
+    }
+  };
+
+  const handlePressOut = () => {
+    if (onPress) {
+      scale.value = withSpring(1, tokens.motion.spring.default);
+    }
+  };
+
   return (
-    <View
+    <AnimatedPressable
+      accessibilityRole={onPress ? 'button' : undefined}
+      disabled={!onPress}
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       style={[
+        animatedStyle,
         getShadow(1),
         {
           backgroundColor: tokens.colors.surface.card,
@@ -66,6 +98,6 @@ export function PathCard({
       </Text>
 
       {isStarted ? <ProgressBar color="structure" progress={progress} /> : null}
-    </View>
+    </AnimatedPressable>
   );
 }

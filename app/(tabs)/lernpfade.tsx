@@ -1,49 +1,16 @@
+import { useRouter } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 
 import { PathCard } from '@/components/features';
+import { MOCK_PATHS } from '@/data/mockPaths';
 import { useThemeMode } from '@/theme';
-
-const MOCK_PATHS = {
-  active: [
-    {
-      id: 'prompt-basics',
-      title: 'Prompt-Grundlagen',
-      currentChapter: 3,
-      totalChapters: 8,
-      progress: 0.42,
-    },
-    {
-      id: 'structure-lab',
-      title: 'Struktur & Constraints',
-      currentChapter: 1,
-      totalChapters: 6,
-      progress: 0.12,
-    },
-  ],
-  available: [
-    {
-      id: 'context-mastery',
-      title: 'Kontext & Rollen',
-      totalChapters: 7,
-      isNew: true,
-    },
-    {
-      id: 'iteration-loops',
-      title: 'Iteratives Verfeinern',
-      totalChapters: 5,
-      isNew: false,
-    },
-    {
-      id: 'eval-scoring',
-      title: 'Prompts bewerten',
-      totalChapters: 6,
-      isNew: false,
-    },
-  ],
-};
 
 export default function LernpfadeScreen() {
   const { tokens, t } = useThemeMode();
+  const router = useRouter();
+
+  const activePaths = MOCK_PATHS.filter((path) => path.progress !== undefined);
+  const availablePaths = MOCK_PATHS.filter((path) => path.progress === undefined);
 
   return (
     <ScrollView
@@ -64,7 +31,7 @@ export default function LernpfadeScreen() {
           {t('paths.sectionActive')}
         </Text>
 
-        {MOCK_PATHS.active.length === 0 ? (
+        {activePaths.length === 0 ? (
           <Text
             style={{
               color: tokens.colors.text.secondary,
@@ -74,10 +41,11 @@ export default function LernpfadeScreen() {
             {t('paths.emptyActive')}
           </Text>
         ) : (
-          MOCK_PATHS.active.map((path) => (
+          activePaths.map((path) => (
             <PathCard
               currentChapter={path.currentChapter}
               key={path.id}
+              onPress={() => router.push(`/lernpfad/${path.id}`)}
               progress={path.progress}
               title={path.title}
               totalChapters={path.totalChapters}
@@ -96,11 +64,12 @@ export default function LernpfadeScreen() {
           {t('paths.sectionAvailable')}
         </Text>
 
-        {MOCK_PATHS.available.map((path) => (
+        {availablePaths.map((path) => (
           <PathCard
             badgeLabel={path.isNew ? t('paths.badgeNew') : undefined}
             badgeTone="primary"
             key={path.id}
+            onPress={() => router.push(`/lernpfad/${path.id}`)}
             title={path.title}
             totalChapters={path.totalChapters}
           />

@@ -44,6 +44,26 @@ export const copy: CopyCatalog = {
     playful: 'Bereit für dein erstes Abenteuer? Wähl deinen Lernpfad und leg los!',
     focus: 'Wähle einen Lernpfad, um zu beginnen.',
   },
+  'pathDetail.progressTitle': {
+    playful: 'Dein Fortschritt',
+    focus: 'Fortschritt',
+  },
+  'pathDetail.chapterListTitle': {
+    playful: 'Deine Kapitel',
+    focus: 'Kapitel',
+  },
+  'pathDetail.continueCta': {
+    playful: 'Weiter geht’s!',
+    focus: 'Fortsetzen',
+  },
+  'pathDetail.startCta': {
+    playful: 'Jetzt starten!',
+    focus: 'Starten',
+  },
+  'pathDetail.notFound': {
+    playful: 'Diesen Pfad kennen wir noch nicht.',
+    focus: 'Lernpfad nicht gefunden.',
+  },
   'statBlock.completedLessons': {
     playful: 'Abgeschlossene Lektionen',
     focus: 'Lektionen abgeschlossen',
