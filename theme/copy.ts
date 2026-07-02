@@ -100,6 +100,50 @@ export const copy: CopyCatalog = {
     playful: 'Diese Lektion gibt es noch nicht.',
     focus: 'Lektion nicht gefunden.',
   },
+  'profile.statsSection': {
+    playful: 'Deine Erfolge',
+    focus: 'Statistik',
+  },
+  'profile.modeSection': {
+    playful: 'Wie willst du lernen?',
+    focus: 'Darstellungsmodus',
+  },
+  'profile.modePlayful': {
+    playful: 'Playful',
+    focus: 'Playful',
+  },
+  'profile.modeFocus': {
+    playful: 'Focus',
+    focus: 'Focus',
+  },
+  'profile.modeDescription': {
+    playful: 'Gleiche Inhalte, gleiche Zahlen – nur die Verpackung ändert sich.',
+    focus: 'Beide Modi zeigen identische Daten und Funktionen, nur die Darstellung variiert.',
+  },
+  'profile.byokSection': {
+    playful: 'Dein KI-Schlüssel',
+    focus: 'API-Key (BYOK)',
+  },
+  'profile.byokDescription': {
+    playful: 'Dein eigener API-Key bleibt sicher auf deinem Gerät und schaltet das Prompt Lab frei.',
+    focus: 'Der API-Key wird verschlüsselt lokal gespeichert (Secure Store) und nur für Prompt-Lab-Anfragen verwendet.',
+  },
+  'profile.byokPlaceholder': {
+    playful: 'API-Key einfügen',
+    focus: 'API-Key eingeben',
+  },
+  'profile.byokSave': {
+    playful: 'Schlüssel speichern',
+    focus: 'Speichern',
+  },
+  'profile.byokDelete': {
+    playful: 'Schlüssel löschen',
+    focus: 'Löschen',
+  },
+  'profile.byokSavedBadge': {
+    playful: 'Sicher gespeichert',
+    focus: 'Gespeichert',
+  },
   'statBlock.completedLessons': {
     playful: 'Abgeschlossene Lektionen',
     focus: 'Lektionen abgeschlossen',
