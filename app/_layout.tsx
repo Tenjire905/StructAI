@@ -5,7 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { ThemeModeProvider, colors } from '@/theme';
+import { ThemeModeProvider, CelebrationProvider, colors } from '@/theme';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -42,24 +42,26 @@ export default function RootLayout() {
 
   return (
     <ThemeModeProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: colors.background.base },
-        }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="onboarding/index" />
-        <Stack.Screen name="onboarding/modus" />
-        <Stack.Screen
-          name="dev-preview"
-          options={{
-            headerShown: true,
-            title: 'Dev Preview',
-            headerStyle: { backgroundColor: colors.background.elevated },
-            headerTintColor: colors.text.primary,
-          }}
-        />
-      </Stack>
+      <CelebrationProvider>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: colors.background.base },
+          }}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="onboarding/index" />
+          <Stack.Screen name="onboarding/modus" />
+          <Stack.Screen
+            name="dev-preview"
+            options={{
+              headerShown: true,
+              title: 'Dev Preview',
+              headerStyle: { backgroundColor: colors.background.elevated },
+              headerTintColor: colors.text.primary,
+            }}
+          />
+        </Stack>
+      </CelebrationProvider>
     </ThemeModeProvider>
   );
 }

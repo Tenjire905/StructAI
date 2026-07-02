@@ -316,6 +316,18 @@ export const copy: CopyCatalog = {
     playful: 'So',
     focus: 'So',
   },
+  'celebration.lessonComplete': {
+    playful: 'Lektion geschafft!',
+    focus: 'Lektion abgeschlossen.',
+  },
+  'celebration.orbGain': {
+    playful: '+{{count}} Orbs für dich!',
+    focus: '+{{count}} Orbs',
+  },
+  'celebration.streakMilestone': {
+    playful: 'Volle Woche – deine Serie hält!',
+    focus: '7-Tage-Meilenstein erreicht.',
+  },
 };
 
 export type CopyKey = keyof typeof copy;
