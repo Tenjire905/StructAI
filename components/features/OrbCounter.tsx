@@ -12,8 +12,9 @@ import Animated, {
 import Svg, { Circle, G } from 'react-native-svg';
 
 import { getShadow, useCelebration, useThemeMode } from '@/theme';
+import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 
-import { OrbIcon } from './OrbIcon';
+import { OrbCompanion } from './OrbCompanion';
 
 type OrbCounterProps = {
   count: number;
@@ -23,6 +24,7 @@ type OrbCounterProps = {
 export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
   const { tokens, t } = useThemeMode();
   const { celebrate } = useCelebration();
+  const companionState = useOrbCompanionState();
   const animatedCount = useSharedValue(count);
   const orbScale = useSharedValue(1);
   const previousCountRef = useRef(count);
@@ -106,7 +108,7 @@ export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
                 width: tokens.spacing.space7,
               },
             ]}>
-            <OrbIcon size={tokens.icons.sizes.lg} />
+            <OrbCompanion size={tokens.icons.sizes.lg} state={companionState} />
           </Animated.View>
         ) : (
           <View

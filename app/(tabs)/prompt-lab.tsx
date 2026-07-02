@@ -10,7 +10,9 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ScoreChart } from '@/components/features';
+import { OrbCompanion } from '@/components/features/OrbCompanion';
 import { Badge, Button, Card, PressableScale, ProgressBar } from '@/components/ui';
+import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import {
   ScoringError,
   detectProvider,
@@ -45,6 +47,8 @@ export default function PromptLabScreen() {
   const [storedKey, setStoredKey] = useState<string | null>(null);
   const [isScoring, setIsScoring] = useState(false);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
+  const [inputFocused, setInputFocused] = useState(false);
+  const companionState = useOrbCompanionState(inputFocused ? 'attentive' : undefined);
 
   // Key bei jedem Tab-Fokus neu lesen – falls er gerade im Profil
   // hinzugefügt oder gelöscht wurde.
@@ -169,19 +173,30 @@ export default function PromptLabScreen() {
         </View>
       ) : null}
 
-      <View style={{ gap: tokens.spacing.space3 }}>
+      <View
+        style={{
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
         <Text
           style={{
             color: tokens.colors.text.primary,
+            flex: 1,
             fontFamily: tokens.typography.fontFamily.heading,
             fontSize: tokens.typography.fontSize.headingMd,
           }}>
           {t('promptLab.inputLabel')}
         </Text>
+        <OrbCompanion size={tokens.icons.sizes.md} state={companionState} />
+      </View>
 
+      <View style={{ gap: tokens.spacing.space3 }}>
         <TextInput
           multiline
+          onBlur={() => setInputFocused(false)}
           onChangeText={setPromptInput}
+          onFocus={() => setInputFocused(true)}
           placeholder={t('promptLab.inputPlaceholder')}
           placeholderTextColor={tokens.colors.text.tertiary}
           style={{
