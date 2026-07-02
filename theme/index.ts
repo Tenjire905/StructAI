@@ -1,3 +1,3 @@
 export * from './copy';
 export * from './theme';
-export * from './ThemeModeContext';
+export { ThemeModeProvider, ThemeModeScope, useThemeMode } from './ThemeModeContext';

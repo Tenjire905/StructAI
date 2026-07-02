@@ -79,3 +79,27 @@ export function useThemeMode(): ThemeModeContextValue {
 
   return context;
 }
+
+type ThemeModeScopeProps = PropsWithChildren<{
+  mode: ThemeMode;
+}>;
+
+export function ThemeModeScope({ mode, children }: ThemeModeScopeProps) {
+  const parent = useThemeMode();
+  const tokens = useMemo(() => resolveThemeTokens(mode), [mode]);
+
+  const value = useMemo<ThemeModeContextValue>(
+    () => ({
+      mode,
+      tokens,
+      copy: parent.copy,
+      setMode: parent.setMode,
+      t: (key: string) => getCopyText(key, mode),
+    }),
+    [mode, tokens, parent.copy, parent.setMode],
+  );
+
+  return (
+    <ThemeModeContext.Provider value={value}>{children}</ThemeModeContext.Provider>
+  );
+}
