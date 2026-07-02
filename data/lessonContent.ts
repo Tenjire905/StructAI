@@ -1,14 +1,8 @@
-import { lessonContentCatalog } from '@/data/lessonContentCatalog';
+import { getLocalizedLessonText } from '@/data/lessonContent/index';
 import { DEFAULT_LOCALE, type Locale } from '@/theme/locale';
 
 export function getLessonText(key: string, locale: Locale): string {
-  const entry = lessonContentCatalog[key];
-
-  if (!entry) {
-    return key;
-  }
-
-  return entry[locale] ?? entry[DEFAULT_LOCALE] ?? key;
+  return getLocalizedLessonText(key, locale);
 }
 
-export { lessonContentCatalog, type LessonContentCatalog } from '@/data/lessonContentCatalog';
+export type { Locale } from '@/theme/locale';

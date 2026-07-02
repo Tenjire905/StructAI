@@ -18,7 +18,7 @@ export const copyDe: CopyCatalog = {
     focus: 'Profil',
   },
   'home.greeting': {
-    playful: 'Willkommen zurueck, {{name}}!',
+    playful: 'Willkommen zurück, {{name}}!',
     focus: 'Guten Tag, {{name}}.',
   },
   'home.continueLearning': {
@@ -47,7 +47,7 @@ export const copyDe: CopyCatalog = {
   },
   'paths.sectionAvailable': {
     playful: 'Entdecke mehr',
-    focus: 'Verfuegbare Lernpfade',
+    focus: 'Verfügbare Lernpfade',
   },
   'paths.title.prompt_basics': {
     playful: 'Prompt-Grundlagen',
@@ -70,8 +70,8 @@ export const copyDe: CopyCatalog = {
     focus: 'Bewertungssystem',
   },
   'paths.emptyActive': {
-    playful: 'Bereit fuer dein erstes Abenteuer? Waehle deinen Lernpfad und leg los!',
-    focus: 'Waehle einen Lernpfad, um zu beginnen.',
+    playful: 'Bereit für dein erstes Abenteuer? Wähle deinen Lernpfad und leg los!',
+    focus: 'Wähle einen Lernpfad, um zu beginnen.',
   },
   'pathDetail.progressTitle': {
     playful: 'Dein Fortschritt',
@@ -82,7 +82,7 @@ export const copyDe: CopyCatalog = {
     focus: 'Kapitel',
   },
   'pathDetail.continueCta': {
-    playful: 'Weiter gehts!',
+    playful: 'Weiter geht es!',
     focus: 'Fortsetzen',
   },
   'pathDetail.startCta': {
@@ -102,8 +102,8 @@ export const copyDe: CopyCatalog = {
     focus: 'Auswahl',
   },
   'lesson.typeFillBlank': {
-    playful: 'Lueckentext',
-    focus: 'Luecke',
+    playful: 'Lückentext',
+    focus: 'Lücke',
   },
   'lesson.typeTrueFalse': {
     playful: 'Wahr oder falsch',
@@ -114,8 +114,8 @@ export const copyDe: CopyCatalog = {
     focus: 'Sortieren',
   },
   'lesson.fillBlankInstruction': {
-    playful: 'Fuell die Luecke mit dem passenden Begriff.',
-    focus: 'Luecke korrekt ausfuellen.',
+    playful: 'Füll die Lücke mit dem passenden Begriff.',
+    focus: 'Lücke korrekt ausfüllen.',
   },
   'lesson.trueLabel': {
     playful: 'Wahr',
@@ -134,11 +134,11 @@ export const copyDe: CopyCatalog = {
     focus: 'Perfekt. Bonus erhalten.',
   },
   'lesson.check': {
-    playful: 'Antwort pruefen!',
-    focus: 'Pruefen',
+    playful: 'Antwort prüfen!',
+    focus: 'Prüfen',
   },
   'lesson.next': {
-    playful: 'Weiter gehts!',
+    playful: 'Weiter geht es!',
     focus: 'Weiter',
   },
   'lesson.correctFeedback': {
@@ -146,20 +146,20 @@ export const copyDe: CopyCatalog = {
     focus: 'Korrekt.',
   },
   'lesson.wrongFeedback': {
-    playful: 'Fast! Schau dir die Erklaerung an.',
-    focus: 'Nicht korrekt. Siehe Erklaerung.',
+    playful: 'Fast! Schau dir die Erklärung an.',
+    focus: 'Nicht korrekt. Siehe Erklärung.',
   },
   'lesson.completeTitle': {
     playful: 'Lektion geschafft!',
     focus: 'Lektion abgeschlossen.',
   },
   'lesson.orbsEarned': {
-    playful: '+{{count}} Orbs fuer dich!',
+    playful: '+{{count}} Orbs für dich!',
     focus: '+{{count}} Orbs',
   },
   'lesson.backToPath': {
-    playful: 'Zurueck zum Pfad',
-    focus: 'Zurueck zum Pfad',
+    playful: 'Zurück zum Pfad',
+    focus: 'Zurück zum Pfad',
   },
   'lesson.notFound': {
     playful: 'Diese Lektion gibt es noch nicht.',
@@ -182,7 +182,7 @@ export const copyDe: CopyCatalog = {
     focus: 'Fokussiert',
   },
   'profile.modeDescription': {
-    playful: 'Gleiche Inhalte, gleiche Zahlen - nur die Verpackung aendert sich.',
+    playful: 'Gleiche Inhalte, gleiche Zahlen - nur die Verpackung ändert sich.',
     focus: 'Beide Modi zeigen identische Daten und Funktionen, nur die Darstellung variiert.',
   },
   'profile.languageSection': {
@@ -190,8 +190,8 @@ export const copyDe: CopyCatalog = {
     focus: 'Sprache',
   },
   'profile.languageDescription': {
-    playful: 'Waehle die Sprache der Oberflaeche. Deine Fortschritte bleiben gleich.',
-    focus: 'Sprache der Oberflaeche festlegen.',
+    playful: 'Wähle die Sprache der Oberfläche. Deine Fortschritte bleiben gleich.',
+    focus: 'Sprache der Oberfläche festlegen.',
   },
   'profile.languageDe': {
     playful: 'Deutsch',
@@ -202,32 +202,32 @@ export const copyDe: CopyCatalog = {
     focus: 'Englisch',
   },
   'profile.languageFr': {
-    playful: 'Franzoesisch',
-    focus: 'Franzoesisch',
+    playful: 'Französisch',
+    focus: 'Französisch',
   },
   'profile.languageRu': {
     playful: 'Russisch',
     focus: 'Russisch',
   },
   'profile.byokSection': {
-    playful: 'Dein KI-Schluessel',
-    focus: 'API-Schluessel (BYOK)',
+    playful: 'Dein KI-Schlüssel',
+    focus: 'API-Schlüssel (BYOK)',
   },
   'profile.byokDescription': {
-    playful: 'Dein eigener API-Schluessel bleibt sicher auf deinem Geraet und schaltet die Prompt-Werkstatt frei.',
-    focus: 'Der API-Schluessel wird verschluesselt lokal gespeichert (Secure Store) und nur fuer Prompt-Werkstatt-Anfragen verwendet.',
+    playful: 'Dein eigener API-Schlüssel bleibt sicher auf deinem Gerät und schaltet die Prompt-Werkstatt frei.',
+    focus: 'Der API-Schlüssel wird verschlüsselt lokal gespeichert (Secure Store) und nur für Prompt-Werkstatt-Anfragen verwendet.',
   },
   'profile.byokPlaceholder': {
-    playful: 'API-Schluessel einfuegen',
-    focus: 'API-Schluessel eingeben',
+    playful: 'API-Schlüssel einfügen',
+    focus: 'API-Schlüssel eingeben',
   },
   'profile.byokSave': {
-    playful: 'Schluessel speichern',
+    playful: 'Schlüssel speichern',
     focus: 'Speichern',
   },
   'profile.byokDelete': {
-    playful: 'Schluessel loeschen',
-    focus: 'Loeschen',
+    playful: 'Schlüssel löschen',
+    focus: 'Löschen',
   },
   'profile.byokSavedBadge': {
     playful: 'Sicher gespeichert',
@@ -246,12 +246,12 @@ export const copyDe: CopyCatalog = {
     focus: 'Bewerten',
   },
   'promptLab.demoBanner': {
-    playful: 'Demo-Modus: Ohne API-Schluessel bewertet dich der lokale Uebungs-Coach.',
-    focus: 'Demo-Modus: lokale Bewertung ohne API-Schluessel.',
+    playful: 'Demo-Modus: Ohne API-Schlüssel bewertet dich der lokale Übungs-Coach.',
+    focus: 'Demo-Modus: lokale Bewertung ohne API-Schlüssel.',
   },
   'promptLab.addKeyCta': {
-    playful: 'Schluessel im Profil hinterlegen',
-    focus: 'API-Schluessel im Profil hinterlegen',
+    playful: 'Schlüssel im Profil hinterlegen',
+    focus: 'API-Schlüssel im Profil hinterlegen',
   },
   'promptLab.scoreTitle': {
     playful: 'Deine Auswertung',
@@ -278,8 +278,8 @@ export const copyDe: CopyCatalog = {
     focus: 'Gesamtbewertung: solide.',
   },
   'promptLab.feedbackWeak': {
-    playful: 'Guter Start - lass uns das schaerfen.',
-    focus: 'Gesamtbewertung: ausbaufaehig.',
+    playful: 'Guter Start - lass uns das schärfen.',
+    focus: 'Gesamtbewertung: ausbaufähig.',
   },
   'promptLab.hintStructure': {
     playful: 'Mehr Struktur: Trenn Kontext, Aufgabe und Vorgaben in Abschnitte.',
@@ -287,11 +287,11 @@ export const copyDe: CopyCatalog = {
   },
   'promptLab.hintGoal': {
     playful: 'Sag dem Modell genauer, was am Ende rauskommen soll.',
-    focus: 'Verbesserungspotenzial: erwartetes Ergebnis praeziser definieren.',
+    focus: 'Verbesserungspotenzial: erwartetes Ergebnis präziser definieren.',
   },
   'promptLab.hintConstraints': {
     playful: 'Mit praezisen Vorgaben holst du den Top-Score.',
-    focus: 'Verbesserungspotenzial: praezisere Vorgaben (Laenge, Format, Zielgruppe).',
+    focus: 'Verbesserungspotenzial: präzisere Vorgaben (Länge, Format, Zielgruppe).',
   },
   'promptLab.historyTitle': {
     playful: 'Dein Bewertungsverlauf',
@@ -299,67 +299,67 @@ export const copyDe: CopyCatalog = {
   },
   'promptLab.scoringInProgress': {
     playful: 'Wird bewertet...',
-    focus: 'Bewertung laeuft...',
+    focus: 'Bewertung läuft...',
   },
   'promptLab.liveBadge': {
     playful: 'Live-Bewertung: {{provider}}',
     focus: 'Live: {{provider}}',
   },
   'promptLab.fallbackInvalidKey': {
-    playful: 'Dein Schluessel wurde abgelehnt - diesmal hat der lokale Coach bewertet. Pruef den Schluessel im Profil.',
-    focus: 'API-Schluessel abgelehnt. Lokale Bewertung verwendet. Schluessel im Profil pruefen.',
+    playful: 'Dein Schlüssel wurde abgelehnt - diesmal hat der lokale Coach bewertet. Prüf den Schlüssel im Profil.',
+    focus: 'API-Schlüssel abgelehnt. Lokale Bewertung verwendet. Schlüssel im Profil prüfen.',
   },
   'promptLab.fallbackQuota': {
-    playful: 'Dein API-Guthaben ist aufgebraucht oder limitiert - der lokale Coach uebernimmt.',
-    focus: 'Kontingent oder Guthaben erschoepft. Lokale Bewertung verwendet.',
+    playful: 'Dein API-Guthaben ist aufgebraucht oder limitiert - der lokale Coach übernimmt.',
+    focus: 'Kontingent oder Guthaben erschöpft. Lokale Bewertung verwendet.',
   },
   'promptLab.fallbackNetwork': {
-    playful: 'Keine Verbindung zur KI - der lokale Coach uebernimmt.',
+    playful: 'Keine Verbindung zur KI - der lokale Coach übernimmt.',
     focus: 'API nicht erreichbar. Lokale Bewertung verwendet.',
   },
   'promptLab.fallbackGeneric': {
-    playful: 'Die KI-Antwort war unbrauchbar - der lokale Coach uebernimmt.',
+    playful: 'Die KI-Antwort war unbrauchbar - der lokale Coach übernimmt.',
     focus: 'API-Fehler. Lokale Bewertung verwendet.',
   },
   'profile.byokChecking': {
-    playful: 'Pruefe deinen Schluessel...',
-    focus: 'Schluessel wird geprueft...',
+    playful: 'Prüfe deinen Schlüssel...',
+    focus: 'Schlüssel wird geprüft...',
   },
   'profile.byokValidBadge': {
     playful: 'Funktioniert ({{provider}})',
     focus: 'Aktiv ({{provider}})',
   },
   'profile.byokInvalidError': {
-    playful: 'Der Schluessel wurde abgelehnt - bitte pruef ihn nochmal.',
-    focus: 'Schluessel ungueltig. Bitte pruefen.',
+    playful: 'Der Schlüssel wurde abgelehnt - bitte prüf ihn nochmal.',
+    focus: 'Schlüssel ungültig. Bitte prüfen.',
   },
   'profile.byokUnverifiedBadge': {
-    playful: 'Gespeichert - noch nicht geprueft',
-    focus: 'Gespeichert (ungeprueft)',
+    playful: 'Gespeichert - noch nicht geprüft',
+    focus: 'Gespeichert (ungeprüft)',
   },
   'onboarding.welcomeHeadline': {
     playful: 'Lerne Prompting wie ein Profi',
     focus: 'KI-Prompting strukturiert lernen',
   },
   'onboarding.welcomeSub': {
-    playful: 'Kurze Lektionen, echte Bewertung, sichtbarer Fortschritt - Schritt fuer Schritt zu besseren Prompts.',
+    playful: 'Kurze Lektionen, echte Bewertung, sichtbarer Fortschritt - Schritt für Schritt zu besseren Prompts.',
     focus: 'Kurze Lektionen, messbare Bewertung, klarer Fortschritt.',
   },
   'onboarding.welcomeCta': {
-    playful: 'Los gehts!',
+    playful: 'Los geht es!',
     focus: 'Starten',
   },
   'onboarding.modeQuestion': {
-    playful: 'Wie wuerdest du gerne lernen?',
-    focus: 'Wie wuerdest du gerne lernen?',
+    playful: 'Wie würdest du gerne lernen?',
+    focus: 'Wie würdest du gerne lernen?',
   },
   'onboarding.modeHint': {
     playful: 'Beide zeigen dieselben Inhalte - du kannst jederzeit in den Einstellungen wechseln.',
-    focus: 'Identische Inhalte und Funktionen. Jederzeit in den Einstellungen aenderbar.',
+    focus: 'Identische Inhalte und Funktionen. Jederzeit in den Einstellungen änderbar.',
   },
   'onboarding.modeCta': {
-    playful: 'Auswahl bestaetigen',
-    focus: 'Bestaetigen',
+    playful: 'Auswahl bestätigen',
+    focus: 'Bestätigen',
   },
   'onboarding.previewPathTitle': {
     playful: 'Prompt-Grundlagen',
@@ -410,11 +410,11 @@ export const copyDe: CopyCatalog = {
     focus: 'Lektion abgeschlossen.',
   },
   'celebration.orbGain': {
-    playful: '+{{count}} Orbs fuer dich!',
+    playful: '+{{count}} Orbs für dich!',
     focus: '+{{count}} Orbs',
   },
   'celebration.streakMilestone': {
-    playful: 'Volle Woche - deine Serie haelt!',
+    playful: 'Volle Woche - deine Serie hält!',
     focus: '7-Tage-Meilenstein erreicht.',
   },
 };
