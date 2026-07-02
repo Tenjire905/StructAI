@@ -5,6 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
+import '@/lib/bootstrap';
 import { ThemeModeProvider, CelebrationProvider, colors } from '@/theme';
 
 export { ErrorBoundary } from 'expo-router';

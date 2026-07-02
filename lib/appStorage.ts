@@ -1,24 +1,43 @@
-import { createMMKV } from 'react-native-mmkv';
+import { createMMKV, type MMKV } from 'react-native-mmkv';
 
 type KeyValueStorage = {
   getString: (key: string) => string | undefined;
   set: (key: string, value: string) => void;
+  delete: (key: string) => void;
+  contains: (key: string) => boolean;
+  isMemoryOnly: boolean;
 };
 
-// MMKV ist ein natives Modul und in Expo Go nicht verfügbar –
-// dort fällt die App auf einen In-Memory-Store zurück
-// (kein Persist über App-Neustarts, im Dev-Build wieder echt persistent).
+let nativeMmkv: MMKV | null = null;
+
 function createAppStorage(): KeyValueStorage {
   try {
-    return createMMKV({ id: 'structai-storage' });
+    nativeMmkv = createMMKV({ id: 'structai-storage' });
+
+    return {
+      isMemoryOnly: false,
+      getString: (key) => nativeMmkv?.getString(key),
+      set: (key, value) => {
+        nativeMmkv?.set(key, value);
+      },
+      delete: (key) => {
+        nativeMmkv?.remove(key);
+      },
+      contains: (key) => nativeMmkv?.contains(key) ?? false,
+    };
   } catch {
     const memory = new Map<string, string>();
 
     return {
+      isMemoryOnly: true,
       getString: (key) => memory.get(key),
       set: (key, value) => {
         memory.set(key, value);
       },
+      delete: (key) => {
+        memory.delete(key);
+      },
+      contains: (key) => memory.has(key),
     };
   }
 }
@@ -33,4 +52,12 @@ export function isOnboardingCompleted(): boolean {
 
 export function setOnboardingCompleted(): void {
   appStorage.set(ONBOARDING_COMPLETED_KEY, 'true');
+}
+
+export function clearOnboardingCompleted(): void {
+  appStorage.delete(ONBOARDING_COMPLETED_KEY);
+}
+
+export function isExpoGoMemoryStorage(): boolean {
+  return appStorage.isMemoryOnly;
 }

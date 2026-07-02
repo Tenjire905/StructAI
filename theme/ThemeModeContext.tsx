@@ -10,7 +10,9 @@ import {
 
 import { appStorage } from '@/lib/appStorage';
 
-import { copy, formatCopyText, type CopyCatalog } from './copy';
+import { getCatalogForLocale } from './copy/index';
+import { formatCopyText, type CopyCatalog } from './copy/types';
+import { DEFAULT_LOCALE, isLocale, type Locale } from './locale';
 import {
   resolveThemeTokens,
   type ResolvedThemeTokens,
@@ -18,15 +20,18 @@ import {
 } from './theme';
 
 const THEME_MODE_STORAGE_KEY = 'structai.theme-mode';
+const LOCALE_STORAGE_KEY = 'structai.locale';
 const DEFAULT_MODE: ThemeMode = 'focus';
 
 const storage = appStorage;
 
 type ThemeModeContextValue = {
   mode: ThemeMode;
+  locale: Locale;
   tokens: ResolvedThemeTokens;
   copy: CopyCatalog;
   setMode: (mode: ThemeMode) => void;
+  setLocale: (locale: Locale) => void;
   t: (key: string, vars?: Record<string, string | number>) => string;
 };
 
@@ -42,29 +47,51 @@ function readStoredMode(): ThemeMode {
   return DEFAULT_MODE;
 }
 
+function readStoredLocale(): Locale {
+  const stored = storage.getString(LOCALE_STORAGE_KEY);
+
+  if (stored && isLocale(stored)) {
+    return stored;
+  }
+
+  return DEFAULT_LOCALE;
+}
+
 export function ThemeModeProvider({ children }: PropsWithChildren) {
   const [mode, setModeState] = useState<ThemeMode>(() => readStoredMode());
+  const [locale, setLocaleState] = useState<Locale>(() => readStoredLocale());
 
   useEffect(() => {
     storage.set(THEME_MODE_STORAGE_KEY, mode);
   }, [mode]);
 
+  useEffect(() => {
+    storage.set(LOCALE_STORAGE_KEY, locale);
+  }, [locale]);
+
   const setMode = useCallback((nextMode: ThemeMode) => {
     setModeState(nextMode);
   }, []);
 
+  const setLocale = useCallback((nextLocale: Locale) => {
+    setLocaleState(nextLocale);
+  }, []);
+
   const tokens = useMemo(() => resolveThemeTokens(mode), [mode]);
+  const copy = useMemo(() => getCatalogForLocale(locale), [locale]);
 
   const value = useMemo<ThemeModeContextValue>(
     () => ({
       mode,
+      locale,
       tokens,
       copy,
       setMode,
+      setLocale,
       t: (key: string, vars?: Record<string, string | number>) =>
-        formatCopyText(key, mode, vars),
+        formatCopyText(key, mode, copy, vars),
     }),
-    [mode, tokens, setMode],
+    [copy, locale, mode, setLocale, setMode, tokens],
   );
 
   return (
@@ -93,13 +120,15 @@ export function ThemeModeScope({ mode, children }: ThemeModeScopeProps) {
   const value = useMemo<ThemeModeContextValue>(
     () => ({
       mode,
+      locale: parent.locale,
       tokens,
       copy: parent.copy,
       setMode: parent.setMode,
+      setLocale: parent.setLocale,
       t: (key: string, vars?: Record<string, string | number>) =>
-        formatCopyText(key, mode, vars),
+        formatCopyText(key, mode, parent.copy, vars),
     }),
-    [mode, tokens, parent.copy, parent.setMode],
+    [mode, parent.copy, parent.locale, parent.setLocale, parent.setMode, tokens],
   );
 
   return (
