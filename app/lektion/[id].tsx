@@ -4,12 +4,11 @@ import { ScrollView, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
 
-import { OrbIcon } from '@/components/features';
+import { OrbCompanion } from '@/components/features';
 import {
   ChoiceStepView,
   FillBlankStepView,
@@ -17,6 +16,7 @@ import {
   TrueFalseStepView,
 } from '@/components/features/lesson-steps';
 import { Button, Card, ProgressBar } from '@/components/ui';
+import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import {
   getMockLesson,
   type ResolvedLessonStep,
@@ -446,7 +446,7 @@ type CompletionViewProps = {
 function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
   const { tokens, t } = useThemeMode();
   const { celebrate } = useCelebration();
-  const scale = useSharedValue(0.6);
+  const companionState = useOrbCompanionState();
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
   const finishedRef = useRef(false);
 
@@ -457,26 +457,7 @@ function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
 
     finishedRef.current = true;
     celebrate('lesson_complete', { orbCount: orbsReward });
-
-    if (tokens.presentation.allowCelebrationSpring) {
-      scale.value = withSequence(
-        withSpring(1.08, tokens.motion.spring.bouncy),
-        withSpring(1, tokens.motion.spring.default),
-      );
-    } else {
-      scale.value = withSpring(1, tokens.motion.spring.default);
-    }
-  }, [
-    celebrate,
-    orbsReward,
-    scale,
-    tokens.motion.spring,
-    tokens.presentation.allowCelebrationSpring,
-  ]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  }, [celebrate, orbsReward]);
 
   return (
     <View
@@ -488,9 +469,8 @@ function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
         justifyContent: 'center',
         paddingHorizontal: tokens.spacing.screenPadding,
       }}>
-      <Animated.View
+      <View
         style={[
-          animatedStyle,
           isPlayful ? getShadow('glow') : undefined,
           {
             alignItems: 'center',
@@ -501,8 +481,8 @@ function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
             width: tokens.spacing.space8,
           },
         ]}>
-        <OrbIcon size={tokens.icons.sizes.xl} />
-      </Animated.View>
+        <OrbCompanion size={tokens.spacing.space8 * 0.75} state={companionState} />
+      </View>
 
       <Text
         style={{
