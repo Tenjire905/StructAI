@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { createMMKV } from 'react-native-mmkv';
 
-import { copy, getCopyText, type CopyCatalog } from './copy';
+import { copy, formatCopyText, type CopyCatalog } from './copy';
 import {
   resolveThemeTokens,
   type ResolvedThemeTokens,
@@ -26,7 +26,7 @@ type ThemeModeContextValue = {
   tokens: ResolvedThemeTokens;
   copy: CopyCatalog;
   setMode: (mode: ThemeMode) => void;
-  t: (key: string) => string;
+  t: (key: string, vars?: Record<string, string | number>) => string;
 };
 
 const ThemeModeContext = createContext<ThemeModeContextValue | null>(null);
@@ -60,7 +60,8 @@ export function ThemeModeProvider({ children }: PropsWithChildren) {
       tokens,
       copy,
       setMode,
-      t: (key: string) => getCopyText(key, mode),
+      t: (key: string, vars?: Record<string, string | number>) =>
+        formatCopyText(key, mode, vars),
     }),
     [mode, tokens, setMode],
   );
@@ -94,7 +95,8 @@ export function ThemeModeScope({ mode, children }: ThemeModeScopeProps) {
       tokens,
       copy: parent.copy,
       setMode: parent.setMode,
-      t: (key: string) => getCopyText(key, mode),
+      t: (key: string, vars?: Record<string, string | number>) =>
+        formatCopyText(key, mode, vars),
     }),
     [mode, tokens, parent.copy, parent.setMode],
   );
