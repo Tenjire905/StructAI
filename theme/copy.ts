@@ -144,6 +144,70 @@ export const copy: CopyCatalog = {
     playful: 'Sicher gespeichert',
     focus: 'Gespeichert',
   },
+  'promptLab.inputLabel': {
+    playful: 'Dein Prompt',
+    focus: 'Prompt',
+  },
+  'promptLab.inputPlaceholder': {
+    playful: 'Schreib deinen Prompt hier rein…',
+    focus: 'Prompt eingeben…',
+  },
+  'promptLab.scoreButton': {
+    playful: 'Bewerten lassen!',
+    focus: 'Bewerten',
+  },
+  'promptLab.demoBanner': {
+    playful: 'Demo-Modus: Ohne API-Key bewertet dich der lokale Übungs-Coach.',
+    focus: 'Demo-Modus: lokale Bewertung ohne API-Key.',
+  },
+  'promptLab.addKeyCta': {
+    playful: 'Key im Profil hinterlegen',
+    focus: 'API-Key im Profil hinterlegen',
+  },
+  'promptLab.scoreTitle': {
+    playful: 'Deine Auswertung',
+    focus: 'Auswertung',
+  },
+  'promptLab.catStructure': {
+    playful: 'Struktur',
+    focus: 'Struktur',
+  },
+  'promptLab.catGoal': {
+    playful: 'Zieldefinition',
+    focus: 'Zieldefinition',
+  },
+  'promptLab.catConstraints': {
+    playful: 'Constraints',
+    focus: 'Constraints',
+  },
+  'promptLab.feedbackStrong': {
+    playful: 'Starker Prompt! Deine Struktur sitzt.',
+    focus: 'Gesamtbewertung: stark.',
+  },
+  'promptLab.feedbackOkay': {
+    playful: 'Solide! Da geht noch mehr.',
+    focus: 'Gesamtbewertung: solide.',
+  },
+  'promptLab.feedbackWeak': {
+    playful: 'Guter Start – lass uns das schärfen.',
+    focus: 'Gesamtbewertung: ausbaufähig.',
+  },
+  'promptLab.hintStructure': {
+    playful: 'Mehr Struktur: Trenn Kontext, Aufgabe und Vorgaben in Abschnitte.',
+    focus: 'Verbesserungspotenzial: Kontext, Aufgabe und Vorgaben klar trennen.',
+  },
+  'promptLab.hintGoal': {
+    playful: 'Sag dem Modell genauer, was am Ende rauskommen soll.',
+    focus: 'Verbesserungspotenzial: erwartetes Ergebnis präziser definieren.',
+  },
+  'promptLab.hintConstraints': {
+    playful: 'Noch mehr Constraints und du holst den Top-Score.',
+    focus: 'Verbesserungspotenzial: präzisere Constraints (Länge, Format, Zielgruppe).',
+  },
+  'promptLab.historyTitle': {
+    playful: 'Dein Score-Verlauf',
+    focus: 'Score-Verlauf',
+  },
   'statBlock.completedLessons': {
     playful: 'Abgeschlossene Lektionen',
     focus: 'Lektionen abgeschlossen',
