@@ -1,7 +1,10 @@
+import { useIsFocused } from 'expo-router';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import Animated, {
+  cancelAnimation,
   Easing,
+  type SharedValue,
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
@@ -29,6 +32,21 @@ type OrbCompanionProps = {
   state: OrbCompanionState;
   size?: number;
 };
+
+function stopScaleAnimation(scale: SharedValue<number>) {
+  cancelAnimation(scale);
+  scale.value = 1;
+}
+
+function stopEyeAnimations(
+  eyeRadius: SharedValue<number>,
+  eyeHeight: SharedValue<number>,
+) {
+  cancelAnimation(eyeRadius);
+  cancelAnimation(eyeHeight);
+  eyeRadius.value = 1.1;
+  eyeHeight.value = 1.1;
+}
 
 function getOrbBodyOpacity(state: OrbCompanionState): number {
   switch (state) {
@@ -74,19 +92,23 @@ function getHighlightOpacity(state: OrbCompanionState, isPlayfulPresentation: bo
 type PlayfulEyesProps = {
   state: OrbCompanionState;
   reduceMotion: boolean;
+  isFocused: boolean;
 };
 
-function PlayfulEyes({ state, reduceMotion }: PlayfulEyesProps) {
+function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
   const { tokens } = useThemeMode();
   const eyeRadius = useSharedValue(1.1);
   const eyeHeight = useSharedValue(1.1);
 
   useEffect(() => {
-    if (reduceMotion) {
-      eyeRadius.value = 1.1;
-      eyeHeight.value = 1.1;
-      return;
+    if (!isFocused || reduceMotion) {
+      stopEyeAnimations(eyeRadius, eyeHeight);
+      return () => {
+        stopEyeAnimations(eyeRadius, eyeHeight);
+      };
     }
+
+    stopEyeAnimations(eyeRadius, eyeHeight);
 
     switch (state) {
       case 'attentive':
@@ -105,7 +127,11 @@ function PlayfulEyes({ state, reduceMotion }: PlayfulEyesProps) {
         eyeHeight.value = withTiming(1.1, { duration: tokens.motion.duration.fast });
         break;
     }
-  }, [eyeHeight, eyeRadius, reduceMotion, state, tokens.motion.duration.fast]);
+
+    return () => {
+      stopEyeAnimations(eyeRadius, eyeHeight);
+    };
+  }, [eyeHeight, eyeRadius, isFocused, reduceMotion, state, tokens.motion.duration.fast]);
 
   const leftEyeProps = useAnimatedProps(() => ({
     rx: eyeRadius.value,
@@ -187,6 +213,7 @@ function PlayfulEyes({ state, reduceMotion }: PlayfulEyesProps) {
 
 export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
   const { tokens } = useThemeMode();
+  const isFocused = useIsFocused();
   const gradientId = useId().replace(/:/g, '');
   const orbScale = useSharedValue(1);
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -199,10 +226,14 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
   }, []);
 
   useEffect(() => {
-    if (reduceMotion) {
-      orbScale.value = 1;
-      return;
+    if (!isFocused || reduceMotion) {
+      stopScaleAnimation(orbScale);
+      return () => {
+        stopScaleAnimation(orbScale);
+      };
     }
+
+    stopScaleAnimation(orbScale);
 
     if (state === 'idle') {
       const duration = isPlayfulPresentation ? 1200 : 1500;
@@ -215,7 +246,10 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
         -1,
         false,
       );
-      return;
+
+      return () => {
+        stopScaleAnimation(orbScale);
+      };
     }
 
     if (state === 'sleepy' && isPlayfulPresentation) {
@@ -227,30 +261,41 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
         -1,
         false,
       );
-      return;
+
+      return () => {
+        stopScaleAnimation(orbScale);
+      };
     }
 
-    orbScale.value = withTiming(1, { duration: tokens.motion.duration.fast });
-
-    if (!isPlayfulPresentation) {
-      return;
-    }
-
-    if (state === 'happy') {
+    if (isPlayfulPresentation && state === 'happy') {
       orbScale.value = withSequence(
         withSpring(1.08, tokens.motion.spring.bouncy),
         withSpring(1, tokens.motion.spring.default),
       );
-      return;
+
+      return () => {
+        stopScaleAnimation(orbScale);
+      };
     }
 
-    if (state === 'celebrating') {
+    if (isPlayfulPresentation && state === 'celebrating') {
       orbScale.value = withSequence(
         withSpring(1.12, tokens.motion.spring.bouncy),
         withSpring(1, tokens.motion.spring.default),
       );
+
+      return () => {
+        stopScaleAnimation(orbScale);
+      };
     }
+
+    orbScale.value = withTiming(1, { duration: tokens.motion.duration.fast });
+
+    return () => {
+      stopScaleAnimation(orbScale);
+    };
   }, [
+    isFocused,
     isPlayfulPresentation,
     orbScale,
     reduceMotion,
@@ -287,7 +332,7 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
           r="3"
         />
         {isPlayfulPresentation ? (
-          <PlayfulEyes reduceMotion={reduceMotion} state={state} />
+          <PlayfulEyes isFocused={isFocused} reduceMotion={reduceMotion} state={state} />
         ) : null}
       </Svg>
     </Animated.View>
