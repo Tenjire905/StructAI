@@ -24,6 +24,26 @@ export const copy: CopyCatalog = {
     playful: 'Kapitel {{current}} von {{total}}',
     focus: 'Kap. {{current}}/{{total}}',
   },
+  'pathCard.chaptersTotal': {
+    playful: '{{total}} Kapitel warten auf dich',
+    focus: '{{total}} Kapitel',
+  },
+  'paths.badgeNew': {
+    playful: 'Neu',
+    focus: 'Neu',
+  },
+  'paths.sectionActive': {
+    playful: 'Deine aktiven Pfade',
+    focus: 'In Bearbeitung',
+  },
+  'paths.sectionAvailable': {
+    playful: 'Entdecke mehr',
+    focus: 'Verfügbare Lernpfade',
+  },
+  'paths.emptyActive': {
+    playful: 'Bereit für dein erstes Abenteuer? Wähl deinen Lernpfad und leg los!',
+    focus: 'Wähle einen Lernpfad, um zu beginnen.',
+  },
   'statBlock.completedLessons': {
     playful: 'Abgeschlossene Lektionen',
     focus: 'Lektionen abgeschlossen',
