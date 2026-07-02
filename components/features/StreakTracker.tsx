@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
@@ -57,11 +58,15 @@ function StreakDay({ completed, label }: StreakDayProps) {
   const scale = useSharedValue(completed ? 1 : 0.92);
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
 
+  // withSequence statt Spring-Start im Animations-Callback: das Callback-Muster
+  // rekursiert auf dem Web-Renderer endlos, wenn ein Modus-Wechsel die laufende
+  // Animation abbricht (Callback feuert sofort und startet erneut).
   useEffect(() => {
     if (completed && isPlayful) {
-      scale.value = withSpring(1.12, tokens.motion.spring.bouncy, () => {
-        scale.value = withSpring(1, tokens.motion.spring.default);
-      });
+      scale.value = withSequence(
+        withSpring(1.12, tokens.motion.spring.bouncy),
+        withSpring(1, tokens.motion.spring.default),
+      );
       return;
     }
 

@@ -5,6 +5,7 @@ import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -32,10 +33,12 @@ export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
       duration: tokens.motion.duration.medium,
     });
 
+    // withSequence statt Callback-Chaining – siehe StreakTracker (Web-Rekursion)
     if (isPlayful) {
-      orbScale.value = withSpring(1.08, tokens.motion.spring.bouncy, () => {
-        orbScale.value = withSpring(1, tokens.motion.spring.default);
-      });
+      orbScale.value = withSequence(
+        withSpring(1.08, tokens.motion.spring.bouncy),
+        withSpring(1, tokens.motion.spring.default),
+      );
     }
   }, [animatedCount, count, isPlayful, orbScale, tokens.motion]);
 
