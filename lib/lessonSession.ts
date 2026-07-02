@@ -65,7 +65,9 @@ function shuffleReorder(step: ResolvedReorderStep, seed: number): ResolvedReorde
   return {
     ...step,
     items: shuffled.map((entry) => entry.item),
-    correctOrder: shuffled.map((entry) => entry.index),
+    correctOrder: step.correctOrder.map((originalIndex) =>
+      shuffled.findIndex((entry) => entry.index === originalIndex),
+    ),
   };
 }
 
