@@ -7,41 +7,66 @@ import {
 
 export type { CelebrationType };
 
+export type CelebrationLastEvent = {
+  id: string;
+  type: CelebrationType;
+  orbCount?: number;
+  isActive: boolean;
+};
+
 type CelebrateOptions = {
   orbCount?: number;
 };
 
 type CelebrationContextValue = {
   celebrate: (type: CelebrationType, options?: CelebrateOptions) => void;
+  /** Most recent celebration event; isActive while the overlay is visible. */
+  lastEvent: CelebrationLastEvent | null;
 };
 
 const CelebrationContext = createContext<CelebrationContextValue | null>(null);
 
 export function CelebrationProvider({ children }: { children: React.ReactNode }) {
-  const [event, setEvent] = useState<{
-    id: string;
-    type: CelebrationType;
-    orbCount?: number;
-  } | null>(null);
+  const [lastEvent, setLastEvent] = useState<CelebrationLastEvent | null>(null);
 
   const celebrate = useCallback((type: CelebrationType, options?: CelebrateOptions) => {
-    setEvent({
+    setLastEvent({
       id: `${type}-${Date.now()}`,
       type,
       orbCount: options?.orbCount,
+      isActive: true,
     });
   }, []);
 
   const dismiss = useCallback(() => {
-    setEvent(null);
+    setLastEvent((current) =>
+      current ? { ...current, isActive: false } : null,
+    );
   }, []);
 
-  const value = useMemo(() => ({ celebrate }), [celebrate]);
+  const value = useMemo(
+    () => ({
+      celebrate,
+      lastEvent,
+    }),
+    [celebrate, lastEvent],
+  );
 
   return (
     <CelebrationContext.Provider value={value}>
       {children}
-      <CelebrationOverlay event={event} onDismiss={dismiss} />
+      <CelebrationOverlay
+        event={
+          lastEvent?.isActive
+            ? {
+                id: lastEvent.id,
+                type: lastEvent.type,
+                orbCount: lastEvent.orbCount,
+              }
+            : null
+        }
+        onDismiss={dismiss}
+      />
     </CelebrationContext.Provider>
   );
 }
