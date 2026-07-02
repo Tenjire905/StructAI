@@ -19,7 +19,29 @@ import {
 const THEME_MODE_STORAGE_KEY = 'structai.theme-mode';
 const DEFAULT_MODE: ThemeMode = 'focus';
 
-const storage = createMMKV({ id: 'structai-storage' });
+type ModeStorage = {
+  getString: (key: string) => string | undefined;
+  set: (key: string, value: string) => void;
+};
+
+// MMKV ist ein natives Modul und in Expo Go nicht verfügbar –
+// dort fällt der Modus auf einen In-Memory-Store zurück (kein Persist über App-Neustarts).
+function createModeStorage(): ModeStorage {
+  try {
+    return createMMKV({ id: 'structai-storage' });
+  } catch {
+    const memory = new Map<string, string>();
+
+    return {
+      getString: (key) => memory.get(key),
+      set: (key, value) => {
+        memory.set(key, value);
+      },
+    };
+  }
+}
+
+const storage = createModeStorage();
 
 type ThemeModeContextValue = {
   mode: ThemeMode;

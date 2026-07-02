@@ -17,6 +17,10 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
+    'ClashDisplay-Semibold': require('../assets/fonts/ClashDisplay-Semibold.otf'),
+    'ClashDisplay-Medium': require('../assets/fonts/ClashDisplay-Medium.otf'),
+    'GeneralSans-Regular': require('../assets/fonts/GeneralSans-Regular.otf'),
+    'GeneralSans-Medium': require('../assets/fonts/GeneralSans-Medium.otf'),
     'SpaceMono-Regular': require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
