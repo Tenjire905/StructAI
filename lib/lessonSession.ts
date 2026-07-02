@@ -129,6 +129,42 @@ function toReorder(step: ResolvedChoiceStep, instruction: string): ResolvedReord
   };
 }
 
+function prepareNativeStep(step: ResolvedLessonStep, stepSeed: number): ResolvedLessonStep {
+  switch (step.type) {
+    case 'info':
+    case 'true_false':
+      return step;
+    case 'fill_blank':
+      return shuffleChoiceLike(step, stepSeed);
+    case 'reorder':
+      return shuffleReorder(step, stepSeed);
+    case 'choice':
+      return step;
+  }
+}
+
+function prepareChoiceStep(
+  step: ResolvedChoiceStep,
+  stepSeed: number,
+  seed: number,
+  stepIndex: number,
+  reorderHint: string,
+): ResolvedLessonStep {
+  const shuffledChoice = shuffleChoiceLike(step, stepSeed) as ResolvedChoiceStep;
+  const variant = pickVariantKind(seed, stepIndex);
+
+  switch (variant) {
+    case 'choice':
+      return shuffledChoice;
+    case 'fill_blank':
+      return shuffleChoiceLike(toFillBlank(shuffledChoice), stepSeed + 3);
+    case 'true_false':
+      return toTrueFalse(shuffledChoice, stepSeed + 5);
+    case 'reorder':
+      return shuffleReorder(toReorder(shuffledChoice, reorderHint), stepSeed + 7);
+  }
+}
+
 export function prepareLessonSteps(
   steps: ResolvedLessonStep[],
   lessonId: string,
@@ -139,34 +175,10 @@ export function prepareLessonSteps(
   return steps.map((step, stepIndex) => {
     const stepSeed = seed + stepIndex * 17;
 
-    if (step.type === 'info') {
-      return step;
+    if (step.type === 'choice') {
+      return prepareChoiceStep(step, stepSeed, seed, stepIndex, reorderHint);
     }
 
-    if (step.type !== 'choice') {
-      if (step.type === 'fill_blank') {
-        return shuffleChoiceLike(step, stepSeed);
-      }
-
-      if (step.type === 'reorder') {
-        return shuffleReorder(step, stepSeed);
-      }
-
-      return step;
-    }
-
-    const shuffledChoice = shuffleChoiceLike(step, stepSeed) as ResolvedChoiceStep;
-    const variant = pickVariantKind(seed, stepIndex);
-
-    switch (variant) {
-      case 'choice':
-        return shuffledChoice;
-      case 'fill_blank':
-        return shuffleChoiceLike(toFillBlank(shuffledChoice), stepSeed + 3);
-      case 'true_false':
-        return toTrueFalse(shuffledChoice, stepSeed + 5);
-      case 'reorder':
-        return shuffleReorder(toReorder(shuffledChoice, reorderHint), stepSeed + 7);
-    }
+    return prepareNativeStep(step, stepSeed);
   });
 }
