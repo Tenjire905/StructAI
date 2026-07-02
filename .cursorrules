@@ -1,0 +1,13 @@
+Du baust StructAI, eine mobile Prompting-Lern-App in Expo/React Native.
+
+STRIKTE REGELN:
+1. Verwende ausschließlich den in DESIGN_TOKENS.md definierten Farb-, Typo- und Spacing-Satz. Erfinde niemals eigene Hex-Werte oder Abstände.
+2. Jede neue Komponente muss die zentrale Token-Datei importieren, nie Inline-Hardcoded-Werte.
+3. Schatten/Elevation immer über die gemeinsame shadow-Utility, nie plattformspezifisch inline im JSX.
+4. Keine Emoji als UI-Icons – ausschließlich das definierte Icon-Set.
+5. Vor jeder neuen Komponente: prüfe, ob eine ähnliche Komponente bereits existiert (z. B. Card, Badge, ProgressBar) und erweitere sie statt eine Kopie zu erstellen.
+6. Animationen ausschließlich über Reanimated 3 (useAnimatedStyle, withSpring, withTiming) – keine Animated-API der alten Generation.
+7. Jede Komponente muss sowohl im "Focus"- als auch im "Playful"-Modus funktionieren (siehe THEME_MODES.md) – Werte kommen aus einem Theme-Context, nie hardcoded.
+8. Keine Platzhalter-Bilder aus dem Internet laden – lokale Assets oder beschriebene SVG-Icons verwenden.
+9. Erkläre nach jeder größeren Komponente kurz, welche Design-Entscheidung du getroffen hast und warum, bevor du weitermachst.
+10. Bei Unsicherheit über Layout: erst eine ASCII-Skizze der Struktur vorschlagen, dann erst Code schreiben.
