@@ -1,8 +1,6 @@
 import { clearOnboardingCompleted } from '@/lib/appStorage';
 import { clearPersistedProgress } from '@/store/progressStore';
 
-import { appStorage } from './appStorage';
-
 /** Dev-/Musteraccount: bei jedem App-Start frischer Zustand (Fortschritt, Graphen, Onboarding). */
 export const DEV_FRESH_SESSION_ON_LAUNCH = true;
 

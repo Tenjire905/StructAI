@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { createMMKV, type MMKV } from 'react-native-mmkv';
 
 type KeyValueStorage = {
@@ -8,41 +9,78 @@ type KeyValueStorage = {
   isMemoryOnly: boolean;
 };
 
-let nativeMmkv: MMKV | null = null;
+function isClientEnvironment(): boolean {
+  if (typeof window === 'undefined') {
+    return false;
+  }
 
-function createAppStorage(): KeyValueStorage {
+  // Expo Router static render runs in Node with Platform.OS === 'web'.
+  if (Platform.OS === 'web' && typeof document === 'undefined') {
+    return false;
+  }
+
+  return true;
+}
+
+function createMemoryStorage(): KeyValueStorage {
+  const memory = new Map<string, string>();
+
+  return {
+    isMemoryOnly: true,
+    getString: (key) => memory.get(key),
+    set: (key, value) => {
+      memory.set(key, value);
+    },
+    delete: (key) => {
+      memory.delete(key);
+    },
+    contains: (key) => memory.has(key),
+  };
+}
+
+function createNativeStorage(): KeyValueStorage {
   try {
-    nativeMmkv = createMMKV({ id: 'structai-storage' });
+    const mmkv: MMKV = createMMKV({ id: 'structai-storage' });
 
     return {
       isMemoryOnly: false,
-      getString: (key) => nativeMmkv?.getString(key),
+      getString: (key) => mmkv.getString(key),
       set: (key, value) => {
-        nativeMmkv?.set(key, value);
+        mmkv.set(key, value);
       },
       delete: (key) => {
-        nativeMmkv?.remove(key);
+        mmkv.remove(key);
       },
-      contains: (key) => nativeMmkv?.contains(key) ?? false,
+      contains: (key) => mmkv.contains(key),
     };
   } catch {
-    const memory = new Map<string, string>();
-
-    return {
-      isMemoryOnly: true,
-      getString: (key) => memory.get(key),
-      set: (key, value) => {
-        memory.set(key, value);
-      },
-      delete: (key) => {
-        memory.delete(key);
-      },
-      contains: (key) => memory.has(key),
-    };
+    return createMemoryStorage();
   }
 }
 
-export const appStorage = createAppStorage();
+let storageInstance: KeyValueStorage | null = null;
+
+function resolveStorage(): KeyValueStorage {
+  if (!isClientEnvironment()) {
+    return createMemoryStorage();
+  }
+
+  if (!storageInstance) {
+    storageInstance = createNativeStorage();
+  }
+
+  return storageInstance;
+}
+
+export const appStorage: KeyValueStorage = {
+  get isMemoryOnly() {
+    return resolveStorage().isMemoryOnly;
+  },
+  getString: (key) => resolveStorage().getString(key),
+  set: (key, value) => resolveStorage().set(key, value),
+  delete: (key) => resolveStorage().delete(key),
+  contains: (key) => resolveStorage().contains(key),
+};
 
 const ONBOARDING_COMPLETED_KEY = 'structai.onboarding-completed';
 

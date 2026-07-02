@@ -58,14 +58,27 @@ function readStoredLocale(): Locale {
 }
 
 export function ThemeModeProvider({ children }: PropsWithChildren) {
-  const [mode, setModeState] = useState<ThemeMode>(() => readStoredMode());
-  const [locale, setLocaleState] = useState<Locale>(() => readStoredLocale());
+  const [mode, setModeState] = useState<ThemeMode>(DEFAULT_MODE);
+  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
 
   useEffect(() => {
+    setModeState(readStoredMode());
+    setLocaleState(readStoredLocale());
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     storage.set(THEME_MODE_STORAGE_KEY, mode);
   }, [mode]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     storage.set(LOCALE_STORAGE_KEY, locale);
   }, [locale]);
 

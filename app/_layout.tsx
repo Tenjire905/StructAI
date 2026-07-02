@@ -5,7 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import '@/lib/bootstrap';
+import { runBootstrap } from '@/lib/bootstrap';
 import { ThemeModeProvider, CelebrationProvider, colors } from '@/theme';
 
 export { ErrorBoundary } from 'expo-router';
@@ -24,6 +24,10 @@ export default function RootLayout() {
     'GeneralSans-Medium': require('../assets/fonts/GeneralSans-Medium.otf'),
     'SpaceMono-Regular': require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+
+  useEffect(() => {
+    runBootstrap();
+  }, []);
 
   useEffect(() => {
     if (error) {
