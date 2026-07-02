@@ -55,6 +55,11 @@ export const lessonEnCm = {
   "cm-4.s0.title": "Tone is more than \"friendly\"",
   "cm-4.s1.explanation":
     "Measurable style features are reproducible - vague adjectives are not.",
+  "cm-4.s1.instruction": "Put the steps for precise style instructions in a sensible order.",
+  "cm-4.s1.item0": "Define measurable traits (sentence length, address form, technical level)",
+  "cm-4.s1.item1": "Replace vague adjectives with concrete rules",
+  "cm-4.s1.item2": "Add a mini example sentence in the target tone",
+  "cm-4.s1.item3": "Remove conflicting examples in a different style",
   "cm-4.s1.opt0": "Please phrase it nicely.",
   "cm-4.s1.opt1":
     "Use formal address, matter-of-fact tone, max. 20 words per sentence, no metaphors.",

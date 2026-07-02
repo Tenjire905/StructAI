@@ -38,9 +38,10 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         bodyKey: 'pb-2.s0.body',
       },
       {
-        type: 'choice',
-        questionKey: 'pb-2.s1.question',
-        optionKeys: ['pb-2.s1.opt0', 'pb-2.s1.opt1', 'pb-2.s1.opt2'],
+        type: 'fill_blank',
+        prefixKey: 'pb-2.s1.prefix',
+        suffixKey: 'pb-2.s1.suffix',
+        optionKeys: ['pb-2.s1.blank0', 'pb-2.s1.blank1', 'pb-2.s1.blank2'],
         correctIndex: 1,
         explanationKey: 'pb-2.s1.explanation',
       },
@@ -265,10 +266,9 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         bodyKey: 'sl-3.s0.body',
       },
       {
-        type: 'choice',
-        questionKey: 'sl-3.s1.question',
-        optionKeys: ['sl-3.s1.opt0', 'sl-3.s1.opt1', 'sl-3.s1.opt2'],
-        correctIndex: 1,
+        type: 'true_false',
+        statementKey: 'sl-3.s1.statement',
+        correct: true,
         explanationKey: 'sl-3.s1.explanation',
       },
       {
@@ -447,10 +447,15 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         bodyKey: 'cm-4.s0.body',
       },
       {
-        type: 'choice',
-        questionKey: 'cm-4.s1.question',
-        optionKeys: ['cm-4.s1.opt0', 'cm-4.s1.opt1', 'cm-4.s1.opt2'],
-        correctIndex: 1,
+        type: 'reorder',
+        instructionKey: 'cm-4.s1.instruction',
+        itemKeys: [
+          'cm-4.s1.item0',
+          'cm-4.s1.item1',
+          'cm-4.s1.item2',
+          'cm-4.s1.item3',
+        ],
+        correctOrder: [0, 1, 2, 3],
         explanationKey: 'cm-4.s1.explanation',
       },
       {

@@ -24,6 +24,7 @@ export const lessonFrSl: Record<string, string> = {
   'sl-3.s0.title': 'Les contraintes = des limites mesurables',
   'sl-3.s1.explanation': 'Le nombre de phrases, la consigne de style et le public cible sont concrètement vérifiables.',
   'sl-3.s1.opt0': 'Merci de rester dans le sujet.',
+  'sl-3.s1.statement': '« 3 phrases maximum, pas de voix passive, public cible : développeurs » est une contrainte vérifiable.',
   'sl-3.s1.opt1': '3 phrases maximum, pas de voix passive, public cible : développeurs.',
   'sl-3.s1.opt2': 'Écris de manière professionnelle.',
   'sl-3.s1.question': 'Quelle formulation est une vraie contrainte ?',
