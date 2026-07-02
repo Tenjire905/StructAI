@@ -8,6 +8,14 @@ export type CopyEntry = {
 export type CopyCatalog = Record<string, CopyEntry>;
 
 export const copy: CopyCatalog = {
+  'home.greeting': {
+    playful: 'Willkommen zurück, {{name}}!',
+    focus: 'Guten Tag, {{name}}.',
+  },
+  'home.continueLearning': {
+    playful: 'Weiterlernen',
+    focus: 'Aktuelle Lernpfade',
+  },
   'orbCounter.label': {
     playful: 'Energie-Orbs',
     focus: 'Orbs',
