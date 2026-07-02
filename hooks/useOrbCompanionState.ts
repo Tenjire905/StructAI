@@ -22,19 +22,19 @@ function isLowEnergy(orbCount: number, orbMax: number): boolean {
  * Derives the orb companion mood from progress, celebrations, theme mode, and
  * optional external overrides (e.g. attentive from step B4).
  *
- * Priority when no override is set: celebrating > low_energy > sleepy > idle
+ * Priority: celebrating > attentive (override) > low_energy > sleepy > idle
  *
  * @example
- * // celebrating beats low_energy:
- * // lastEvent.isActive === true AND orbCount/orbMax === 0.05 → 'celebrating'
+ * // celebrating beats attentive override:
+ * // companionOverride='attentive' AND lastEvent.isActive → 'celebrating'
+ *
+ * @example
+ * // attentive beats low_energy:
+ * // companionOverride='attentive' AND orbCount/orbMax === 0.05 → 'attentive'
  *
  * @example
  * // low_energy beats sleepy:
  * // playful background >60s, no celebration, orbCount/orbMax === 0.10 → 'low_energy'
- *
- * @example
- * // celebrating beats sleepy:
- * // playful background >60s AND lastEvent.isActive === true → 'celebrating'
  */
 export function useOrbCompanionState(
   companionOverride?: OrbCompanionState,
@@ -81,12 +81,12 @@ export function useOrbCompanionState(
     };
   }, [mode]);
 
-  if (companionOverride !== undefined) {
-    return companionOverride;
-  }
-
   if (lastEvent?.isActive) {
     return 'celebrating';
+  }
+
+  if (companionOverride !== undefined) {
+    return companionOverride;
   }
 
   if (isLowEnergy(orbCount, orbMax)) {

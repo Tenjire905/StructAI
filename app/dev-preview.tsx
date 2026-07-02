@@ -1,13 +1,55 @@
 import { ScrollView, Text, View } from 'react-native';
 
 import {
+  OrbCompanion,
   OrbCounter,
   PathCard,
   StatBlock,
   StreakTracker,
 } from '@/components/features';
 import { Avatar, Badge, Button, Card, ProgressBar } from '@/components/ui';
+import type { OrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { ThemeModeScope, useThemeMode } from '@/theme';
+
+const COMPANION_STATES: OrbCompanionState[] = [
+  'idle',
+  'attentive',
+  'happy',
+  'low_energy',
+  'celebrating',
+  'sleepy',
+];
+
+function CompanionStatesPreview() {
+  const { tokens } = useThemeMode();
+
+  return (
+    <View style={{ gap: tokens.spacing.space2 }}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.space3 }}>
+        {COMPANION_STATES.map((state) => (
+          <View
+            key={state}
+            style={{
+              alignItems: 'center',
+              gap: tokens.spacing.space1,
+              minWidth: 72,
+            }}>
+            <OrbCompanion size={tokens.icons.sizes.xl} state={state} />
+            <Text
+              style={{
+                color: tokens.colors.text.tertiary,
+                fontFamily: tokens.typography.fontFamily.mono,
+                fontSize: tokens.typography.fontSize.bodySm,
+                textAlign: 'center',
+              }}>
+              {state}
+            </Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
 
 function AtomsPreview() {
   const { tokens } = useThemeMode();
@@ -93,6 +135,16 @@ function PreviewColumn({ modeLabel }: { modeLabel: 'Playful' | 'Focus' }) {
         }}>
         {modeLabel}
       </Text>
+
+      <Text
+        style={{
+          color: tokens.colors.text.secondary,
+          fontFamily: tokens.typography.fontFamily.bodyMedium,
+          fontSize: tokens.typography.fontSize.bodySm,
+        }}>
+        OrbCompanion
+      </Text>
+      <CompanionStatesPreview />
 
       <AtomsPreview />
       <FeaturesPreview />
