@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, ScrollView, Text, TextInput, View } from 'react-native';
 
 import { StatBlock } from '@/components/features';
 import { Avatar, Badge, Button, Card } from '@/components/ui';
+import {
+  ScoringError,
+  getProviderLabel,
+  validateApiKey,
+} from '@/lib/aiScoring';
 import { deleteApiKey, getApiKey, saveApiKey } from '@/lib/secureKeyStore';
 import { useThemeMode, type ThemeMode } from '@/theme';
 
@@ -12,15 +17,61 @@ const MOCK_PROFILE = {
   currentStreak: 4,
 };
 
+type KeyStatus =
+  | { state: 'none' }
+  | { state: 'checking' }
+  | { state: 'valid'; providerLabel: string }
+  | { state: 'unverified' }
+  | { state: 'invalid' };
+
 export default function ProfilScreen() {
   const { tokens, t, mode, setMode } = useThemeMode();
   const [apiKeyInput, setApiKeyInput] = useState('');
-  const [hasStoredKey, setHasStoredKey] = useState(false);
+  const [keyStatus, setKeyStatus] = useState<KeyStatus>({ state: 'none' });
 
+  // Beim Öffnen: vorhandenen Key kostenlos gegen die Models-API prüfen
+  // (validiert nur Auth, verbraucht keine Tokens).
   useEffect(() => {
-    getApiKey().then((storedKey) => {
-      setHasStoredKey(storedKey !== null && storedKey.length > 0);
-    });
+    let cancelled = false;
+
+    getApiKey()
+      .then(async (storedKey) => {
+        if (!storedKey || storedKey.length === 0) {
+          if (!cancelled) {
+            setKeyStatus({ state: 'none' });
+          }
+          return;
+        }
+
+        if (!cancelled) {
+          setKeyStatus({ state: 'checking' });
+        }
+
+        try {
+          const provider = await validateApiKey(storedKey);
+          if (!cancelled) {
+            setKeyStatus({ state: 'valid', providerLabel: getProviderLabel(provider) });
+          }
+        } catch (error) {
+          if (cancelled) {
+            return;
+          }
+          if (error instanceof ScoringError && error.reason === 'invalidKey') {
+            setKeyStatus({ state: 'invalid' });
+          } else {
+            setKeyStatus({ state: 'unverified' });
+          }
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setKeyStatus({ state: 'none' });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleSaveKey = async () => {
@@ -30,15 +81,36 @@ export default function ProfilScreen() {
       return;
     }
 
-    await saveApiKey(trimmedKey);
-    setApiKeyInput('');
-    setHasStoredKey(true);
+    setKeyStatus({ state: 'checking' });
+
+    try {
+      const provider = await validateApiKey(trimmedKey);
+      await saveApiKey(trimmedKey);
+      setApiKeyInput('');
+      setKeyStatus({ state: 'valid', providerLabel: getProviderLabel(provider) });
+    } catch (error) {
+      if (error instanceof ScoringError && error.reason === 'invalidKey') {
+        // Ungültige Keys nicht speichern – Eingabe bleibt zur Korrektur stehen.
+        setKeyStatus({ state: 'invalid' });
+        return;
+      }
+
+      // Netzwerk-/Serverprobleme: Key trotzdem speichern, Prüfung folgt bei Nutzung.
+      await saveApiKey(trimmedKey);
+      setApiKeyInput('');
+      setKeyStatus({ state: 'unverified' });
+    }
   };
 
   const handleDeleteKey = async () => {
     await deleteApiKey();
-    setHasStoredKey(false);
+    setKeyStatus({ state: 'none' });
   };
+
+  const hasStoredKey =
+    keyStatus.state === 'valid' ||
+    keyStatus.state === 'unverified' ||
+    keyStatus.state === 'checking';
 
   return (
     <ScrollView
@@ -148,7 +220,24 @@ export default function ProfilScreen() {
               {t('profile.byokDescription')}
             </Text>
 
-            {hasStoredKey ? (
+            {keyStatus.state === 'checking' ? (
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  gap: tokens.spacing.space2,
+                }}>
+                <ActivityIndicator color={tokens.colors.accent.primary} size="small" />
+                <Text
+                  style={{
+                    color: tokens.colors.text.secondary,
+                    fontFamily: tokens.typography.fontFamily.body,
+                    fontSize: tokens.typography.fontSize.bodySm,
+                  }}>
+                  {t('profile.byokChecking')}
+                </Text>
+              </View>
+            ) : hasStoredKey ? (
               <View
                 style={{
                   alignItems: 'center',
@@ -156,7 +245,16 @@ export default function ProfilScreen() {
                   gap: tokens.spacing.space3,
                   justifyContent: 'space-between',
                 }}>
-                <Badge label={t('profile.byokSavedBadge')} tone="success" />
+                {keyStatus.state === 'valid' ? (
+                  <Badge
+                    label={t('profile.byokValidBadge', {
+                      provider: keyStatus.providerLabel,
+                    })}
+                    tone="success"
+                  />
+                ) : (
+                  <Badge label={t('profile.byokUnverifiedBadge')} tone="warning" />
+                )}
                 <Button
                   label={t('profile.byokDelete')}
                   onPress={handleDeleteKey}
@@ -165,6 +263,16 @@ export default function ProfilScreen() {
               </View>
             ) : (
               <View style={{ gap: tokens.spacing.space3 }}>
+                {keyStatus.state === 'invalid' ? (
+                  <Text
+                    style={{
+                      color: tokens.colors.accent.danger,
+                      fontFamily: tokens.typography.fontFamily.bodyMedium,
+                      fontSize: tokens.typography.fontSize.bodySm,
+                    }}>
+                    {t('profile.byokInvalidError')}
+                  </Text>
+                ) : null}
                 <TextInput
                   autoCapitalize="none"
                   autoCorrect={false}
@@ -173,7 +281,10 @@ export default function ProfilScreen() {
                   placeholderTextColor={tokens.colors.text.tertiary}
                   secureTextEntry
                   style={{
-                    borderColor: tokens.colors.border.strong,
+                    borderColor:
+                      keyStatus.state === 'invalid'
+                        ? tokens.colors.accent.danger
+                        : tokens.colors.border.strong,
                     borderRadius: tokens.radius.md,
                     borderWidth: 1,
                     color: tokens.colors.text.primary,

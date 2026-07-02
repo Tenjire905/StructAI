@@ -14,7 +14,7 @@ const CONSTRAINT_PATTERNS =
   /\b(maximal|mindestens|genau|nur|ohne|zielgruppe|absätze?|wörter|zeichen|stichpunkte?|ton|stil|sprache)\b/i;
 const STRUCTURE_PATTERNS = /(\n|:|;|##|--|\d\.|•|\*)/;
 
-function clampScore(value: number): number {
+export function clampScore(value: number): number {
   return Math.max(5, Math.min(100, Math.round(value)));
 }
 

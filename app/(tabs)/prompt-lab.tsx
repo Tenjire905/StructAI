@@ -1,6 +1,6 @@
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { KeyRound } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -9,7 +9,13 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ScoreChart } from '@/components/features';
-import { Button, Card, ProgressBar } from '@/components/ui';
+import { Badge, Button, Card, ProgressBar } from '@/components/ui';
+import {
+  ScoringError,
+  detectProvider,
+  getProviderLabel,
+  scorePromptRemote,
+} from '@/lib/aiScoring';
 import { getApiKey } from '@/lib/secureKeyStore';
 import { scorePrompt, type PromptScore } from '@/lib/promptScoring';
 import { useThemeMode } from '@/theme';
@@ -22,24 +28,78 @@ const HINT_COPY_KEY = {
   constraints: 'promptLab.hintConstraints',
 } as const;
 
+const FALLBACK_COPY_KEY: Record<ScoringError['reason'], string> = {
+  invalidKey: 'promptLab.fallbackInvalidKey',
+  quota: 'promptLab.fallbackQuota',
+  network: 'promptLab.fallbackNetwork',
+  generic: 'promptLab.fallbackGeneric',
+};
+
 export default function PromptLabScreen() {
   const { tokens, t } = useThemeMode();
   const router = useRouter();
   const [promptInput, setPromptInput] = useState('');
   const [score, setScore] = useState<PromptScore | null>(null);
   const [history, setHistory] = useState<number[]>(MOCK_SCORE_HISTORY);
-  const [hasStoredKey, setHasStoredKey] = useState(true);
+  const [storedKey, setStoredKey] = useState<string | null>(null);
+  const [isScoring, setIsScoring] = useState(false);
+  const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
 
-  useEffect(() => {
-    getApiKey().then((storedKey) => {
-      setHasStoredKey(storedKey !== null && storedKey.length > 0);
-    });
-  }, []);
+  // Key bei jedem Tab-Fokus neu lesen – falls er gerade im Profil
+  // hinzugefügt oder gelöscht wurde.
+  useFocusEffect(
+    useCallback(() => {
+      let cancelled = false;
 
-  const handleScore = () => {
-    const result = scorePrompt(promptInput);
+      getApiKey()
+        .then((key) => {
+          if (!cancelled) {
+            setStoredKey(key && key.length > 0 ? key : null);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setStoredKey(null);
+          }
+        });
+
+      return () => {
+        cancelled = true;
+      };
+    }, []),
+  );
+
+  const provider = storedKey ? detectProvider(storedKey) : null;
+
+  const handleScore = async () => {
+    if (isScoring) {
+      return;
+    }
+
+    setIsScoring(true);
+    setFallbackNotice(null);
+
+    let result: PromptScore;
+
+    // Fallback-Kette: Remote-Bewertung, bei jedem Fehler lokale Heuristik.
+    // Ein API-Problem (ungültiger Key, kein Guthaben, offline) darf die App
+    // niemals crashen – der Nutzer bekommt immer ein Ergebnis plus Hinweis.
+    if (storedKey) {
+      try {
+        result = await scorePromptRemote(promptInput, storedKey);
+      } catch (error) {
+        const reason =
+          error instanceof ScoringError ? error.reason : ('generic' as const);
+        setFallbackNotice(FALLBACK_COPY_KEY[reason]);
+        result = scorePrompt(promptInput);
+      }
+    } else {
+      result = scorePrompt(promptInput);
+    }
+
     setScore(result);
     setHistory((previous) => [...previous.slice(-9), result.total]);
+    setIsScoring(false);
   };
 
   const feedbackKey =
@@ -60,7 +120,7 @@ export default function PromptLabScreen() {
         paddingTop: tokens.spacing.space5,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
-      {!hasStoredKey ? (
+      {storedKey === null ? (
         <Pressable
           accessibilityRole="button"
           onPress={() => router.push('/profil')}
@@ -99,6 +159,13 @@ export default function PromptLabScreen() {
             </Text>
           </View>
         </Pressable>
+      ) : provider !== null ? (
+        <View style={{ alignSelf: 'flex-start' }}>
+          <Badge
+            label={t('promptLab.liveBadge', { provider: getProviderLabel(provider) })}
+            tone="success"
+          />
+        </View>
       ) : null}
 
       <View style={{ gap: tokens.spacing.space3 }}>
@@ -133,12 +200,35 @@ export default function PromptLabScreen() {
         />
 
         <Button
-          disabled={promptInput.trim().length === 0}
-          label={t('promptLab.scoreButton')}
+          disabled={promptInput.trim().length === 0 || isScoring}
+          label={
+            isScoring ? t('promptLab.scoringInProgress') : t('promptLab.scoreButton')
+          }
           onPress={handleScore}
           variant="primary"
         />
       </View>
+
+      {fallbackNotice !== null ? (
+        <View
+          style={{
+            backgroundColor: tokens.colors.surface.card,
+            borderColor: tokens.colors.accent.warning,
+            borderRadius: tokens.radius.md,
+            borderWidth: 1,
+            padding: tokens.spacing.space3,
+          }}>
+          <Text
+            style={{
+              color: tokens.colors.text.primary,
+              fontFamily: tokens.typography.fontFamily.body,
+              fontSize: tokens.typography.fontSize.bodySm,
+              lineHeight: tokens.typography.fontSize.bodySm * 1.4,
+            }}>
+            {t(fallbackNotice)}
+          </Text>
+        </View>
+      ) : null}
 
       {score !== null && feedbackKey !== null ? (
         <ScoreResult feedbackKey={feedbackKey} score={score} />

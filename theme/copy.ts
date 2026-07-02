@@ -208,6 +208,46 @@ export const copy: CopyCatalog = {
     playful: 'Dein Score-Verlauf',
     focus: 'Score-Verlauf',
   },
+  'promptLab.scoringInProgress': {
+    playful: 'Wird bewertet…',
+    focus: 'Bewerte…',
+  },
+  'promptLab.liveBadge': {
+    playful: 'Live-Bewertung: {{provider}}',
+    focus: 'Live: {{provider}}',
+  },
+  'promptLab.fallbackInvalidKey': {
+    playful: 'Dein Key wurde abgelehnt – diesmal hat der lokale Coach bewertet. Prüf den Key im Profil.',
+    focus: 'API-Key abgelehnt. Lokale Bewertung verwendet. Key im Profil prüfen.',
+  },
+  'promptLab.fallbackQuota': {
+    playful: 'Dein API-Guthaben ist aufgebraucht oder limitiert – der lokale Coach übernimmt.',
+    focus: 'Kontingent/Guthaben erschöpft. Lokale Bewertung verwendet.',
+  },
+  'promptLab.fallbackNetwork': {
+    playful: 'Keine Verbindung zur KI – der lokale Coach übernimmt.',
+    focus: 'API nicht erreichbar. Lokale Bewertung verwendet.',
+  },
+  'promptLab.fallbackGeneric': {
+    playful: 'Die KI-Antwort war unbrauchbar – der lokale Coach übernimmt.',
+    focus: 'API-Fehler. Lokale Bewertung verwendet.',
+  },
+  'profile.byokChecking': {
+    playful: 'Prüfe deinen Schlüssel…',
+    focus: 'Prüfe Key…',
+  },
+  'profile.byokValidBadge': {
+    playful: 'Funktioniert ({{provider}})',
+    focus: 'Aktiv ({{provider}})',
+  },
+  'profile.byokInvalidError': {
+    playful: 'Der Schlüssel wurde abgelehnt – bitte prüf ihn nochmal.',
+    focus: 'Key ungültig. Bitte prüfen.',
+  },
+  'profile.byokUnverifiedBadge': {
+    playful: 'Gespeichert – noch nicht geprüft',
+    focus: 'Gespeichert (ungeprüft)',
+  },
   'statBlock.completedLessons': {
     playful: 'Abgeschlossene Lektionen',
     focus: 'Lektionen abgeschlossen',
