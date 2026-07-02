@@ -111,45 +111,48 @@ export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
             <OrbCompanion size={tokens.icons.sizes.lg} state={companionState} />
           </Animated.View>
         ) : (
-          <View
-            style={{
-              alignItems: 'center',
-              height: ringSize,
-              justifyContent: 'center',
-              width: ringSize,
-            }}>
-            <Svg height={ringSize} width={ringSize}>
-              <Circle
-                cx={center}
-                cy={center}
-                fill="none"
-                r={ringRadius}
-                stroke={tokens.colors.border.subtle}
-                strokeWidth={strokeWidth}
-              />
-              <G transform={`rotate(-90 ${center} ${center})`}>
+          <View style={{ alignItems: 'center', flexDirection: 'row', gap: tokens.spacing.space2 }}>
+            <View
+              style={{
+                alignItems: 'center',
+                height: ringSize,
+                justifyContent: 'center',
+                width: ringSize,
+              }}>
+              <Svg height={ringSize} width={ringSize}>
                 <Circle
                   cx={center}
                   cy={center}
                   fill="none"
                   r={ringRadius}
-                  stroke={tokens.colors.accent.primary}
-                  strokeDasharray={`${circumference} ${circumference}`}
-                  strokeDashoffset={strokeDashoffset}
-                  strokeLinecap="round"
+                  stroke={tokens.colors.border.subtle}
                   strokeWidth={strokeWidth}
                 />
-              </G>
-            </Svg>
-            <Text
-              style={{
-                color: tokens.colors.text.primary,
-                fontFamily: tokens.typography.fontFamily.mono,
-                fontSize: tokens.typography.fontSize.bodySm,
-                position: 'absolute',
-              }}>
-              {Math.round(energyRatio * 100)}
-            </Text>
+                <G transform={`rotate(-90 ${center} ${center})`}>
+                  <Circle
+                    cx={center}
+                    cy={center}
+                    fill="none"
+                    r={ringRadius}
+                    stroke={tokens.colors.accent.primary}
+                    strokeDasharray={`${circumference} ${circumference}`}
+                    strokeDashoffset={strokeDashoffset}
+                    strokeLinecap="round"
+                    strokeWidth={strokeWidth}
+                  />
+                </G>
+              </Svg>
+              <Text
+                style={{
+                  color: tokens.colors.text.primary,
+                  fontFamily: tokens.typography.fontFamily.mono,
+                  fontSize: tokens.typography.fontSize.bodySm,
+                  position: 'absolute',
+                }}>
+                {Math.round(energyRatio * 100)}
+              </Text>
+            </View>
+            <OrbCompanion size={tokens.icons.sizes.lg} state={companionState} />
           </View>
         )}
 

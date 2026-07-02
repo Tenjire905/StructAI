@@ -27,6 +27,7 @@ import type { OrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { useThemeMode } from '@/theme';
 
 const AnimatedEllipse = Animated.createAnimatedComponent(Ellipse);
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 type OrbCompanionProps = {
   state: OrbCompanionState;
@@ -46,6 +47,11 @@ function stopEyeAnimations(
   cancelAnimation(eyeHeight);
   eyeRadius.value = 1.1;
   eyeHeight.value = 1.1;
+}
+
+function stopGradientIntensity(intensity: SharedValue<number>, value = 1) {
+  cancelAnimation(intensity);
+  intensity.value = value;
 }
 
 function getOrbBodyOpacity(state: OrbCompanionState): number {
@@ -216,14 +222,32 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
   const isFocused = useIsFocused();
   const gradientId = useId().replace(/:/g, '');
   const orbScale = useSharedValue(1);
+  const gradientIntensity = useSharedValue(getOrbBodyOpacity(state));
   const [reduceMotion, setReduceMotion] = useState(false);
 
   const isPlayfulPresentation =
     !reduceMotion && tokens.presentation.orbStyle === 'illustrated';
 
+  const highlightRatio = useMemo(() => {
+    const bodyOpacity = getOrbBodyOpacity(state);
+    return getHighlightOpacity(state, isPlayfulPresentation) / bodyOpacity;
+  }, [isPlayfulPresentation, state]);
+
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
   }, []);
+
+  useEffect(() => {
+    const targetIntensity = getOrbBodyOpacity(state);
+    stopGradientIntensity(gradientIntensity, gradientIntensity.value);
+    gradientIntensity.value = withTiming(targetIntensity, {
+      duration: tokens.motion.duration.fast,
+    });
+
+    return () => {
+      stopGradientIntensity(gradientIntensity, targetIntensity);
+    };
+  }, [gradientIntensity, state, tokens.motion.duration.fast]);
 
   useEffect(() => {
     if (!isFocused || reduceMotion) {
@@ -308,11 +332,13 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
     transform: [{ scale: orbScale.value }],
   }));
 
-  const bodyOpacity = useMemo(() => getOrbBodyOpacity(state), [state]);
-  const highlightOpacity = useMemo(
-    () => getHighlightOpacity(state, isPlayfulPresentation),
-    [isPlayfulPresentation, state],
-  );
+  const bodyAnimatedProps = useAnimatedProps(() => ({
+    opacity: gradientIntensity.value,
+  }));
+
+  const highlightAnimatedProps = useAnimatedProps(() => ({
+    opacity: gradientIntensity.value * highlightRatio,
+  }));
 
   return (
     <Animated.View style={containerStyle}>
@@ -323,12 +349,18 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
             <Stop offset="100%" stopColor={tokens.colors.accent.primary} />
           </RadialGradient>
         </Defs>
-        <Circle cx="12" cy="12" fill={`url(#${gradientId})`} opacity={bodyOpacity} r="10" />
-        <Circle
+        <AnimatedCircle
+          animatedProps={bodyAnimatedProps}
+          cx="12"
+          cy="12"
+          fill={`url(#${gradientId})`}
+          r="10"
+        />
+        <AnimatedCircle
+          animatedProps={highlightAnimatedProps}
           cx="9"
           cy="9"
           fill={tokens.colors.text.onAccent}
-          opacity={highlightOpacity}
           r="3"
         />
         {isPlayfulPresentation ? (
