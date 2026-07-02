@@ -64,6 +64,13 @@ export const lessonFrCm = {
   "cm-4.s0.title": "Le ton, c'est plus que \"sympathique\"",
   "cm-4.s1.explanation":
     "Les caractéristiques de style mesurables sont reproductibles - les adjectifs vagues ne le sont pas.",
+  "cm-4.s1.instruction":
+    "Remettez les étapes pour des consignes de style précises dans un ordre logique.",
+  "cm-4.s1.item0":
+    "Fixer des critères mesurables (longueur des phrases, forme d'adresse, niveau technique)",
+  "cm-4.s1.item1": "Remplacer les adjectifs vagues par des règles concrètes",
+  "cm-4.s1.item2": "Ajouter une mini-phrase d'exemple dans le ton visé",
+  "cm-4.s1.item3": "Retirer les exemples contradictoires dans un autre style",
   "cm-4.s1.opt0": "Merci de le formuler gentiment.",
   "cm-4.s1.opt1":
     "Vouvoiement, ton factuel, 20 mots max. par phrase, pas de métaphores.",

@@ -24,6 +24,7 @@ export const lessonEnSl: Record<string, string> = {
   'sl-3.s0.title': 'Constraints = measurable limits',
   'sl-3.s1.explanation': 'Sentence count, style guidance, and target audience are all concrete and testable.',
   'sl-3.s1.opt0': 'Please stay on point.',
+  'sl-3.s1.statement': '"Maximum 3 sentences, no passive voice, target audience: developers" is a testable constraint.',
   'sl-3.s1.opt1': 'Maximum 3 sentences, no passive voice, target audience: developers.',
   'sl-3.s1.opt2': 'Write professionally.',
   'sl-3.s1.question': 'Which wording is a real constraint?',
