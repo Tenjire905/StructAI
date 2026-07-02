@@ -13,3 +13,5 @@ export function runBootstrap(): void {
   initializeDevSession();
   useProgressStore.getState().hydrate();
 }
+
+runBootstrap();

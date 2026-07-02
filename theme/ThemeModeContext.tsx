@@ -2,7 +2,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
   type PropsWithChildren,
@@ -58,36 +57,17 @@ function readStoredLocale(): Locale {
 }
 
 export function ThemeModeProvider({ children }: PropsWithChildren) {
-  const [mode, setModeState] = useState<ThemeMode>(DEFAULT_MODE);
-  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
-
-  useEffect(() => {
-    setModeState(readStoredMode());
-    setLocaleState(readStoredLocale());
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    storage.set(THEME_MODE_STORAGE_KEY, mode);
-  }, [mode]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    storage.set(LOCALE_STORAGE_KEY, locale);
-  }, [locale]);
+  const [mode, setModeState] = useState<ThemeMode>(() => readStoredMode());
+  const [locale, setLocaleState] = useState<Locale>(() => readStoredLocale());
 
   const setMode = useCallback((nextMode: ThemeMode) => {
     setModeState(nextMode);
+    storage.set(THEME_MODE_STORAGE_KEY, nextMode);
   }, []);
 
   const setLocale = useCallback((nextLocale: Locale) => {
     setLocaleState(nextLocale);
+    storage.set(LOCALE_STORAGE_KEY, nextLocale);
   }, []);
 
   const tokens = useMemo(() => resolveThemeTokens(mode), [mode]);

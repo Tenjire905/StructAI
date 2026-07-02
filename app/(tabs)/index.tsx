@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import { useMemo } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import {
@@ -25,7 +26,11 @@ export default function HomeScreen() {
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const currentStreak = useProgressStore((state) => state.currentStreak);
   const streakDays = useProgressStore((state) => state.streakDays);
-  const activePaths = useProgressStore((state) => state.getActivePaths());
+  const pathProgress = useProgressStore((state) => state.pathProgress);
+  const activePaths = useMemo(
+    () => useProgressStore.getState().getActivePaths(),
+    [pathProgress],
+  );
 
   return (
     <ScrollView

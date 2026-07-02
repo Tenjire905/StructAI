@@ -59,10 +59,15 @@ function createNativeStorage(): KeyValueStorage {
 }
 
 let storageInstance: KeyValueStorage | null = null;
+let serverStorageInstance: KeyValueStorage | null = null;
 
 function resolveStorage(): KeyValueStorage {
   if (!isClientEnvironment()) {
-    return createMemoryStorage();
+    if (!serverStorageInstance) {
+      serverStorageInstance = createMemoryStorage();
+    }
+
+    return serverStorageInstance;
   }
 
   if (!storageInstance) {

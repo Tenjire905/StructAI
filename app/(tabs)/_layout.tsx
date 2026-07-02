@@ -1,21 +1,12 @@
 import { Redirect, Tabs } from 'expo-router';
 import { Beaker, BookOpen, Home, User } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
 
 import { isOnboardingCompleted } from '@/lib/appStorage';
 import { useThemeMode } from '@/theme';
 
 export default function TabLayout() {
   const { tokens, t } = useThemeMode();
-  const [onboarded, setOnboarded] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    setOnboarded(isOnboardingCompleted());
-  }, []);
-
-  if (onboarded === null) {
-    return null;
-  }
+  const onboarded = isOnboardingCompleted();
 
   if (!onboarded) {
     return <Redirect href="/onboarding" />;
