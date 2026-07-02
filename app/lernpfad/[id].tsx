@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { Check, Lock, Play } from 'lucide-react-native';
 import { ScrollView, Text, View } from 'react-native';
 
@@ -10,6 +10,7 @@ import { useThemeMode } from '@/theme';
 export default function LernpfadDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { tokens, t } = useThemeMode();
+  const router = useRouter();
   const path = getMockPath(id ?? '');
 
   const headerOptions = {
@@ -105,7 +106,12 @@ export default function LernpfadDetailScreen() {
 
         <Button
           label={isStarted ? t('pathDetail.continueCta') : t('pathDetail.startCta')}
-          onPress={() => undefined}
+          onPress={() => {
+            const targetChapter =
+              path.chapters.find((chapter) => chapter.status === 'current') ??
+              path.chapters[0];
+            router.push(`/lektion/${targetChapter.id}`);
+          }}
           variant="primary"
         />
 

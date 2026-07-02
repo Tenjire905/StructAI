@@ -64,6 +64,42 @@ export const copy: CopyCatalog = {
     playful: 'Diesen Pfad kennen wir noch nicht.',
     focus: 'Lernpfad nicht gefunden.',
   },
+  'lesson.stepLabel': {
+    playful: 'Schritt {{current}} von {{total}}',
+    focus: '{{current}}/{{total}}',
+  },
+  'lesson.check': {
+    playful: 'Antwort prüfen!',
+    focus: 'Prüfen',
+  },
+  'lesson.next': {
+    playful: 'Weiter geht’s!',
+    focus: 'Weiter',
+  },
+  'lesson.correctFeedback': {
+    playful: 'Stark! Deine Antwort sitzt.',
+    focus: 'Korrekt.',
+  },
+  'lesson.wrongFeedback': {
+    playful: 'Fast! Schau dir die Erklärung an.',
+    focus: 'Nicht korrekt. Siehe Erklärung.',
+  },
+  'lesson.completeTitle': {
+    playful: 'Lektion geschafft!',
+    focus: 'Lektion abgeschlossen.',
+  },
+  'lesson.orbsEarned': {
+    playful: '+{{count}} Orbs für dich!',
+    focus: '+{{count}} Orbs',
+  },
+  'lesson.backToPath': {
+    playful: 'Zurück zum Pfad',
+    focus: 'Zurück zum Pfad',
+  },
+  'lesson.notFound': {
+    playful: 'Diese Lektion gibt es noch nicht.',
+    focus: 'Lektion nicht gefunden.',
+  },
   'statBlock.completedLessons': {
     playful: 'Abgeschlossene Lektionen',
     focus: 'Lektionen abgeschlossen',
