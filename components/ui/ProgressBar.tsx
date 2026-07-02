@@ -13,15 +13,19 @@ type ProgressColor = 'primary' | 'structure';
 type ProgressBarProps = {
   progress: number;
   color?: ProgressColor;
+  /** Balkenhöhe, Default space-2 (8) – z. B. für Miniatur-Previews reduzierbar. */
+  height?: number;
   style?: StyleProp<ViewStyle>;
 };
 
 export function ProgressBar({
   progress,
   color = 'primary',
+  height,
   style,
 }: ProgressBarProps) {
   const { tokens } = useThemeMode();
+  const barHeight = height ?? tokens.spacing.space2;
   const clampedProgress = Math.min(1, Math.max(0, progress));
   const animatedProgress = useSharedValue(clampedProgress);
   const trackWidth = useSharedValue(0);
@@ -52,7 +56,7 @@ export function ProgressBar({
         {
           backgroundColor: tokens.colors.border.subtle,
           borderRadius: tokens.radius.pill,
-          height: tokens.spacing.space2,
+          height: barHeight,
         },
         style,
       ]}
@@ -63,7 +67,7 @@ export function ProgressBar({
           {
             backgroundColor: fillColor,
             borderRadius: tokens.radius.pill,
-            height: tokens.spacing.space2,
+            height: barHeight,
           },
         ]}
       />

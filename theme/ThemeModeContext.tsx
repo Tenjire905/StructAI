@@ -7,7 +7,8 @@ import {
   useState,
   type PropsWithChildren,
 } from 'react';
-import { createMMKV } from 'react-native-mmkv';
+
+import { appStorage } from '@/lib/appStorage';
 
 import { copy, formatCopyText, type CopyCatalog } from './copy';
 import {
@@ -19,29 +20,7 @@ import {
 const THEME_MODE_STORAGE_KEY = 'structai.theme-mode';
 const DEFAULT_MODE: ThemeMode = 'focus';
 
-type ModeStorage = {
-  getString: (key: string) => string | undefined;
-  set: (key: string, value: string) => void;
-};
-
-// MMKV ist ein natives Modul und in Expo Go nicht verfügbar –
-// dort fällt der Modus auf einen In-Memory-Store zurück (kein Persist über App-Neustarts).
-function createModeStorage(): ModeStorage {
-  try {
-    return createMMKV({ id: 'structai-storage' });
-  } catch {
-    const memory = new Map<string, string>();
-
-    return {
-      getString: (key) => memory.get(key),
-      set: (key, value) => {
-        memory.set(key, value);
-      },
-    };
-  }
-}
-
-const storage = createModeStorage();
+const storage = appStorage;
 
 type ThemeModeContextValue = {
   mode: ThemeMode;

@@ -248,6 +248,34 @@ export const copy: CopyCatalog = {
     playful: 'Gespeichert – noch nicht geprüft',
     focus: 'Gespeichert (ungeprüft)',
   },
+  'onboarding.welcomeHeadline': {
+    playful: 'Lerne Prompting wie ein Profi',
+    focus: 'KI-Prompting strukturiert lernen',
+  },
+  'onboarding.welcomeSub': {
+    playful: 'Kurze Lektionen, echte Bewertung, sichtbarer Fortschritt – Schritt für Schritt zu besseren Prompts.',
+    focus: 'Kurze Lektionen, messbare Bewertung, klarer Fortschritt.',
+  },
+  'onboarding.welcomeCta': {
+    playful: 'Los geht’s!',
+    focus: 'Starten',
+  },
+  'onboarding.modeQuestion': {
+    playful: 'Wie würdest du gerne lernen?',
+    focus: 'Wie würdest du gerne lernen?',
+  },
+  'onboarding.modeHint': {
+    playful: 'Beide zeigen dieselben Inhalte – du kannst jederzeit in den Einstellungen wechseln.',
+    focus: 'Identische Inhalte und Funktionen. Jederzeit in den Einstellungen änderbar.',
+  },
+  'onboarding.modeCta': {
+    playful: 'Auswahl bestätigen',
+    focus: 'Bestätigen',
+  },
+  'onboarding.previewPathTitle': {
+    playful: 'Prompt-Grundlagen',
+    focus: 'Prompt-Grundlagen',
+  },
   'statBlock.completedLessons': {
     playful: 'Abgeschlossene Lektionen',
     focus: 'Lektionen abgeschlossen',

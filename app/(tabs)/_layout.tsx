@@ -1,10 +1,19 @@
-import { Tabs } from 'expo-router';
+import { Redirect, Tabs } from 'expo-router';
 import { Beaker, BookOpen, Home, User } from 'lucide-react-native';
+import { useState } from 'react';
 
+import { isOnboardingCompleted } from '@/lib/appStorage';
 import { useThemeMode } from '@/theme';
 
 export default function TabLayout() {
   const { tokens } = useThemeMode();
+  // Einmal pro Mount lesen: nach Onboarding-Abschluss wird per router.replace('/')
+  // neu gemountet und der Flag frisch ausgewertet.
+  const [onboarded] = useState(() => isOnboardingCompleted());
+
+  if (!onboarded) {
+    return <Redirect href="/onboarding" />;
+  }
 
   return (
     <Tabs

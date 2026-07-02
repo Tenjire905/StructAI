@@ -48,6 +48,8 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: colors.background.base },
         }}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="onboarding/index" />
+        <Stack.Screen name="onboarding/modus" />
         <Stack.Screen
           name="dev-preview"
           options={{
