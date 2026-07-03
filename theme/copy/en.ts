@@ -357,6 +357,106 @@ export const copyEn: CopyCatalog = {
     playful: 'Saved - not verified yet',
     focus: 'Saved (unverified)',
   },
+  'profile.accountSection': {
+    playful: 'Your account',
+    focus: 'Account',
+  },
+  'profile.accountDescription': {
+    playful: 'You are signed in. Signing out only ends the session on this device.',
+    focus: 'Signed in. Sign out ends the session on this device.',
+  },
+  'profile.signOut': {
+    playful: 'Sign out',
+    focus: 'Sign out',
+  },
+  'auth.headline': {
+    playful: 'Welcome to StructAI',
+    focus: 'Sign in to StructAI',
+  },
+  'auth.subheadline': {
+    playful: 'Sign in so your progress can be saved securely later.',
+    focus: 'Sign in to secure your learning progress.',
+  },
+  'auth.signInTab': {
+    playful: 'Sign in',
+    focus: 'Sign in',
+  },
+  'auth.signUpTab': {
+    playful: 'Register',
+    focus: 'Register',
+  },
+  'auth.emailPlaceholder': {
+    playful: 'Email address',
+    focus: 'Email',
+  },
+  'auth.passwordPlaceholder': {
+    playful: 'Password (min. 6 characters)',
+    focus: 'Password (min. 6 chars)',
+  },
+  'auth.signInCta': {
+    playful: 'Sign in now',
+    focus: 'Sign in',
+  },
+  'auth.signInLoading': {
+    playful: 'Signing in…',
+    focus: 'Signing in…',
+  },
+  'auth.signUpCta': {
+    playful: 'Create account',
+    focus: 'Register',
+  },
+  'auth.signUpLoading': {
+    playful: 'Creating account…',
+    focus: 'Registering…',
+  },
+  'auth.signUpHint': {
+    playful: 'After registration, check your inbox if email confirmation is required.',
+    focus: 'Check your inbox if email confirmation is required.',
+  },
+  'auth.dividerOr': {
+    playful: 'or',
+    focus: 'or',
+  },
+  'auth.googleCta': {
+    playful: 'Continue with Google',
+    focus: 'Sign in with Google',
+  },
+  'auth.googleLoading': {
+    playful: 'Google sign-in…',
+    focus: 'Google…',
+  },
+  'auth.errorGeneric': {
+    playful: 'Something went wrong. Please try again.',
+    focus: 'Sign-in failed. Please try again.',
+  },
+  'auth.errorInvalidCredentials': {
+    playful: 'Email or password is incorrect.',
+    focus: 'Invalid credentials.',
+  },
+  'auth.errorEmailNotConfirmed': {
+    playful: 'Please confirm your email address first.',
+    focus: 'Email address not confirmed.',
+  },
+  'auth.errorUserExists': {
+    playful: 'An account already exists for this email.',
+    focus: 'Account already exists.',
+  },
+  'auth.errorWeakPassword': {
+    playful: 'The password does not meet the requirements.',
+    focus: 'Password requirements not met.',
+  },
+  'auth.errorNotConfigured': {
+    playful: 'Supabase is not configured yet.',
+    focus: 'Supabase configuration missing.',
+  },
+  'auth.configMissingTitle': {
+    playful: 'Backend not connected yet',
+    focus: 'Backend not configured',
+  },
+  'auth.configMissingBody': {
+    playful: 'Set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY in your .env.',
+    focus: 'Set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY in .env.',
+  },
   'onboarding.welcomeHeadline': {
     playful: 'Learn prompting like a pro',
     focus: 'Learn AI prompting in a structured way',

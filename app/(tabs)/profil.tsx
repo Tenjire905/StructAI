@@ -9,6 +9,7 @@ import {
   validateApiKey,
 } from '@/lib/aiScoring';
 import { deleteApiKey, getApiKey, saveApiKey } from '@/lib/secureKeyStore';
+import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
 import {
   LOCALE_LABEL_KEYS,
@@ -30,6 +31,7 @@ type KeyStatus =
 
 export default function ProfilScreen() {
   const { tokens, t, mode, setMode, locale, setLocale } = useThemeMode();
+  const { user, signOut } = useAuth();
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const currentStreak = useProgressStore((state) => state.currentStreak);
   const [apiKeyInput, setApiKeyInput] = useState('');
@@ -118,6 +120,16 @@ export default function ProfilScreen() {
     keyStatus.state === 'unverified' ||
     keyStatus.state === 'checking';
 
+  const displayName =
+    user?.user_metadata?.full_name ??
+    user?.user_metadata?.name ??
+    user?.email?.split('@')[0] ??
+    MOCK_PROFILE.name;
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -133,15 +145,27 @@ export default function ProfilScreen() {
           flexDirection: 'row',
           gap: tokens.spacing.space4,
         }}>
-        <Avatar name={MOCK_PROFILE.name} size="lg" />
-        <Text
-          style={{
-            color: tokens.colors.text.primary,
-            fontFamily: tokens.typography.fontFamily.display,
-            fontSize: tokens.typography.fontSize.headingLg,
-          }}>
-          {MOCK_PROFILE.name}
-        </Text>
+        <Avatar name={displayName} size="lg" />
+        <View style={{ flex: 1, gap: tokens.spacing.space2 }}>
+          <Text
+            style={{
+              color: tokens.colors.text.primary,
+              fontFamily: tokens.typography.fontFamily.display,
+              fontSize: tokens.typography.fontSize.headingLg,
+            }}>
+            {displayName}
+          </Text>
+          {user?.email ? (
+            <Text
+              style={{
+                color: tokens.colors.text.secondary,
+                fontFamily: tokens.typography.fontFamily.body,
+                fontSize: tokens.typography.fontSize.bodySm,
+              }}>
+              {user.email}
+            </Text>
+          ) : null}
+        </View>
       </View>
 
       <View style={{ gap: tokens.spacing.space3 }}>
@@ -229,6 +253,32 @@ export default function ProfilScreen() {
               }}>
               {t('profile.languageDescription')}
             </Text>
+          </View>
+        </Card>
+      </View>
+
+      <View style={{ gap: tokens.spacing.space3 }}>
+        <Text
+          style={{
+            color: tokens.colors.text.primary,
+            fontFamily: tokens.typography.fontFamily.heading,
+            fontSize: tokens.typography.fontSize.headingMd,
+          }}>
+          {t('profile.accountSection')}
+        </Text>
+
+        <Card variant="solid">
+          <View style={{ gap: tokens.spacing.space3 }}>
+            <Text
+              style={{
+                color: tokens.colors.text.secondary,
+                fontFamily: tokens.typography.fontFamily.body,
+                fontSize: tokens.typography.fontSize.bodyMd,
+                lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
+              }}>
+              {t('profile.accountDescription')}
+            </Text>
+            <Button label={t('profile.signOut')} onPress={handleSignOut} variant="ghost" />
           </View>
         </Card>
       </View>

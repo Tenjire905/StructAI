@@ -357,6 +357,106 @@ export const copyFr: CopyCatalog = {
     playful: 'Enregistree - pas encore verifiee',
     focus: 'Enregistree (non verifiee)',
   },
+  'profile.accountSection': {
+    playful: 'Ton compte',
+    focus: 'Compte',
+  },
+  'profile.accountDescription': {
+    playful: 'Tu es connecte. La deconnexion termine seulement la session sur cet appareil.',
+    focus: 'Connecte. La deconnexion termine la session sur cet appareil.',
+  },
+  'profile.signOut': {
+    playful: 'Se deconnecter',
+    focus: 'Se deconnecter',
+  },
+  'auth.headline': {
+    playful: 'Bienvenue sur StructAI',
+    focus: 'Connexion a StructAI',
+  },
+  'auth.subheadline': {
+    playful: 'Connecte-toi pour que ta progression puisse etre sauvegardee plus tard.',
+    focus: 'Connectez-vous pour securiser votre progression.',
+  },
+  'auth.signInTab': {
+    playful: 'Connexion',
+    focus: 'Connexion',
+  },
+  'auth.signUpTab': {
+    playful: 'Inscription',
+    focus: 'Inscription',
+  },
+  'auth.emailPlaceholder': {
+    playful: 'Adresse e-mail',
+    focus: 'E-mail',
+  },
+  'auth.passwordPlaceholder': {
+    playful: 'Mot de passe (min. 6 caracteres)',
+    focus: 'Mot de passe (min. 6 car.)',
+  },
+  'auth.signInCta': {
+    playful: 'Se connecter',
+    focus: 'Connexion',
+  },
+  'auth.signInLoading': {
+    playful: 'Connexion…',
+    focus: 'Connexion…',
+  },
+  'auth.signUpCta': {
+    playful: 'Creer un compte',
+    focus: 'Inscription',
+  },
+  'auth.signUpLoading': {
+    playful: 'Inscription…',
+    focus: 'Inscription…',
+  },
+  'auth.signUpHint': {
+    playful: 'Apres inscription, verifie ta boite mail si une confirmation est requise.',
+    focus: 'Verifiez votre boite mail si une confirmation est requise.',
+  },
+  'auth.dividerOr': {
+    playful: 'ou',
+    focus: 'ou',
+  },
+  'auth.googleCta': {
+    playful: 'Continuer avec Google',
+    focus: 'Se connecter avec Google',
+  },
+  'auth.googleLoading': {
+    playful: 'Connexion Google…',
+    focus: 'Google…',
+  },
+  'auth.errorGeneric': {
+    playful: 'Une erreur est survenue. Reessaie.',
+    focus: 'Echec de connexion. Reessayez.',
+  },
+  'auth.errorInvalidCredentials': {
+    playful: 'E-mail ou mot de passe incorrect.',
+    focus: 'Identifiants invalides.',
+  },
+  'auth.errorEmailNotConfirmed': {
+    playful: 'Confirme d abord ton adresse e-mail.',
+    focus: 'Adresse e-mail non confirmee.',
+  },
+  'auth.errorUserExists': {
+    playful: 'Un compte existe deja pour cet e-mail.',
+    focus: 'Compte deja existant.',
+  },
+  'auth.errorWeakPassword': {
+    playful: 'Le mot de passe ne respecte pas les exigences.',
+    focus: 'Exigences de mot de passe non respectees.',
+  },
+  'auth.errorNotConfigured': {
+    playful: 'Supabase n est pas encore configure.',
+    focus: 'Configuration Supabase manquante.',
+  },
+  'auth.configMissingTitle': {
+    playful: 'Backend pas encore connecte',
+    focus: 'Backend non configure',
+  },
+  'auth.configMissingBody': {
+    playful: 'Definis EXPO_PUBLIC_SUPABASE_URL et EXPO_PUBLIC_SUPABASE_ANON_KEY dans ton .env.',
+    focus: 'Definir EXPO_PUBLIC_SUPABASE_URL et EXPO_PUBLIC_SUPABASE_ANON_KEY dans .env.',
+  },
   'onboarding.welcomeHeadline': {
     playful: 'Apprends le prompting comme un pro',
     focus: 'Apprendre le prompting IA de facon structuree',

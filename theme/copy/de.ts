@@ -357,6 +357,106 @@ export const copyDe: CopyCatalog = {
     playful: 'Gespeichert - noch nicht geprüft',
     focus: 'Gespeichert (ungeprüft)',
   },
+  'profile.accountSection': {
+    playful: 'Dein Konto',
+    focus: 'Konto',
+  },
+  'profile.accountDescription': {
+    playful: 'Du bist angemeldet. Abmelden beendet nur die Sitzung auf diesem Gerät.',
+    focus: 'Angemeldet. Abmelden beendet die Sitzung auf diesem Gerät.',
+  },
+  'profile.signOut': {
+    playful: 'Abmelden',
+    focus: 'Abmelden',
+  },
+  'auth.headline': {
+    playful: 'Willkommen bei StructAI',
+    focus: 'Bei StructAI anmelden',
+  },
+  'auth.subheadline': {
+    playful: 'Melde dich an, damit dein Fortschritt später sicher gespeichert werden kann.',
+    focus: 'Melden Sie sich an, um Ihren Lernfortschritt zu sichern.',
+  },
+  'auth.signInTab': {
+    playful: 'Anmelden',
+    focus: 'Anmelden',
+  },
+  'auth.signUpTab': {
+    playful: 'Registrieren',
+    focus: 'Registrieren',
+  },
+  'auth.emailPlaceholder': {
+    playful: 'E-Mail-Adresse',
+    focus: 'E-Mail',
+  },
+  'auth.passwordPlaceholder': {
+    playful: 'Passwort (mind. 6 Zeichen)',
+    focus: 'Passwort (min. 6 Zeichen)',
+  },
+  'auth.signInCta': {
+    playful: 'Jetzt anmelden',
+    focus: 'Anmelden',
+  },
+  'auth.signInLoading': {
+    playful: 'Anmeldung läuft…',
+    focus: 'Anmeldung…',
+  },
+  'auth.signUpCta': {
+    playful: 'Konto erstellen',
+    focus: 'Registrieren',
+  },
+  'auth.signUpLoading': {
+    playful: 'Registrierung läuft…',
+    focus: 'Registrierung…',
+  },
+  'auth.signUpHint': {
+    playful: 'Nach der Registrierung prüf bitte dein Postfach, falls eine Bestätigung nötig ist.',
+    focus: 'Bei E-Mail-Bestätigung bitte Posteingang prüfen.',
+  },
+  'auth.dividerOr': {
+    playful: 'oder',
+    focus: 'oder',
+  },
+  'auth.googleCta': {
+    playful: 'Mit Google fortfahren',
+    focus: 'Mit Google anmelden',
+  },
+  'auth.googleLoading': {
+    playful: 'Google-Anmeldung…',
+    focus: 'Google…',
+  },
+  'auth.errorGeneric': {
+    playful: 'Das hat leider nicht geklappt. Bitte versuch es nochmal.',
+    focus: 'Anmeldung fehlgeschlagen. Bitte erneut versuchen.',
+  },
+  'auth.errorInvalidCredentials': {
+    playful: 'E-Mail oder Passwort stimmen nicht.',
+    focus: 'Ungültige Anmeldedaten.',
+  },
+  'auth.errorEmailNotConfirmed': {
+    playful: 'Bitte bestätige zuerst deine E-Mail-Adresse.',
+    focus: 'E-Mail-Adresse noch nicht bestätigt.',
+  },
+  'auth.errorUserExists': {
+    playful: 'Für diese E-Mail gibt es schon ein Konto.',
+    focus: 'Konto existiert bereits.',
+  },
+  'auth.errorWeakPassword': {
+    playful: 'Das Passwort erfüllt die Anforderungen nicht.',
+    focus: 'Passwortanforderungen nicht erfüllt.',
+  },
+  'auth.errorNotConfigured': {
+    playful: 'Supabase ist noch nicht konfiguriert.',
+    focus: 'Supabase-Konfiguration fehlt.',
+  },
+  'auth.configMissingTitle': {
+    playful: 'Backend noch nicht verbunden',
+    focus: 'Backend nicht konfiguriert',
+  },
+  'auth.configMissingBody': {
+    playful: 'Setze EXPO_PUBLIC_SUPABASE_URL und EXPO_PUBLIC_SUPABASE_ANON_KEY in deiner .env.',
+    focus: 'EXPO_PUBLIC_SUPABASE_URL und EXPO_PUBLIC_SUPABASE_ANON_KEY in .env setzen.',
+  },
   'onboarding.welcomeHeadline': {
     playful: 'Lerne Prompting wie ein Profi',
     focus: 'KI-Prompting strukturiert lernen',

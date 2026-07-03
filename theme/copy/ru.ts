@@ -357,6 +357,106 @@ export const copyRu: CopyCatalog = {
     playful: 'Сохранен - еще не проверен',
     focus: 'Сохранен (не проверен)',
   },
+  'profile.accountSection': {
+    playful: 'Твой аккаунт',
+    focus: 'Аккаунт',
+  },
+  'profile.accountDescription': {
+    playful: 'Ты вошел в аккаунт. Выход завершит сессию только на этом устройстве.',
+    focus: 'Вы вошли в аккаунт. Выход завершит сессию на этом устройстве.',
+  },
+  'profile.signOut': {
+    playful: 'Выйти',
+    focus: 'Выйти',
+  },
+  'auth.headline': {
+    playful: 'Добро пожаловать в StructAI',
+    focus: 'Вход в StructAI',
+  },
+  'auth.subheadline': {
+    playful: 'Войди, чтобы позже можно было безопасно сохранить прогресс.',
+    focus: 'Войдите, чтобы сохранить прогресс обучения.',
+  },
+  'auth.signInTab': {
+    playful: 'Вход',
+    focus: 'Вход',
+  },
+  'auth.signUpTab': {
+    playful: 'Регистрация',
+    focus: 'Регистрация',
+  },
+  'auth.emailPlaceholder': {
+    playful: 'Электронная почта',
+    focus: 'E-mail',
+  },
+  'auth.passwordPlaceholder': {
+    playful: 'Пароль (мин. 6 символов)',
+    focus: 'Пароль (мин. 6 симв.)',
+  },
+  'auth.signInCta': {
+    playful: 'Войти',
+    focus: 'Войти',
+  },
+  'auth.signInLoading': {
+    playful: 'Вход…',
+    focus: 'Вход…',
+  },
+  'auth.signUpCta': {
+    playful: 'Создать аккаунт',
+    focus: 'Регистрация',
+  },
+  'auth.signUpLoading': {
+    playful: 'Регистрация…',
+    focus: 'Регистрация…',
+  },
+  'auth.signUpHint': {
+    playful: 'После регистрации проверь почту, если нужно подтверждение.',
+    focus: 'Проверьте почту, если требуется подтверждение e-mail.',
+  },
+  'auth.dividerOr': {
+    playful: 'или',
+    focus: 'или',
+  },
+  'auth.googleCta': {
+    playful: 'Продолжить с Google',
+    focus: 'Войти через Google',
+  },
+  'auth.googleLoading': {
+    playful: 'Вход через Google…',
+    focus: 'Google…',
+  },
+  'auth.errorGeneric': {
+    playful: 'Что-то пошло не так. Попробуй еще раз.',
+    focus: 'Не удалось войти. Попробуйте снова.',
+  },
+  'auth.errorInvalidCredentials': {
+    playful: 'Неверный e-mail или пароль.',
+    focus: 'Неверные учетные данные.',
+  },
+  'auth.errorEmailNotConfirmed': {
+    playful: 'Сначала подтверди e-mail.',
+    focus: 'E-mail еще не подтвержден.',
+  },
+  'auth.errorUserExists': {
+    playful: 'Аккаунт с этим e-mail уже существует.',
+    focus: 'Аккаунт уже существует.',
+  },
+  'auth.errorWeakPassword': {
+    playful: 'Пароль не соответствует требованиям.',
+    focus: 'Пароль не соответствует требованиям.',
+  },
+  'auth.errorNotConfigured': {
+    playful: 'Supabase еще не настроен.',
+    focus: 'Конфигурация Supabase отсутствует.',
+  },
+  'auth.configMissingTitle': {
+    playful: 'Бэкенд еще не подключен',
+    focus: 'Бэкенд не настроен',
+  },
+  'auth.configMissingBody': {
+    playful: 'Укажи EXPO_PUBLIC_SUPABASE_URL и EXPO_PUBLIC_SUPABASE_ANON_KEY в .env.',
+    focus: 'Задайте EXPO_PUBLIC_SUPABASE_URL и EXPO_PUBLIC_SUPABASE_ANON_KEY в .env.',
+  },
   'onboarding.welcomeHeadline': {
     playful: 'Освой промптинг как профи',
     focus: 'Структурированное обучение AI-промптингу',
