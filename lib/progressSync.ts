@@ -1,6 +1,7 @@
 import { appStorage } from '@/lib/appStorage';
 import {
   isProgressSnapshotEmpty,
+  mergeProgressSnapshots,
   normalizeProgressSnapshot,
 } from '@/lib/progressMerge';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
@@ -125,8 +126,8 @@ export function queueProgressSync(snapshot: ProgressSnapshot): void {
 /**
  * Pulls remote progress after login.
  * - New device / empty local cache → apply server snapshot.
- * - Different account than last sync → replace with server (or defaults).
- * - Same account with existing local cache → keep local, push in background.
+ * - Same account with local + remote data → union merge (max-union-per-field).
+ * - Different account than last sync → replace with server (or defaults), never merge stale local.
  * Logout intentionally does NOT clear local MMKV (offline continuation).
  */
 export async function hydrateProgressOnLogin(userId: string): Promise<void> {
@@ -139,21 +140,37 @@ export async function hydrateProgressOnLogin(userId: string): Promise<void> {
   const accountChanged = Boolean(lastSyncedUserId && lastSyncedUserId !== userId);
   const localEmpty = isProgressSnapshotEmpty(localSnapshot);
 
-  if (!accountChanged && !localEmpty) {
-    queueProgressSync(localSnapshot);
+  const remoteSnapshot = await fetchRemoteProgress(userId);
+  const remoteEmpty = !remoteSnapshot || isProgressSnapshotEmpty(remoteSnapshot);
+
+  if (accountChanged) {
+    if (!remoteEmpty && remoteSnapshot) {
+      applySnapshotToStore(remoteSnapshot);
+    } else {
+      applySnapshotToStore({
+        ...DEFAULT_PROGRESS,
+        streakDays: [...DEFAULT_PROGRESS.streakDays],
+      });
+    }
+
     appStorage.set(PROGRESS_SYNC_USER_KEY, userId);
+    const snapshotAfterSwitch = useProgressStore.getState().getSnapshot();
+
+    if (!isProgressSnapshotEmpty(snapshotAfterSwitch)) {
+      queueProgressSync(snapshotAfterSwitch);
+    }
+
     return;
   }
 
-  const remoteSnapshot = await fetchRemoteProgress(userId);
-
-  if (remoteSnapshot && !isProgressSnapshotEmpty(remoteSnapshot)) {
-    applySnapshotToStore(remoteSnapshot);
-  } else if (accountChanged) {
-    applySnapshotToStore({
-      ...DEFAULT_PROGRESS,
-      streakDays: [...DEFAULT_PROGRESS.streakDays],
-    });
+  if (localEmpty) {
+    if (!remoteEmpty && remoteSnapshot) {
+      applySnapshotToStore(remoteSnapshot);
+    }
+  } else if (!remoteEmpty && remoteSnapshot) {
+    applySnapshotToStore(mergeProgressSnapshots(localSnapshot, remoteSnapshot));
+  } else {
+    queueProgressSync(localSnapshot);
   }
 
   appStorage.set(PROGRESS_SYNC_USER_KEY, userId);

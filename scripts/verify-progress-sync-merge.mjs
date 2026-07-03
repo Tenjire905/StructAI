@@ -252,7 +252,7 @@ console.log(
   JSON.stringify(
     {
       strategy: PROGRESS_MERGE_STRATEGY,
-      note: 'Proposed for multi-device conflict resolution; login currently uses empty-local pull only.',
+      note: 'Union merge is active on login when both local and remote snapshots exist.',
       cases,
       pass: totalViolations === 0,
       totalViolations,

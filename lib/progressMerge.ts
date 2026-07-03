@@ -2,7 +2,7 @@ import { getPathTemplate } from '@/lib/pathLessonUtils';
 import type { PathProgressRecord, ProgressSnapshot } from '@/store/progressStore';
 import { DEFAULT_PROGRESS } from '@/store/progressStore';
 
-/** Proposed conflict strategy – not wired into login until product confirmation. */
+/** Proposed conflict strategy – active on login when local and remote both exist. */
 export const PROGRESS_MERGE_STRATEGY = 'max-union-per-field' as const;
 
 export type ProgressMergeStrategy = typeof PROGRESS_MERGE_STRATEGY;
