@@ -343,6 +343,80 @@ export const copyFr: CopyCatalog = {
     playful: 'La reponse IA etait inutilisable - le coach local prend le relais.',
     focus: 'Erreur API. Evaluation locale utilisee.',
   },
+  'promptLab.modeScore': {
+    playful: 'Evaluer',
+    focus: 'Evaluation',
+  },
+  'promptLab.modeCompare': {
+    playful: 'Comparer les modeles',
+    focus: 'Comparaison',
+  },
+  'modelComparer.description': {
+    playful:
+      'Un prompt, plusieurs modeles en parallele — fais defiler les reponses et compare vitesse et cout.',
+    focus:
+      'Envoie un prompt en parallele a 2–3 providers configures et affiche les reponses cote a cote (scroll horizontal).',
+  },
+  'modelComparer.needTwoKeys': {
+    playful: 'Ajoute au moins deux cles API dans le profil pour comparer.',
+    focus: 'Au moins deux cles provider requises dans le profil.',
+  },
+  'modelComparer.modelPickerLabel': {
+    playful: 'Choisir les modeles (2–3)',
+    focus: 'Modeles (2–3)',
+  },
+  'modelComparer.modelPickerHint': {
+    playful: 'Au moins deux, au plus trois modeles.',
+    focus: 'Selection : min. 2, max. 3 modeles.',
+  },
+  'modelComparer.promptLabel': {
+    playful: 'Ton prompt',
+    focus: 'Prompt',
+  },
+  'modelComparer.promptPlaceholder': {
+    playful: 'Ecris le prompt pour tous les modeles...',
+    focus: 'Prompt pour tous les modeles selectionnes...',
+  },
+  'modelComparer.compareButton': {
+    playful: 'Comparer en parallele',
+    focus: 'Comparer',
+  },
+  'modelComparer.comparing': {
+    playful: 'Les modeles repondent...',
+    focus: 'Comparaison en cours...',
+  },
+  'modelComparer.resultsTitle': {
+    playful: 'Reponses comparees',
+    focus: 'Resultats',
+  },
+  'modelComparer.latencyBadge': {
+    playful: '{{seconds}} s',
+    focus: '{{seconds}} s',
+  },
+  'modelComparer.costBadge': {
+    playful: 'env. {{cost}}',
+    focus: '≈ {{cost}}',
+  },
+  'modelComparer.errorBadge': {
+    playful: 'Erreur',
+    focus: 'Erreur',
+  },
+  'modelComparer.errorInvalidKey': {
+    playful: 'Cle refusee — verifie-la dans le profil.',
+    focus: 'Cle API invalide.',
+  },
+  'modelComparer.errorQuota': {
+    playful: 'Quota ou credit epuise.',
+    focus: 'Rate-limit ou quota epuise.',
+  },
+  'modelComparer.errorNetwork': {
+    playful: 'Erreur reseau ou timeout.',
+    focus: 'Erreur reseau / timeout.',
+  },
+  'modelComparer.errorGeneric': {
+    playful: 'Ce modele n a pas pu repondre.',
+    focus: 'Reponse du modele echouee.',
+  },
   'profile.byokChecking': {
     playful: 'Verification de ta cle...',
     focus: 'Verification de la cle...',

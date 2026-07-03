@@ -343,6 +343,80 @@ export const copyDe: CopyCatalog = {
     playful: 'Die KI-Antwort war unbrauchbar - der lokale Coach übernimmt.',
     focus: 'API-Fehler. Lokale Bewertung verwendet.',
   },
+  'promptLab.modeScore': {
+    playful: 'Bewerten',
+    focus: 'Bewertung',
+  },
+  'promptLab.modeCompare': {
+    playful: 'Modelle vergleichen',
+    focus: 'Modellvergleich',
+  },
+  'modelComparer.description': {
+    playful:
+      'Ein Prompt, mehrere Modelle parallel — swipe durch die Antworten und vergleiche Tempo und Kosten.',
+    focus:
+      'Sendet einen Prompt parallel an 2–3 konfigurierte Provider und zeigt Antworten nebeneinander (horizontal scrollbar).',
+  },
+  'modelComparer.needTwoKeys': {
+    playful: 'Leg mindestens zwei API-Schlüssel im Profil an, um Modelle zu vergleichen.',
+    focus: 'Mindestens zwei Provider-Keys im Profil erforderlich.',
+  },
+  'modelComparer.modelPickerLabel': {
+    playful: 'Modelle wählen (2–3)',
+    focus: 'Modelle (2–3)',
+  },
+  'modelComparer.modelPickerHint': {
+    playful: 'Mindestens zwei, höchstens drei Modelle gleichzeitig.',
+    focus: 'Auswahl: mindestens 2, maximal 3 Modelle.',
+  },
+  'modelComparer.promptLabel': {
+    playful: 'Dein Prompt',
+    focus: 'Prompt',
+  },
+  'modelComparer.promptPlaceholder': {
+    playful: 'Schreib deinen Prompt für alle Modelle...',
+    focus: 'Prompt für alle gewählten Modelle...',
+  },
+  'modelComparer.compareButton': {
+    playful: 'Parallel vergleichen',
+    focus: 'Vergleichen',
+  },
+  'modelComparer.comparing': {
+    playful: 'Modelle antworten...',
+    focus: 'Vergleich läuft...',
+  },
+  'modelComparer.resultsTitle': {
+    playful: 'Antworten im Vergleich',
+    focus: 'Ergebnisse',
+  },
+  'modelComparer.latencyBadge': {
+    playful: '{{seconds}} s',
+    focus: '{{seconds}} s',
+  },
+  'modelComparer.costBadge': {
+    playful: 'ca. {{cost}}',
+    focus: '≈ {{cost}}',
+  },
+  'modelComparer.errorBadge': {
+    playful: 'Fehler',
+    focus: 'Fehler',
+  },
+  'modelComparer.errorInvalidKey': {
+    playful: 'Schlüssel abgelehnt — prüf den Key im Profil.',
+    focus: 'Ungültiger API-Schlüssel.',
+  },
+  'modelComparer.errorQuota': {
+    playful: 'Kontingent oder Guthaben erschöpft.',
+    focus: 'Rate-Limit oder Kontingent erschöpft.',
+  },
+  'modelComparer.errorNetwork': {
+    playful: 'Netzwerkfehler oder Timeout.',
+    focus: 'Netzwerkfehler / Timeout.',
+  },
+  'modelComparer.errorGeneric': {
+    playful: 'Dieses Modell konnte nicht antworten.',
+    focus: 'Modell-Antwort fehlgeschlagen.',
+  },
   'profile.byokChecking': {
     playful: 'Prüfe deinen Schlüssel...',
     focus: 'Schlüssel wird geprüft...',

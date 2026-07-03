@@ -343,6 +343,80 @@ export const copyEn: CopyCatalog = {
     playful: 'The AI response was unusable - the local coach is taking over.',
     focus: 'API error. Local scoring used.',
   },
+  'promptLab.modeScore': {
+    playful: 'Score',
+    focus: 'Scoring',
+  },
+  'promptLab.modeCompare': {
+    playful: 'Compare models',
+    focus: 'Model compare',
+  },
+  'modelComparer.description': {
+    playful:
+      'One prompt, multiple models in parallel — swipe through answers and compare speed and cost.',
+    focus:
+      'Sends one prompt in parallel to 2–3 configured providers and shows answers side by side (horizontal scroll).',
+  },
+  'modelComparer.needTwoKeys': {
+    playful: 'Add at least two API keys in Profile to compare models.',
+    focus: 'At least two provider keys required in Profile.',
+  },
+  'modelComparer.modelPickerLabel': {
+    playful: 'Pick models (2–3)',
+    focus: 'Models (2–3)',
+  },
+  'modelComparer.modelPickerHint': {
+    playful: 'Select at least two and at most three models.',
+    focus: 'Selection: minimum 2, maximum 3 models.',
+  },
+  'modelComparer.promptLabel': {
+    playful: 'Your prompt',
+    focus: 'Prompt',
+  },
+  'modelComparer.promptPlaceholder': {
+    playful: 'Write the prompt for all models...',
+    focus: 'Prompt for all selected models...',
+  },
+  'modelComparer.compareButton': {
+    playful: 'Compare in parallel',
+    focus: 'Compare',
+  },
+  'modelComparer.comparing': {
+    playful: 'Models are responding...',
+    focus: 'Comparison running...',
+  },
+  'modelComparer.resultsTitle': {
+    playful: 'Answers compared',
+    focus: 'Results',
+  },
+  'modelComparer.latencyBadge': {
+    playful: '{{seconds}} s',
+    focus: '{{seconds}} s',
+  },
+  'modelComparer.costBadge': {
+    playful: 'approx. {{cost}}',
+    focus: '≈ {{cost}}',
+  },
+  'modelComparer.errorBadge': {
+    playful: 'Error',
+    focus: 'Error',
+  },
+  'modelComparer.errorInvalidKey': {
+    playful: 'Key rejected — check it in Profile.',
+    focus: 'Invalid API key.',
+  },
+  'modelComparer.errorQuota': {
+    playful: 'Quota or credit exhausted.',
+    focus: 'Rate limit or quota exhausted.',
+  },
+  'modelComparer.errorNetwork': {
+    playful: 'Network error or timeout.',
+    focus: 'Network error / timeout.',
+  },
+  'modelComparer.errorGeneric': {
+    playful: 'This model could not respond.',
+    focus: 'Model response failed.',
+  },
   'profile.byokChecking': {
     playful: 'Checking your key...',
     focus: 'Checking key...',

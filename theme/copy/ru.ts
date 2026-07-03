@@ -343,6 +343,80 @@ export const copyRu: CopyCatalog = {
     playful: 'Ответ ИИ оказался бесполезным - локальный тренер берет это на себя.',
     focus: 'Ошибка API. Использована локальная оценка.',
   },
+  'promptLab.modeScore': {
+    playful: 'Оценить',
+    focus: 'Оценка',
+  },
+  'promptLab.modeCompare': {
+    playful: 'Сравнить модели',
+    focus: 'Сравнение',
+  },
+  'modelComparer.description': {
+    playful:
+      'Один промпт — несколько моделей параллельно. Листай ответы и сравнивай скорость и стоимость.',
+    focus:
+      'Отправляет один промпт параллельно 2–3 настроенным провайдерам и показывает ответы рядом (горизонтальный скролл).',
+  },
+  'modelComparer.needTwoKeys': {
+    playful: 'Добавь минимум два API-ключа в профиле для сравнения.',
+    focus: 'Нужны минимум два ключа провайдеров в профиле.',
+  },
+  'modelComparer.modelPickerLabel': {
+    playful: 'Выбери модели (2–3)',
+    focus: 'Модели (2–3)',
+  },
+  'modelComparer.modelPickerHint': {
+    playful: 'Минимум две и максимум три модели.',
+    focus: 'Выбор: минимум 2, максимум 3 модели.',
+  },
+  'modelComparer.promptLabel': {
+    playful: 'Твой промпт',
+    focus: 'Промпт',
+  },
+  'modelComparer.promptPlaceholder': {
+    playful: 'Напиши промпт для всех моделей...',
+    focus: 'Промпт для всех выбранных моделей...',
+  },
+  'modelComparer.compareButton': {
+    playful: 'Сравнить параллельно',
+    focus: 'Сравнить',
+  },
+  'modelComparer.comparing': {
+    playful: 'Модели отвечают...',
+    focus: 'Сравнение...',
+  },
+  'modelComparer.resultsTitle': {
+    playful: 'Ответы в сравнении',
+    focus: 'Результаты',
+  },
+  'modelComparer.latencyBadge': {
+    playful: '{{seconds}} с',
+    focus: '{{seconds}} с',
+  },
+  'modelComparer.costBadge': {
+    playful: '≈ {{cost}}',
+    focus: '≈ {{cost}}',
+  },
+  'modelComparer.errorBadge': {
+    playful: 'Ошибка',
+    focus: 'Ошибка',
+  },
+  'modelComparer.errorInvalidKey': {
+    playful: 'Ключ отклонен — проверь его в профиле.',
+    focus: 'Недействительный API-ключ.',
+  },
+  'modelComparer.errorQuota': {
+    playful: 'Квота или баланс исчерпаны.',
+    focus: 'Rate-limit или квота исчерпаны.',
+  },
+  'modelComparer.errorNetwork': {
+    playful: 'Сетевая ошибка или таймаут.',
+    focus: 'Сеть / таймаут.',
+  },
+  'modelComparer.errorGeneric': {
+    playful: 'Эта модель не смогла ответить.',
+    focus: 'Ответ модели не получен.',
+  },
   'profile.byokChecking': {
     playful: 'Проверяем твой ключ...',
     focus: 'Проверка ключа...',

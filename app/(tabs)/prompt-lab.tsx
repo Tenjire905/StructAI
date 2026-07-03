@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ScoreChart } from '@/components/features';
+import { ModelComparer } from '@/components/features/ModelComparer';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
 import { Badge, Button, Card, PressableScale, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
@@ -37,9 +38,12 @@ const FALLBACK_COPY_KEY: Record<ScoringError['reason'], string> = {
   generic: 'promptLab.fallbackGeneric',
 };
 
+type PromptLabMode = 'score' | 'compare';
+
 export default function PromptLabScreen() {
   const { tokens, t, locale } = useThemeMode();
   const router = useRouter();
+  const [labMode, setLabMode] = useState<PromptLabMode>('score');
   const history = useProgressStore((state) => state.promptScoreHistory);
   const addPromptScore = useProgressStore((state) => state.addPromptScore);
   const [promptInput, setPromptInput] = useState('');
@@ -134,6 +138,27 @@ export default function PromptLabScreen() {
         paddingTop: tokens.spacing.space5,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
+      <View style={{ flexDirection: 'row', gap: tokens.spacing.space2 }}>
+        <View style={{ flex: 1 }}>
+          <Button
+            label={t('promptLab.modeScore')}
+            onPress={() => setLabMode('score')}
+            variant={labMode === 'score' ? 'primary' : 'ghost'}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            label={t('promptLab.modeCompare')}
+            onPress={() => setLabMode('compare')}
+            variant={labMode === 'compare' ? 'primary' : 'ghost'}
+          />
+        </View>
+      </View>
+
+      {labMode === 'compare' ? (
+        <ModelComparer availableKeys={storedKeys} />
+      ) : (
+        <>
       {storedKeys.length === 0 ? (
         <PressableScale
           accessibilityRole="button"
@@ -273,6 +298,8 @@ export default function PromptLabScreen() {
           <ScoreChart scores={history} />
         </Card>
       </View>
+        </>
+      )}
     </ScrollView>
   );
 }
