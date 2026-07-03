@@ -5,6 +5,7 @@ import {
   detectNewlyCompletedPathId,
   reconcileCompletedPathIds,
 } from '@/lib/pathCompletion';
+import { normalizeProgressSnapshot } from '@/lib/progressMerge';
 import {
   getFirstLessonIdForPath,
   getNextLessonId,
@@ -22,6 +23,11 @@ export type PathProgressRecord = {
   progress: number;
 };
 
+export type PromptScoreHistoryEntry = {
+  score: number;
+  recordedAt: string;
+};
+
 export type ProgressSnapshot = {
   orbCount: number;
   orbMax: number;
@@ -31,7 +37,7 @@ export type ProgressSnapshot = {
   pathProgress: Record<string, PathProgressRecord>;
   completedPathIds: string[];
   pathCompletedAt: Record<string, string>;
-  promptScoreHistory: number[];
+  promptScoreHistory: PromptScoreHistoryEntry[];
 };
 
 type ProgressActions = {
@@ -79,16 +85,7 @@ function readProgressSnapshot(): ProgressSnapshot {
 
   try {
     const parsed = JSON.parse(raw) as Partial<ProgressSnapshot>;
-
-    return {
-      ...DEFAULT_PROGRESS,
-      ...parsed,
-      streakDays: parsed.streakDays ?? [...DEFAULT_STREAK_DAYS],
-      pathProgress: parsed.pathProgress ?? {},
-      completedPathIds: parsed.completedPathIds ?? [],
-      pathCompletedAt: parsed.pathCompletedAt ?? {},
-      promptScoreHistory: parsed.promptScoreHistory ?? [],
-    };
+    return normalizeProgressSnapshot(parsed);
   } catch {
     return { ...DEFAULT_PROGRESS, streakDays: [...DEFAULT_STREAK_DAYS] };
   }
@@ -347,7 +344,10 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     set((state) => {
       const snapshot: ProgressSnapshot = {
         ...state,
-        promptScoreHistory: [...state.promptScoreHistory.slice(-9), score],
+        promptScoreHistory: [
+          ...state.promptScoreHistory.slice(-9),
+          { score, recordedAt: new Date().toISOString() },
+        ],
       };
 
       writeProgressSnapshot(snapshot);

@@ -135,6 +135,62 @@ function mergeStreakDays(local, remote) {
   return Array.from({ length: 7 }, (_, index) => Boolean(local[index] || remote[index]));
 }
 
+function normalizePromptScoreHistory(raw) {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+
+  return raw
+    .map((entry, index) => {
+      if (typeof entry === 'number' && Number.isFinite(entry)) {
+        return {
+          score: entry,
+          recordedAt: new Date(Date.now() - (raw.length - index) * 60_000).toISOString(),
+        };
+      }
+
+      if (entry && typeof entry === 'object' && 'score' in entry) {
+        const score = Number(entry.score);
+        const recordedAt = entry.recordedAt;
+
+        if (!Number.isFinite(score)) {
+          return null;
+        }
+
+        return {
+          score,
+          recordedAt:
+            typeof recordedAt === 'string' && recordedAt.length > 0
+              ? recordedAt
+              : new Date(Date.now() - (raw.length - index) * 60_000).toISOString(),
+        };
+      }
+
+      return null;
+    })
+    .filter(Boolean);
+}
+
+function mergePromptScoreHistory(local, remote) {
+  const seen = new Set();
+
+  return [...normalizePromptScoreHistory(local), ...normalizePromptScoreHistory(remote)]
+    .filter((entry) => {
+      const key = `${entry.recordedAt}|${entry.score}`;
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    })
+    .sort(
+      (left, right) =>
+        new Date(left.recordedAt).getTime() - new Date(right.recordedAt).getTime(),
+    )
+    .slice(-10);
+}
+
 function mergeProgressSnapshots(local, remote) {
   const pathIds = unionUnique([
     ...Object.keys(local.pathProgress),
@@ -166,7 +222,10 @@ function mergeProgressSnapshots(local, remote) {
     pathProgress,
     completedPathIds,
     pathCompletedAt,
-    promptScoreHistory: [...local.promptScoreHistory, ...remote.promptScoreHistory].slice(-10),
+    promptScoreHistory: mergePromptScoreHistory(
+      local.promptScoreHistory,
+      remote.promptScoreHistory,
+    ),
   };
 }
 
@@ -360,6 +419,35 @@ cases.push({
   violations: [
     ...(emptyDetection ? [] : ['default snapshot should be empty']),
     ...(nonEmptyDetection ? ['orb snapshot should not be empty'] : []),
+  ],
+});
+
+const promptScoreMergeCase = mergeProgressSnapshots(
+  snapshot({
+    promptScoreHistory: [
+      { score: 72, recordedAt: '2026-07-01T10:00:00.000Z' },
+      { score: 81, recordedAt: '2026-07-02T08:00:00.000Z' },
+    ],
+  }),
+  snapshot({
+    promptScoreHistory: [
+      { score: 81, recordedAt: '2026-07-02T08:00:00.000Z' },
+      { score: 90, recordedAt: '2026-07-03T12:00:00.000Z' },
+    ],
+  }),
+);
+
+cases.push({
+  label: 'promptScoreHistory merge sorts chronologically and deduplicates',
+  violations: [
+    ...(promptScoreMergeCase.promptScoreHistory.length === 3
+      ? []
+      : ['expected 3 unique prompt score entries after merge']),
+    ...(promptScoreMergeCase.promptScoreHistory[0].score === 72 ? [] : ['oldest score should be 72']),
+    ...(promptScoreMergeCase.promptScoreHistory[2].score === 90 ? [] : ['newest score should be 90']),
+    ...(promptScoreMergeCase.promptScoreHistory.every((entry) => entry.recordedAt)
+      ? []
+      : ['each prompt score entry should carry recordedAt']),
   ],
 });
 

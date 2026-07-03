@@ -1,6 +1,6 @@
 import { getPathTemplate } from '@/lib/pathLessonUtils';
 import { reconcileCompletedPathIds } from '@/lib/pathCompletion';
-import type { PathProgressRecord, ProgressSnapshot } from '@/store/progressStore';
+import type { PathProgressRecord, ProgressSnapshot, PromptScoreHistoryEntry } from '@/store/progressStore';
 import { DEFAULT_PROGRESS } from '@/store/progressStore';
 
 /** Proposed conflict strategy – active on login when local and remote both exist. */
@@ -109,6 +109,71 @@ function mergePathCompletedAt(
   return merged;
 }
 
+function normalizePromptScoreEntry(
+  entry: unknown,
+  index: number,
+  total: number,
+): PromptScoreHistoryEntry | null {
+  if (typeof entry === 'number' && Number.isFinite(entry)) {
+    return {
+      score: entry,
+      recordedAt: new Date(Date.now() - (total - index) * 60_000).toISOString(),
+    };
+  }
+
+  if (entry && typeof entry === 'object' && 'score' in entry) {
+    const score = Number((entry as PromptScoreHistoryEntry).score);
+    const recordedAt = (entry as PromptScoreHistoryEntry).recordedAt;
+
+    if (!Number.isFinite(score)) {
+      return null;
+    }
+
+    return {
+      score,
+      recordedAt:
+        typeof recordedAt === 'string' && recordedAt.length > 0
+          ? recordedAt
+          : new Date(Date.now() - (total - index) * 60_000).toISOString(),
+    };
+  }
+
+  return null;
+}
+
+export function normalizePromptScoreHistory(raw: unknown): PromptScoreHistoryEntry[] {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+
+  return raw
+    .map((entry, index) => normalizePromptScoreEntry(entry, index, raw.length))
+    .filter((entry): entry is PromptScoreHistoryEntry => entry !== null);
+}
+
+export function mergePromptScoreHistory(
+  local: PromptScoreHistoryEntry[],
+  remote: PromptScoreHistoryEntry[],
+): PromptScoreHistoryEntry[] {
+  const seen = new Set<string>();
+
+  return [...local, ...remote]
+    .filter((entry) => {
+      const key = `${entry.recordedAt}|${entry.score}`;
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+      return true;
+    })
+    .sort(
+      (left, right) =>
+        new Date(left.recordedAt).getTime() - new Date(right.recordedAt).getTime(),
+    )
+    .slice(-10);
+}
+
 export function isProgressSnapshotEmpty(snapshot: ProgressSnapshot): boolean {
   return (
     snapshot.completedLessons === 0 &&
@@ -157,10 +222,10 @@ export function mergeProgressSnapshots(
     pathProgress,
     completedPathIds,
     pathCompletedAt,
-    promptScoreHistory: [
-      ...local.promptScoreHistory,
-      ...remote.promptScoreHistory,
-    ].slice(-10),
+    promptScoreHistory: mergePromptScoreHistory(
+      normalizePromptScoreHistory(local.promptScoreHistory),
+      normalizePromptScoreHistory(remote.promptScoreHistory),
+    ),
   };
 }
 
@@ -178,6 +243,6 @@ export function normalizeProgressSnapshot(
     pathProgress: partial.pathProgress ?? {},
     completedPathIds: partial.completedPathIds ?? [],
     pathCompletedAt: partial.pathCompletedAt ?? {},
-    promptScoreHistory: partial.promptScoreHistory ?? [],
+    promptScoreHistory: normalizePromptScoreHistory(partial.promptScoreHistory),
   };
 }

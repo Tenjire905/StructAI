@@ -295,7 +295,7 @@ export default function PromptLabScreen() {
         </Text>
 
         <Card variant="solid">
-          <ScoreChart scores={history} />
+          <ScoreChart scores={history.map((entry) => entry.score)} />
         </Card>
       </View>
         </>
