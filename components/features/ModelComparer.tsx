@@ -10,11 +10,22 @@ import {
 
 import { Badge, Button, Card } from '@/components/ui';
 import {
+  getSpendingWarning,
+  readSpendingSettings,
+  readSpendingTotals,
+  recordEstimatedSpend,
+  type SpendingWarning,
+} from '@/lib/byokSpending';
+import {
   comparePromptAcrossModels,
   getCompareModelLabel,
   mockComparePromptAcrossModels,
   type CompareModelResult,
 } from '@/lib/modelCompare';
+import {
+  buildCompareInsightsByProvider,
+  type CompareInsight,
+} from '@/lib/modelCompareInsights';
 import type { ByokKeyEntry, ByokProvider } from '@/lib/secureKeyStore';
 import { useThemeMode } from '@/theme';
 
@@ -31,6 +42,12 @@ const ERROR_COPY_KEY = {
   network: 'modelComparer.errorNetwork',
   generic: 'modelComparer.errorGeneric',
 } as const;
+
+const SPENDING_WARNING_COPY_KEY: Record<Exclude<SpendingWarning, 'none'>, string> = {
+  daily: 'modelComparer.spendingWarningDaily',
+  monthly: 'modelComparer.spendingWarningMonthly',
+  both: 'modelComparer.spendingWarningBoth',
+};
 
 function formatLatencySeconds(latencyMs: number): string {
   return (latencyMs / 1000).toFixed(1);
@@ -60,11 +77,37 @@ export function ModelComparer({
   const [selectedProviders, setSelectedProviders] = useState<ByokProvider[]>([]);
   const [results, setResults] = useState<CompareModelResult[] | null>(null);
   const [isComparing, setIsComparing] = useState(false);
+  const [spendingWarning, setSpendingWarning] = useState<SpendingWarning>('none');
 
   const availableProviders = useMemo(
     () => availableKeys.map((entry) => entry.provider),
     [availableKeys],
   );
+
+  useEffect(() => {
+    setSpendingWarning(
+      getSpendingWarning(readSpendingSettings(), readSpendingTotals()),
+    );
+  }, []);
+
+  const applyCompareResults = useCallback((nextResults: CompareModelResult[]) => {
+    const estimatedRunCost = nextResults.reduce((sum, result) => {
+      if (result.status !== 'success') {
+        return sum;
+      }
+
+      return sum + result.estimatedCostUsd;
+    }, 0);
+
+    if (estimatedRunCost > 0) {
+      recordEstimatedSpend(estimatedRunCost);
+    }
+
+    setResults(nextResults);
+    setSpendingWarning(
+      getSpendingWarning(readSpendingSettings(), readSpendingTotals()),
+    );
+  }, []);
 
   useEffect(() => {
     setSelectedProviders((current) => {
@@ -107,7 +150,7 @@ export function ModelComparer({
 
       if (!cancelled) {
         setSelectedProviders(providers);
-        setResults(nextResults);
+        applyCompareResults(nextResults);
         setIsComparing(false);
       }
     })();
@@ -121,6 +164,7 @@ export function ModelComparer({
     availableProviders,
     initialPrompt,
     useMockCompare,
+    applyCompareResults,
   ]);
 
   const toggleProvider = useCallback(
@@ -150,6 +194,11 @@ export function ModelComparer({
     !isComparing &&
     availableProviders.length >= 2;
 
+  const resultInsights = useMemo(
+    () => (results ? buildCompareInsightsByProvider(results) : new Map<string, CompareInsight>()),
+    [results],
+  );
+
   const handleCompare = async () => {
     if (!canCompare) {
       return;
@@ -168,7 +217,7 @@ export function ModelComparer({
     const compareFn = useMockCompare ? mockComparePromptAcrossModels : comparePromptAcrossModels;
     const nextResults = await compareFn(promptInput.trim(), targets);
 
-    setResults(nextResults);
+    applyCompareResults(nextResults);
     setIsComparing(false);
   };
 
@@ -295,6 +344,27 @@ export function ModelComparer({
         </View>
       ) : null}
 
+      {spendingWarning !== 'none' ? (
+        <View
+          style={{
+            backgroundColor: tokens.colors.surface.card,
+            borderColor: tokens.colors.accent.warning,
+            borderRadius: tokens.radius.md,
+            borderWidth: 1,
+            padding: tokens.spacing.space3,
+          }}>
+          <Text
+            style={{
+              color: tokens.colors.text.primary,
+              fontFamily: tokens.typography.fontFamily.body,
+              fontSize: tokens.typography.fontSize.bodySm,
+              lineHeight: tokens.typography.fontSize.bodySm * 1.4,
+            }}>
+            {t(SPENDING_WARNING_COPY_KEY[spendingWarning])}
+          </Text>
+        </View>
+      ) : null}
+
       {results !== null ? (
         <View style={{ gap: tokens.spacing.space3 }}>
           <Text
@@ -313,6 +383,7 @@ export function ModelComparer({
             {results.map((result) => (
               <CompareResultCard
                 cardWidth={cardWidth}
+                insight={resultInsights.get(result.provider) ?? null}
                 key={result.provider}
                 result={result}
               />
@@ -327,9 +398,10 @@ export function ModelComparer({
 type CompareResultCardProps = {
   result: CompareModelResult;
   cardWidth: number;
+  insight: CompareInsight | null;
 };
 
-function CompareResultCard({ result, cardWidth }: CompareResultCardProps) {
+function CompareResultCard({ result, cardWidth, insight }: CompareResultCardProps) {
   const { tokens, t } = useThemeMode();
 
   return (
@@ -370,6 +442,17 @@ function CompareResultCard({ result, cardWidth }: CompareResultCardProps) {
                   tone="primary"
                 />
               </View>
+              {insight !== null ? (
+                <Text
+                  style={{
+                    color: tokens.colors.text.secondary,
+                    fontFamily: tokens.typography.fontFamily.bodyMedium,
+                    fontSize: tokens.typography.fontSize.bodySm,
+                    lineHeight: tokens.typography.fontSize.bodySm * 1.5,
+                  }}>
+                  {t(insight.copyKey, insight.vars)}
+                </Text>
+              ) : null}
             </>
           ) : (
             <View style={{ gap: tokens.spacing.space2 }}>

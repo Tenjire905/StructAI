@@ -417,6 +417,106 @@ export const copyFr: CopyCatalog = {
     playful: 'Ce modele n a pas pu repondre.',
     focus: 'Reponse du modele echouee.',
   },
+  'modelComparer.insightMoreExpensiveSlightlyDetailed': {
+    playful: '{{costMultiplier}}× plus cher, mais seulement {{detailPercent}}% plus detaille que les autres.',
+    focus: '{{costMultiplier}}× plus cher, seulement {{detailPercent}}% de texte en plus.',
+  },
+  'modelComparer.insightMoreExpensiveMuchDetailed': {
+    playful: '{{costMultiplier}}× plus cher et {{detailPercent}}% plus detaille que les autres.',
+    focus: '{{costMultiplier}}× plus cher avec {{detailPercent}}% de texte en plus.',
+  },
+  'modelComparer.insightMoreExpensiveShorter': {
+    playful: '{{costMultiplier}}× plus cher avec une reponse {{detailPercent}}% plus courte.',
+    focus: '{{costMultiplier}}× plus cher, reponse {{detailPercent}}% plus courte.',
+  },
+  'modelComparer.insightMoreExpensiveSimilarDetail': {
+    playful: '{{costMultiplier}}× plus cher pour une longueur de reponse similaire.',
+    focus: '{{costMultiplier}}× plus cher, longueur proche de la moyenne.',
+  },
+  'modelComparer.insightCheaperMoreDetailed': {
+    playful: '{{costMultiplier}}× moins cher et {{detailPercent}}% plus detaille.',
+    focus: '{{costMultiplier}}× moins cher avec {{detailPercent}}% de texte en plus.',
+  },
+  'modelComparer.insightCheaperShorter': {
+    playful: '{{costMultiplier}}× moins cher, mais {{detailPercent}}% plus court.',
+    focus: '{{costMultiplier}}× moins cher, reponse {{detailPercent}}% plus courte.',
+  },
+  'modelComparer.insightCheaperSimilarDetail': {
+    playful: '{{costMultiplier}}× moins cher pour une longueur similaire.',
+    focus: '{{costMultiplier}}× moins cher, longueur proche de la moyenne.',
+  },
+  'modelComparer.insightFaster': {
+    playful: '{{speedMultiplier}}× plus rapide — cout et longueur similaires.',
+    focus: '{{speedMultiplier}}× plus rapide, cout et texte comparables.',
+  },
+  'modelComparer.insightSlower': {
+    playful: '{{speedMultiplier}}× plus lent — cout et longueur similaires.',
+    focus: '{{speedMultiplier}}× plus lent, cout et texte comparables.',
+  },
+  'modelComparer.insightSimilar': {
+    playful: 'Cout, vitesse et longueur proches de la moyenne des autres modeles.',
+    focus: 'Cout, latence et longueur proches du milieu des autres modeles.',
+  },
+  'modelComparer.spendingWarningDaily': {
+    playful: 'Info : limite journaliere de depense estimee atteinte (estimation seulement).',
+    focus: 'Limite journaliere de depense estimee atteinte (estimation locale, non garantie).',
+  },
+  'modelComparer.spendingWarningMonthly': {
+    playful: 'Info : limite mensuelle de depense estimee atteinte (estimation seulement).',
+    focus: 'Limite mensuelle de depense estimee atteinte (estimation locale, non garantie).',
+  },
+  'modelComparer.spendingWarningBoth': {
+    playful: 'Info : limites journaliere et mensuelle atteintes (estimation seulement).',
+    focus: 'Limites journaliere et mensuelle atteintes (estimation non garantie).',
+  },
+  'profile.spendingLimitSection': {
+    playful: 'Garde-fou depenses',
+    focus: 'Limite de depense (BYOK)',
+  },
+  'profile.spendingLimitDescription': {
+    playful: 'Fixe une limite jour/mois pour les couts API estimes — alerte locale avant la surprise.',
+    focus: 'Limite optionnelle jour/mois pour depenses BYOK estimees avec alerte locale.',
+  },
+  'profile.spendingLimitDisclaimer': {
+    playful: 'Estimation grossiere sur ton appareil — pas une facture reelle, sans garantie.',
+    focus: 'Estimation client sans garantie de facturation ; orientation uniquement.',
+  },
+  'profile.spendingLimitDailyLabel': {
+    playful: 'Limite journaliere (USD, optionnel)',
+    focus: 'Limite journaliere USD (optionnel)',
+  },
+  'profile.spendingLimitMonthlyLabel': {
+    playful: 'Limite mensuelle (USD, optionnel)',
+    focus: 'Limite mensuelle USD (optionnel)',
+  },
+  'profile.spendingLimitPlaceholder': {
+    playful: 'ex. 1.00',
+    focus: 'ex. 1.00',
+  },
+  'profile.spendingLimitSave': {
+    playful: 'Enregistrer la limite',
+    focus: 'Enregistrer',
+  },
+  'profile.spendingLimitUsageToday': {
+    playful: 'Estime aujourd hui : {{amount}}',
+    focus: 'Aujourd hui (estimation) : {{amount}}',
+  },
+  'profile.spendingLimitUsageMonth': {
+    playful: 'Estime ce mois : {{amount}}',
+    focus: 'Mois (estimation) : {{amount}}',
+  },
+  'profile.spendingLimitWarningDaily': {
+    playful: 'Limite journaliere atteinte (estimation)',
+    focus: 'Limite journaliere atteinte (estimation)',
+  },
+  'profile.spendingLimitWarningMonthly': {
+    playful: 'Limite mensuelle atteinte (estimation)',
+    focus: 'Limite mensuelle atteinte (estimation)',
+  },
+  'profile.spendingLimitWarningBoth': {
+    playful: 'Limites journaliere et mensuelle atteintes (estimation)',
+    focus: 'Limites journaliere et mensuelle atteintes (estimation)',
+  },
   'profile.byokChecking': {
     playful: 'Verification de ta cle...',
     focus: 'Verification de la cle...',

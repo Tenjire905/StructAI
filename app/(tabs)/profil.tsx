@@ -2,6 +2,7 @@ import { ScrollView, Text, View } from 'react-native';
 
 import { StatBlock } from '@/components/features';
 import { ByokKeysManager } from '@/components/features/profile/ByokKeysManager';
+import { SpendingLimitSettings } from '@/components/features/profile/SpendingLimitSettings';
 import { Avatar, Button, Card } from '@/components/ui';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
@@ -186,6 +187,7 @@ export default function ProfilScreen() {
       </View>
 
       <ByokKeysManager />
+      <SpendingLimitSettings />
     </ScrollView>
   );
 }

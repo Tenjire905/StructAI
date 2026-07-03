@@ -417,6 +417,106 @@ export const copyRu: CopyCatalog = {
     playful: 'Эта модель не смогла ответить.',
     focus: 'Ответ модели не получен.',
   },
+  'modelComparer.insightMoreExpensiveSlightlyDetailed': {
+    playful: 'В {{costMultiplier}}× дороже, но всего на {{detailPercent}}% подробнее остальных.',
+    focus: 'В {{costMultiplier}}× дороже, лишь на {{detailPercent}}% больше текста.',
+  },
+  'modelComparer.insightMoreExpensiveMuchDetailed': {
+    playful: 'В {{costMultiplier}}× дороже и на {{detailPercent}}% подробнее остальных.',
+    focus: 'В {{costMultiplier}}× дороже, текст на {{detailPercent}}% длиннее.',
+  },
+  'modelComparer.insightMoreExpensiveShorter': {
+    playful: 'В {{costMultiplier}}× дороже, ответ на {{detailPercent}}% короче.',
+    focus: 'В {{costMultiplier}}× дороже, ответ короче на {{detailPercent}}%.',
+  },
+  'modelComparer.insightMoreExpensiveSimilarDetail': {
+    playful: 'В {{costMultiplier}}× дороже при похожей длине ответа.',
+    focus: 'В {{costMultiplier}}× дороже, длина текста близка к средней.',
+  },
+  'modelComparer.insightCheaperMoreDetailed': {
+    playful: 'В {{costMultiplier}}× дешевле и на {{detailPercent}}% подробнее.',
+    focus: 'В {{costMultiplier}}× дешевле, текст на {{detailPercent}}% длиннее.',
+  },
+  'modelComparer.insightCheaperShorter': {
+    playful: 'В {{costMultiplier}}× дешевле, но на {{detailPercent}}% короче.',
+    focus: 'В {{costMultiplier}}× дешевле, ответ короче на {{detailPercent}}%.',
+  },
+  'modelComparer.insightCheaperSimilarDetail': {
+    playful: 'В {{costMultiplier}}× дешевле при похожей длине ответа.',
+    focus: 'В {{costMultiplier}}× дешевле, длина текста близка к средней.',
+  },
+  'modelComparer.insightFaster': {
+    playful: 'В {{speedMultiplier}}× быстрее — стоимость и длина похожи.',
+    focus: 'В {{speedMultiplier}}× быстрее при сопоставимых cost и длине.',
+  },
+  'modelComparer.insightSlower': {
+    playful: 'В {{speedMultiplier}}× медленнее — стоимость и длина похожи.',
+    focus: 'В {{speedMultiplier}}× медленнее при сопоставимых cost и длине.',
+  },
+  'modelComparer.insightSimilar': {
+    playful: 'Стоимость, скорость и длина близки к среднему других моделей.',
+    focus: 'Cost, latency и длина текста близки к среднему других моделей.',
+  },
+  'modelComparer.spendingWarningDaily': {
+    playful: 'Дневной лимит оценочных расходов достигнут (только оценка, без гарантии).',
+    focus: 'Дневной лимит оценочных API-расходов достигнут (локальная оценка).',
+  },
+  'modelComparer.spendingWarningMonthly': {
+    playful: 'Месячный лимит оценочных расходов достигнут (только оценка, без гарантии).',
+    focus: 'Месячный лимит оценочных API-расходов достигнут (локальная оценка).',
+  },
+  'modelComparer.spendingWarningBoth': {
+    playful: 'Дневной и месячный лимит оценочных расходов достигнут (только оценка).',
+    focus: 'Дневной и месячный лимит оценочных расходов достигнут.',
+  },
+  'profile.spendingLimitSection': {
+    playful: 'Лимит расходов',
+    focus: 'Лимит расходов (BYOK)',
+  },
+  'profile.spendingLimitDescription': {
+    playful: 'Задай дневной или месячный лимит оценочных API-расходов — предупредим локально.',
+    focus: 'Опциональный дневной/месячный лимит оценочных BYOK-расходов с локальным предупреждением.',
+  },
+  'profile.spendingLimitDisclaimer': {
+    playful: 'Только грубая оценка на устройстве — не реальный счет, без гарантии.',
+    focus: 'Клиентская оценка без гарантии биллинга; только для ориентира.',
+  },
+  'profile.spendingLimitDailyLabel': {
+    playful: 'Дневной лимит (USD, опционально)',
+    focus: 'Дневной лимит USD (опционально)',
+  },
+  'profile.spendingLimitMonthlyLabel': {
+    playful: 'Месячный лимит (USD, опционально)',
+    focus: 'Месячный лимит USD (опционально)',
+  },
+  'profile.spendingLimitPlaceholder': {
+    playful: 'напр. 1.00',
+    focus: 'напр. 1.00',
+  },
+  'profile.spendingLimitSave': {
+    playful: 'Сохранить лимит',
+    focus: 'Сохранить',
+  },
+  'profile.spendingLimitUsageToday': {
+    playful: 'Сегодня оценочно: {{amount}}',
+    focus: 'Сегодня (оценка): {{amount}}',
+  },
+  'profile.spendingLimitUsageMonth': {
+    playful: 'За месяц оценочно: {{amount}}',
+    focus: 'Месяц (оценка): {{amount}}',
+  },
+  'profile.spendingLimitWarningDaily': {
+    playful: 'Дневной лимит достигнут (оценка)',
+    focus: 'Дневной лимит достигнут (оценка)',
+  },
+  'profile.spendingLimitWarningMonthly': {
+    playful: 'Месячный лимит достигнут (оценка)',
+    focus: 'Месячный лимит достигнут (оценка)',
+  },
+  'profile.spendingLimitWarningBoth': {
+    playful: 'Дневной и месячный лимит достигнут (оценка)',
+    focus: 'Дневной и месячный лимит достигнут (оценка)',
+  },
   'profile.byokChecking': {
     playful: 'Проверяем твой ключ...',
     focus: 'Проверка ключа...',

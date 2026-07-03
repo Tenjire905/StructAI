@@ -417,6 +417,106 @@ export const copyDe: CopyCatalog = {
     playful: 'Dieses Modell konnte nicht antworten.',
     focus: 'Modell-Antwort fehlgeschlagen.',
   },
+  'modelComparer.insightMoreExpensiveSlightlyDetailed': {
+    playful: '{{costMultiplier}}× teurer, aber nur {{detailPercent}}% ausführlicher als die anderen.',
+    focus: '{{costMultiplier}}× teurer, nur {{detailPercent}}% mehr Text als die anderen Modelle.',
+  },
+  'modelComparer.insightMoreExpensiveMuchDetailed': {
+    playful: '{{costMultiplier}}× teurer und {{detailPercent}}% ausführlicher als die anderen.',
+    focus: '{{costMultiplier}}× teurer bei {{detailPercent}}% mehr Antworttext.',
+  },
+  'modelComparer.insightMoreExpensiveShorter': {
+    playful: '{{costMultiplier}}× teurer bei {{detailPercent}}% kürzerer Antwort.',
+    focus: '{{costMultiplier}}× teurer, Antwort {{detailPercent}}% kürzer als die anderen.',
+  },
+  'modelComparer.insightMoreExpensiveSimilarDetail': {
+    playful: '{{costMultiplier}}× teurer bei ähnlicher Antwortlänge.',
+    focus: '{{costMultiplier}}× teurer, Textlänge nahe am Durchschnitt.',
+  },
+  'modelComparer.insightCheaperMoreDetailed': {
+    playful: '{{costMultiplier}}× günstiger und {{detailPercent}}% ausführlicher.',
+    focus: '{{costMultiplier}}× günstiger bei {{detailPercent}}% mehr Text.',
+  },
+  'modelComparer.insightCheaperShorter': {
+    playful: '{{costMultiplier}}× günstiger, dafür {{detailPercent}}% kürzer.',
+    focus: '{{costMultiplier}}× günstiger, Antwort {{detailPercent}}% kürzer.',
+  },
+  'modelComparer.insightCheaperSimilarDetail': {
+    playful: '{{costMultiplier}}× günstiger bei ähnlicher Antwortlänge.',
+    focus: '{{costMultiplier}}× günstiger, Textlänge nahe am Durchschnitt.',
+  },
+  'modelComparer.insightFaster': {
+    playful: '{{speedMultiplier}}× schneller — Kosten und Länge ähnlich wie die anderen.',
+    focus: '{{speedMultiplier}}× schneller bei vergleichbaren Kosten und Textlänge.',
+  },
+  'modelComparer.insightSlower': {
+    playful: '{{speedMultiplier}}× langsamer — Kosten und Länge ähnlich wie die anderen.',
+    focus: '{{speedMultiplier}}× langsamer bei vergleichbaren Kosten und Textlänge.',
+  },
+  'modelComparer.insightSimilar': {
+    playful: 'Kosten, Tempo und Länge liegen nah am Durchschnitt der anderen Modelle.',
+    focus: 'Kosten, Latenz und Textlänge nahe am Mittelwert der anderen Modelle.',
+  },
+  'modelComparer.spendingWarningDaily': {
+    playful: 'Hinweis: Dein Tageslimit für geschätzte API-Kosten ist erreicht (nur Schätzung, keine Garantie).',
+    focus: 'Tageslimit für geschätzte API-Kosten erreicht (clientseitige Schätzung, unverbindlich).',
+  },
+  'modelComparer.spendingWarningMonthly': {
+    playful: 'Hinweis: Dein Monatslimit für geschätzte API-Kosten ist erreicht (nur Schätzung, keine Garantie).',
+    focus: 'Monatslimit für geschätzte API-Kosten erreicht (clientseitige Schätzung, unverbindlich).',
+  },
+  'modelComparer.spendingWarningBoth': {
+    playful: 'Hinweis: Tages- und Monatslimit für geschätzte API-Kosten erreicht (nur Schätzung).',
+    focus: 'Tages- und Monatslimit für geschätzte API-Kosten erreicht (Schätzung, unverbindlich).',
+  },
+  'profile.spendingLimitSection': {
+    playful: 'Ausgaben-Wächter',
+    focus: 'Ausgabenlimit (BYOK)',
+  },
+  'profile.spendingLimitDescription': {
+    playful: 'Setz ein Tages- oder Monatslimit für geschätzte API-Kosten — wir warnen dich lokal, bevor es unbemerkt teuer wird.',
+    focus: 'Optionales Tages-/Monatslimit für geschätzte BYOK-Kosten mit lokaler Warnung.',
+  },
+  'profile.spendingLimitDisclaimer': {
+    playful: 'Nur eine grobe Schätzung auf deinem Gerät — keine echte Abrechnung, keine Garantie.',
+    focus: 'Clientseitige Kostenschätzung ohne Abrechnungsgarantie; dient nur als Orientierung.',
+  },
+  'profile.spendingLimitDailyLabel': {
+    playful: 'Tageslimit (USD, optional)',
+    focus: 'Tageslimit USD (optional)',
+  },
+  'profile.spendingLimitMonthlyLabel': {
+    playful: 'Monatslimit (USD, optional)',
+    focus: 'Monatslimit USD (optional)',
+  },
+  'profile.spendingLimitPlaceholder': {
+    playful: 'z. B. 1.00',
+    focus: 'z. B. 1.00',
+  },
+  'profile.spendingLimitSave': {
+    playful: 'Limit speichern',
+    focus: 'Speichern',
+  },
+  'profile.spendingLimitUsageToday': {
+    playful: 'Heute geschätzt: {{amount}}',
+    focus: 'Heute (Schätzung): {{amount}}',
+  },
+  'profile.spendingLimitUsageMonth': {
+    playful: 'Diesen Monat geschätzt: {{amount}}',
+    focus: 'Monat (Schätzung): {{amount}}',
+  },
+  'profile.spendingLimitWarningDaily': {
+    playful: 'Tageslimit erreicht (Schätzung)',
+    focus: 'Tageslimit erreicht (Schätzung)',
+  },
+  'profile.spendingLimitWarningMonthly': {
+    playful: 'Monatslimit erreicht (Schätzung)',
+    focus: 'Monatslimit erreicht (Schätzung)',
+  },
+  'profile.spendingLimitWarningBoth': {
+    playful: 'Tages- und Monatslimit erreicht (Schätzung)',
+    focus: 'Tages- und Monatslimit erreicht (Schätzung)',
+  },
   'profile.byokChecking': {
     playful: 'Prüfe deinen Schlüssel...',
     focus: 'Schlüssel wird geprüft...',
