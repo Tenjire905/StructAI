@@ -2,8 +2,7 @@
  * Verification harness for proposed progress merge strategy (E2).
  * Keep logic in sync with lib/progressMerge.ts.
  *
- * Production login currently pulls remote data only for empty local caches.
- * This script validates the proposed multi-device merge for future adoption.
+ * Union merge (max-union-per-field) is active on login when local + remote exist.
  */
 
 const PROGRESS_MERGE_STRATEGY = 'max-union-per-field';
