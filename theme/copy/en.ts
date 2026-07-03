@@ -234,8 +234,10 @@ export const copyEn: CopyCatalog = {
     focus: 'API key (BYOK)',
   },
   'profile.byokDescription': {
-    playful: 'Your own API key stays safely on your device and unlocks the Prompt Lab.',
-    focus: 'The API key is encrypted and stored locally (Secure Store), and only used for Prompt Lab requests.',
+    playful:
+      'One key per provider — everything stays on your device and is never synced.',
+    focus:
+      'One API key per provider, encrypted locally (Secure Store). Keys are never synced.',
   },
   'profile.byokPlaceholder': {
     playful: 'Paste API key',
@@ -356,6 +358,14 @@ export const copyEn: CopyCatalog = {
   'profile.byokUnverifiedBadge': {
     playful: 'Saved - not verified yet',
     focus: 'Saved (unverified)',
+  },
+  'profile.byokTest': {
+    playful: 'Test key',
+    focus: 'Test',
+  },
+  'profile.byokConfiguredCount': {
+    playful: '{{count}} providers connected',
+    focus: '{{count}} providers configured',
   },
   'profile.accountSection': {
     playful: 'Your account',

@@ -19,7 +19,7 @@ import {
   getProviderLabel,
   scorePromptRemote,
 } from '@/lib/aiScoring';
-import { getApiKey } from '@/lib/secureKeyStore';
+import { listApiKeys, type ByokKeyEntry } from '@/lib/secureKeyStore';
 import { scorePrompt, type PromptScore } from '@/lib/promptScoring';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
@@ -44,7 +44,7 @@ export default function PromptLabScreen() {
   const addPromptScore = useProgressStore((state) => state.addPromptScore);
   const [promptInput, setPromptInput] = useState('');
   const [score, setScore] = useState<PromptScore | null>(null);
-  const [storedKey, setStoredKey] = useState<string | null>(null);
+  const [storedKeys, setStoredKeys] = useState<ByokKeyEntry[]>([]);
   const [isScoring, setIsScoring] = useState(false);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
   const [inputFocused, setInputFocused] = useState(false);
@@ -56,15 +56,15 @@ export default function PromptLabScreen() {
     useCallback(() => {
       let cancelled = false;
 
-      getApiKey()
-        .then((key) => {
+      listApiKeys()
+        .then((keys) => {
           if (!cancelled) {
-            setStoredKey(key && key.length > 0 ? key : null);
+            setStoredKeys(keys);
           }
         })
         .catch(() => {
           if (!cancelled) {
-            setStoredKey(null);
+            setStoredKeys([]);
           }
         });
 
@@ -74,7 +74,16 @@ export default function PromptLabScreen() {
     }, []),
   );
 
-  const provider = storedKey ? detectProvider(storedKey) : null;
+  const primaryKey = storedKeys[0]?.key ?? null;
+  const provider = primaryKey ? detectProvider(primaryKey) : null;
+  const liveProviderLabel =
+    storedKeys.length > 1
+      ? storedKeys
+          .map((entry) => getProviderLabel(entry.provider))
+          .join(' + ')
+      : provider
+        ? getProviderLabel(provider)
+        : null;
 
   const handleScore = async () => {
     if (isScoring) {
@@ -89,9 +98,9 @@ export default function PromptLabScreen() {
     // Fallback-Kette: Remote-Bewertung, bei jedem Fehler lokale Heuristik.
     // Ein API-Problem (ungültiger Key, kein Guthaben, offline) darf die App
     // niemals crashen – der Nutzer bekommt immer ein Ergebnis plus Hinweis.
-    if (storedKey) {
+    if (primaryKey) {
       try {
-        result = await scorePromptRemote(promptInput, storedKey);
+        result = await scorePromptRemote(promptInput, primaryKey);
       } catch (error) {
         const reason =
           error instanceof ScoringError ? error.reason : ('generic' as const);
@@ -125,7 +134,7 @@ export default function PromptLabScreen() {
         paddingTop: tokens.spacing.space5,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
-      {storedKey === null ? (
+      {storedKeys.length === 0 ? (
         <PressableScale
           accessibilityRole="button"
           onPress={() => router.push('/profil')}
@@ -164,10 +173,10 @@ export default function PromptLabScreen() {
             </Text>
           </View>
         </PressableScale>
-      ) : provider !== null ? (
+      ) : liveProviderLabel !== null ? (
         <View style={{ alignSelf: 'flex-start' }}>
           <Badge
-            label={t('promptLab.liveBadge', { provider: getProviderLabel(provider) })}
+            label={t('promptLab.liveBadge', { provider: liveProviderLabel })}
             tone="success"
           />
         </View>

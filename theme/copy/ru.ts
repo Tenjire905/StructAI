@@ -234,8 +234,10 @@ export const copyRu: CopyCatalog = {
     focus: 'API-ключ (BYOK)',
   },
   'profile.byokDescription': {
-    playful: 'Твой API-ключ надежно хранится на устройстве и открывает Промпт-мастерскую.',
-    focus: 'API-ключ хранится локально в зашифрованном виде (Secure Store) и используется только для запросов мастерской.',
+    playful:
+      'Один ключ на провайдера — все остается на устройстве и никогда не синхронизируется.',
+    focus:
+      'Один API-ключ на провайдера, локально в Secure Store. Ключи не синхронизируются.',
   },
   'profile.byokPlaceholder': {
     playful: 'Вставь API-ключ',
@@ -356,6 +358,14 @@ export const copyRu: CopyCatalog = {
   'profile.byokUnverifiedBadge': {
     playful: 'Сохранен - еще не проверен',
     focus: 'Сохранен (не проверен)',
+  },
+  'profile.byokTest': {
+    playful: 'Проверить ключ',
+    focus: 'Тест',
+  },
+  'profile.byokConfiguredCount': {
+    playful: '{{count}} провайдеров подключено',
+    focus: '{{count}} провайдеров настроено',
   },
   'profile.accountSection': {
     playful: 'Твой аккаунт',

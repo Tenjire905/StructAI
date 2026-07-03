@@ -234,8 +234,10 @@ export const copyDe: CopyCatalog = {
     focus: 'API-Schlüssel (BYOK)',
   },
   'profile.byokDescription': {
-    playful: 'Dein eigener API-Schlüssel bleibt sicher auf deinem Gerät und schaltet die Prompt-Werkstatt frei.',
-    focus: 'Der API-Schlüssel wird verschlüsselt lokal gespeichert (Secure Store) und nur für Prompt-Werkstatt-Anfragen verwendet.',
+    playful:
+      'Pro Anbieter ein eigener Schlüssel – alles bleibt sicher auf deinem Gerät und wird nie synchronisiert.',
+    focus:
+      'Pro Provider ein API-Schlüssel, verschlüsselt lokal (Secure Store). Keys werden nicht synchronisiert.',
   },
   'profile.byokPlaceholder': {
     playful: 'API-Schlüssel einfügen',
@@ -356,6 +358,14 @@ export const copyDe: CopyCatalog = {
   'profile.byokUnverifiedBadge': {
     playful: 'Gespeichert - noch nicht geprüft',
     focus: 'Gespeichert (ungeprüft)',
+  },
+  'profile.byokTest': {
+    playful: 'Schlüssel testen',
+    focus: 'Testen',
+  },
+  'profile.byokConfiguredCount': {
+    playful: '{{count}} Anbieter verbunden',
+    focus: '{{count}} Provider konfiguriert',
   },
   'profile.accountSection': {
     playful: 'Dein Konto',

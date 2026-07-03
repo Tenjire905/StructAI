@@ -234,8 +234,10 @@ export const copyFr: CopyCatalog = {
     focus: 'Cle API (BYOK)',
   },
   'profile.byokDescription': {
-    playful: 'Ta propre cle API reste en securite sur ton appareil et debloque l Atelier de prompts.',
-    focus: 'La cle API est stockee localement de facon chiffree (Secure Store) et utilisee uniquement pour les requetes de l Atelier.',
+    playful:
+      'Une cle par fournisseur — tout reste sur ton appareil et n est jamais synchronise.',
+    focus:
+      'Une cle API par provider, chiffree localement (Secure Store). Les cles ne sont pas synchronisees.',
   },
   'profile.byokPlaceholder': {
     playful: 'Coller la cle API',
@@ -356,6 +358,14 @@ export const copyFr: CopyCatalog = {
   'profile.byokUnverifiedBadge': {
     playful: 'Enregistree - pas encore verifiee',
     focus: 'Enregistree (non verifiee)',
+  },
+  'profile.byokTest': {
+    playful: 'Tester la cle',
+    focus: 'Tester',
+  },
+  'profile.byokConfiguredCount': {
+    playful: '{{count}} fournisseurs connectes',
+    focus: '{{count}} providers configures',
   },
   'profile.accountSection': {
     playful: 'Ton compte',

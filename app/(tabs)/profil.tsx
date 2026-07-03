@@ -1,14 +1,8 @@
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, TextInput, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 import { StatBlock } from '@/components/features';
-import { Avatar, Badge, Button, Card } from '@/components/ui';
-import {
-  ScoringError,
-  getProviderLabel,
-  validateApiKey,
-} from '@/lib/aiScoring';
-import { deleteApiKey, getApiKey, saveApiKey } from '@/lib/secureKeyStore';
+import { ByokKeysManager } from '@/components/features/profile/ByokKeysManager';
+import { Avatar, Button, Card } from '@/components/ui';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
 import {
@@ -22,103 +16,11 @@ const MOCK_PROFILE = {
   name: 'Alex Muster',
 };
 
-type KeyStatus =
-  | { state: 'none' }
-  | { state: 'checking' }
-  | { state: 'valid'; providerLabel: string }
-  | { state: 'unverified' }
-  | { state: 'invalid' };
-
 export default function ProfilScreen() {
   const { tokens, t, mode, setMode, locale, setLocale } = useThemeMode();
   const { user, signOut } = useAuth();
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const currentStreak = useProgressStore((state) => state.currentStreak);
-  const [apiKeyInput, setApiKeyInput] = useState('');
-  const [keyStatus, setKeyStatus] = useState<KeyStatus>({ state: 'none' });
-
-  // Beim Öffnen: vorhandenen Key kostenlos gegen die Models-API prüfen
-  // (validiert nur Auth, verbraucht keine Tokens).
-  useEffect(() => {
-    let cancelled = false;
-
-    getApiKey()
-      .then(async (storedKey) => {
-        if (!storedKey || storedKey.length === 0) {
-          if (!cancelled) {
-            setKeyStatus({ state: 'none' });
-          }
-          return;
-        }
-
-        if (!cancelled) {
-          setKeyStatus({ state: 'checking' });
-        }
-
-        try {
-          const provider = await validateApiKey(storedKey);
-          if (!cancelled) {
-            setKeyStatus({ state: 'valid', providerLabel: getProviderLabel(provider) });
-          }
-        } catch (error) {
-          if (cancelled) {
-            return;
-          }
-          if (error instanceof ScoringError && error.reason === 'invalidKey') {
-            setKeyStatus({ state: 'invalid' });
-          } else {
-            setKeyStatus({ state: 'unverified' });
-          }
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setKeyStatus({ state: 'none' });
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const handleSaveKey = async () => {
-    const trimmedKey = apiKeyInput.trim();
-
-    if (trimmedKey.length === 0) {
-      return;
-    }
-
-    setKeyStatus({ state: 'checking' });
-
-    try {
-      const provider = await validateApiKey(trimmedKey);
-      await saveApiKey(trimmedKey);
-      setApiKeyInput('');
-      setKeyStatus({ state: 'valid', providerLabel: getProviderLabel(provider) });
-    } catch (error) {
-      if (error instanceof ScoringError && error.reason === 'invalidKey') {
-        // Ungültige Keys nicht speichern – Eingabe bleibt zur Korrektur stehen.
-        setKeyStatus({ state: 'invalid' });
-        return;
-      }
-
-      // Netzwerk-/Serverprobleme: Key trotzdem speichern, Prüfung folgt bei Nutzung.
-      await saveApiKey(trimmedKey);
-      setApiKeyInput('');
-      setKeyStatus({ state: 'unverified' });
-    }
-  };
-
-  const handleDeleteKey = async () => {
-    await deleteApiKey();
-    setKeyStatus({ state: 'none' });
-  };
-
-  const hasStoredKey =
-    keyStatus.state === 'valid' ||
-    keyStatus.state === 'unverified' ||
-    keyStatus.state === 'checking';
 
   const displayName =
     user?.user_metadata?.full_name ??
@@ -283,113 +185,7 @@ export default function ProfilScreen() {
         </Card>
       </View>
 
-      <View style={{ gap: tokens.spacing.space3 }}>
-        <Text
-          style={{
-            color: tokens.colors.text.primary,
-            fontFamily: tokens.typography.fontFamily.heading,
-            fontSize: tokens.typography.fontSize.headingMd,
-          }}>
-          {t('profile.byokSection')}
-        </Text>
-
-        <Card variant="solid">
-          <View style={{ gap: tokens.spacing.space3 }}>
-            <Text
-              style={{
-                color: tokens.colors.text.secondary,
-                fontFamily: tokens.typography.fontFamily.body,
-                fontSize: tokens.typography.fontSize.bodyMd,
-                lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
-              }}>
-              {t('profile.byokDescription')}
-            </Text>
-
-            {keyStatus.state === 'checking' ? (
-              <View
-                style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  gap: tokens.spacing.space2,
-                }}>
-                <ActivityIndicator color={tokens.colors.accent.primary} size="small" />
-                <Text
-                  style={{
-                    color: tokens.colors.text.secondary,
-                    fontFamily: tokens.typography.fontFamily.body,
-                    fontSize: tokens.typography.fontSize.bodySm,
-                  }}>
-                  {t('profile.byokChecking')}
-                </Text>
-              </View>
-            ) : hasStoredKey ? (
-              <View
-                style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  gap: tokens.spacing.space3,
-                  justifyContent: 'space-between',
-                }}>
-                {keyStatus.state === 'valid' ? (
-                  <Badge
-                    label={t('profile.byokValidBadge', {
-                      provider: keyStatus.providerLabel,
-                    })}
-                    tone="success"
-                  />
-                ) : (
-                  <Badge label={t('profile.byokUnverifiedBadge')} tone="warning" />
-                )}
-                <Button
-                  label={t('profile.byokDelete')}
-                  onPress={handleDeleteKey}
-                  variant="ghost"
-                />
-              </View>
-            ) : (
-              <View style={{ gap: tokens.spacing.space3 }}>
-                {keyStatus.state === 'invalid' ? (
-                  <Text
-                    style={{
-                      color: tokens.colors.accent.danger,
-                      fontFamily: tokens.typography.fontFamily.bodyMedium,
-                      fontSize: tokens.typography.fontSize.bodySm,
-                    }}>
-                    {t('profile.byokInvalidError')}
-                  </Text>
-                ) : null}
-                <TextInput
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  onChangeText={setApiKeyInput}
-                  placeholder={t('profile.byokPlaceholder')}
-                  placeholderTextColor={tokens.colors.text.tertiary}
-                  secureTextEntry
-                  style={{
-                    borderColor:
-                      keyStatus.state === 'invalid'
-                        ? tokens.colors.accent.danger
-                        : tokens.colors.border.strong,
-                    borderRadius: tokens.radius.md,
-                    borderWidth: 1,
-                    color: tokens.colors.text.primary,
-                    fontFamily: tokens.typography.fontFamily.mono,
-                    fontSize: tokens.typography.fontSize.bodyMd,
-                    padding: tokens.spacing.space3,
-                  }}
-                  value={apiKeyInput}
-                />
-                <Button
-                  disabled={apiKeyInput.trim().length === 0}
-                  label={t('profile.byokSave')}
-                  onPress={handleSaveKey}
-                  variant="primary"
-                />
-              </View>
-            )}
-          </View>
-        </Card>
-      </View>
+      <ByokKeysManager />
     </ScrollView>
   );
 }
