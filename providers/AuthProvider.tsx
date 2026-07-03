@@ -4,12 +4,14 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type PropsWithChildren,
 } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 
 import { createSessionFromUrl, subscribeToAuthDeepLinks } from '@/lib/authRedirect';
+import { hydrateProgressOnLogin } from '@/lib/progressSync';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 type AuthContextValue = {
@@ -28,6 +30,16 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const lastHydratedUserId = useRef<string | null>(null);
+
+  const runProgressHydration = useCallback((userId: string) => {
+    if (lastHydratedUserId.current === userId) {
+      return;
+    }
+
+    lastHydratedUserId.current = userId;
+    void hydrateProgressOnLogin(userId);
+  }, []);
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
@@ -46,9 +58,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+    } = supabase.auth.onAuthStateChange((event, nextSession) => {
       setSession(nextSession);
       setIsLoading(false);
+
+      if (!nextSession?.user) {
+        lastHydratedUserId.current = null;
+        return;
+      }
+
+      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+        runProgressHydration(nextSession.user.id);
+      }
     });
 
     const unsubscribeDeepLinks = subscribeToAuthDeepLinks(async (url) => {
@@ -64,7 +85,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       subscription.unsubscribe();
       unsubscribeDeepLinks();
     };
-  }, []);
+  }, [runProgressHydration]);
 
   const signInWithEmail = useCallback(async (email: string, password: string) => {
     if (!isSupabaseConfigured) {
@@ -96,6 +117,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }, []);
 
   const signOut = useCallback(async () => {
+    lastHydratedUserId.current = null;
+
     if (!isSupabaseConfigured) {
       setSession(null);
       return;

@@ -31,6 +31,8 @@ export type ProgressSnapshot = {
 type ProgressActions = {
   hydrate: () => void;
   reset: () => void;
+  persistSnapshot: (snapshot: ProgressSnapshot) => void;
+  getSnapshot: () => ProgressSnapshot;
   recordLessonOpened: (lessonId: string) => void;
   recordLessonFailed: (lessonId: string) => void;
   completeLesson: (lessonId: string, orbsEarned: number) => void;
@@ -84,6 +86,29 @@ function readProgressSnapshot(): ProgressSnapshot {
 
 function writeProgressSnapshot(snapshot: ProgressSnapshot): void {
   appStorage.set(PROGRESS_STORAGE_KEY, JSON.stringify(snapshot));
+}
+
+function scheduleProgressSync(snapshot: ProgressSnapshot): void {
+  void import('@/lib/progressSync').then(({ queueProgressSync }) => {
+    queueProgressSync(snapshot);
+  });
+}
+
+function persistAndSync(snapshot: ProgressSnapshot): void {
+  writeProgressSnapshot(snapshot);
+  scheduleProgressSync(snapshot);
+}
+
+function toProgressSnapshot(state: ProgressStore): ProgressSnapshot {
+  return {
+    orbCount: state.orbCount,
+    orbMax: state.orbMax,
+    completedLessons: state.completedLessons,
+    currentStreak: state.currentStreak,
+    streakDays: state.streakDays,
+    pathProgress: state.pathProgress,
+    promptScoreHistory: state.promptScoreHistory,
+  };
 }
 
 function pathTitleKey(pathId: string): string {
@@ -144,6 +169,13 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     set(fresh);
   },
 
+  persistSnapshot: (snapshot) => {
+    writeProgressSnapshot(snapshot);
+    set(snapshot);
+  },
+
+  getSnapshot: () => toProgressSnapshot(get()),
+
   recordLessonFailed: (lessonId) => {
     const pathId = getPathIdForLesson(lessonId);
 
@@ -179,7 +211,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         promptScoreHistory: state.promptScoreHistory,
       };
 
-      writeProgressSnapshot(snapshot);
+      persistAndSync(snapshot);
 
       return snapshot;
     });
@@ -262,7 +294,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         promptScoreHistory: state.promptScoreHistory,
       };
 
-      writeProgressSnapshot(snapshot);
+      persistAndSync(snapshot);
 
       return snapshot;
     });
