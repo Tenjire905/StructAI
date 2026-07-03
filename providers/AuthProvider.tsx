@@ -68,7 +68,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
 
       if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-        runProgressHydration(nextSession.user.id);
+        // Defer side effects to avoid Supabase auth deadlocks / redirect loops.
+        setTimeout(() => {
+          runProgressHydration(nextSession.user.id);
+        }, 0);
       }
     });
 
@@ -92,10 +95,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
       throw new Error('supabase_not_configured');
     }
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
       throw error;
+    }
+
+    if (data.session) {
+      setSession(data.session);
+      setIsLoading(false);
     }
   }, []);
 
@@ -111,6 +119,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
 
     if (data.session) {
+      setSession(data.session);
+      setIsLoading(false);
       return 'signed_in';
     }
 

@@ -1,11 +1,10 @@
-import { Redirect, useRouter } from 'expo-router';
+import { Redirect } from 'expo-router';
 
 import { AuthScreenView } from '@/components/features/auth/AuthScreenView';
 import { getPostAuthRoute } from '@/lib/authNavigation';
 import { useAuth } from '@/providers/AuthProvider';
 
 export default function AuthScreen() {
-  const router = useRouter();
   const { session, isLoading } = useAuth();
 
   if (isLoading) {
@@ -16,11 +15,5 @@ export default function AuthScreen() {
     return <Redirect href={getPostAuthRoute()} />;
   }
 
-  return (
-    <AuthScreenView
-      onAuthenticated={() => {
-        router.replace(getPostAuthRoute());
-      }}
-    />
-  );
+  return <AuthScreenView />;
 }

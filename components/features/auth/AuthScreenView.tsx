@@ -17,6 +17,7 @@ import { useThemeMode } from '@/theme';
 type AuthMode = 'signIn' | 'signUp';
 
 type AuthScreenViewProps = {
+  /** Reserved for dev previews; production navigation uses session Redirect. */
   onAuthenticated?: () => void;
 };
 
@@ -86,7 +87,6 @@ export function AuthScreenView({ onAuthenticated }: AuthScreenViewProps) {
     try {
       if (mode === 'signIn') {
         await signInWithEmail(email.trim(), password);
-        onAuthenticated?.();
         return;
       }
 
@@ -97,8 +97,6 @@ export function AuthScreenView({ onAuthenticated }: AuthScreenViewProps) {
         setMode('signIn');
         return;
       }
-
-      onAuthenticated?.();
     } catch (error) {
       setErrorMessage(resolveAuthErrorMessage(error, t));
     } finally {
@@ -112,7 +110,6 @@ export function AuthScreenView({ onAuthenticated }: AuthScreenViewProps) {
 
     try {
       await signInWithGoogle();
-      onAuthenticated?.();
     } catch (error) {
       setErrorMessage(resolveAuthErrorMessage(error, t));
     } finally {

@@ -24,7 +24,6 @@ let pendingSnapshot: ProgressSnapshot | null = null;
 let inflightSync: Promise<void> | null = null;
 
 function applySnapshotToStore(snapshot: ProgressSnapshot): void {
-  useProgressStore.setState(snapshot);
   useProgressStore.getState().persistSnapshot(snapshot);
 }
 
