@@ -157,6 +157,10 @@ export const copyDe: CopyCatalog = {
     playful: '+{{count}} Orbs für dich!',
     focus: '+{{count}} Orbs',
   },
+  'lesson.practiceComplete': {
+    playful: 'Übung abgeschlossen — keine Extra-Orbs.',
+    focus: 'Wiederholt. Keine zusätzlichen Orbs.',
+  },
   'lesson.backToPath': {
     playful: 'Zurück zum Pfad',
     focus: 'Zurück zum Pfad',

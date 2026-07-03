@@ -1,4 +1,4 @@
-export type MockChapterStatus = 'completed' | 'current' | 'locked';
+export type MockChapterStatus = 'completed' | 'current' | 'failed' | 'locked';
 
 export type MockChapter = {
   id: string;

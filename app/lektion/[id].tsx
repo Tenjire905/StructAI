@@ -28,6 +28,7 @@ import {
   hasPassedLessonThreshold,
   type LessonAnswerResult,
 } from '@/lib/lessonRewards';
+import { getPathIdForLesson } from '@/lib/pathLessonUtils';
 import { prepareLessonSteps } from '@/lib/lessonSession';
 import { useProgressStore } from '@/store/progressStore';
 import { getShadow, useCelebration, useThemeMode } from '@/theme';
@@ -49,6 +50,7 @@ export default function LektionScreen() {
   const lessonId = id ?? '';
   const { tokens, t, locale } = useThemeMode();
   const router = useRouter();
+  const pathProgress = useProgressStore((state) => state.pathProgress);
   const recordLessonOpened = useProgressStore((state) => state.recordLessonOpened);
   const recordLessonFailed = useProgressStore((state) => state.recordLessonFailed);
   const completeLesson = useProgressStore((state) => state.completeLesson);
@@ -247,7 +249,14 @@ export default function LektionScreen() {
 
   const finishLesson = (results: LessonAnswerResult[]) => {
     if (hasPassedLessonThreshold(results)) {
-      const reward = computeLessonOrbReward(lesson.orbsReward, results);
+      const pathId = getPathIdForLesson(lesson.id);
+      const wasAlreadyCompleted =
+        pathId !== undefined &&
+        (pathProgress[pathId]?.completedLessonIds.includes(lesson.id) ?? false);
+      const reward = wasAlreadyCompleted
+        ? 0
+        : computeLessonOrbReward(lesson.orbsReward, results);
+
       setEarnedOrbs(reward);
       completeLesson(lesson.id, reward);
       setLessonOutcome('passed');
@@ -511,7 +520,10 @@ function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
     }
 
     finishedRef.current = true;
-    celebrate('lesson_complete', { orbCount: orbsReward });
+
+    if (orbsReward > 0) {
+      celebrate('lesson_complete', { orbCount: orbsReward });
+    }
   }, [celebrate, orbsReward]);
 
   return (
@@ -555,7 +567,7 @@ function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
           fontFamily: tokens.typography.fontFamily.mono,
           fontSize: tokens.typography.fontSize.headingLg,
         }}>
-        {t('lesson.orbsEarned', { count: orbsReward })}
+        {orbsReward > 0 ? t('lesson.orbsEarned', { count: orbsReward }) : t('lesson.practiceComplete')}
       </Text>
 
       <Button

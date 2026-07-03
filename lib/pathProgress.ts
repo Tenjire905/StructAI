@@ -61,11 +61,16 @@ export function mergePathWithProgress(
   }
 
   const completedSet = new Set(record.completedLessonIds);
+  const failedSet = new Set(record.failedLessonIds ?? []);
   const currentId = record.currentLessonId;
 
   const chapters: MockChapter[] = template.chapters.map((chapter) => {
     if (completedSet.has(chapter.id)) {
       return { ...chapter, status: 'completed' };
+    }
+
+    if (failedSet.has(chapter.id)) {
+      return { ...chapter, status: 'failed' };
     }
 
     if (chapter.id === currentId) {
@@ -76,7 +81,8 @@ export function mergePathWithProgress(
   });
 
   const hasCurrent = chapters.some((chapter) => chapter.status === 'current');
-  if (!hasCurrent) {
+  const hasFailed = chapters.some((chapter) => chapter.status === 'failed');
+  if (!hasCurrent && !hasFailed) {
     const firstOpen = chapters.find((chapter) => chapter.status === 'locked');
     if (firstOpen) {
       const index = chapters.findIndex((chapter) => chapter.id === firstOpen.id);
@@ -94,6 +100,13 @@ export function mergePathWithProgress(
     progress: progressBar.completedRatio,
     chapters,
   };
+}
+
+export function getContinueLessonId(path: MockPath): string {
+  const failedChapter = path.chapters.find((chapter) => chapter.status === 'failed');
+  const currentChapter = path.chapters.find((chapter) => chapter.status === 'current');
+
+  return (failedChapter ?? currentChapter ?? path.chapters[0]).id;
 }
 
 export function getMergedPath(pathId: string, pathProgress: Record<string, PathProgressRecord>): MockPath | undefined {

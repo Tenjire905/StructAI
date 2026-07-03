@@ -239,9 +239,10 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       const nextLessonId = getNextLessonId(pathId, lessonId) ?? lessonId;
       const progress = computePathProgressRatio(pathId, completedLessonIds);
       const wasAlreadyCompleted = pathRecord.completedLessonIds.includes(lessonId);
+      const awardedOrbs = wasAlreadyCompleted ? 0 : orbsEarned;
 
       const snapshot: ProgressSnapshot = {
-        orbCount: state.orbCount + orbsEarned,
+        orbCount: state.orbCount + awardedOrbs,
         orbMax: state.orbMax,
         completedLessons: wasAlreadyCompleted
           ? state.completedLessons

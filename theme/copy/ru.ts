@@ -157,6 +157,10 @@ export const copyRu: CopyCatalog = {
     playful: '+{{count}} орбов для тебя!',
     focus: '+{{count}} орбов',
   },
+  'lesson.practiceComplete': {
+    playful: 'Повтор пройден — без дополнительных орбов.',
+    focus: 'Повторено. Дополнительных орбов нет.',
+  },
   'lesson.backToPath': {
     playful: 'Назад к треку',
     focus: 'Назад к треку',
