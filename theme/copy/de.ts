@@ -413,6 +413,10 @@ export const copyDe: CopyCatalog = {
     playful: 'Nach der Registrierung prüf bitte dein Postfach, falls eine Bestätigung nötig ist.',
     focus: 'Bei E-Mail-Bestätigung bitte Posteingang prüfen.',
   },
+  'auth.signUpConfirmEmail': {
+    playful: 'Account erstellt! Bitte bestätige deine E-Mail, dann kannst du dich anmelden.',
+    focus: 'Registrierung erfolgreich. E-Mail bestätigen, danach anmelden.',
+  },
   'auth.dividerOr': {
     playful: 'oder',
     focus: 'oder',

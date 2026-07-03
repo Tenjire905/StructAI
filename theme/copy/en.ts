@@ -413,6 +413,10 @@ export const copyEn: CopyCatalog = {
     playful: 'After registration, check your inbox if email confirmation is required.',
     focus: 'Check your inbox if email confirmation is required.',
   },
+  'auth.signUpConfirmEmail': {
+    playful: 'Account created! Please confirm your email, then sign in.',
+    focus: 'Registration successful. Confirm email, then sign in.',
+  },
   'auth.dividerOr': {
     playful: 'or',
     focus: 'or',

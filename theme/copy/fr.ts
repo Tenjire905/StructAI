@@ -413,6 +413,10 @@ export const copyFr: CopyCatalog = {
     playful: 'Apres inscription, verifie ta boite mail si une confirmation est requise.',
     focus: 'Verifiez votre boite mail si une confirmation est requise.',
   },
+  'auth.signUpConfirmEmail': {
+    playful: 'Compte cree ! Confirme ton e-mail, puis connecte-toi.',
+    focus: 'Inscription reussie. Confirmer e-mail, puis connexion.',
+  },
   'auth.dividerOr': {
     playful: 'ou',
     focus: 'ou',

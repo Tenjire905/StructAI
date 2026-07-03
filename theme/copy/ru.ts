@@ -413,6 +413,10 @@ export const copyRu: CopyCatalog = {
     playful: 'После регистрации проверь почту, если нужно подтверждение.',
     focus: 'Проверьте почту, если требуется подтверждение e-mail.',
   },
+  'auth.signUpConfirmEmail': {
+    playful: 'Аккаунт создан! Подтверди e-mail, затем войди.',
+    focus: 'Регистрация успешна. Подтвердите e-mail, затем войдите.',
+  },
   'auth.dividerOr': {
     playful: 'или',
     focus: 'или',

@@ -67,6 +67,7 @@ export function AuthScreenView({ onAuthenticated }: AuthScreenViewProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleSubmitting, setIsGoogleSubmitting] = useState(false);
 
@@ -80,12 +81,21 @@ export function AuthScreenView({ onAuthenticated }: AuthScreenViewProps) {
 
     setIsSubmitting(true);
     setErrorMessage(null);
+    setInfoMessage(null);
 
     try {
       if (mode === 'signIn') {
         await signInWithEmail(email.trim(), password);
-      } else {
-        await signUpWithEmail(email.trim(), password);
+        onAuthenticated?.();
+        return;
+      }
+
+      const signUpResult = await signUpWithEmail(email.trim(), password);
+
+      if (signUpResult === 'confirmation_required') {
+        setInfoMessage(t('auth.signUpConfirmEmail'));
+        setMode('signIn');
+        return;
       }
 
       onAuthenticated?.();
@@ -187,6 +197,7 @@ export function AuthScreenView({ onAuthenticated }: AuthScreenViewProps) {
                 onPress={() => {
                   setMode('signIn');
                   setErrorMessage(null);
+                  setInfoMessage(null);
                 }}
                 variant={mode === 'signIn' ? 'primary' : 'ghost'}
               />
@@ -197,6 +208,7 @@ export function AuthScreenView({ onAuthenticated }: AuthScreenViewProps) {
                 onPress={() => {
                   setMode('signUp');
                   setErrorMessage(null);
+                  setInfoMessage(null);
                 }}
                 variant={mode === 'signUp' ? 'primary' : 'ghost'}
               />
@@ -259,6 +271,18 @@ export function AuthScreenView({ onAuthenticated }: AuthScreenViewProps) {
                   lineHeight: tokens.typography.fontSize.bodySm * 1.5,
                 }}>
                 {errorMessage}
+              </Text>
+            ) : null}
+
+            {infoMessage ? (
+              <Text
+                style={{
+                  color: tokens.colors.accent.success,
+                  fontFamily: tokens.typography.fontFamily.bodyMedium,
+                  fontSize: tokens.typography.fontSize.bodySm,
+                  lineHeight: tokens.typography.fontSize.bodySm * 1.5,
+                }}>
+                {infoMessage}
               </Text>
             ) : null}
 
