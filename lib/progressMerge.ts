@@ -84,6 +84,31 @@ function mergeStreakDays(local: boolean[], remote: boolean[]): boolean[] {
   );
 }
 
+function mergePathCompletedAt(
+  local: Record<string, string>,
+  remote: Record<string, string>,
+): Record<string, string> {
+  const keys = unionUnique([...Object.keys(local), ...Object.keys(remote)]);
+  const merged: Record<string, string> = {};
+
+  for (const pathId of keys) {
+    const localValue = local[pathId];
+    const remoteValue = remote[pathId];
+
+    if (localValue && remoteValue) {
+      merged[pathId] =
+        new Date(localValue).getTime() <= new Date(remoteValue).getTime()
+          ? localValue
+          : remoteValue;
+      continue;
+    }
+
+    merged[pathId] = localValue ?? remoteValue ?? '';
+  }
+
+  return merged;
+}
+
 export function isProgressSnapshotEmpty(snapshot: ProgressSnapshot): boolean {
   return (
     snapshot.completedLessons === 0 &&
@@ -118,6 +143,10 @@ export function mergeProgressSnapshots(
     pathProgress,
     unionUnique([...(local.completedPathIds ?? []), ...(remote.completedPathIds ?? [])]),
   );
+  const pathCompletedAt = mergePathCompletedAt(
+    local.pathCompletedAt ?? {},
+    remote.pathCompletedAt ?? {},
+  );
 
   return {
     orbCount: Math.max(local.orbCount, remote.orbCount),
@@ -127,6 +156,7 @@ export function mergeProgressSnapshots(
     streakDays: mergeStreakDays(local.streakDays, remote.streakDays),
     pathProgress,
     completedPathIds,
+    pathCompletedAt,
     promptScoreHistory: [
       ...local.promptScoreHistory,
       ...remote.promptScoreHistory,
@@ -147,6 +177,7 @@ export function normalizeProgressSnapshot(
     streakDays: partial.streakDays ?? [...DEFAULT_PROGRESS.streakDays],
     pathProgress: partial.pathProgress ?? {},
     completedPathIds: partial.completedPathIds ?? [],
+    pathCompletedAt: partial.pathCompletedAt ?? {},
     promptScoreHistory: partial.promptScoreHistory ?? [],
   };
 }

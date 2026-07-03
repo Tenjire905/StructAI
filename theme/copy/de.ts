@@ -753,4 +753,44 @@ export const copyDe: CopyCatalog = {
     playful: 'Zurück zu den Lernpfaden',
     focus: 'Zur Lernpfad-Übersicht',
   },
+  'certificate.badge': {
+    playful: 'Abschluss-Zertifikat',
+    focus: 'Zertifikat',
+  },
+  'certificate.awardedTo': {
+    playful: 'Verliehen an',
+    focus: 'Teilnehmer',
+  },
+  'certificate.completedOn': {
+    playful: 'Abgeschlossen am',
+    focus: 'Abschlussdatum',
+  },
+  'certificate.brandTagline': {
+    playful: 'Prompt Engineering · Lernpfad',
+    focus: 'StructAI · Lernpfad-Abschluss',
+  },
+  'certificate.share': {
+    playful: 'Zertifikat teilen',
+    focus: 'Zertifikat exportieren',
+  },
+  'certificate.sharing': {
+    playful: 'Wird vorbereitet…',
+    focus: 'Export läuft…',
+  },
+  'certificate.shareDialogTitle': {
+    playful: 'Dein StructAI-Zertifikat teilen',
+    focus: 'StructAI-Zertifikat teilen',
+  },
+  'certificate.shareUnavailable': {
+    playful: 'Teilen ist auf diesem Gerät gerade nicht möglich.',
+    focus: 'Zertifikat-Export auf diesem Gerät nicht verfügbar.',
+  },
+  'profile.certificatesSection': {
+    playful: 'Deine Zertifikate',
+    focus: 'Abschlusszertifikate',
+  },
+  'profile.certificatesDescription': {
+    playful: 'Für jeden abgeschlossenen Lernpfad kannst du dein Zertifikat als Bild teilen.',
+    focus: 'Abgeschlossene Lernpfade mit Export als Bild.',
+  },
 };

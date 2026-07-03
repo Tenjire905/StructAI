@@ -1,11 +1,20 @@
 import { useEffect, useRef } from 'react';
-import { Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
+import { CertificateShareAction } from '@/components/features/CertificateShareAction';
+import { CertificateView } from '@/components/features/CertificateView';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
 import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
+import {
+  CERTIFICATE_LAYOUT_HEIGHT,
+  CERTIFICATE_LAYOUT_WIDTH,
+} from '@/lib/certificateExport';
 import { pathTitleKey } from '@/lib/pathProgress';
+import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { getPathTemplate } from '@/lib/pathLessonUtils';
+import { useAuth } from '@/providers/AuthProvider';
+import { useProgressStore } from '@/store/progressStore';
 import { getShadow, useCelebration, useThemeMode } from '@/theme';
 
 type PathCompletionViewProps = {
@@ -15,13 +24,18 @@ type PathCompletionViewProps = {
 };
 
 export function PathCompletionView({ pathId, orbsReward, onFinish }: PathCompletionViewProps) {
-  const { tokens, t } = useThemeMode();
+  const { tokens, t, locale, mode } = useThemeMode();
   const { celebrate } = useCelebration();
+  const { user } = useAuth();
   const companionState = useOrbCompanionState('celebrating');
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
   const finishedRef = useRef(false);
   const path = getPathTemplate(pathId);
   const totalChapters = path?.totalChapters ?? 0;
+  const completedAt =
+    useProgressStore((state) => state.pathCompletedAt[pathId]) ?? new Date().toISOString();
+  const recipientName = resolveProfileDisplayName(user);
+  const previewScale = 0.72;
 
   useEffect(() => {
     if (finishedRef.current) {
@@ -36,15 +50,16 @@ export function PathCompletionView({ pathId, orbsReward, onFinish }: PathComplet
   }, [celebrate, orbsReward, pathId]);
 
   return (
-    <View
-      style={{
+    <ScrollView
+      contentContainerStyle={{
         alignItems: 'center',
-        backgroundColor: tokens.colors.background.base,
-        flex: 1,
         gap: tokens.spacing.space5,
         justifyContent: 'center',
+        minHeight: '100%',
         paddingHorizontal: tokens.spacing.screenPadding,
-      }}>
+        paddingVertical: tokens.spacing.space6,
+      }}
+      style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <View
         style={[
           isPlayful ? getShadow('glow') : undefined,
@@ -95,23 +110,41 @@ export function PathCompletionView({ pathId, orbsReward, onFinish }: PathComplet
         </Text>
       ) : null}
 
-      <Text
+      <View
         style={{
-          color: tokens.colors.text.tertiary,
-          fontFamily: tokens.typography.fontFamily.body,
-          fontSize: tokens.typography.fontSize.bodySm,
-          lineHeight: tokens.typography.fontSize.bodySm * 1.5,
-          textAlign: 'center',
+          alignItems: 'center',
+          height: CERTIFICATE_LAYOUT_HEIGHT * previewScale,
+          justifyContent: 'center',
+          width: CERTIFICATE_LAYOUT_WIDTH * previewScale,
         }}>
-        {t('pathCompletion.certificateHint')}
-      </Text>
+        <CertificateView
+          awardedToLabel={t('certificate.awardedTo')}
+          badgeLabel={t('certificate.badge')}
+          brandTagline={t('certificate.brandTagline')}
+          completedAt={completedAt}
+          completedOnLabel={t('certificate.completedOn')}
+          locale={locale}
+          mode={mode}
+          pathTitle={t(pathTitleKey(pathId))}
+          recipientName={recipientName}
+          style={{
+            transform: [{ scale: previewScale }],
+          }}
+        />
+      </View>
+
+      <CertificateShareAction
+        completedAt={completedAt}
+        fullWidth
+        pathId={pathId}
+      />
 
       <Button
         label={t('pathCompletion.backToPaths')}
         onPress={onFinish}
         style={{ alignSelf: 'stretch' }}
-        variant="primary"
+        variant="ghost"
       />
-    </View>
+    </ScrollView>
   );
 }

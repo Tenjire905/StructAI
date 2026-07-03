@@ -753,4 +753,44 @@ export const copyEn: CopyCatalog = {
     playful: 'Back to learning paths',
     focus: 'Back to path overview',
   },
+  'certificate.badge': {
+    playful: 'Completion certificate',
+    focus: 'Certificate',
+  },
+  'certificate.awardedTo': {
+    playful: 'Awarded to',
+    focus: 'Participant',
+  },
+  'certificate.completedOn': {
+    playful: 'Completed on',
+    focus: 'Completion date',
+  },
+  'certificate.brandTagline': {
+    playful: 'Prompt Engineering · Learning Path',
+    focus: 'StructAI · Path Completion',
+  },
+  'certificate.share': {
+    playful: 'Share certificate',
+    focus: 'Export certificate',
+  },
+  'certificate.sharing': {
+    playful: 'Preparing…',
+    focus: 'Exporting…',
+  },
+  'certificate.shareDialogTitle': {
+    playful: 'Share your StructAI certificate',
+    focus: 'Share StructAI certificate',
+  },
+  'certificate.shareUnavailable': {
+    playful: 'Sharing is not available on this device right now.',
+    focus: 'Certificate export is not available on this device.',
+  },
+  'profile.certificatesSection': {
+    playful: 'Your certificates',
+    focus: 'Completion certificates',
+  },
+  'profile.certificatesDescription': {
+    playful: 'Share a certificate image for every learning path you completed.',
+    focus: 'Completed learning paths with image export.',
+  },
 };

@@ -753,4 +753,44 @@ export const copyRu: CopyCatalog = {
     playful: 'К учебным путям',
     focus: 'К обзору путей',
   },
+  'certificate.badge': {
+    playful: 'Сертификат об окончании',
+    focus: 'Сертификат',
+  },
+  'certificate.awardedTo': {
+    playful: 'Вручено',
+    focus: 'Участник',
+  },
+  'certificate.completedOn': {
+    playful: 'Завершено',
+    focus: 'Дата завершения',
+  },
+  'certificate.brandTagline': {
+    playful: 'Prompt Engineering · Учебный путь',
+    focus: 'StructAI · Завершение пути',
+  },
+  'certificate.share': {
+    playful: 'Поделиться сертификатом',
+    focus: 'Экспорт сертификата',
+  },
+  'certificate.sharing': {
+    playful: 'Подготовка…',
+    focus: 'Экспорт…',
+  },
+  'certificate.shareDialogTitle': {
+    playful: 'Поделиться сертификатом StructAI',
+    focus: 'Поделиться сертификатом StructAI',
+  },
+  'certificate.shareUnavailable': {
+    playful: 'Поделиться сейчас нельзя на этом устройстве.',
+    focus: 'Экспорт сертификата недоступен на этом устройстве.',
+  },
+  'profile.certificatesSection': {
+    playful: 'Твои сертификаты',
+    focus: 'Сертификаты об окончании',
+  },
+  'profile.certificatesDescription': {
+    playful: 'Делись изображением сертификата за каждый завершённый путь.',
+    focus: 'Завершённые пути с экспортом изображения.',
+  },
 };

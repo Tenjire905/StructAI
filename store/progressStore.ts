@@ -30,6 +30,7 @@ export type ProgressSnapshot = {
   streakDays: boolean[];
   pathProgress: Record<string, PathProgressRecord>;
   completedPathIds: string[];
+  pathCompletedAt: Record<string, string>;
   promptScoreHistory: number[];
 };
 
@@ -65,6 +66,7 @@ export const DEFAULT_PROGRESS: ProgressSnapshot = {
   streakDays: [...DEFAULT_STREAK_DAYS],
   pathProgress: {},
   completedPathIds: [],
+  pathCompletedAt: {},
   promptScoreHistory: [],
 };
 
@@ -84,6 +86,7 @@ function readProgressSnapshot(): ProgressSnapshot {
       streakDays: parsed.streakDays ?? [...DEFAULT_STREAK_DAYS],
       pathProgress: parsed.pathProgress ?? {},
       completedPathIds: parsed.completedPathIds ?? [],
+      pathCompletedAt: parsed.pathCompletedAt ?? {},
       promptScoreHistory: parsed.promptScoreHistory ?? [],
     };
   } catch {
@@ -115,6 +118,7 @@ function toProgressSnapshot(state: ProgressStore): ProgressSnapshot {
     streakDays: state.streakDays,
     pathProgress: state.pathProgress,
     completedPathIds: state.completedPathIds,
+    pathCompletedAt: state.pathCompletedAt,
     promptScoreHistory: state.promptScoreHistory,
   };
 }
@@ -217,6 +221,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         streakDays: state.streakDays,
         pathProgress: nextPathProgress,
         completedPathIds: state.completedPathIds,
+        pathCompletedAt: state.pathCompletedAt,
         promptScoreHistory: state.promptScoreHistory,
       };
 
@@ -252,6 +257,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         streakDays: state.streakDays,
         pathProgress: nextPathProgress,
         completedPathIds: state.completedPathIds,
+        pathCompletedAt: state.pathCompletedAt,
         promptScoreHistory: state.promptScoreHistory,
       };
 
@@ -304,6 +310,14 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
           ? [...state.completedPathIds, newlyCompletedPathId]
           : state.completedPathIds;
 
+      const pathCompletedAt =
+        newlyCompletedPathId !== null
+          ? {
+              ...state.pathCompletedAt,
+              [newlyCompletedPathId]: new Date().toISOString(),
+            }
+          : state.pathCompletedAt;
+
       const snapshot: ProgressSnapshot = {
         orbCount: state.orbCount + awardedOrbs,
         orbMax: state.orbMax,
@@ -317,6 +331,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
           [pathId]: nextPathRecord,
         },
         completedPathIds,
+        pathCompletedAt,
         promptScoreHistory: state.promptScoreHistory,
       };
 

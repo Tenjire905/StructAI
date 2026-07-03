@@ -753,4 +753,44 @@ export const copyFr: CopyCatalog = {
     playful: 'Retour aux parcours',
     focus: 'Retour a la vue d\'ensemble',
   },
+  'certificate.badge': {
+    playful: 'Certificat de fin',
+    focus: 'Certificat',
+  },
+  'certificate.awardedTo': {
+    playful: 'Decerne a',
+    focus: 'Participant',
+  },
+  'certificate.completedOn': {
+    playful: 'Termine le',
+    focus: 'Date de fin',
+  },
+  'certificate.brandTagline': {
+    playful: 'Prompt Engineering · Parcours',
+    focus: 'StructAI · Fin de parcours',
+  },
+  'certificate.share': {
+    playful: 'Partager le certificat',
+    focus: 'Exporter le certificat',
+  },
+  'certificate.sharing': {
+    playful: 'Preparation…',
+    focus: 'Export en cours…',
+  },
+  'certificate.shareDialogTitle': {
+    playful: 'Partager ton certificat StructAI',
+    focus: 'Partager le certificat StructAI',
+  },
+  'certificate.shareUnavailable': {
+    playful: 'Le partage n\'est pas disponible sur cet appareil.',
+    focus: 'Export du certificat indisponible sur cet appareil.',
+  },
+  'profile.certificatesSection': {
+    playful: 'Tes certificats',
+    focus: 'Certificats de fin',
+  },
+  'profile.certificatesDescription': {
+    playful: 'Partage une image de certificat pour chaque parcours termine.',
+    focus: 'Parcours termines avec export en image.',
+  },
 };

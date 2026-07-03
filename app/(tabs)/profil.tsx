@@ -2,8 +2,10 @@ import { ScrollView, Text, View } from 'react-native';
 
 import { StatBlock } from '@/components/features';
 import { ByokKeysManager } from '@/components/features/profile/ByokKeysManager';
+import { ProfileCertificatesSection } from '@/components/features/profile/ProfileCertificatesSection';
 import { SpendingLimitSettings } from '@/components/features/profile/SpendingLimitSettings';
 import { Avatar, Button, Card } from '@/components/ui';
+import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
 import {
@@ -13,21 +15,13 @@ import {
   type ThemeMode,
 } from '@/theme';
 
-const MOCK_PROFILE = {
-  name: 'Alex Muster',
-};
-
 export default function ProfilScreen() {
   const { tokens, t, mode, setMode, locale, setLocale } = useThemeMode();
   const { user, signOut } = useAuth();
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const currentStreak = useProgressStore((state) => state.currentStreak);
 
-  const displayName =
-    user?.user_metadata?.full_name ??
-    user?.user_metadata?.name ??
-    user?.email?.split('@')[0] ??
-    MOCK_PROFILE.name;
+  const displayName = resolveProfileDisplayName(user);
 
   const handleSignOut = async () => {
     await signOut();
@@ -85,6 +79,8 @@ export default function ProfilScreen() {
           <StatBlock copyKey="statBlock.currentStreak" value={currentStreak} />
         </View>
       </View>
+
+      <ProfileCertificatesSection />
 
       <View style={{ gap: tokens.spacing.space3 }}>
         <Text
