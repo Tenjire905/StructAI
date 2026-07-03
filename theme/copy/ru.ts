@@ -733,4 +733,24 @@ export const copyRu: CopyCatalog = {
     playful: 'Полная неделя - серия продолжается!',
     focus: 'Достигнут рубеж в 7 дней.',
   },
+  'celebration.pathComplete': {
+    playful: 'Путь пройден: {{path}}!',
+    focus: 'Учебный путь завершён: {{path}}.',
+  },
+  'pathCompletion.title': {
+    playful: 'Путь пройден!',
+    focus: 'Учебный путь завершён',
+  },
+  'pathCompletion.subtitle': {
+    playful: 'Ты успешно прошёл все {{total}} глав «{{path}}».',
+    focus: 'Все {{total}} глав «{{path}}» успешно завершены.',
+  },
+  'pathCompletion.certificateHint': {
+    playful: 'Сертификат скоро можно будет получить здесь.',
+    focus: 'Экспорт сертификата будет добавлен здесь (G2).',
+  },
+  'pathCompletion.backToPaths': {
+    playful: 'К учебным путям',
+    focus: 'К обзору путей',
+  },
 };

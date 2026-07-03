@@ -2,6 +2,10 @@ import { create } from 'zustand';
 
 import { appStorage } from '@/lib/appStorage';
 import {
+  detectNewlyCompletedPathId,
+  reconcileCompletedPathIds,
+} from '@/lib/pathCompletion';
+import {
   getFirstLessonIdForPath,
   getNextLessonId,
   getPathIdForLesson,
@@ -25,6 +29,7 @@ export type ProgressSnapshot = {
   currentStreak: number;
   streakDays: boolean[];
   pathProgress: Record<string, PathProgressRecord>;
+  completedPathIds: string[];
   promptScoreHistory: number[];
 };
 
@@ -35,7 +40,7 @@ type ProgressActions = {
   getSnapshot: () => ProgressSnapshot;
   recordLessonOpened: (lessonId: string) => void;
   recordLessonFailed: (lessonId: string) => void;
-  completeLesson: (lessonId: string, orbsEarned: number) => void;
+  completeLesson: (lessonId: string, orbsEarned: number) => string | null;
   addPromptScore: (score: number) => void;
   getResumeLessonId: (pathId: string) => string | undefined;
   getActivePaths: () => Array<{
@@ -59,6 +64,7 @@ export const DEFAULT_PROGRESS: ProgressSnapshot = {
   currentStreak: 0,
   streakDays: [...DEFAULT_STREAK_DAYS],
   pathProgress: {},
+  completedPathIds: [],
   promptScoreHistory: [],
 };
 
@@ -77,6 +83,7 @@ function readProgressSnapshot(): ProgressSnapshot {
       ...parsed,
       streakDays: parsed.streakDays ?? [...DEFAULT_STREAK_DAYS],
       pathProgress: parsed.pathProgress ?? {},
+      completedPathIds: parsed.completedPathIds ?? [],
       promptScoreHistory: parsed.promptScoreHistory ?? [],
     };
   } catch {
@@ -107,6 +114,7 @@ function toProgressSnapshot(state: ProgressStore): ProgressSnapshot {
     currentStreak: state.currentStreak,
     streakDays: state.streakDays,
     pathProgress: state.pathProgress,
+    completedPathIds: state.completedPathIds,
     promptScoreHistory: state.promptScoreHistory,
   };
 }
@@ -208,6 +216,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         currentStreak: state.currentStreak,
         streakDays: state.streakDays,
         pathProgress: nextPathProgress,
+        completedPathIds: state.completedPathIds,
         promptScoreHistory: state.promptScoreHistory,
       };
 
@@ -242,6 +251,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         currentStreak: state.currentStreak,
         streakDays: state.streakDays,
         pathProgress: nextPathProgress,
+        completedPathIds: state.completedPathIds,
         promptScoreHistory: state.promptScoreHistory,
       };
 
@@ -255,8 +265,10 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     const pathId = getPathIdForLesson(lessonId);
 
     if (!pathId) {
-      return;
+      return null;
     }
+
+    let newlyCompletedPathId: string | null = null;
 
     set((state) => {
       const pathRecord = ensurePathProgress(state.pathProgress, pathId, lessonId);
@@ -273,6 +285,25 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       const wasAlreadyCompleted = pathRecord.completedLessonIds.includes(lessonId);
       const awardedOrbs = wasAlreadyCompleted ? 0 : orbsEarned;
 
+      const nextPathRecord: PathProgressRecord = {
+        completedLessonIds,
+        failedLessonIds,
+        currentLessonId: nextLessonId,
+        lastTouchedLessonId: lessonId,
+        progress,
+      };
+
+      newlyCompletedPathId = detectNewlyCompletedPathId(
+        pathId,
+        nextPathRecord,
+        state.completedPathIds,
+      );
+
+      const completedPathIds =
+        newlyCompletedPathId !== null
+          ? [...state.completedPathIds, newlyCompletedPathId]
+          : state.completedPathIds;
+
       const snapshot: ProgressSnapshot = {
         orbCount: state.orbCount + awardedOrbs,
         orbMax: state.orbMax,
@@ -283,14 +314,9 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         streakDays: state.streakDays,
         pathProgress: {
           ...state.pathProgress,
-          [pathId]: {
-            completedLessonIds,
-            failedLessonIds,
-            currentLessonId: nextLessonId,
-            lastTouchedLessonId: lessonId,
-            progress,
-          },
+          [pathId]: nextPathRecord,
         },
+        completedPathIds,
         promptScoreHistory: state.promptScoreHistory,
       };
 
@@ -298,6 +324,8 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
 
       return snapshot;
     });
+
+    return newlyCompletedPathId;
   },
 
   addPromptScore: (score) => {

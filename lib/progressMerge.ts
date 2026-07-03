@@ -1,4 +1,5 @@
 import { getPathTemplate } from '@/lib/pathLessonUtils';
+import { reconcileCompletedPathIds } from '@/lib/pathCompletion';
 import type { PathProgressRecord, ProgressSnapshot } from '@/store/progressStore';
 import { DEFAULT_PROGRESS } from '@/store/progressStore';
 
@@ -113,6 +114,10 @@ export function mergeProgressSnapshots(
   );
 
   const completedLessons = Math.max(local.completedLessons, remote.completedLessons);
+  const completedPathIds = reconcileCompletedPathIds(
+    pathProgress,
+    unionUnique([...(local.completedPathIds ?? []), ...(remote.completedPathIds ?? [])]),
+  );
 
   return {
     orbCount: Math.max(local.orbCount, remote.orbCount),
@@ -121,6 +126,7 @@ export function mergeProgressSnapshots(
     currentStreak: Math.max(local.currentStreak, remote.currentStreak),
     streakDays: mergeStreakDays(local.streakDays, remote.streakDays),
     pathProgress,
+    completedPathIds,
     promptScoreHistory: [
       ...local.promptScoreHistory,
       ...remote.promptScoreHistory,
@@ -140,6 +146,7 @@ export function normalizeProgressSnapshot(
     ...partial,
     streakDays: partial.streakDays ?? [...DEFAULT_PROGRESS.streakDays],
     pathProgress: partial.pathProgress ?? {},
+    completedPathIds: partial.completedPathIds ?? [],
     promptScoreHistory: partial.promptScoreHistory ?? [],
   };
 }

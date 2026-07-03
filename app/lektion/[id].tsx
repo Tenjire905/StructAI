@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { OrbCompanion } from '@/components/features';
+import { PathCompletionView } from '@/components/features/PathCompletionView';
 import {
   ChoiceStepView,
   FillBlankStepView,
@@ -43,7 +44,7 @@ function stepKind(step: GradedStep): LessonAnswerResult['kind'] {
   return step.type;
 }
 
-type LessonOutcome = 'active' | 'passed' | 'failed';
+type LessonOutcome = 'active' | 'passed' | 'path_complete' | 'failed';
 
 export default function LektionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -68,6 +69,7 @@ export default function LektionScreen() {
   const [isChecked, setIsChecked] = useState(false);
   const [lessonOutcome, setLessonOutcome] = useState<LessonOutcome>('active');
   const [earnedOrbs, setEarnedOrbs] = useState(0);
+  const [completedPathId, setCompletedPathId] = useState<string | null>(null);
   const [failureStats, setFailureStats] = useState({ correctCount: 0, gradedCount: 0 });
   const [stepAttempts, setStepAttempts] = useState<Record<number, number>>({});
   const [answerResults, setAnswerResults] = useState<LessonAnswerResult[]>([]);
@@ -240,6 +242,7 @@ export default function LektionScreen() {
     setStepAttempts({});
     setAnswerResults([]);
     setLessonOutcome('active');
+    setCompletedPathId(null);
   };
 
   const retryLesson = () => {
@@ -258,8 +261,14 @@ export default function LektionScreen() {
         : computeLessonOrbReward(lesson.orbsReward, results);
 
       setEarnedOrbs(reward);
-      completeLesson(lesson.id, reward);
-      setLessonOutcome('passed');
+      const newlyCompletedPathId = completeLesson(lesson.id, reward);
+
+      if (newlyCompletedPathId) {
+        setCompletedPathId(newlyCompletedPathId);
+        setLessonOutcome('path_complete');
+      } else {
+        setLessonOutcome('passed');
+      }
       return;
     }
 
@@ -270,6 +279,19 @@ export default function LektionScreen() {
 
   const primaryLabel = gradedStep && !isChecked ? t('lesson.check') : t('lesson.next');
   const primaryDisabled = gradedStep !== null && !isChecked && !hasSelection;
+
+  if (lessonOutcome === 'path_complete' && completedPathId) {
+    return (
+      <>
+        <Stack.Screen options={headerOptions} />
+        <PathCompletionView
+          onFinish={() => router.back()}
+          orbsReward={earnedOrbs}
+          pathId={completedPathId}
+        />
+      </>
+    );
+  }
 
   if (lessonOutcome === 'passed') {
     return (

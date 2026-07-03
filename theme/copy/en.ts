@@ -733,4 +733,24 @@ export const copyEn: CopyCatalog = {
     playful: 'Full week - your streak is alive!',
     focus: '7-day milestone reached.',
   },
+  'celebration.pathComplete': {
+    playful: 'Path complete: {{path}}!',
+    focus: 'Learning path completed: {{path}}.',
+  },
+  'pathCompletion.title': {
+    playful: 'Path complete!',
+    focus: 'Learning path completed',
+  },
+  'pathCompletion.subtitle': {
+    playful: 'You passed all {{total}} chapters of "{{path}}".',
+    focus: 'All {{total}} chapters of "{{path}}" completed successfully.',
+  },
+  'pathCompletion.certificateHint': {
+    playful: 'Your certificate will be available here soon.',
+    focus: 'Certificate export will be added here next (G2).',
+  },
+  'pathCompletion.backToPaths': {
+    playful: 'Back to learning paths',
+    focus: 'Back to path overview',
+  },
 };

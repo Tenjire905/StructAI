@@ -11,11 +11,13 @@ export type CelebrationLastEvent = {
   id: string;
   type: CelebrationType;
   orbCount?: number;
+  pathTitleKey?: string;
   isActive: boolean;
 };
 
 type CelebrateOptions = {
   orbCount?: number;
+  pathTitleKey?: string;
 };
 
 type CelebrationContextValue = {
@@ -34,6 +36,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
       id: `${type}-${Date.now()}`,
       type,
       orbCount: options?.orbCount,
+      pathTitleKey: options?.pathTitleKey,
       isActive: true,
     });
   }, []);
@@ -62,6 +65,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
                 id: lastEvent.id,
                 type: lastEvent.type,
                 orbCount: lastEvent.orbCount,
+                pathTitleKey: lastEvent.pathTitleKey,
               }
             : null
         }

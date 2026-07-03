@@ -733,4 +733,24 @@ export const copyDe: CopyCatalog = {
     playful: 'Volle Woche - deine Serie hält!',
     focus: '7-Tage-Meilenstein erreicht.',
   },
+  'celebration.pathComplete': {
+    playful: 'Lernpfad geschafft: {{path}}!',
+    focus: 'Lernpfad abgeschlossen: {{path}}.',
+  },
+  'pathCompletion.title': {
+    playful: 'Lernpfad komplett!',
+    focus: 'Lernpfad abgeschlossen',
+  },
+  'pathCompletion.subtitle': {
+    playful: 'Du hast alle {{total}} Kapitel von „{{path}}“ bestanden.',
+    focus: 'Alle {{total}} Kapitel von „{{path}}“ erfolgreich abgeschlossen.',
+  },
+  'pathCompletion.certificateHint': {
+    playful: 'Dein Zertifikat kannst du dir hier bald holen.',
+    focus: 'Zertifikat-Export folgt in Kürze an dieser Stelle (G2).',
+  },
+  'pathCompletion.backToPaths': {
+    playful: 'Zurück zu den Lernpfaden',
+    focus: 'Zur Lernpfad-Übersicht',
+  },
 };

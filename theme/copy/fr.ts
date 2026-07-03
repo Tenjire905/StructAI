@@ -733,4 +733,24 @@ export const copyFr: CopyCatalog = {
     playful: 'Semaine complete - ta serie continue !',
     focus: 'Jalon de 7 jours atteint.',
   },
+  'celebration.pathComplete': {
+    playful: 'Parcours termine : {{path}} !',
+    focus: 'Parcours d\'apprentissage termine : {{path}}.',
+  },
+  'pathCompletion.title': {
+    playful: 'Parcours complete !',
+    focus: 'Parcours d\'apprentissage termine',
+  },
+  'pathCompletion.subtitle': {
+    playful: 'Tu as reussi les {{total}} chapitres de « {{path}} ».',
+    focus: 'Les {{total}} chapitres de « {{path}} » ont ete termines avec succes.',
+  },
+  'pathCompletion.certificateHint': {
+    playful: 'Ton certificat sera bientot disponible ici.',
+    focus: 'L\'export du certificat sera ajoute ici prochainement (G2).',
+  },
+  'pathCompletion.backToPaths': {
+    playful: 'Retour aux parcours',
+    focus: 'Retour a la vue d\'ensemble',
+  },
 };
