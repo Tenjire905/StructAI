@@ -9,8 +9,73 @@ const PROGRESS_MERGE_STRATEGY = 'max-union-per-field';
 
 const DEFAULT_STREAK_DAYS = [false, false, false, false, false, false, false];
 
+const PATH_CHAPTER_IDS = {
+  'prompt-basics': ['pb-1', 'pb-2', 'pb-3', 'pb-4', 'pb-5', 'pb-6', 'pb-7', 'pb-8'],
+  'structure-lab': ['sl-1', 'sl-2', 'sl-3', 'sl-4', 'sl-5', 'sl-6'],
+};
+
+const PATH_TOTAL_CHAPTERS = {
+  'prompt-basics': 8,
+  'structure-lab': 6,
+};
+
 function unionUnique(values) {
   return [...new Set(values)];
+}
+
+function isPathFullyCompleted(pathId, record) {
+  const requiredLessonIds = PATH_CHAPTER_IDS[pathId] ?? [];
+
+  if (requiredLessonIds.length === 0 || !record) {
+    return false;
+  }
+
+  const completedSet = new Set(record.completedLessonIds);
+  return requiredLessonIds.every((lessonId) => completedSet.has(lessonId));
+}
+
+function reconcileCompletedPathIds(pathProgress, existingCompletedPathIds = []) {
+  const merged = new Set(existingCompletedPathIds);
+
+  for (const pathId of Object.keys(pathProgress)) {
+    if (isPathFullyCompleted(pathId, pathProgress[pathId])) {
+      merged.add(pathId);
+    }
+  }
+
+  return [...merged];
+}
+
+function mergePathCompletedAt(local, remote) {
+  const keys = unionUnique([...Object.keys(local), ...Object.keys(remote)]);
+  const merged = {};
+
+  for (const pathId of keys) {
+    const localValue = local[pathId];
+    const remoteValue = remote[pathId];
+
+    if (localValue && remoteValue) {
+      merged[pathId] =
+        new Date(localValue).getTime() <= new Date(remoteValue).getTime()
+          ? localValue
+          : remoteValue;
+      continue;
+    }
+
+    merged[pathId] = localValue ?? remoteValue ?? '';
+  }
+
+  return merged;
+}
+
+function computePathProgressRatio(pathId, completedIds) {
+  const totalChapters = PATH_TOTAL_CHAPTERS[pathId] ?? 0;
+
+  if (totalChapters === 0) {
+    return 0;
+  }
+
+  return Math.min(1, completedIds.length / totalChapters);
 }
 
 function isProgressSnapshotEmpty(snapshot) {
@@ -62,7 +127,7 @@ function mergePathRecord(pathId, local, remote) {
     lastTouchedLessonId: preferLocalCurrent
       ? local.lastTouchedLessonId
       : remote.lastTouchedLessonId,
-    progress: Math.max(local.progress, remote.progress),
+    progress: computePathProgressRatio(pathId, completedLessonIds),
   };
 }
 
@@ -83,6 +148,15 @@ function mergeProgressSnapshots(local, remote) {
     ]),
   );
 
+  const completedPathIds = reconcileCompletedPathIds(
+    pathProgress,
+    unionUnique([...(local.completedPathIds ?? []), ...(remote.completedPathIds ?? [])]),
+  );
+  const pathCompletedAt = mergePathCompletedAt(
+    local.pathCompletedAt ?? {},
+    remote.pathCompletedAt ?? {},
+  );
+
   return {
     orbCount: Math.max(local.orbCount, remote.orbCount),
     orbMax: Math.max(local.orbMax, remote.orbMax),
@@ -90,6 +164,8 @@ function mergeProgressSnapshots(local, remote) {
     currentStreak: Math.max(local.currentStreak, remote.currentStreak),
     streakDays: mergeStreakDays(local.streakDays, remote.streakDays),
     pathProgress,
+    completedPathIds,
+    pathCompletedAt,
     promptScoreHistory: [...local.promptScoreHistory, ...remote.promptScoreHistory].slice(-10),
   };
 }
@@ -102,6 +178,8 @@ function snapshot(overrides = {}) {
     currentStreak: 0,
     streakDays: [...DEFAULT_STREAK_DAYS],
     pathProgress: {},
+    completedPathIds: [],
+    pathCompletedAt: {},
     promptScoreHistory: [],
     ...overrides,
   };
@@ -163,6 +241,9 @@ cases.push({
       : ['failedLessonIds should drop completed failures']),
     ...(unionCase.orbCount === 30 ? [] : ['orbCount should be max(12,30)=30']),
     ...(unionCase.completedLessons === 2 ? [] : ['completedLessons should be max(1,2)=2']),
+    ...(Math.abs(unionCase.pathProgress['prompt-basics'].progress - 3 / 8) < 0.001
+      ? []
+      : ['progress should be recomputed from merged completed count']),
   ],
 });
 
@@ -234,6 +315,43 @@ cases.push({
   ],
 });
 
+const pathCompletionMergeCase = mergeProgressSnapshots(
+  snapshot({
+    completedPathIds: ['iteration-loops'],
+    pathCompletedAt: { 'iteration-loops': '2026-07-01T10:00:00.000Z' },
+    pathProgress: {
+      'prompt-basics': pathRecord({
+        completedLessonIds: PATH_CHAPTER_IDS['prompt-basics'],
+      }),
+    },
+  }),
+  snapshot({
+    completedPathIds: [],
+    pathCompletedAt: { 'prompt-basics': '2026-07-02T08:00:00.000Z' },
+    pathProgress: {
+      'prompt-basics': pathRecord({
+        completedLessonIds: PATH_CHAPTER_IDS['prompt-basics'].slice(0, 7),
+      }),
+    },
+  }),
+);
+
+cases.push({
+  label: 'merge reconciles completedPathIds and earliest pathCompletedAt',
+  violations: [
+    ...(pathCompletionMergeCase.completedPathIds.includes('prompt-basics')
+      ? []
+      : ['prompt-basics should be reconciled as complete']),
+    ...(pathCompletionMergeCase.completedPathIds.includes('iteration-loops')
+      ? []
+      : ['existing completedPathIds should be preserved']),
+    ...(pathCompletionMergeCase.pathCompletedAt['prompt-basics'] ===
+    '2026-07-02T08:00:00.000Z'
+      ? []
+      : ['pathCompletedAt should keep earliest known timestamp']),
+  ],
+});
+
 const emptyDetection = isProgressSnapshotEmpty(snapshot());
 const nonEmptyDetection = isProgressSnapshotEmpty(snapshot({ orbCount: 1 }));
 
@@ -260,3 +378,5 @@ console.log(
     2,
   ),
 );
+
+process.exit(totalViolations === 0 ? 0 : 1);

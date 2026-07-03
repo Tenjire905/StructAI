@@ -74,6 +74,9 @@ const expectedDevScreens = [
   'dev-d1b-progress-preview.tsx',
   'dev-d2-chapter-states-preview.tsx',
   'dev-auth-preview.tsx',
+  'dev-f1-byok-preview.tsx',
+  'dev-f2-modelcomparer-preview.tsx',
+  'dev-g2-certificate-preview.tsx',
 ];
 
 const devDir = join(root, 'app/(dev)');
