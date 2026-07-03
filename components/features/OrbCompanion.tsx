@@ -291,6 +291,24 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
       };
     }
 
+    if (state === 'low_energy' && isPlayfulPresentation) {
+      const duration = 1600;
+      const peak = 1.015;
+
+      orbScale.value = withRepeat(
+        withSequence(
+          withTiming(peak, { duration, easing: Easing.inOut(Easing.sin) }),
+          withTiming(1, { duration, easing: Easing.inOut(Easing.sin) }),
+        ),
+        -1,
+        false,
+      );
+
+      return () => {
+        stopScaleAnimation(orbScale);
+      };
+    }
+
     if (isPlayfulPresentation && state === 'happy') {
       orbScale.value = withSequence(
         withSpring(1.08, tokens.motion.spring.bouncy),

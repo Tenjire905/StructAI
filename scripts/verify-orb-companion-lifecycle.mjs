@@ -3,7 +3,7 @@
  * Mirrors animation decisions in components/features/OrbCompanion.tsx.
  */
 
-const LOOP_STATES = new Set(['idle', 'sleepy']);
+const LOOP_STATES = new Set(['idle', 'sleepy', 'low_energy']);
 
 function resolveScaleDriver(state, isFocused, reduceMotion, isPlayfulPresentation) {
   if (!isFocused || reduceMotion) {
@@ -16,6 +16,10 @@ function resolveScaleDriver(state, isFocused, reduceMotion, isPlayfulPresentatio
 
   if (state === 'sleepy' && isPlayfulPresentation) {
     return { kind: 'sleepy-breathing', loop: true };
+  }
+
+  if (state === 'low_energy' && isPlayfulPresentation) {
+    return { kind: 'low-energy-pulse', loop: true };
   }
 
   if (isPlayfulPresentation && (state === 'happy' || state === 'celebrating')) {
@@ -73,18 +77,42 @@ function runFocusPauseScenario() {
   const idleFocused = resolveScaleDriver('idle', true, false, true);
   const idleUnfocused = resolveScaleDriver('idle', false, false, true);
   const sleepyBackground = resolveScaleDriver('sleepy', false, false, true);
+  const lowEnergyFocusedPlayful = resolveScaleDriver('low_energy', true, false, true);
+  const lowEnergyUnfocused = resolveScaleDriver('low_energy', false, false, true);
+  const lowEnergyFocusedFocusMode = resolveScaleDriver('low_energy', true, false, false);
 
   return {
     idleFocused,
     idleUnfocused,
     sleepyBackground,
+    lowEnergyFocusedPlayful,
+    lowEnergyUnfocused,
+    lowEnergyFocusedFocusMode,
     loopsActiveInBackground:
-      idleUnfocused.loop || sleepyBackground.loop,
+      idleUnfocused.loop || sleepyBackground.loop || lowEnergyUnfocused.loop,
+  };
+}
+
+function runLowEnergyCelebratingScenario() {
+  const context = { reduceMotion: false, isPlayfulPresentation: true, isFocused: true };
+  const step = simulateTransition(
+    { state: 'low_energy', isFocused: true },
+    { state: 'celebrating', isFocused: true },
+    context,
+  );
+
+  return {
+    from: 'low_energy',
+    to: 'celebrating',
+    step,
+    violations:
+      step.parallelLoops || step.stackedWithoutCancel ? 1 : 0,
   };
 }
 
 const rapid = runRapidStateScenario();
 const focus = runFocusPauseScenario();
+const lowEnergyCelebrating = runLowEnergyCelebratingScenario();
 
 console.log(
   JSON.stringify(
@@ -96,15 +124,18 @@ console.log(
           'Open dev-preview, enable Playful, pick idle companion',
           'Within 500ms toggle props: idle → celebrating → idle → happy (e.g. fast state picker or temporary dev buttons)',
           'Confirm scale settles at 1 with no repeating pulse after final happy spring completes',
-          'Switch tab or navigate away — idle/sleepy breathing must stop on unfocused tab instances',
+          'Switch tab or navigate away — idle/sleepy/low_energy loops must stop on unfocused tab instances',
           'Watch Metro/console: no Reanimated warnings about overlapping animations',
         ],
       },
+      loopStates: [...LOOP_STATES],
       rapidStateScenario: rapid,
       focusPauseScenario: focus,
+      lowEnergyCelebratingScenario: lowEnergyCelebrating,
       pass:
         rapid.violations === 0 &&
-        focus.loopsActiveInBackground === false,
+        focus.loopsActiveInBackground === false &&
+        lowEnergyCelebrating.violations === 0,
     },
     null,
     2,
