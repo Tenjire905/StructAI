@@ -1,18 +1,25 @@
-import { Redirect } from 'expo-router';
+import { ActivityIndicator, View } from 'react-native';
 
-import { getPostAuthRoute } from '@/lib/authNavigation';
 import { useAuth } from '@/providers/AuthProvider';
+import { colors } from '@/theme';
 
-export default function AppEntryRedirect() {
-  const { session, isLoading } = useAuth();
+/** Entry route – routing is handled by AuthNavigationController. */
+export default function AppEntryScreen() {
+  const { isLoading } = useAuth();
 
   if (isLoading) {
-    return null;
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          backgroundColor: colors.background.base,
+          flex: 1,
+          justifyContent: 'center',
+        }}>
+        <ActivityIndicator color={colors.accent.primary} size="large" />
+      </View>
+    );
   }
 
-  if (!session) {
-    return <Redirect href="/auth" />;
-  }
-
-  return <Redirect href={getPostAuthRoute()} />;
+  return null;
 }

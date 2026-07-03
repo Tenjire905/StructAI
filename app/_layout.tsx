@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import '@/lib/bootstrap';
+import { AuthNavigationController } from '@/components/AuthNavigationController';
 import { AuthProvider } from '@/providers/AuthProvider';
 import { ThemeModeProvider, CelebrationProvider, colors } from '@/theme';
 
@@ -44,6 +45,7 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
+      <AuthNavigationController />
       <ThemeModeProvider>
         <CelebrationProvider>
           <Stack

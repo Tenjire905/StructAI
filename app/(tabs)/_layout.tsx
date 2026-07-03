@@ -1,26 +1,10 @@
-import { Redirect, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { Beaker, BookOpen, Home, User } from 'lucide-react-native';
 
-import { isOnboardingCompleted } from '@/lib/appStorage';
-import { useAuth } from '@/providers/AuthProvider';
 import { useThemeMode } from '@/theme';
 
 export default function TabLayout() {
   const { tokens, t } = useThemeMode();
-  const { session, isLoading } = useAuth();
-  const onboarded = isOnboardingCompleted();
-
-  if (isLoading) {
-    return null;
-  }
-
-  if (!session) {
-    return <Redirect href="/auth" />;
-  }
-
-  if (!onboarded) {
-    return <Redirect href="/onboarding" />;
-  }
 
   return (
     <Tabs

@@ -59,20 +59,19 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, nextSession) => {
-      setSession(nextSession);
-      setIsLoading(false);
+      setTimeout(() => {
+        setSession(nextSession);
+        setIsLoading(false);
 
-      if (!nextSession?.user) {
-        lastHydratedUserId.current = null;
-        return;
-      }
+        if (!nextSession?.user) {
+          lastHydratedUserId.current = null;
+          return;
+        }
 
-      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-        // Defer side effects to avoid Supabase auth deadlocks / redirect loops.
-        setTimeout(() => {
+        if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
           runProgressHydration(nextSession.user.id);
-        }, 0);
-      }
+        }
+      }, 0);
     });
 
     const unsubscribeDeepLinks = subscribeToAuthDeepLinks(async (url) => {
@@ -100,11 +99,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
     if (error) {
       throw error;
     }
-
-    if (data.session) {
-      setSession(data.session);
-      setIsLoading(false);
-    }
   }, []);
 
   const signUpWithEmail = useCallback(async (email: string, password: string) => {
@@ -119,8 +113,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
 
     if (data.session) {
-      setSession(data.session);
-      setIsLoading(false);
       return 'signed_in';
     }
 
