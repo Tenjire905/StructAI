@@ -449,6 +449,14 @@ export const copyFr: CopyCatalog = {
     playful: 'Supabase n est pas encore configure.',
     focus: 'Configuration Supabase manquante.',
   },
+  'auth.errorOAuthCancelled': {
+    playful: 'Connexion Google annulee.',
+    focus: 'Connexion Google annulee.',
+  },
+  'auth.errorOAuthFailed': {
+    playful: 'Connexion Google impossible. Verifie la redirect URL dans Supabase.',
+    focus: 'Echec Google. Verifier redirect URL Supabase.',
+  },
   'auth.configMissingTitle': {
     playful: 'Backend pas encore connecte',
     focus: 'Backend non configure',

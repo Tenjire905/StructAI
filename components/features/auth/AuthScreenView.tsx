@@ -26,6 +26,18 @@ function resolveAuthErrorMessage(error: unknown, t: (key: string) => string): st
       return t('auth.errorNotConfigured');
     }
 
+    if (error.message === 'oauth_cancelled') {
+      return t('auth.errorOAuthCancelled');
+    }
+
+    if (
+      error.message === 'oauth_failed' ||
+      error.message === 'oauth_session_missing' ||
+      error.message === 'oauth_url_missing'
+    ) {
+      return t('auth.errorOAuthFailed');
+    }
+
     const normalized = error.message.toLowerCase();
 
     if (normalized.includes('invalid login credentials')) {

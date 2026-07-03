@@ -449,6 +449,14 @@ export const copyEn: CopyCatalog = {
     playful: 'Supabase is not configured yet.',
     focus: 'Supabase configuration missing.',
   },
+  'auth.errorOAuthCancelled': {
+    playful: 'Google sign-in was cancelled.',
+    focus: 'Google sign-in cancelled.',
+  },
+  'auth.errorOAuthFailed': {
+    playful: 'Google sign-in could not be completed. Check the redirect URL in Supabase.',
+    focus: 'Google sign-in failed. Check redirect URL in Supabase.',
+  },
   'auth.configMissingTitle': {
     playful: 'Backend not connected yet',
     focus: 'Backend not configured',

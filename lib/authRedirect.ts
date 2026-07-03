@@ -7,15 +7,46 @@ import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 WebBrowser.maybeCompleteAuthSession();
 
+/**
+ * Must match an entry in Supabase → Authentication → URL Configuration → Redirect URLs.
+ * Uses a path segment (not bare structai://) to avoid iOS PKCE redirect corruption.
+ */
 export const authRedirectUri = makeRedirectUri({
   scheme: 'structai',
+  path: 'auth/callback',
+  preferLocalhost: true,
 });
 
+function parseAuthCallbackParams(url: string) {
+  const normalized = url.includes('#') ? url.replace('#', '?') : url;
+  return QueryParams.getQueryParams(normalized);
+}
+
+function sanitizeAuthCode(code: string | undefined): string | undefined {
+  if (!code) {
+    return undefined;
+  }
+
+  return code.replace(/%23$|#$/, '');
+}
+
 export async function createSessionFromUrl(url: string) {
-  const { params, errorCode } = QueryParams.getQueryParams(url);
+  const { params, errorCode } = parseAuthCallbackParams(url);
 
   if (errorCode) {
     throw new Error(errorCode);
+  }
+
+  const authCode = sanitizeAuthCode(params.code);
+
+  if (authCode) {
+    const { data, error } = await supabase.auth.exchangeCodeForSession(authCode);
+
+    if (error) {
+      throw error;
+    }
+
+    return data.session;
   }
 
   const accessToken = params.access_token;
@@ -60,11 +91,19 @@ export async function signInWithGoogleOAuth(): Promise<void> {
 
   const result = await WebBrowser.openAuthSessionAsync(data.url, authRedirectUri);
 
-  if (result.type !== 'success') {
-    return;
+  if (result.type === 'cancel' || result.type === 'dismiss') {
+    throw new Error('oauth_cancelled');
   }
 
-  await createSessionFromUrl(result.url);
+  if (result.type !== 'success') {
+    throw new Error('oauth_failed');
+  }
+
+  const session = await createSessionFromUrl(result.url);
+
+  if (!session) {
+    throw new Error('oauth_session_missing');
+  }
 }
 
 export function subscribeToAuthDeepLinks(

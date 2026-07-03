@@ -449,6 +449,14 @@ export const copyRu: CopyCatalog = {
     playful: 'Supabase еще не настроен.',
     focus: 'Конфигурация Supabase отсутствует.',
   },
+  'auth.errorOAuthCancelled': {
+    playful: 'Вход через Google отменен.',
+    focus: 'Вход через Google отменен.',
+  },
+  'auth.errorOAuthFailed': {
+    playful: 'Не удалось завершить вход через Google. Проверь redirect URL в Supabase.',
+    focus: 'Ошибка Google. Проверь redirect URL в Supabase.',
+  },
   'auth.configMissingTitle': {
     playful: 'Бэкенд еще не подключен',
     focus: 'Бэкенд не настроен',
