@@ -171,8 +171,9 @@ export function prepareLessonSteps(
   steps: ResolvedLessonStep[],
   lessonId: string,
   reorderHint: string,
+  sessionNonce: string | number = Date.now(),
 ): ResolvedLessonStep[] {
-  const seed = hashSeed(`${lessonId}-${Date.now()}`);
+  const seed = hashSeed(`${lessonId}-${sessionNonce}`);
 
   return steps.map((step, stepIndex) => {
     const stepSeed = seed + stepIndex * 17;

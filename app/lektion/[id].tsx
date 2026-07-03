@@ -13,6 +13,7 @@ import {
   ChoiceStepView,
   FillBlankStepView,
   ReorderStepView,
+  RetryPromptView,
   TrueFalseStepView,
 } from '@/components/features/lesson-steps';
 import { Button, Card, ProgressBar } from '@/components/ui';
@@ -23,6 +24,8 @@ import {
 } from '@/data/mockLessons';
 import {
   computeLessonOrbReward,
+  computeLessonPassRatio,
+  hasPassedLessonThreshold,
   type LessonAnswerResult,
 } from '@/lib/lessonRewards';
 import { prepareLessonSteps } from '@/lib/lessonSession';
@@ -39,6 +42,8 @@ function stepKind(step: GradedStep): LessonAnswerResult['kind'] {
   return step.type;
 }
 
+type LessonOutcome = 'active' | 'passed' | 'failed';
+
 export default function LektionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const lessonId = id ?? '';
@@ -52,6 +57,19 @@ export default function LektionScreen() {
     [lessonId, locale],
   );
 
+  const [sessionNonce, setSessionNonce] = useState(0);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedTrueFalse, setSelectedTrueFalse] = useState<boolean | null>(null);
+  const [reorderIndices, setReorderIndices] = useState<number[]>([]);
+  const [isChecked, setIsChecked] = useState(false);
+  const [lessonOutcome, setLessonOutcome] = useState<LessonOutcome>('active');
+  const [earnedOrbs, setEarnedOrbs] = useState(0);
+  const [failureStats, setFailureStats] = useState({ correctCount: 0, gradedCount: 0 });
+  const [stepAttempts, setStepAttempts] = useState<Record<number, number>>({});
+  const [answerResults, setAnswerResults] = useState<LessonAnswerResult[]>([]);
+  const openedRef = useRef(false);
+
   const lesson = useMemo(() => {
     if (!baseLesson) {
       return undefined;
@@ -59,20 +77,14 @@ export default function LektionScreen() {
 
     return {
       ...baseLesson,
-      steps: prepareLessonSteps(baseLesson.steps, baseLesson.id, t('lesson.reorderHint')),
+      steps: prepareLessonSteps(
+        baseLesson.steps,
+        baseLesson.id,
+        t('lesson.reorderHint'),
+        sessionNonce,
+      ),
     };
-  }, [baseLesson, t]);
-
-  const [stepIndex, setStepIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [selectedTrueFalse, setSelectedTrueFalse] = useState<boolean | null>(null);
-  const [reorderIndices, setReorderIndices] = useState<number[]>([]);
-  const [isChecked, setIsChecked] = useState(false);
-  const [isFinished, setIsFinished] = useState(false);
-  const [earnedOrbs, setEarnedOrbs] = useState(0);
-  const [stepAttempts, setStepAttempts] = useState<Record<number, number>>({});
-  const [answerResults, setAnswerResults] = useState<LessonAnswerResult[]>([]);
-  const openedRef = useRef(false);
+  }, [baseLesson, sessionNonce, t]);
 
   useEffect(() => {
     if (!lessonId || openedRef.current) {
@@ -214,23 +226,62 @@ export default function LektionScreen() {
     resetStepInput();
   };
 
+  const resetLessonSession = () => {
+    setStepIndex(0);
+    setSelectedOption(null);
+    setSelectedTrueFalse(null);
+    setReorderIndices([]);
+    setIsChecked(false);
+    setEarnedOrbs(0);
+    setFailureStats({ correctCount: 0, gradedCount: 0 });
+    setStepAttempts({});
+    setAnswerResults([]);
+    setLessonOutcome('active');
+  };
+
+  const retryLesson = () => {
+    setSessionNonce((nonce) => nonce + 1);
+    resetLessonSession();
+  };
+
   const finishLesson = (results: LessonAnswerResult[]) => {
-    const reward = computeLessonOrbReward(lesson.orbsReward, results);
-    setEarnedOrbs(reward);
-    completeLesson(lesson.id, reward);
-    setIsFinished(true);
+    if (hasPassedLessonThreshold(results)) {
+      const reward = computeLessonOrbReward(lesson.orbsReward, results);
+      setEarnedOrbs(reward);
+      completeLesson(lesson.id, reward);
+      setLessonOutcome('passed');
+      return;
+    }
+
+    const { correctCount, gradedCount } = computeLessonPassRatio(results);
+    setFailureStats({ correctCount, gradedCount });
+    setLessonOutcome('failed');
   };
 
   const primaryLabel = gradedStep && !isChecked ? t('lesson.check') : t('lesson.next');
   const primaryDisabled = gradedStep !== null && !isChecked && !hasSelection;
 
-  if (isFinished) {
+  if (lessonOutcome === 'passed') {
     return (
       <>
         <Stack.Screen options={headerOptions} />
         <CompletionView
           onFinish={() => router.back()}
           orbsReward={earnedOrbs}
+        />
+      </>
+    );
+  }
+
+  if (lessonOutcome === 'failed') {
+    return (
+      <>
+        <Stack.Screen options={headerOptions} />
+        <RetryPromptView
+          correctCount={failureStats.correctCount}
+          gradedCount={failureStats.gradedCount}
+          onContinueLater={() => router.back()}
+          onRetry={retryLesson}
         />
       </>
     );

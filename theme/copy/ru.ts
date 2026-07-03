@@ -165,6 +165,22 @@ export const copyRu: CopyCatalog = {
     playful: 'Такого урока пока нет.',
     focus: 'Урок не найден.',
   },
+  'lesson.retryTitle': {
+    playful: 'Пока не получилось!',
+    focus: 'Порог не достигнут.',
+  },
+  'lesson.retrySummary': {
+    playful: '{{correct}} из {{total}} верно — попробуй ещё!',
+    focus: '{{correct}}/{{total}} верно. Нужно больше 60%.',
+  },
+  'lesson.retryPrimary': {
+    playful: 'Попробовать снова',
+    focus: 'Повторить урок',
+  },
+  'lesson.retrySecondary': {
+    playful: 'Продолжить позже',
+    focus: 'Продолжить позже',
+  },
   'profile.statsSection': {
     playful: 'Твои достижения',
     focus: 'Статистика',

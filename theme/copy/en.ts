@@ -165,6 +165,22 @@ export const copyEn: CopyCatalog = {
     playful: "This lesson doesn't exist yet.",
     focus: 'Lesson not found.',
   },
+  'lesson.retryTitle': {
+    playful: 'Not quite there yet!',
+    focus: 'Threshold not met.',
+  },
+  'lesson.retrySummary': {
+    playful: '{{correct}} of {{total}} correct — try again!',
+    focus: '{{correct}}/{{total}} correct. At least 60% required.',
+  },
+  'lesson.retryPrimary': {
+    playful: 'Try again',
+    focus: 'Retry lesson',
+  },
+  'lesson.retrySecondary': {
+    playful: 'Continue later',
+    focus: 'Continue later',
+  },
   'profile.statsSection': {
     playful: 'Your wins',
     focus: 'Stats',

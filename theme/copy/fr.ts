@@ -165,6 +165,22 @@ export const copyFr: CopyCatalog = {
     playful: 'Cette lecon n existe pas encore.',
     focus: 'Lecon introuvable.',
   },
+  'lesson.retryTitle': {
+    playful: 'Pas encore reussi !',
+    focus: 'Seuil non atteint.',
+  },
+  'lesson.retrySummary': {
+    playful: '{{correct}} sur {{total}} correct — reessaie !',
+    focus: '{{correct}}/{{total}} correct. Minimum 60 % requis.',
+  },
+  'lesson.retryPrimary': {
+    playful: 'Reessayer',
+    focus: 'Reessayer',
+  },
+  'lesson.retrySecondary': {
+    playful: 'Plus tard',
+    focus: 'Continuer plus tard',
+  },
   'profile.statsSection': {
     playful: 'Tes reussites',
     focus: 'Statistiques',

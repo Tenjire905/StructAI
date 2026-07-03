@@ -165,6 +165,22 @@ export const copyDe: CopyCatalog = {
     playful: 'Diese Lektion gibt es noch nicht.',
     focus: 'Lektion nicht gefunden.',
   },
+  'lesson.retryTitle': {
+    playful: 'Noch nicht geschafft!',
+    focus: 'Schwelle nicht erreicht.',
+  },
+  'lesson.retrySummary': {
+    playful: '{{correct}} von {{total}} richtig — versuch\'s nochmal!',
+    focus: '{{correct}}/{{total}} korrekt. Mindestens 60 % erforderlich.',
+  },
+  'lesson.retryPrimary': {
+    playful: 'Nochmal versuchen',
+    focus: 'Erneut versuchen',
+  },
+  'lesson.retrySecondary': {
+    playful: 'Später weiter',
+    focus: 'Später fortsetzen',
+  },
   'profile.statsSection': {
     playful: 'Deine Erfolge',
     focus: 'Statistik',
