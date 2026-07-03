@@ -785,6 +785,16 @@ export const copyFr: CopyCatalog = {
     playful: 'Le partage n\'est pas disponible sur cet appareil.',
     focus: 'Export du certificat indisponible sur cet appareil.',
   },
+  'certificate.download': {
+    playful: 'Telecharger le certificat',
+    focus: 'Enregistrer en image',
+  },
+  'certificate.shareWebUnavailable': {
+    playful:
+      'Le telechargement a echoue. Le partage natif est disponible dans l\'app StructAI sur mobile — dans le navigateur, utilise « Telecharger le certificat ».',
+    focus:
+      'Echec du telechargement. Partage natif dans l\'app iOS/Android ; le navigateur doit enregistrer un PNG.',
+  },
   'profile.certificatesSection': {
     playful: 'Tes certificats',
     focus: 'Certificats de fin',

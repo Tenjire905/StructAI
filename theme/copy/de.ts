@@ -785,6 +785,16 @@ export const copyDe: CopyCatalog = {
     playful: 'Teilen ist auf diesem Gerät gerade nicht möglich.',
     focus: 'Zertifikat-Export auf diesem Gerät nicht verfügbar.',
   },
+  'certificate.download': {
+    playful: 'Zertifikat herunterladen',
+    focus: 'Als Bild speichern',
+  },
+  'certificate.shareWebUnavailable': {
+    playful:
+      'Download klappt gerade nicht. Teilen geht in der StructAI-App auf dem Handy — im Browser normalerweise per „Zertifikat herunterladen“.',
+    focus:
+      'Download fehlgeschlagen. Native Freigabe ist in der iOS/Android-App verfügbar; im Browser sollte der PNG-Export starten.',
+  },
   'profile.certificatesSection': {
     playful: 'Deine Zertifikate',
     focus: 'Abschlusszertifikate',

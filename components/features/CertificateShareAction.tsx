@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
-import { Alert, View } from 'react-native';
+import { Alert, Platform, View } from 'react-native';
 
 import { CertificateView } from '@/components/features/CertificateView';
 import { Button } from '@/components/ui';
-import { isCertificateSharingAvailable, shareCertificateImage } from '@/lib/certificateExport';
+import { exportCertificateImage } from '@/lib/certificateExport';
 import { pathTitleKey } from '@/lib/pathProgress';
 import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
@@ -27,32 +27,37 @@ export function CertificateShareAction({
   const { user } = useAuth();
   const [isSharing, setIsSharing] = useState(false);
   const recipientName = resolveProfileDisplayName(user);
+  const isWeb = Platform.OS === 'web';
 
   const handleShare = async () => {
     setIsSharing(true);
 
     try {
-      const available = await isCertificateSharingAvailable();
-
-      if (!available) {
-        Alert.alert(t('certificate.shareUnavailable'));
-        return;
-      }
-
-      const result = await shareCertificateImage(
+      const result = await exportCertificateImage(
         certificateRef,
         t('certificate.shareDialogTitle'),
+        `structai-certificate-${pathId}.png`,
       );
 
       if (result === 'unavailable') {
-        Alert.alert(t('certificate.shareUnavailable'));
+        Alert.alert(
+          isWeb ? t('certificate.shareWebUnavailable') : t('certificate.shareUnavailable'),
+        );
       }
     } catch {
-      Alert.alert(t('certificate.shareUnavailable'));
+      Alert.alert(
+        isWeb ? t('certificate.shareWebUnavailable') : t('certificate.shareUnavailable'),
+      );
     } finally {
       setIsSharing(false);
     }
   };
+
+  const actionLabel = isSharing
+    ? t('certificate.sharing')
+    : isWeb
+      ? t('certificate.download')
+      : t('certificate.share');
 
   return (
     <>
@@ -81,7 +86,7 @@ export function CertificateShareAction({
 
       <Button
         disabled={isSharing}
-        label={isSharing ? t('certificate.sharing') : t('certificate.share')}
+        label={actionLabel}
         onPress={() => {
           void handleShare();
         }}

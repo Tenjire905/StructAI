@@ -785,6 +785,16 @@ export const copyEn: CopyCatalog = {
     playful: 'Sharing is not available on this device right now.',
     focus: 'Certificate export is not available on this device.',
   },
+  'certificate.download': {
+    playful: 'Download certificate',
+    focus: 'Save as image',
+  },
+  'certificate.shareWebUnavailable': {
+    playful:
+      'Download did not start. Sharing works in the StructAI mobile app — in the browser use “Download certificate”.',
+    focus:
+      'Download failed. Use native sharing in the iOS/Android app; the browser should save a PNG file.',
+  },
   'profile.certificatesSection': {
     playful: 'Your certificates',
     focus: 'Completion certificates',
