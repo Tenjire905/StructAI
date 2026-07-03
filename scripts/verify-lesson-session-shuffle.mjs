@@ -1,0 +1,275 @@
+/**
+ * Verification harness for lessonSession shuffle/remap logic.
+ * Keep shuffle helpers in sync with lib/lessonSession.ts.
+ */
+
+function mulberry32(seed) {
+  let t = seed + 0x6d2b79f5;
+  return () => {
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function shuffleWithSeed(items, seed) {
+  const random = mulberry32(seed);
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+  }
+  return copy;
+}
+
+function shuffleChoiceLike(step, seed) {
+  const indexed = step.options.map((option, index) => ({ option, index }));
+  const shuffled = shuffleWithSeed(indexed, seed);
+  const correctIndex = shuffled.findIndex((entry) => entry.index === step.correctIndex);
+  return {
+    ...step,
+    options: shuffled.map((entry) => entry.option),
+    correctIndex,
+  };
+}
+
+function shuffleReorder(step, seed) {
+  const indexed = step.items.map((item, index) => ({ item, index }));
+  let shuffled = shuffleWithSeed(indexed, seed);
+
+  if (shuffled.every((entry, index) => entry.index === step.correctOrder[index])) {
+    shuffled = shuffleWithSeed(indexed, seed + 1);
+  }
+
+  return {
+    ...step,
+    items: shuffled.map((entry) => entry.item),
+    correctOrder: step.correctOrder.map((originalIndex) =>
+      shuffled.findIndex((entry) => entry.index === originalIndex),
+    ),
+  };
+}
+
+function pickVariantKind(seed, stepIndex) {
+  const random = mulberry32(seed + stepIndex * 31);
+  const roll = random();
+  if (roll < 0.45) return 'choice';
+  if (roll < 0.7) return 'fill_blank';
+  if (roll < 0.85) return 'true_false';
+  return 'reorder';
+}
+
+function toReorder(step, instruction) {
+  return {
+    type: 'reorder',
+    instruction,
+    items: [...step.options],
+    correctOrder: step.options.map((_, index) => index),
+    explanation: step.explanation,
+  };
+}
+
+function isReorderCorrect(step, reorderIndices) {
+  return reorderIndices.every((value, index) => value === step.correctOrder[index]);
+}
+
+function computeExpectedUserOrder(step) {
+  return step.correctOrder.map((originalIndex) =>
+    step.items.findIndex((item, index) => {
+      const indexed = step.items.map((value, idx) => ({ value, idx }));
+      return indexed.find((entry) => entry.idx === originalIndex)?.value === item;
+    }),
+  );
+}
+
+function computeSemanticCorrectOrder(step, originalItems) {
+  return step.correctOrder.map((originalIndex) =>
+    step.items.indexOf(originalItems[originalIndex]),
+  );
+}
+
+function computeLessonOrbReward(baseReward, results) {
+  const graded = results.filter((result) =>
+    ['choice', 'fill_blank', 'true_false', 'reorder'].includes(result.kind),
+  );
+  if (graded.length === 0) return baseReward;
+  const scoreSum = graded.reduce((sum, result) => {
+    if (!result.correct) return sum + 0.25;
+    if (result.attempts === 1) return sum + 1;
+    if (result.attempts === 2) return sum + 0.7;
+    return sum + 0.45;
+  }, 0);
+  const ratio = scoreSum / graded.length;
+  const scaled = 0.4 + (1 - 0.4) * ratio;
+  return Math.max(1, Math.round(baseReward * scaled));
+}
+
+function verifyFillBlankRemap(seedCount = 500) {
+  const failures = [];
+  const base = {
+    type: 'fill_blank',
+    prefix: 'Prefix ',
+    suffix: ' suffix',
+    options: ['Verbessere', 'Kürze', 'Mach'],
+    correctIndex: 1,
+    explanation: 'x',
+  };
+
+  for (let seed = 1; seed <= seedCount; seed += 1) {
+    const shuffled = shuffleChoiceLike(base, seed);
+    const correctLabel = base.options[base.correctIndex];
+    if (shuffled.options[shuffled.correctIndex] !== correctLabel) {
+      failures.push({ seed, kind: 'label-mismatch' });
+    }
+    for (let selected = 0; selected < shuffled.options.length; selected += 1) {
+      const expected = selected === shuffled.correctIndex;
+      const actual = selected === shuffled.correctIndex;
+      if (expected !== actual) failures.push({ seed, selected });
+    }
+  }
+
+  return failures.length;
+}
+
+function verifyReorderRemap(seedCount = 500, step = null) {
+  const failures = [];
+  const base =
+    step ??
+    ({
+      type: 'reorder',
+      instruction: 'Order me',
+      items: ['A', 'B', 'C', 'D'],
+      correctOrder: [0, 1, 2, 3],
+      explanation: 'x',
+    });
+
+  const originalItems = [...base.items];
+
+  for (let seed = 1; seed <= seedCount; seed += 1) {
+    const prepared = shuffleReorder(base, seed);
+    const userOrder = base.correctOrder.map((originalIndex) =>
+      prepared.items.indexOf(originalItems[originalIndex]),
+    );
+
+    if (userOrder.some((index) => index < 0)) {
+      failures.push({ seed, kind: 'missing-item-index' });
+      continue;
+    }
+
+    if (!isReorderCorrect(prepared, userOrder)) {
+      failures.push({
+        seed,
+        kind: 'semantic-order-marked-wrong',
+        userOrder,
+        correctOrder: prepared.correctOrder,
+      });
+    }
+  }
+
+  return failures.length;
+}
+
+function verifyVariantDistribution(trials = 10000, stepsPerTrial = 2) {
+  const aggregate = { choice: 0, fill_blank: 0, true_false: 0, reorder: 0 };
+  for (let t = 0; t < trials; t += 1) {
+    for (let stepIndex = 0; stepIndex < stepsPerTrial; stepIndex += 1) {
+      aggregate[pickVariantKind(t, stepIndex)] += 1;
+    }
+  }
+  const total = trials * stepsPerTrial;
+  return Object.fromEntries(
+    Object.entries(aggregate).map(([key, value]) => [key, Number((value / total).toFixed(3))]),
+  );
+}
+
+function verifyDynamicReorderFromChoice(seedCount = 500) {
+  const choiceStep = {
+    type: 'choice',
+    question: 'Which is clearest?',
+    options: ['Option A', 'Option B', 'Option C'],
+    correctIndex: 1,
+    explanation: 'Because B.',
+  };
+
+  let reorderSeedsFound = 0;
+  let failures = 0;
+
+  for (let seed = 1; seed <= seedCount; seed += 1) {
+    for (let stepIndex = 0; stepIndex < 8; stepIndex += 1) {
+      if (pickVariantKind(seed, stepIndex) !== 'reorder') {
+        continue;
+      }
+
+      reorderSeedsFound += 1;
+      const stepSeed = seed + stepIndex * 17;
+      const shuffledChoice = shuffleChoiceLike(choiceStep, stepSeed);
+      const reorderStep = shuffleReorder(
+        toReorder(shuffledChoice, 'Arrange in the correct order.'),
+        stepSeed + 7,
+      );
+      const userOrder = shuffledChoice.options.map((option) =>
+        reorderStep.items.indexOf(option),
+      );
+
+      if (!isReorderCorrect(reorderStep, userOrder)) {
+        failures += 1;
+      }
+    }
+  }
+
+  return { reorderSeedsFound, failures };
+}
+
+function verifyCm4Reward() {
+  const cm4Items = [
+    'Messbare Merkmale festlegen (Satzlänge, Anrede, Fachgrad)',
+    'Vage Adjektive durch konkrete Regeln ersetzen',
+    'Mini-Beispielsatz im Zielton ergänzen',
+    'Widersprüchliche Beispiele in anderem Stil entfernen',
+  ];
+  const base = {
+    type: 'reorder',
+    instruction: 'Bringe die Schritte für präzise Stilvorgaben in die sinnvolle Reihenfolge.',
+    items: cm4Items,
+    correctOrder: [0, 1, 2, 3],
+    explanation: 'x',
+  };
+
+  const prepared = shuffleReorder(base, 42);
+  const userOrder = [0, 1, 2, 3].map((originalIndex) =>
+    prepared.items.indexOf(cm4Items[originalIndex]),
+  );
+  const reorderCorrect = isReorderCorrect(prepared, userOrder);
+  const reward = computeLessonOrbReward(18, [
+    { kind: 'reorder', correct: reorderCorrect, attempts: 1 },
+    { kind: 'choice', correct: true, attempts: 1 },
+  ]);
+
+  return { reorderCorrect, reward };
+}
+
+const fillBlankFailures = verifyFillBlankRemap(500);
+const reorderFailures = verifyReorderRemap(500);
+const distribution = verifyVariantDistribution(10000, 2);
+const dynamicReorder = verifyDynamicReorderFromChoice(500);
+const cm4Reward = verifyCm4Reward();
+
+console.log(
+  JSON.stringify(
+    {
+      scope: {
+        sharedShuffleReorder:
+          'prepareChoiceStep reorder branch and prepareNativeStep reorder branch both call shuffleReorder()',
+        affectedNativeCatalog: ['cm-4'],
+        affectedRuntimeChoiceVariant: 'any choice step where pickVariantKind returns reorder (~15%)',
+      },
+      fillBlankFailures500: fillBlankFailures,
+      reorderFailures500: reorderFailures,
+      cm4Reward,
+      distribution10000: distribution,
+      dynamicReorderFromChoice500: dynamicReorder,
+    },
+    null,
+    2,
+  ),
+);

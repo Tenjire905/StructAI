@@ -1,0 +1,277 @@
+import { useEffect, useMemo } from 'react';
+import { Modal, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import Animated, {
+  Easing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+
+import { useThemeMode } from '@/theme';
+
+export type CelebrationType = 'orb_gain' | 'streak_milestone' | 'lesson_complete';
+
+export type CelebrationOverlayEvent = {
+  id: string;
+  type: CelebrationType;
+  orbCount?: number;
+};
+
+type CelebrationOverlayProps = {
+  event: CelebrationOverlayEvent | null;
+  onDismiss: () => void;
+};
+
+const CONFETTI_COUNT = 24;
+
+const CONFETTI_COLORS = [
+  '#8B5CF6',
+  '#22D3EE',
+  '#34D399',
+  '#F59E0B',
+  '#6D28D9',
+] as const;
+
+type ConfettiParticle = {
+  id: number;
+  left: number;
+  delay: number;
+  size: number;
+  color: string;
+  drift: number;
+};
+
+function createParticles(width: number): ConfettiParticle[] {
+  return Array.from({ length: CONFETTI_COUNT }, (_, index) => ({
+    id: index,
+    left: Math.random() * width,
+    delay: Math.random() * 120,
+    size: 6 + Math.random() * 6,
+    color: CONFETTI_COLORS[index % CONFETTI_COLORS.length],
+    drift: (Math.random() - 0.5) * 80,
+  }));
+}
+
+function ConfettiParticleView({
+  particle,
+  height,
+}: {
+  particle: ConfettiParticle;
+  height: number;
+}) {
+  const translateY = useSharedValue(-40);
+  const translateX = useSharedValue(0);
+  const opacity = useSharedValue(1);
+  const rotation = useSharedValue(0);
+
+  useEffect(() => {
+    translateY.value = withDelay(
+      particle.delay,
+      withTiming(height + 40, {
+        duration: 600,
+        easing: Easing.out(Easing.quad),
+      }),
+    );
+    translateX.value = withDelay(
+      particle.delay,
+      withTiming(particle.drift, {
+        duration: 600,
+        easing: Easing.out(Easing.quad),
+      }),
+    );
+    rotation.value = withDelay(
+      particle.delay,
+      withTiming(360, { duration: 600, easing: Easing.linear }),
+    );
+    opacity.value = withDelay(
+      particle.delay + 400,
+      withTiming(0, { duration: 200 }),
+    );
+  }, [height, opacity, particle.delay, particle.drift, rotation, translateX, translateY]);
+
+  const style = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [
+      { translateX: translateX.value },
+      { translateY: translateY.value },
+      { rotate: `${rotation.value}deg` },
+    ],
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        style,
+        {
+          backgroundColor: particle.color,
+          borderRadius: 2,
+          height: particle.size,
+          left: particle.left,
+          position: 'absolute',
+          top: 0,
+          width: particle.size * 0.6,
+        },
+      ]}
+    />
+  );
+}
+
+function PlayfulConfetti({ height, width }: { height: number; width: number }) {
+  const particles = useMemo(() => createParticles(width), [width]);
+
+  return (
+    <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+      {particles.map((particle) => (
+        <ConfettiParticleView height={height} key={particle.id} particle={particle} />
+      ))}
+    </View>
+  );
+}
+
+function FocusPulse() {
+  const { tokens } = useThemeMode();
+  const pulseOpacity = useSharedValue(0);
+
+  useEffect(() => {
+    const half = tokens.motion.duration.celebration / 2;
+    pulseOpacity.value = withSequence(
+      withTiming(0.18, {
+        duration: half,
+        easing: Easing.out(Easing.quad),
+      }),
+      withTiming(0, {
+        duration: half,
+        easing: Easing.in(Easing.quad),
+      }),
+    );
+  }, [pulseOpacity, tokens.motion.duration.celebration]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: pulseOpacity.value,
+  }));
+
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[
+        StyleSheet.absoluteFill,
+        animatedStyle,
+        { backgroundColor: tokens.colors.accent.primary },
+      ]}
+    />
+  );
+}
+
+function getCelebrationCopyKey(type: CelebrationType): string {
+  switch (type) {
+    case 'orb_gain':
+      return 'celebration.orbGain';
+    case 'streak_milestone':
+      return 'celebration.streakMilestone';
+    case 'lesson_complete':
+      return 'celebration.lessonComplete';
+  }
+}
+
+export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps) {
+  const { tokens, t } = useThemeMode();
+  const { height, width } = useWindowDimensions();
+  const visible = event !== null;
+  const contentScale = useSharedValue(0.85);
+  const contentOpacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (!event) {
+      return;
+    }
+
+    contentOpacity.value = 0;
+    contentScale.value = 0.85;
+
+    contentOpacity.value = withTiming(1, {
+      duration: tokens.motion.duration.fast,
+    });
+
+    if (tokens.presentation.allowCelebrationSpring) {
+      contentScale.value = withSpring(1, tokens.motion.spring.bouncy);
+    } else {
+      contentScale.value = withSpring(1, tokens.motion.spring.default);
+    }
+
+    const dismissTimer = setTimeout(() => {
+      contentOpacity.value = withTiming(0, { duration: tokens.motion.duration.fast }, () => {
+        runOnJS(onDismiss)();
+      });
+    }, tokens.motion.duration.celebration);
+
+    return () => {
+      clearTimeout(dismissTimer);
+    };
+  }, [
+    contentOpacity,
+    contentScale,
+    event,
+    onDismiss,
+    tokens.motion.duration.celebration,
+    tokens.motion.duration.fast,
+    tokens.motion.spring,
+    tokens.presentation.allowCelebrationSpring,
+  ]);
+
+  const contentStyle = useAnimatedStyle(() => ({
+    opacity: contentOpacity.value,
+    transform: [{ scale: contentScale.value }],
+  }));
+
+  if (!event) {
+    return null;
+  }
+
+  const copyKey = getCelebrationCopyKey(event.type);
+  const label =
+    event.type === 'orb_gain' && event.orbCount !== undefined
+      ? t(copyKey, { count: event.orbCount })
+      : t(copyKey);
+
+  return (
+    <Modal animationType="none" transparent visible={visible}>
+      <View pointerEvents="none" style={styles.overlay}>
+        {tokens.presentation.confettiEnabled ? (
+          <PlayfulConfetti height={height} width={width} />
+        ) : (
+          <FocusPulse />
+        )}
+
+        <Animated.View style={[contentStyle, styles.messageWrap]}>
+          <Text
+            style={{
+              color: tokens.colors.text.primary,
+              fontFamily: tokens.typography.fontFamily.display,
+              fontSize: tokens.typography.fontSize.headingLg,
+              textAlign: 'center',
+            }}>
+            {label}
+          </Text>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  messageWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFill,
+    alignItems: 'center',
+    backgroundColor: 'rgba(10, 6, 18, 0.45)',
+    justifyContent: 'center',
+  },
+});
