@@ -11,3 +11,4 @@ STRIKTE REGELN:
 8. Keine Platzhalter-Bilder aus dem Internet laden – lokale Assets oder beschriebene SVG-Icons verwenden.
 9. Erkläre nach jeder größeren Komponente kurz, welche Design-Entscheidung du getroffen hast und warum, bevor du weitermachst.
 10. Bei Unsicherheit über Layout: erst eine ASCII-Skizze der Struktur vorschlagen, dann erst Code schreiben.
+11. Nach JEDEM lokalen Merge in develop (ob von mir angewiesen oder auf eigene Bestätigung hin) meldest du unaufgefordert den neuen develop-Tip-Hash im selben Bericht, in dem du den Merge bestätigst — nicht erst auf Nachfrage. Ein Merge ohne diese Bestätigung gilt als nicht vollständig dokumentiert.
