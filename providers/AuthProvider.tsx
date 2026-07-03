@@ -11,6 +11,7 @@ import {
 import type { Session, User } from '@supabase/supabase-js';
 
 import { createSessionFromUrl, subscribeToAuthDeepLinks } from '@/lib/authRedirect';
+import { runBootstrap } from '@/lib/bootstrap';
 import { hydrateProgressOnLogin } from '@/lib/progressSync';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
@@ -42,19 +43,28 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }, []);
 
   useEffect(() => {
-    if (!isSupabaseConfigured) {
-      setIsLoading(false);
-      return;
-    }
-
     let isMounted = true;
 
-    supabase.auth.getSession().then(({ data }) => {
+    void (async () => {
+      await runBootstrap();
+
+      if (!isSupabaseConfigured) {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      const { data } = await supabase.auth.getSession();
       if (isMounted) {
         setSession(data.session);
         setIsLoading(false);
       }
-    });
+    })();
+
+    if (!isSupabaseConfigured) {
+      return;
+    }
 
     const {
       data: { subscription },

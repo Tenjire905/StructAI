@@ -4,10 +4,10 @@ import { useEffect, useRef } from 'react';
 import { isOnboardingCompleted } from '@/lib/appStorage';
 import { useAuth } from '@/providers/AuthProvider';
 
-const DEV_ROUTE_PREFIX = 'dev-';
+const DEV_ROUTE_GROUP = '(dev)';
 
 function isDevRoute(rootSegment: string | undefined): boolean {
-  return Boolean(rootSegment?.startsWith(DEV_ROUTE_PREFIX));
+  return rootSegment === DEV_ROUTE_GROUP;
 }
 
 function resolveAuthedRoute(): Href {

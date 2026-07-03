@@ -5,7 +5,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import '@/lib/bootstrap';
 import { AuthNavigationController } from '@/components/AuthNavigationController';
 import { AuthProvider } from '@/providers/AuthProvider';
 import { ThemeModeProvider, CelebrationProvider, colors } from '@/theme';
@@ -57,24 +56,7 @@ export default function RootLayout() {
             <Stack.Screen name="auth/index" />
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="onboarding" />
-            <Stack.Screen
-              name="dev-auth-preview"
-              options={{
-                headerShown: true,
-                title: 'Auth Preview',
-                headerStyle: { backgroundColor: colors.background.elevated },
-                headerTintColor: colors.text.primary,
-              }}
-            />
-          <Stack.Screen
-            name="dev-preview"
-            options={{
-              headerShown: true,
-              title: 'Dev Preview',
-              headerStyle: { backgroundColor: colors.background.elevated },
-              headerTintColor: colors.text.primary,
-            }}
-          />
+            {__DEV__ ? <Stack.Screen name="(dev)" options={{ headerShown: false }} /> : null}
           </Stack>
         </CelebrationProvider>
       </ThemeModeProvider>
