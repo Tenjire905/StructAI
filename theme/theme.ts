@@ -267,6 +267,7 @@ function resolveFocusColors(base: ColorPalette): ColorPalette {
       primaryDim: desaturateHex(base.accent.primaryDim, saturationReduction),
       structure: desaturateHex(base.accent.structure, saturationReduction),
       structureDim: desaturateHex(base.accent.structureDim, saturationReduction),
+      warning: desaturateHex(base.accent.warning, saturationReduction),
     },
   };
 }

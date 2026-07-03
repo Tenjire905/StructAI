@@ -50,6 +50,7 @@ export default function LektionScreen() {
   const { tokens, t, locale } = useThemeMode();
   const router = useRouter();
   const recordLessonOpened = useProgressStore((state) => state.recordLessonOpened);
+  const recordLessonFailed = useProgressStore((state) => state.recordLessonFailed);
   const completeLesson = useProgressStore((state) => state.completeLesson);
 
   const baseLesson = useMemo(
@@ -280,7 +281,10 @@ export default function LektionScreen() {
         <RetryPromptView
           correctCount={failureStats.correctCount}
           gradedCount={failureStats.gradedCount}
-          onContinueLater={() => router.back()}
+          onContinueLater={() => {
+            recordLessonFailed(lesson.id);
+            router.back();
+          }}
           onRetry={retryLesson}
         />
       </>

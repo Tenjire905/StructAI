@@ -6,7 +6,7 @@ import { Button, Card } from '@/components/ui';
 import { ProgressBar } from '@/components/ui';
 import { getLessonText } from '@/data/lessonContent';
 import { type MockChapter } from '@/data/mockPaths';
-import { getMergedPath, pathTitleKey } from '@/lib/pathProgress';
+import { getMergedPath, getPathProgressBarModel, pathTitleKey } from '@/lib/pathProgress';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
@@ -52,7 +52,8 @@ export default function LernpfadDetailScreen() {
   }
 
   const isStarted = path.currentChapter !== undefined && path.progress !== undefined;
-  const progressPercent = Math.round((path.progress ?? 0) * 100);
+  const progressBar = getPathProgressBarModel(pathId, pathProgress);
+  const progressPercent = Math.round(progressBar.completedRatio * 100);
 
   return (
     <>
@@ -91,7 +92,11 @@ export default function LernpfadDetailScreen() {
               </Text>
             </View>
 
-            <ProgressBar color="structure" progress={path.progress ?? 0} />
+            <ProgressBar
+              color="structure"
+              failedSegments={progressBar.failedSegments}
+              progress={progressBar.completedRatio}
+            />
 
             <Text
               style={{

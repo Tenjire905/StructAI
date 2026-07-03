@@ -12,6 +12,7 @@ export const PROGRESS_STORAGE_KEY = 'structai.progress.v1';
 
 export type PathProgressRecord = {
   completedLessonIds: string[];
+  failedLessonIds: string[];
   currentLessonId: string;
   lastTouchedLessonId: string;
   progress: number;
@@ -31,6 +32,7 @@ type ProgressActions = {
   hydrate: () => void;
   reset: () => void;
   recordLessonOpened: (lessonId: string) => void;
+  recordLessonFailed: (lessonId: string) => void;
   completeLesson: (lessonId: string, orbsEarned: number) => void;
   addPromptScore: (score: number) => void;
   getResumeLessonId: (pathId: string) => string | undefined;
@@ -96,7 +98,10 @@ function ensurePathProgress(
   const existing = pathProgress[pathId];
 
   if (existing) {
-    return existing;
+    return {
+      ...existing,
+      failedLessonIds: existing.failedLessonIds ?? [],
+    };
   }
 
   const template = getPathTemplate(pathId);
@@ -104,6 +109,7 @@ function ensurePathProgress(
 
   return {
     completedLessonIds: [],
+    failedLessonIds: [],
     currentLessonId: firstLesson,
     lastTouchedLessonId: lessonId,
     progress: 0,
@@ -136,6 +142,47 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     };
     writeProgressSnapshot(fresh);
     set(fresh);
+  },
+
+  recordLessonFailed: (lessonId) => {
+    const pathId = getPathIdForLesson(lessonId);
+
+    if (!pathId) {
+      return;
+    }
+
+    set((state) => {
+      const pathRecord = ensurePathProgress(state.pathProgress, pathId, lessonId);
+      const failedSet = new Set(pathRecord.failedLessonIds);
+
+      if (!pathRecord.completedLessonIds.includes(lessonId)) {
+        failedSet.add(lessonId);
+      }
+
+      const nextPathProgress = {
+        ...state.pathProgress,
+        [pathId]: {
+          ...pathRecord,
+          failedLessonIds: [...failedSet],
+          lastTouchedLessonId: lessonId,
+          currentLessonId: pathRecord.currentLessonId || lessonId,
+        },
+      };
+
+      const snapshot: ProgressSnapshot = {
+        orbCount: state.orbCount,
+        orbMax: state.orbMax,
+        completedLessons: state.completedLessons,
+        currentStreak: state.currentStreak,
+        streakDays: state.streakDays,
+        pathProgress: nextPathProgress,
+        promptScoreHistory: state.promptScoreHistory,
+      };
+
+      writeProgressSnapshot(snapshot);
+
+      return snapshot;
+    });
   },
 
   recordLessonOpened: (lessonId) => {
@@ -188,6 +235,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       }
 
       const completedLessonIds = [...completedSet];
+      const failedLessonIds = pathRecord.failedLessonIds.filter((id) => id !== lessonId);
       const nextLessonId = getNextLessonId(pathId, lessonId) ?? lessonId;
       const progress = computePathProgressRatio(pathId, completedLessonIds);
       const wasAlreadyCompleted = pathRecord.completedLessonIds.includes(lessonId);
@@ -204,6 +252,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
           ...state.pathProgress,
           [pathId]: {
             completedLessonIds,
+            failedLessonIds,
             currentLessonId: nextLessonId,
             lastTouchedLessonId: lessonId,
             progress,
