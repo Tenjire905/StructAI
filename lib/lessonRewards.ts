@@ -5,6 +5,46 @@ export type LessonAnswerResult = {
   attempts: number;
 };
 
+export const GRADED_ANSWER_KINDS = [
+  'choice',
+  'fill_blank',
+  'true_false',
+  'reorder',
+] as const satisfies ReadonlyArray<LessonAnswerResult['kind']>;
+
+export const LESSON_PASS_THRESHOLD = 0.6;
+
+export function filterGradedResults(results: LessonAnswerResult[]): LessonAnswerResult[] {
+  return results.filter((result) =>
+    GRADED_ANSWER_KINDS.includes(result.kind),
+  );
+}
+
+export function computeLessonPassRatio(results: LessonAnswerResult[]): {
+  passRatio: number;
+  correctCount: number;
+  gradedCount: number;
+} {
+  const graded = filterGradedResults(results);
+
+  if (graded.length === 0) {
+    return { passRatio: 1, correctCount: 0, gradedCount: 0 };
+  }
+
+  const correctCount = graded.filter((result) => result.correct).length;
+
+  return {
+    passRatio: correctCount / graded.length,
+    correctCount,
+    gradedCount: graded.length,
+  };
+}
+
+export function hasPassedLessonThreshold(results: LessonAnswerResult[]): boolean {
+  const { passRatio } = computeLessonPassRatio(results);
+  return passRatio > LESSON_PASS_THRESHOLD;
+}
+
 /**
  * Orb-Gewinn skaliert mit Antwortqualität:
  * - 100 % korrekt beim ersten Versuch → volle Base-Reward
@@ -14,9 +54,7 @@ export function computeLessonOrbReward(
   baseReward: number,
   results: LessonAnswerResult[],
 ): number {
-  const graded = results.filter((result) =>
-    ['choice', 'fill_blank', 'true_false', 'reorder'].includes(result.kind),
-  );
+  const graded = filterGradedResults(results);
 
   if (graded.length === 0) {
     return baseReward;

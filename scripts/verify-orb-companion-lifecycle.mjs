@@ -270,7 +270,7 @@ console.log(
   JSON.stringify(
     {
       manualTest: {
-        screen: 'app/dev-preview.tsx (6 OrbCompanion instances per mode column)',
+        screen: 'app/(dev)/dev-preview.tsx (6 OrbCompanion instances per mode column)',
         futureScreens: 'B4: Home, Lektion, Prompt Lab — each instance uses useIsFocused() from its host screen',
         steps: [
           'Open dev-preview, enable Playful, pick idle companion',

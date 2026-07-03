@@ -1,12 +1,15 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { Check, Lock, Play } from 'lucide-react-native';
 import { ScrollView, Text, View } from 'react-native';
 
-import { Button, Card } from '@/components/ui';
-import { ProgressBar } from '@/components/ui';
+import { ChapterRow } from '@/components/features';
+import { Button, Card, ProgressBar } from '@/components/ui';
 import { getLessonText } from '@/data/lessonContent';
-import { type MockChapter } from '@/data/mockPaths';
-import { getMergedPath, pathTitleKey } from '@/lib/pathProgress';
+import {
+  getContinueLessonId,
+  getMergedPath,
+  getPathProgressBarModel,
+  pathTitleKey,
+} from '@/lib/pathProgress';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
@@ -52,7 +55,8 @@ export default function LernpfadDetailScreen() {
   }
 
   const isStarted = path.currentChapter !== undefined && path.progress !== undefined;
-  const progressPercent = Math.round((path.progress ?? 0) * 100);
+  const progressBar = getPathProgressBarModel(pathId, pathProgress);
+  const progressPercent = Math.round(progressBar.completedRatio * 100);
 
   return (
     <>
@@ -91,7 +95,11 @@ export default function LernpfadDetailScreen() {
               </Text>
             </View>
 
-            <ProgressBar color="structure" progress={path.progress ?? 0} />
+            <ProgressBar
+              color="structure"
+              failedSegments={progressBar.failedSegments}
+              progress={progressBar.completedRatio}
+            />
 
             <Text
               style={{
@@ -112,10 +120,7 @@ export default function LernpfadDetailScreen() {
         <Button
           label={isStarted ? t('pathDetail.continueCta') : t('pathDetail.startCta')}
           onPress={() => {
-            const targetChapter =
-              path.chapters.find((chapter) => chapter.status === 'current') ??
-              path.chapters[0];
-            router.push(`/lektion/${targetChapter.id}`);
+            router.push(`/lektion/${getContinueLessonId(path)}`);
           }}
           variant="primary"
         />
@@ -138,6 +143,7 @@ export default function LernpfadDetailScreen() {
                   isLast={index === path.chapters.length - 1}
                   key={chapter.id}
                   number={index + 1}
+                  onPress={(lessonId) => router.push(`/lektion/${lessonId}`)}
                   title={getLessonText(`${chapter.id}.title`, locale)}
                 />
               ))}
@@ -146,81 +152,5 @@ export default function LernpfadDetailScreen() {
         </View>
       </ScrollView>
     </>
-  );
-}
-
-type ChapterRowProps = {
-  chapter: MockChapter;
-  number: number;
-  isLast: boolean;
-  title: string;
-};
-
-function ChapterRow({ chapter, number, isLast, title }: ChapterRowProps) {
-  const { tokens } = useThemeMode();
-
-  const statusIcon = {
-    completed: (
-      <Check
-        color={tokens.colors.accent.success}
-        size={tokens.icons.sizes.md}
-        strokeWidth={tokens.icons.strokeWidth}
-      />
-    ),
-    current: (
-      <Play
-        color={tokens.colors.accent.primary}
-        size={tokens.icons.sizes.md}
-        strokeWidth={tokens.icons.strokeWidth}
-      />
-    ),
-    locked: (
-      <Lock
-        color={tokens.colors.text.tertiary}
-        size={tokens.icons.sizes.md}
-        strokeWidth={tokens.icons.strokeWidth}
-      />
-    ),
-  }[chapter.status];
-
-  const titleColor = {
-    completed: tokens.colors.text.secondary,
-    current: tokens.colors.text.primary,
-    locked: tokens.colors.text.tertiary,
-  }[chapter.status];
-
-  return (
-    <View
-      style={{
-        alignItems: 'center',
-        borderBottomColor: tokens.colors.border.subtle,
-        borderBottomWidth: isLast ? 0 : 1,
-        flexDirection: 'row',
-        gap: tokens.spacing.space3,
-        paddingVertical: tokens.spacing.space3,
-      }}>
-      <Text
-        style={{
-          color: tokens.colors.text.tertiary,
-          fontFamily: tokens.typography.fontFamily.mono,
-          fontSize: tokens.typography.fontSize.bodySm,
-          width: tokens.spacing.space5,
-        }}>
-        {String(number).padStart(2, '0')}
-      </Text>
-      <Text
-        style={{
-          color: titleColor,
-          flex: 1,
-          fontFamily:
-            chapter.status === 'current'
-              ? tokens.typography.fontFamily.bodyMedium
-              : tokens.typography.fontFamily.body,
-          fontSize: tokens.typography.fontSize.bodyLg,
-        }}>
-        {title}
-      </Text>
-      {statusIcon}
-    </View>
   );
 }

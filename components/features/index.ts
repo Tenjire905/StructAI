@@ -1,4 +1,5 @@
 export { CelebrationOverlay } from './CelebrationOverlay';
+export { ChapterRow } from './ChapterRow';
 export { OrbCompanion } from './OrbCompanion';
 export { OrbCounter } from './OrbCounter';
 export { OrbIcon } from './OrbIcon';

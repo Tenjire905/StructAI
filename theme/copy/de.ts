@@ -157,6 +157,10 @@ export const copyDe: CopyCatalog = {
     playful: '+{{count}} Orbs für dich!',
     focus: '+{{count}} Orbs',
   },
+  'lesson.practiceComplete': {
+    playful: 'Übung abgeschlossen — keine Extra-Orbs.',
+    focus: 'Wiederholt. Keine zusätzlichen Orbs.',
+  },
   'lesson.backToPath': {
     playful: 'Zurück zum Pfad',
     focus: 'Zurück zum Pfad',
@@ -164,6 +168,22 @@ export const copyDe: CopyCatalog = {
   'lesson.notFound': {
     playful: 'Diese Lektion gibt es noch nicht.',
     focus: 'Lektion nicht gefunden.',
+  },
+  'lesson.retryTitle': {
+    playful: 'Noch nicht geschafft!',
+    focus: 'Schwelle nicht erreicht.',
+  },
+  'lesson.retrySummary': {
+    playful: '{{correct}} von {{total}} richtig — versuch\'s nochmal!',
+    focus: '{{correct}}/{{total}} korrekt. Mindestens 60 % erforderlich.',
+  },
+  'lesson.retryPrimary': {
+    playful: 'Nochmal versuchen',
+    focus: 'Erneut versuchen',
+  },
+  'lesson.retrySecondary': {
+    playful: 'Später weiter',
+    focus: 'Später fortsetzen',
   },
   'profile.statsSection': {
     playful: 'Deine Erfolge',
@@ -214,8 +234,10 @@ export const copyDe: CopyCatalog = {
     focus: 'API-Schlüssel (BYOK)',
   },
   'profile.byokDescription': {
-    playful: 'Dein eigener API-Schlüssel bleibt sicher auf deinem Gerät und schaltet die Prompt-Werkstatt frei.',
-    focus: 'Der API-Schlüssel wird verschlüsselt lokal gespeichert (Secure Store) und nur für Prompt-Werkstatt-Anfragen verwendet.',
+    playful:
+      'Pro Anbieter ein eigener Schlüssel – alles bleibt sicher auf deinem Gerät und wird nie synchronisiert.',
+    focus:
+      'Pro Provider ein API-Schlüssel, verschlüsselt lokal (Secure Store). Keys werden nicht synchronisiert.',
   },
   'profile.byokPlaceholder': {
     playful: 'API-Schlüssel einfügen',
@@ -321,6 +343,180 @@ export const copyDe: CopyCatalog = {
     playful: 'Die KI-Antwort war unbrauchbar - der lokale Coach übernimmt.',
     focus: 'API-Fehler. Lokale Bewertung verwendet.',
   },
+  'promptLab.modeScore': {
+    playful: 'Bewerten',
+    focus: 'Bewertung',
+  },
+  'promptLab.modeCompare': {
+    playful: 'Modelle vergleichen',
+    focus: 'Modellvergleich',
+  },
+  'modelComparer.description': {
+    playful:
+      'Ein Prompt, mehrere Modelle parallel — swipe durch die Antworten und vergleiche Tempo und Kosten.',
+    focus:
+      'Sendet einen Prompt parallel an 2–3 konfigurierte Provider und zeigt Antworten nebeneinander (horizontal scrollbar).',
+  },
+  'modelComparer.needTwoKeys': {
+    playful: 'Leg mindestens zwei API-Schlüssel im Profil an, um Modelle zu vergleichen.',
+    focus: 'Mindestens zwei Provider-Keys im Profil erforderlich.',
+  },
+  'modelComparer.modelPickerLabel': {
+    playful: 'Modelle wählen (2–3)',
+    focus: 'Modelle (2–3)',
+  },
+  'modelComparer.modelPickerHint': {
+    playful: 'Mindestens zwei, höchstens drei Modelle gleichzeitig.',
+    focus: 'Auswahl: mindestens 2, maximal 3 Modelle.',
+  },
+  'modelComparer.promptLabel': {
+    playful: 'Dein Prompt',
+    focus: 'Prompt',
+  },
+  'modelComparer.promptPlaceholder': {
+    playful: 'Schreib deinen Prompt für alle Modelle...',
+    focus: 'Prompt für alle gewählten Modelle...',
+  },
+  'modelComparer.compareButton': {
+    playful: 'Parallel vergleichen',
+    focus: 'Vergleichen',
+  },
+  'modelComparer.comparing': {
+    playful: 'Modelle antworten...',
+    focus: 'Vergleich läuft...',
+  },
+  'modelComparer.resultsTitle': {
+    playful: 'Antworten im Vergleich',
+    focus: 'Ergebnisse',
+  },
+  'modelComparer.latencyBadge': {
+    playful: '{{seconds}} s',
+    focus: '{{seconds}} s',
+  },
+  'modelComparer.costBadge': {
+    playful: 'ca. {{cost}}',
+    focus: '≈ {{cost}}',
+  },
+  'modelComparer.errorBadge': {
+    playful: 'Fehler',
+    focus: 'Fehler',
+  },
+  'modelComparer.errorInvalidKey': {
+    playful: 'Schlüssel abgelehnt — prüf den Key im Profil.',
+    focus: 'Ungültiger API-Schlüssel.',
+  },
+  'modelComparer.errorQuota': {
+    playful: 'Kontingent oder Guthaben erschöpft.',
+    focus: 'Rate-Limit oder Kontingent erschöpft.',
+  },
+  'modelComparer.errorNetwork': {
+    playful: 'Netzwerkfehler oder Timeout.',
+    focus: 'Netzwerkfehler / Timeout.',
+  },
+  'modelComparer.errorGeneric': {
+    playful: 'Dieses Modell konnte nicht antworten.',
+    focus: 'Modell-Antwort fehlgeschlagen.',
+  },
+  'modelComparer.insightMoreExpensiveSlightlyDetailed': {
+    playful: '{{costMultiplier}}× teurer, aber nur {{detailPercent}}% ausführlicher als die anderen.',
+    focus: '{{costMultiplier}}× teurer, nur {{detailPercent}}% mehr Text als die anderen Modelle.',
+  },
+  'modelComparer.insightMoreExpensiveMuchDetailed': {
+    playful: '{{costMultiplier}}× teurer und {{detailPercent}}% ausführlicher als die anderen.',
+    focus: '{{costMultiplier}}× teurer bei {{detailPercent}}% mehr Antworttext.',
+  },
+  'modelComparer.insightMoreExpensiveShorter': {
+    playful: '{{costMultiplier}}× teurer bei {{detailPercent}}% kürzerer Antwort.',
+    focus: '{{costMultiplier}}× teurer, Antwort {{detailPercent}}% kürzer als die anderen.',
+  },
+  'modelComparer.insightMoreExpensiveSimilarDetail': {
+    playful: '{{costMultiplier}}× teurer bei ähnlicher Antwortlänge.',
+    focus: '{{costMultiplier}}× teurer, Textlänge nahe am Durchschnitt.',
+  },
+  'modelComparer.insightCheaperMoreDetailed': {
+    playful: '{{costMultiplier}}× günstiger und {{detailPercent}}% ausführlicher.',
+    focus: '{{costMultiplier}}× günstiger bei {{detailPercent}}% mehr Text.',
+  },
+  'modelComparer.insightCheaperShorter': {
+    playful: '{{costMultiplier}}× günstiger, dafür {{detailPercent}}% kürzer.',
+    focus: '{{costMultiplier}}× günstiger, Antwort {{detailPercent}}% kürzer.',
+  },
+  'modelComparer.insightCheaperSimilarDetail': {
+    playful: '{{costMultiplier}}× günstiger bei ähnlicher Antwortlänge.',
+    focus: '{{costMultiplier}}× günstiger, Textlänge nahe am Durchschnitt.',
+  },
+  'modelComparer.insightFaster': {
+    playful: '{{speedMultiplier}}× schneller — Kosten und Länge ähnlich wie die anderen.',
+    focus: '{{speedMultiplier}}× schneller bei vergleichbaren Kosten und Textlänge.',
+  },
+  'modelComparer.insightSlower': {
+    playful: '{{speedMultiplier}}× langsamer — Kosten und Länge ähnlich wie die anderen.',
+    focus: '{{speedMultiplier}}× langsamer bei vergleichbaren Kosten und Textlänge.',
+  },
+  'modelComparer.insightSimilar': {
+    playful: 'Kosten, Tempo und Länge liegen nah am Durchschnitt der anderen Modelle.',
+    focus: 'Kosten, Latenz und Textlänge nahe am Mittelwert der anderen Modelle.',
+  },
+  'modelComparer.spendingWarningDaily': {
+    playful: 'Hinweis: Dein Tageslimit für geschätzte API-Kosten ist erreicht (nur Schätzung, keine Garantie).',
+    focus: 'Tageslimit für geschätzte API-Kosten erreicht (clientseitige Schätzung, unverbindlich).',
+  },
+  'modelComparer.spendingWarningMonthly': {
+    playful: 'Hinweis: Dein Monatslimit für geschätzte API-Kosten ist erreicht (nur Schätzung, keine Garantie).',
+    focus: 'Monatslimit für geschätzte API-Kosten erreicht (clientseitige Schätzung, unverbindlich).',
+  },
+  'modelComparer.spendingWarningBoth': {
+    playful: 'Hinweis: Tages- und Monatslimit für geschätzte API-Kosten erreicht (nur Schätzung).',
+    focus: 'Tages- und Monatslimit für geschätzte API-Kosten erreicht (Schätzung, unverbindlich).',
+  },
+  'profile.spendingLimitSection': {
+    playful: 'Ausgaben-Wächter',
+    focus: 'Ausgabenlimit (BYOK)',
+  },
+  'profile.spendingLimitDescription': {
+    playful: 'Setz ein Tages- oder Monatslimit für geschätzte API-Kosten — wir warnen dich lokal, bevor es unbemerkt teuer wird.',
+    focus: 'Optionales Tages-/Monatslimit für geschätzte BYOK-Kosten mit lokaler Warnung.',
+  },
+  'profile.spendingLimitDisclaimer': {
+    playful: 'Nur eine grobe Schätzung auf deinem Gerät — keine echte Abrechnung, keine Garantie.',
+    focus: 'Clientseitige Kostenschätzung ohne Abrechnungsgarantie; dient nur als Orientierung.',
+  },
+  'profile.spendingLimitDailyLabel': {
+    playful: 'Tageslimit (USD, optional)',
+    focus: 'Tageslimit USD (optional)',
+  },
+  'profile.spendingLimitMonthlyLabel': {
+    playful: 'Monatslimit (USD, optional)',
+    focus: 'Monatslimit USD (optional)',
+  },
+  'profile.spendingLimitPlaceholder': {
+    playful: 'z. B. 1.00',
+    focus: 'z. B. 1.00',
+  },
+  'profile.spendingLimitSave': {
+    playful: 'Limit speichern',
+    focus: 'Speichern',
+  },
+  'profile.spendingLimitUsageToday': {
+    playful: 'Heute geschätzt: {{amount}}',
+    focus: 'Heute (Schätzung): {{amount}}',
+  },
+  'profile.spendingLimitUsageMonth': {
+    playful: 'Diesen Monat geschätzt: {{amount}}',
+    focus: 'Monat (Schätzung): {{amount}}',
+  },
+  'profile.spendingLimitWarningDaily': {
+    playful: 'Tageslimit erreicht (Schätzung)',
+    focus: 'Tageslimit erreicht (Schätzung)',
+  },
+  'profile.spendingLimitWarningMonthly': {
+    playful: 'Monatslimit erreicht (Schätzung)',
+    focus: 'Monatslimit erreicht (Schätzung)',
+  },
+  'profile.spendingLimitWarningBoth': {
+    playful: 'Tages- und Monatslimit erreicht (Schätzung)',
+    focus: 'Tages- und Monatslimit erreicht (Schätzung)',
+  },
   'profile.byokChecking': {
     playful: 'Prüfe deinen Schlüssel...',
     focus: 'Schlüssel wird geprüft...',
@@ -336,6 +532,126 @@ export const copyDe: CopyCatalog = {
   'profile.byokUnverifiedBadge': {
     playful: 'Gespeichert - noch nicht geprüft',
     focus: 'Gespeichert (ungeprüft)',
+  },
+  'profile.byokTest': {
+    playful: 'Schlüssel testen',
+    focus: 'Testen',
+  },
+  'profile.byokConfiguredCount': {
+    playful: '{{count}} Anbieter verbunden',
+    focus: '{{count}} Provider konfiguriert',
+  },
+  'profile.accountSection': {
+    playful: 'Dein Konto',
+    focus: 'Konto',
+  },
+  'profile.accountDescription': {
+    playful: 'Du bist angemeldet. Abmelden beendet nur die Sitzung auf diesem Gerät.',
+    focus: 'Angemeldet. Abmelden beendet die Sitzung auf diesem Gerät.',
+  },
+  'profile.signOut': {
+    playful: 'Abmelden',
+    focus: 'Abmelden',
+  },
+  'auth.headline': {
+    playful: 'Willkommen bei StructAI',
+    focus: 'Bei StructAI anmelden',
+  },
+  'auth.subheadline': {
+    playful: 'Melde dich an, damit dein Fortschritt später sicher gespeichert werden kann.',
+    focus: 'Melden Sie sich an, um Ihren Lernfortschritt zu sichern.',
+  },
+  'auth.signInTab': {
+    playful: 'Anmelden',
+    focus: 'Anmelden',
+  },
+  'auth.signUpTab': {
+    playful: 'Registrieren',
+    focus: 'Registrieren',
+  },
+  'auth.emailPlaceholder': {
+    playful: 'E-Mail-Adresse',
+    focus: 'E-Mail',
+  },
+  'auth.passwordPlaceholder': {
+    playful: 'Passwort (mind. 6 Zeichen)',
+    focus: 'Passwort (min. 6 Zeichen)',
+  },
+  'auth.signInCta': {
+    playful: 'Jetzt anmelden',
+    focus: 'Anmelden',
+  },
+  'auth.signInLoading': {
+    playful: 'Anmeldung läuft…',
+    focus: 'Anmeldung…',
+  },
+  'auth.signUpCta': {
+    playful: 'Konto erstellen',
+    focus: 'Registrieren',
+  },
+  'auth.signUpLoading': {
+    playful: 'Registrierung läuft…',
+    focus: 'Registrierung…',
+  },
+  'auth.signUpHint': {
+    playful: 'Nach der Registrierung prüf bitte dein Postfach, falls eine Bestätigung nötig ist.',
+    focus: 'Bei E-Mail-Bestätigung bitte Posteingang prüfen.',
+  },
+  'auth.signUpConfirmEmail': {
+    playful: 'Account erstellt! Bitte bestätige deine E-Mail, dann kannst du dich anmelden.',
+    focus: 'Registrierung erfolgreich. E-Mail bestätigen, danach anmelden.',
+  },
+  'auth.dividerOr': {
+    playful: 'oder',
+    focus: 'oder',
+  },
+  'auth.googleCta': {
+    playful: 'Mit Google fortfahren',
+    focus: 'Mit Google anmelden',
+  },
+  'auth.googleLoading': {
+    playful: 'Google-Anmeldung…',
+    focus: 'Google…',
+  },
+  'auth.errorGeneric': {
+    playful: 'Das hat leider nicht geklappt. Bitte versuch es nochmal.',
+    focus: 'Anmeldung fehlgeschlagen. Bitte erneut versuchen.',
+  },
+  'auth.errorInvalidCredentials': {
+    playful: 'E-Mail oder Passwort stimmen nicht.',
+    focus: 'Ungültige Anmeldedaten.',
+  },
+  'auth.errorEmailNotConfirmed': {
+    playful: 'Bitte bestätige zuerst deine E-Mail-Adresse.',
+    focus: 'E-Mail-Adresse noch nicht bestätigt.',
+  },
+  'auth.errorUserExists': {
+    playful: 'Für diese E-Mail gibt es schon ein Konto.',
+    focus: 'Konto existiert bereits.',
+  },
+  'auth.errorWeakPassword': {
+    playful: 'Das Passwort erfüllt die Anforderungen nicht.',
+    focus: 'Passwortanforderungen nicht erfüllt.',
+  },
+  'auth.errorNotConfigured': {
+    playful: 'Supabase ist noch nicht konfiguriert.',
+    focus: 'Supabase-Konfiguration fehlt.',
+  },
+  'auth.errorOAuthCancelled': {
+    playful: 'Google-Anmeldung abgebrochen.',
+    focus: 'Google-Anmeldung abgebrochen.',
+  },
+  'auth.errorOAuthFailed': {
+    playful: 'Google-Anmeldung konnte nicht abgeschlossen werden. Prüfe die Redirect-URL in Supabase.',
+    focus: 'Google-Anmeldung fehlgeschlagen. Redirect-URL in Supabase prüfen.',
+  },
+  'auth.configMissingTitle': {
+    playful: 'Backend noch nicht verbunden',
+    focus: 'Backend nicht konfiguriert',
+  },
+  'auth.configMissingBody': {
+    playful: 'Setze EXPO_PUBLIC_SUPABASE_URL und EXPO_PUBLIC_SUPABASE_ANON_KEY in deiner .env.',
+    focus: 'EXPO_PUBLIC_SUPABASE_URL und EXPO_PUBLIC_SUPABASE_ANON_KEY in .env setzen.',
   },
   'onboarding.welcomeHeadline': {
     playful: 'Lerne Prompting wie ein Profi',
@@ -416,5 +732,75 @@ export const copyDe: CopyCatalog = {
   'celebration.streakMilestone': {
     playful: 'Volle Woche - deine Serie hält!',
     focus: '7-Tage-Meilenstein erreicht.',
+  },
+  'celebration.pathComplete': {
+    playful: 'Lernpfad geschafft: {{path}}!',
+    focus: 'Lernpfad abgeschlossen: {{path}}.',
+  },
+  'pathCompletion.title': {
+    playful: 'Lernpfad komplett!',
+    focus: 'Lernpfad abgeschlossen',
+  },
+  'pathCompletion.subtitle': {
+    playful: 'Du hast alle {{total}} Kapitel von „{{path}}“ bestanden.',
+    focus: 'Alle {{total}} Kapitel von „{{path}}“ erfolgreich abgeschlossen.',
+  },
+  'pathCompletion.certificateHint': {
+    playful: 'Dein Zertifikat kannst du dir hier bald holen.',
+    focus: 'Zertifikat-Export folgt in Kürze an dieser Stelle (G2).',
+  },
+  'pathCompletion.backToPaths': {
+    playful: 'Zurück zu den Lernpfaden',
+    focus: 'Zur Lernpfad-Übersicht',
+  },
+  'certificate.badge': {
+    playful: 'Abschluss-Zertifikat',
+    focus: 'Zertifikat',
+  },
+  'certificate.awardedTo': {
+    playful: 'Verliehen an',
+    focus: 'Teilnehmer',
+  },
+  'certificate.completedOn': {
+    playful: 'Abgeschlossen am',
+    focus: 'Abschlussdatum',
+  },
+  'certificate.brandTagline': {
+    playful: 'Prompt Engineering · Lernpfad',
+    focus: 'StructAI · Lernpfad-Abschluss',
+  },
+  'certificate.share': {
+    playful: 'Zertifikat teilen',
+    focus: 'Zertifikat exportieren',
+  },
+  'certificate.sharing': {
+    playful: 'Wird vorbereitet…',
+    focus: 'Export läuft…',
+  },
+  'certificate.shareDialogTitle': {
+    playful: 'Dein StructAI-Zertifikat teilen',
+    focus: 'StructAI-Zertifikat teilen',
+  },
+  'certificate.shareUnavailable': {
+    playful: 'Teilen ist auf diesem Gerät gerade nicht möglich.',
+    focus: 'Zertifikat-Export auf diesem Gerät nicht verfügbar.',
+  },
+  'certificate.download': {
+    playful: 'Zertifikat herunterladen',
+    focus: 'Als Bild speichern',
+  },
+  'certificate.shareWebUnavailable': {
+    playful:
+      'Download klappt gerade nicht. Teilen geht in der StructAI-App auf dem Handy — im Browser normalerweise per „Zertifikat herunterladen“.',
+    focus:
+      'Download fehlgeschlagen. Native Freigabe ist in der iOS/Android-App verfügbar; im Browser sollte der PNG-Export starten.',
+  },
+  'profile.certificatesSection': {
+    playful: 'Deine Zertifikate',
+    focus: 'Abschlusszertifikate',
+  },
+  'profile.certificatesDescription': {
+    playful: 'Für jeden abgeschlossenen Lernpfad kannst du dein Zertifikat als Bild teilen.',
+    focus: 'Abgeschlossene Lernpfade mit Export als Bild.',
   },
 };

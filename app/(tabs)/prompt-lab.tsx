@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ScoreChart } from '@/components/features';
+import { ModelComparer } from '@/components/features/ModelComparer';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
 import { Badge, Button, Card, PressableScale, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
@@ -19,7 +20,7 @@ import {
   getProviderLabel,
   scorePromptRemote,
 } from '@/lib/aiScoring';
-import { getApiKey } from '@/lib/secureKeyStore';
+import { listApiKeys, type ByokKeyEntry } from '@/lib/secureKeyStore';
 import { scorePrompt, type PromptScore } from '@/lib/promptScoring';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
@@ -37,14 +38,17 @@ const FALLBACK_COPY_KEY: Record<ScoringError['reason'], string> = {
   generic: 'promptLab.fallbackGeneric',
 };
 
+type PromptLabMode = 'score' | 'compare';
+
 export default function PromptLabScreen() {
   const { tokens, t, locale } = useThemeMode();
   const router = useRouter();
+  const [labMode, setLabMode] = useState<PromptLabMode>('score');
   const history = useProgressStore((state) => state.promptScoreHistory);
   const addPromptScore = useProgressStore((state) => state.addPromptScore);
   const [promptInput, setPromptInput] = useState('');
   const [score, setScore] = useState<PromptScore | null>(null);
-  const [storedKey, setStoredKey] = useState<string | null>(null);
+  const [storedKeys, setStoredKeys] = useState<ByokKeyEntry[]>([]);
   const [isScoring, setIsScoring] = useState(false);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
   const [inputFocused, setInputFocused] = useState(false);
@@ -56,15 +60,15 @@ export default function PromptLabScreen() {
     useCallback(() => {
       let cancelled = false;
 
-      getApiKey()
-        .then((key) => {
+      listApiKeys()
+        .then((keys) => {
           if (!cancelled) {
-            setStoredKey(key && key.length > 0 ? key : null);
+            setStoredKeys(keys);
           }
         })
         .catch(() => {
           if (!cancelled) {
-            setStoredKey(null);
+            setStoredKeys([]);
           }
         });
 
@@ -74,7 +78,16 @@ export default function PromptLabScreen() {
     }, []),
   );
 
-  const provider = storedKey ? detectProvider(storedKey) : null;
+  const primaryKey = storedKeys[0]?.key ?? null;
+  const provider = primaryKey ? detectProvider(primaryKey) : null;
+  const liveProviderLabel =
+    storedKeys.length > 1
+      ? storedKeys
+          .map((entry) => getProviderLabel(entry.provider))
+          .join(' + ')
+      : provider
+        ? getProviderLabel(provider)
+        : null;
 
   const handleScore = async () => {
     if (isScoring) {
@@ -89,9 +102,9 @@ export default function PromptLabScreen() {
     // Fallback-Kette: Remote-Bewertung, bei jedem Fehler lokale Heuristik.
     // Ein API-Problem (ungültiger Key, kein Guthaben, offline) darf die App
     // niemals crashen – der Nutzer bekommt immer ein Ergebnis plus Hinweis.
-    if (storedKey) {
+    if (primaryKey) {
       try {
-        result = await scorePromptRemote(promptInput, storedKey);
+        result = await scorePromptRemote(promptInput, primaryKey);
       } catch (error) {
         const reason =
           error instanceof ScoringError ? error.reason : ('generic' as const);
@@ -125,7 +138,28 @@ export default function PromptLabScreen() {
         paddingTop: tokens.spacing.space5,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
-      {storedKey === null ? (
+      <View style={{ flexDirection: 'row', gap: tokens.spacing.space2 }}>
+        <View style={{ flex: 1 }}>
+          <Button
+            label={t('promptLab.modeScore')}
+            onPress={() => setLabMode('score')}
+            variant={labMode === 'score' ? 'primary' : 'ghost'}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            label={t('promptLab.modeCompare')}
+            onPress={() => setLabMode('compare')}
+            variant={labMode === 'compare' ? 'primary' : 'ghost'}
+          />
+        </View>
+      </View>
+
+      {labMode === 'compare' ? (
+        <ModelComparer availableKeys={storedKeys} />
+      ) : (
+        <>
+      {storedKeys.length === 0 ? (
         <PressableScale
           accessibilityRole="button"
           onPress={() => router.push('/profil')}
@@ -164,10 +198,10 @@ export default function PromptLabScreen() {
             </Text>
           </View>
         </PressableScale>
-      ) : provider !== null ? (
+      ) : liveProviderLabel !== null ? (
         <View style={{ alignSelf: 'flex-start' }}>
           <Badge
-            label={t('promptLab.liveBadge', { provider: getProviderLabel(provider) })}
+            label={t('promptLab.liveBadge', { provider: liveProviderLabel })}
             tone="success"
           />
         </View>
@@ -261,9 +295,11 @@ export default function PromptLabScreen() {
         </Text>
 
         <Card variant="solid">
-          <ScoreChart scores={history} />
+          <ScoreChart scores={history.map((entry) => entry.score)} />
         </Card>
       </View>
+        </>
+      )}
     </ScrollView>
   );
 }

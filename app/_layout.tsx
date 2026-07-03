@@ -5,13 +5,14 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import '@/lib/bootstrap';
+import { AuthNavigationController } from '@/components/AuthNavigationController';
+import { AuthProvider } from '@/providers/AuthProvider';
 import { ThemeModeProvider, CelebrationProvider, colors } from '@/theme';
 
 export { ErrorBoundary } from 'expo-router';
 
 export const unstable_settings = {
-  initialRouteName: '(tabs)',
+  initialRouteName: 'index',
 };
 
 SplashScreen.preventAutoHideAsync();
@@ -42,27 +43,23 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeModeProvider>
-      <CelebrationProvider>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: colors.background.base },
-          }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="onboarding/index" />
-          <Stack.Screen name="onboarding/modus" />
-          <Stack.Screen
-            name="dev-preview"
-            options={{
-              headerShown: true,
-              title: 'Dev Preview',
-              headerStyle: { backgroundColor: colors.background.elevated },
-              headerTintColor: colors.text.primary,
-            }}
-          />
-        </Stack>
-      </CelebrationProvider>
-    </ThemeModeProvider>
+    <AuthProvider>
+      <AuthNavigationController />
+      <ThemeModeProvider>
+        <CelebrationProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: colors.background.base },
+            }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="auth/index" />
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="onboarding" />
+            {__DEV__ ? <Stack.Screen name="(dev)" options={{ headerShown: false }} /> : null}
+          </Stack>
+        </CelebrationProvider>
+      </ThemeModeProvider>
+    </AuthProvider>
   );
 }

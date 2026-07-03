@@ -157,6 +157,10 @@ export const copyRu: CopyCatalog = {
     playful: '+{{count}} орбов для тебя!',
     focus: '+{{count}} орбов',
   },
+  'lesson.practiceComplete': {
+    playful: 'Повтор пройден — без дополнительных орбов.',
+    focus: 'Повторено. Дополнительных орбов нет.',
+  },
   'lesson.backToPath': {
     playful: 'Назад к треку',
     focus: 'Назад к треку',
@@ -164,6 +168,22 @@ export const copyRu: CopyCatalog = {
   'lesson.notFound': {
     playful: 'Такого урока пока нет.',
     focus: 'Урок не найден.',
+  },
+  'lesson.retryTitle': {
+    playful: 'Пока не получилось!',
+    focus: 'Порог не достигнут.',
+  },
+  'lesson.retrySummary': {
+    playful: '{{correct}} из {{total}} верно — попробуй ещё!',
+    focus: '{{correct}}/{{total}} верно. Нужно больше 60%.',
+  },
+  'lesson.retryPrimary': {
+    playful: 'Попробовать снова',
+    focus: 'Повторить урок',
+  },
+  'lesson.retrySecondary': {
+    playful: 'Продолжить позже',
+    focus: 'Продолжить позже',
   },
   'profile.statsSection': {
     playful: 'Твои достижения',
@@ -214,8 +234,10 @@ export const copyRu: CopyCatalog = {
     focus: 'API-ключ (BYOK)',
   },
   'profile.byokDescription': {
-    playful: 'Твой API-ключ надежно хранится на устройстве и открывает Промпт-мастерскую.',
-    focus: 'API-ключ хранится локально в зашифрованном виде (Secure Store) и используется только для запросов мастерской.',
+    playful:
+      'Один ключ на провайдера — все остается на устройстве и никогда не синхронизируется.',
+    focus:
+      'Один API-ключ на провайдера, локально в Secure Store. Ключи не синхронизируются.',
   },
   'profile.byokPlaceholder': {
     playful: 'Вставь API-ключ',
@@ -321,6 +343,180 @@ export const copyRu: CopyCatalog = {
     playful: 'Ответ ИИ оказался бесполезным - локальный тренер берет это на себя.',
     focus: 'Ошибка API. Использована локальная оценка.',
   },
+  'promptLab.modeScore': {
+    playful: 'Оценить',
+    focus: 'Оценка',
+  },
+  'promptLab.modeCompare': {
+    playful: 'Сравнить модели',
+    focus: 'Сравнение',
+  },
+  'modelComparer.description': {
+    playful:
+      'Один промпт — несколько моделей параллельно. Листай ответы и сравнивай скорость и стоимость.',
+    focus:
+      'Отправляет один промпт параллельно 2–3 настроенным провайдерам и показывает ответы рядом (горизонтальный скролл).',
+  },
+  'modelComparer.needTwoKeys': {
+    playful: 'Добавь минимум два API-ключа в профиле для сравнения.',
+    focus: 'Нужны минимум два ключа провайдеров в профиле.',
+  },
+  'modelComparer.modelPickerLabel': {
+    playful: 'Выбери модели (2–3)',
+    focus: 'Модели (2–3)',
+  },
+  'modelComparer.modelPickerHint': {
+    playful: 'Минимум две и максимум три модели.',
+    focus: 'Выбор: минимум 2, максимум 3 модели.',
+  },
+  'modelComparer.promptLabel': {
+    playful: 'Твой промпт',
+    focus: 'Промпт',
+  },
+  'modelComparer.promptPlaceholder': {
+    playful: 'Напиши промпт для всех моделей...',
+    focus: 'Промпт для всех выбранных моделей...',
+  },
+  'modelComparer.compareButton': {
+    playful: 'Сравнить параллельно',
+    focus: 'Сравнить',
+  },
+  'modelComparer.comparing': {
+    playful: 'Модели отвечают...',
+    focus: 'Сравнение...',
+  },
+  'modelComparer.resultsTitle': {
+    playful: 'Ответы в сравнении',
+    focus: 'Результаты',
+  },
+  'modelComparer.latencyBadge': {
+    playful: '{{seconds}} с',
+    focus: '{{seconds}} с',
+  },
+  'modelComparer.costBadge': {
+    playful: '≈ {{cost}}',
+    focus: '≈ {{cost}}',
+  },
+  'modelComparer.errorBadge': {
+    playful: 'Ошибка',
+    focus: 'Ошибка',
+  },
+  'modelComparer.errorInvalidKey': {
+    playful: 'Ключ отклонен — проверь его в профиле.',
+    focus: 'Недействительный API-ключ.',
+  },
+  'modelComparer.errorQuota': {
+    playful: 'Квота или баланс исчерпаны.',
+    focus: 'Rate-limit или квота исчерпаны.',
+  },
+  'modelComparer.errorNetwork': {
+    playful: 'Сетевая ошибка или таймаут.',
+    focus: 'Сеть / таймаут.',
+  },
+  'modelComparer.errorGeneric': {
+    playful: 'Эта модель не смогла ответить.',
+    focus: 'Ответ модели не получен.',
+  },
+  'modelComparer.insightMoreExpensiveSlightlyDetailed': {
+    playful: 'В {{costMultiplier}}× дороже, но всего на {{detailPercent}}% подробнее остальных.',
+    focus: 'В {{costMultiplier}}× дороже, лишь на {{detailPercent}}% больше текста.',
+  },
+  'modelComparer.insightMoreExpensiveMuchDetailed': {
+    playful: 'В {{costMultiplier}}× дороже и на {{detailPercent}}% подробнее остальных.',
+    focus: 'В {{costMultiplier}}× дороже, текст на {{detailPercent}}% длиннее.',
+  },
+  'modelComparer.insightMoreExpensiveShorter': {
+    playful: 'В {{costMultiplier}}× дороже, ответ на {{detailPercent}}% короче.',
+    focus: 'В {{costMultiplier}}× дороже, ответ короче на {{detailPercent}}%.',
+  },
+  'modelComparer.insightMoreExpensiveSimilarDetail': {
+    playful: 'В {{costMultiplier}}× дороже при похожей длине ответа.',
+    focus: 'В {{costMultiplier}}× дороже, длина текста близка к средней.',
+  },
+  'modelComparer.insightCheaperMoreDetailed': {
+    playful: 'В {{costMultiplier}}× дешевле и на {{detailPercent}}% подробнее.',
+    focus: 'В {{costMultiplier}}× дешевле, текст на {{detailPercent}}% длиннее.',
+  },
+  'modelComparer.insightCheaperShorter': {
+    playful: 'В {{costMultiplier}}× дешевле, но на {{detailPercent}}% короче.',
+    focus: 'В {{costMultiplier}}× дешевле, ответ короче на {{detailPercent}}%.',
+  },
+  'modelComparer.insightCheaperSimilarDetail': {
+    playful: 'В {{costMultiplier}}× дешевле при похожей длине ответа.',
+    focus: 'В {{costMultiplier}}× дешевле, длина текста близка к средней.',
+  },
+  'modelComparer.insightFaster': {
+    playful: 'В {{speedMultiplier}}× быстрее — стоимость и длина похожи.',
+    focus: 'В {{speedMultiplier}}× быстрее при сопоставимых cost и длине.',
+  },
+  'modelComparer.insightSlower': {
+    playful: 'В {{speedMultiplier}}× медленнее — стоимость и длина похожи.',
+    focus: 'В {{speedMultiplier}}× медленнее при сопоставимых cost и длине.',
+  },
+  'modelComparer.insightSimilar': {
+    playful: 'Стоимость, скорость и длина близки к среднему других моделей.',
+    focus: 'Cost, latency и длина текста близки к среднему других моделей.',
+  },
+  'modelComparer.spendingWarningDaily': {
+    playful: 'Дневной лимит оценочных расходов достигнут (только оценка, без гарантии).',
+    focus: 'Дневной лимит оценочных API-расходов достигнут (локальная оценка).',
+  },
+  'modelComparer.spendingWarningMonthly': {
+    playful: 'Месячный лимит оценочных расходов достигнут (только оценка, без гарантии).',
+    focus: 'Месячный лимит оценочных API-расходов достигнут (локальная оценка).',
+  },
+  'modelComparer.spendingWarningBoth': {
+    playful: 'Дневной и месячный лимит оценочных расходов достигнут (только оценка).',
+    focus: 'Дневной и месячный лимит оценочных расходов достигнут.',
+  },
+  'profile.spendingLimitSection': {
+    playful: 'Лимит расходов',
+    focus: 'Лимит расходов (BYOK)',
+  },
+  'profile.spendingLimitDescription': {
+    playful: 'Задай дневной или месячный лимит оценочных API-расходов — предупредим локально.',
+    focus: 'Опциональный дневной/месячный лимит оценочных BYOK-расходов с локальным предупреждением.',
+  },
+  'profile.spendingLimitDisclaimer': {
+    playful: 'Только грубая оценка на устройстве — не реальный счет, без гарантии.',
+    focus: 'Клиентская оценка без гарантии биллинга; только для ориентира.',
+  },
+  'profile.spendingLimitDailyLabel': {
+    playful: 'Дневной лимит (USD, опционально)',
+    focus: 'Дневной лимит USD (опционально)',
+  },
+  'profile.spendingLimitMonthlyLabel': {
+    playful: 'Месячный лимит (USD, опционально)',
+    focus: 'Месячный лимит USD (опционально)',
+  },
+  'profile.spendingLimitPlaceholder': {
+    playful: 'напр. 1.00',
+    focus: 'напр. 1.00',
+  },
+  'profile.spendingLimitSave': {
+    playful: 'Сохранить лимит',
+    focus: 'Сохранить',
+  },
+  'profile.spendingLimitUsageToday': {
+    playful: 'Сегодня оценочно: {{amount}}',
+    focus: 'Сегодня (оценка): {{amount}}',
+  },
+  'profile.spendingLimitUsageMonth': {
+    playful: 'За месяц оценочно: {{amount}}',
+    focus: 'Месяц (оценка): {{amount}}',
+  },
+  'profile.spendingLimitWarningDaily': {
+    playful: 'Дневной лимит достигнут (оценка)',
+    focus: 'Дневной лимит достигнут (оценка)',
+  },
+  'profile.spendingLimitWarningMonthly': {
+    playful: 'Месячный лимит достигнут (оценка)',
+    focus: 'Месячный лимит достигнут (оценка)',
+  },
+  'profile.spendingLimitWarningBoth': {
+    playful: 'Дневной и месячный лимит достигнут (оценка)',
+    focus: 'Дневной и месячный лимит достигнут (оценка)',
+  },
   'profile.byokChecking': {
     playful: 'Проверяем твой ключ...',
     focus: 'Проверка ключа...',
@@ -336,6 +532,126 @@ export const copyRu: CopyCatalog = {
   'profile.byokUnverifiedBadge': {
     playful: 'Сохранен - еще не проверен',
     focus: 'Сохранен (не проверен)',
+  },
+  'profile.byokTest': {
+    playful: 'Проверить ключ',
+    focus: 'Тест',
+  },
+  'profile.byokConfiguredCount': {
+    playful: '{{count}} провайдеров подключено',
+    focus: '{{count}} провайдеров настроено',
+  },
+  'profile.accountSection': {
+    playful: 'Твой аккаунт',
+    focus: 'Аккаунт',
+  },
+  'profile.accountDescription': {
+    playful: 'Ты вошел в аккаунт. Выход завершит сессию только на этом устройстве.',
+    focus: 'Вы вошли в аккаунт. Выход завершит сессию на этом устройстве.',
+  },
+  'profile.signOut': {
+    playful: 'Выйти',
+    focus: 'Выйти',
+  },
+  'auth.headline': {
+    playful: 'Добро пожаловать в StructAI',
+    focus: 'Вход в StructAI',
+  },
+  'auth.subheadline': {
+    playful: 'Войди, чтобы позже можно было безопасно сохранить прогресс.',
+    focus: 'Войдите, чтобы сохранить прогресс обучения.',
+  },
+  'auth.signInTab': {
+    playful: 'Вход',
+    focus: 'Вход',
+  },
+  'auth.signUpTab': {
+    playful: 'Регистрация',
+    focus: 'Регистрация',
+  },
+  'auth.emailPlaceholder': {
+    playful: 'Электронная почта',
+    focus: 'E-mail',
+  },
+  'auth.passwordPlaceholder': {
+    playful: 'Пароль (мин. 6 символов)',
+    focus: 'Пароль (мин. 6 симв.)',
+  },
+  'auth.signInCta': {
+    playful: 'Войти',
+    focus: 'Войти',
+  },
+  'auth.signInLoading': {
+    playful: 'Вход…',
+    focus: 'Вход…',
+  },
+  'auth.signUpCta': {
+    playful: 'Создать аккаунт',
+    focus: 'Регистрация',
+  },
+  'auth.signUpLoading': {
+    playful: 'Регистрация…',
+    focus: 'Регистрация…',
+  },
+  'auth.signUpHint': {
+    playful: 'После регистрации проверь почту, если нужно подтверждение.',
+    focus: 'Проверьте почту, если требуется подтверждение e-mail.',
+  },
+  'auth.signUpConfirmEmail': {
+    playful: 'Аккаунт создан! Подтверди e-mail, затем войди.',
+    focus: 'Регистрация успешна. Подтвердите e-mail, затем войдите.',
+  },
+  'auth.dividerOr': {
+    playful: 'или',
+    focus: 'или',
+  },
+  'auth.googleCta': {
+    playful: 'Продолжить с Google',
+    focus: 'Войти через Google',
+  },
+  'auth.googleLoading': {
+    playful: 'Вход через Google…',
+    focus: 'Google…',
+  },
+  'auth.errorGeneric': {
+    playful: 'Что-то пошло не так. Попробуй еще раз.',
+    focus: 'Не удалось войти. Попробуйте снова.',
+  },
+  'auth.errorInvalidCredentials': {
+    playful: 'Неверный e-mail или пароль.',
+    focus: 'Неверные учетные данные.',
+  },
+  'auth.errorEmailNotConfirmed': {
+    playful: 'Сначала подтверди e-mail.',
+    focus: 'E-mail еще не подтвержден.',
+  },
+  'auth.errorUserExists': {
+    playful: 'Аккаунт с этим e-mail уже существует.',
+    focus: 'Аккаунт уже существует.',
+  },
+  'auth.errorWeakPassword': {
+    playful: 'Пароль не соответствует требованиям.',
+    focus: 'Пароль не соответствует требованиям.',
+  },
+  'auth.errorNotConfigured': {
+    playful: 'Supabase еще не настроен.',
+    focus: 'Конфигурация Supabase отсутствует.',
+  },
+  'auth.errorOAuthCancelled': {
+    playful: 'Вход через Google отменен.',
+    focus: 'Вход через Google отменен.',
+  },
+  'auth.errorOAuthFailed': {
+    playful: 'Не удалось завершить вход через Google. Проверь redirect URL в Supabase.',
+    focus: 'Ошибка Google. Проверь redirect URL в Supabase.',
+  },
+  'auth.configMissingTitle': {
+    playful: 'Бэкенд еще не подключен',
+    focus: 'Бэкенд не настроен',
+  },
+  'auth.configMissingBody': {
+    playful: 'Укажи EXPO_PUBLIC_SUPABASE_URL и EXPO_PUBLIC_SUPABASE_ANON_KEY в .env.',
+    focus: 'Задайте EXPO_PUBLIC_SUPABASE_URL и EXPO_PUBLIC_SUPABASE_ANON_KEY в .env.',
   },
   'onboarding.welcomeHeadline': {
     playful: 'Освой промптинг как профи',
@@ -416,5 +732,75 @@ export const copyRu: CopyCatalog = {
   'celebration.streakMilestone': {
     playful: 'Полная неделя - серия продолжается!',
     focus: 'Достигнут рубеж в 7 дней.',
+  },
+  'celebration.pathComplete': {
+    playful: 'Путь пройден: {{path}}!',
+    focus: 'Учебный путь завершён: {{path}}.',
+  },
+  'pathCompletion.title': {
+    playful: 'Путь пройден!',
+    focus: 'Учебный путь завершён',
+  },
+  'pathCompletion.subtitle': {
+    playful: 'Ты успешно прошёл все {{total}} глав «{{path}}».',
+    focus: 'Все {{total}} глав «{{path}}» успешно завершены.',
+  },
+  'pathCompletion.certificateHint': {
+    playful: 'Сертификат скоро можно будет получить здесь.',
+    focus: 'Экспорт сертификата будет добавлен здесь (G2).',
+  },
+  'pathCompletion.backToPaths': {
+    playful: 'К учебным путям',
+    focus: 'К обзору путей',
+  },
+  'certificate.badge': {
+    playful: 'Сертификат об окончании',
+    focus: 'Сертификат',
+  },
+  'certificate.awardedTo': {
+    playful: 'Вручено',
+    focus: 'Участник',
+  },
+  'certificate.completedOn': {
+    playful: 'Завершено',
+    focus: 'Дата завершения',
+  },
+  'certificate.brandTagline': {
+    playful: 'Prompt Engineering · Учебный путь',
+    focus: 'StructAI · Завершение пути',
+  },
+  'certificate.share': {
+    playful: 'Поделиться сертификатом',
+    focus: 'Экспорт сертификата',
+  },
+  'certificate.sharing': {
+    playful: 'Подготовка…',
+    focus: 'Экспорт…',
+  },
+  'certificate.shareDialogTitle': {
+    playful: 'Поделиться сертификатом StructAI',
+    focus: 'Поделиться сертификатом StructAI',
+  },
+  'certificate.shareUnavailable': {
+    playful: 'Поделиться сейчас нельзя на этом устройстве.',
+    focus: 'Экспорт сертификата недоступен на этом устройстве.',
+  },
+  'certificate.download': {
+    playful: 'Скачать сертификат',
+    focus: 'Сохранить как изображение',
+  },
+  'certificate.shareWebUnavailable': {
+    playful:
+      'Скачивание не удалось. Поделиться можно в приложении StructAI на телефоне — в браузере нажми «Скачать сертификат».',
+    focus:
+      'Ошибка скачивания. Нативный экспорт — в iOS/Android-приложении; в браузере должен сохраниться PNG.',
+  },
+  'profile.certificatesSection': {
+    playful: 'Твои сертификаты',
+    focus: 'Сертификаты об окончании',
+  },
+  'profile.certificatesDescription': {
+    playful: 'Делись изображением сертификата за каждый завершённый путь.',
+    focus: 'Завершённые пути с экспортом изображения.',
   },
 };

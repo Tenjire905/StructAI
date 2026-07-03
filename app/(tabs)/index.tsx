@@ -9,7 +9,7 @@ import {
   StreakTracker,
 } from '@/components/features';
 import { Avatar } from '@/components/ui';
-import { pathTitleKey } from '@/lib/pathProgress';
+import { computePathProgressBarModel, pathTitleKey } from '@/lib/pathProgress';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
@@ -89,16 +89,24 @@ export default function HomeScreen() {
             {t('paths.emptyActive')}
           </Text>
         ) : (
-          activePaths.map((path) => (
+          activePaths.map((path) => {
+            const progressBar = computePathProgressBarModel(
+              path.id,
+              pathProgress[path.id],
+            );
+
+            return (
             <PathCard
               currentChapter={path.currentChapter}
+              failedSegments={progressBar.failedSegments}
               key={path.id}
               onPress={() => router.push(`/lektion/${path.resumeLessonId}`)}
-              progress={path.progress}
+              progress={progressBar.completedRatio}
               title={t(path.titleKey)}
               totalChapters={path.totalChapters}
             />
-          ))
+            );
+          })
         )}
       </View>
     </ScrollView>

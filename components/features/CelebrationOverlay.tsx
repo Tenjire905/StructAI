@@ -13,12 +13,17 @@ import Animated, {
 
 import { useThemeMode } from '@/theme';
 
-export type CelebrationType = 'orb_gain' | 'streak_milestone' | 'lesson_complete';
+export type CelebrationType =
+  | 'orb_gain'
+  | 'streak_milestone'
+  | 'lesson_complete'
+  | 'path_complete';
 
 export type CelebrationOverlayEvent = {
   id: string;
   type: CelebrationType;
   orbCount?: number;
+  pathTitleKey?: string;
 };
 
 type CelebrationOverlayProps = {
@@ -45,8 +50,8 @@ type ConfettiParticle = {
   drift: number;
 };
 
-function createParticles(width: number): ConfettiParticle[] {
-  return Array.from({ length: CONFETTI_COUNT }, (_, index) => ({
+function createParticles(width: number, count: number): ConfettiParticle[] {
+  return Array.from({ length: count }, (_, index) => ({
     id: index,
     left: Math.random() * width,
     delay: Math.random() * 120,
@@ -120,8 +125,19 @@ function ConfettiParticleView({
   );
 }
 
-function PlayfulConfetti({ height, width }: { height: number; width: number }) {
-  const particles = useMemo(() => createParticles(width), [width]);
+function PlayfulConfetti({
+  height,
+  width,
+  particleCount,
+}: {
+  height: number;
+  width: number;
+  particleCount: number;
+}) {
+  const particles = useMemo(
+    () => createParticles(width, particleCount),
+    [particleCount, width],
+  );
 
   return (
     <View pointerEvents="none" style={StyleSheet.absoluteFill}>
@@ -132,14 +148,18 @@ function PlayfulConfetti({ height, width }: { height: number; width: number }) {
   );
 }
 
-function FocusPulse() {
+function FocusPulse({ celebrationType }: { celebrationType: CelebrationType }) {
   const { tokens } = useThemeMode();
   const pulseOpacity = useSharedValue(0);
 
   useEffect(() => {
-    const half = tokens.motion.duration.celebration / 2;
+    const duration = getCelebrationDurationMs(
+      celebrationType,
+      tokens.motion.duration.celebration,
+    );
+    const half = duration / 2;
     pulseOpacity.value = withSequence(
-      withTiming(0.18, {
+      withTiming(celebrationType === 'path_complete' ? 0.28 : 0.18, {
         duration: half,
         easing: Easing.out(Easing.quad),
       }),
@@ -148,7 +168,7 @@ function FocusPulse() {
         easing: Easing.in(Easing.quad),
       }),
     );
-  }, [pulseOpacity, tokens.motion.duration.celebration]);
+  }, [celebrationType, pulseOpacity, tokens.motion.duration.celebration]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: pulseOpacity.value,
@@ -174,7 +194,20 @@ function getCelebrationCopyKey(type: CelebrationType): string {
       return 'celebration.streakMilestone';
     case 'lesson_complete':
       return 'celebration.lessonComplete';
+    case 'path_complete':
+      return 'celebration.pathComplete';
   }
+}
+
+function getCelebrationDurationMs(
+  type: CelebrationType,
+  defaultDuration: number,
+): number {
+  return type === 'path_complete' ? defaultDuration * 2 : defaultDuration;
+}
+
+function getConfettiCount(type: CelebrationType): number {
+  return type === 'path_complete' ? CONFETTI_COUNT * 2 : CONFETTI_COUNT;
 }
 
 export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps) {
@@ -206,7 +239,7 @@ export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps
       contentOpacity.value = withTiming(0, { duration: tokens.motion.duration.fast }, () => {
         runOnJS(onDismiss)();
       });
-    }, tokens.motion.duration.celebration);
+    }, getCelebrationDurationMs(event.type, tokens.motion.duration.celebration));
 
     return () => {
       clearTimeout(dismissTimer);
@@ -233,17 +266,21 @@ export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps
 
   const copyKey = getCelebrationCopyKey(event.type);
   const label =
-    event.type === 'orb_gain' && event.orbCount !== undefined
-      ? t(copyKey, { count: event.orbCount })
-      : t(copyKey);
+    event.type === 'path_complete' && event.pathTitleKey
+      ? t(copyKey, { path: t(event.pathTitleKey) })
+      : event.type === 'orb_gain' && event.orbCount !== undefined
+        ? t(copyKey, { count: event.orbCount })
+        : t(copyKey);
+
+  const confettiCount = getConfettiCount(event.type);
 
   return (
     <Modal animationType="none" transparent visible={visible}>
       <View pointerEvents="none" style={styles.overlay}>
         {tokens.presentation.confettiEnabled ? (
-          <PlayfulConfetti height={height} width={width} />
+          <PlayfulConfetti height={height} particleCount={confettiCount} width={width} />
         ) : (
-          <FocusPulse />
+          <FocusPulse celebrationType={event.type} />
         )}
 
         <Animated.View style={[contentStyle, styles.messageWrap]}>
@@ -251,7 +288,10 @@ export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps
             style={{
               color: tokens.colors.text.primary,
               fontFamily: tokens.typography.fontFamily.display,
-              fontSize: tokens.typography.fontSize.headingLg,
+              fontSize:
+                event.type === 'path_complete'
+                  ? tokens.typography.fontSize.displayLg
+                  : tokens.typography.fontSize.headingLg,
               textAlign: 'center',
             }}>
             {label}
