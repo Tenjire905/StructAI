@@ -12,6 +12,7 @@ import { OrbCompanion } from '@/components/features';
 import { PathCompletionView } from '@/components/features/PathCompletionView';
 import {
   ChoiceStepView,
+  ErrorFindingStepView,
   FillBlankStepView,
   MatchingStepView,
   ReorderStepView,
@@ -69,6 +70,8 @@ export default function LektionScreen() {
   const [reorderIndices, setReorderIndices] = useState<number[]>([]);
   const [selectedTermIndex, setSelectedTermIndex] = useState<number | null>(null);
   const [matchingPairs, setMatchingPairs] = useState<Record<number, number>>({});
+  const [errorFindingSelectedIndex, setErrorFindingSelectedIndex] = useState<number | null>(null);
+  const [errorFindingWrongIndices, setErrorFindingWrongIndices] = useState<number[]>([]);
   const [isChecked, setIsChecked] = useState(false);
   const [lessonOutcome, setLessonOutcome] = useState<LessonOutcome>('active');
   const [earnedOrbs, setEarnedOrbs] = useState(0);
@@ -162,6 +165,10 @@ export default function LektionScreen() {
             gradedStep.definitionOrder[matchingPairs[termIndex]] === termIndex,
         );
       case 'error_finding':
+        return (
+          errorFindingSelectedIndex !== null &&
+          gradedStep.textSegments[errorFindingSelectedIndex]?.isError === true
+        );
       case 'categorize':
         return false;
     }
@@ -173,6 +180,8 @@ export default function LektionScreen() {
     setReorderIndices([]);
     setSelectedTermIndex(null);
     setMatchingPairs({});
+    setErrorFindingSelectedIndex(null);
+    setErrorFindingWrongIndices([]);
     setIsChecked(false);
   };
 
@@ -204,6 +213,7 @@ export default function LektionScreen() {
       case 'matching':
         return Object.keys(matchingPairs).length === gradedStep.pairs.length;
       case 'error_finding':
+        return errorFindingSelectedIndex !== null;
       case 'categorize':
         return false;
     }
@@ -222,11 +232,13 @@ export default function LektionScreen() {
     }
 
     if (!isChecked) {
-      setIsChecked(true);
-      setStepAttempts((previous) => ({
-        ...previous,
-        [stepIndex]: (previous[stepIndex] ?? 0) + 1,
-      }));
+      if (step.type !== 'error_finding') {
+        setIsChecked(true);
+        setStepAttempts((previous) => ({
+          ...previous,
+          [stepIndex]: (previous[stepIndex] ?? 0) + 1,
+        }));
+      }
       return;
     }
 
@@ -257,6 +269,8 @@ export default function LektionScreen() {
     setReorderIndices([]);
     setSelectedTermIndex(null);
     setMatchingPairs({});
+    setErrorFindingSelectedIndex(null);
+    setErrorFindingWrongIndices([]);
     setIsChecked(false);
     setEarnedOrbs(0);
     setFailureStats({ correctCount: 0, gradedCount: 0 });
@@ -320,6 +334,29 @@ export default function LektionScreen() {
       [selectedTermIndex]: displayIndex,
     }));
     setSelectedTermIndex(null);
+  };
+
+  const handleSelectErrorFindingSegment = (segmentIndex: number) => {
+    if (step.type !== 'error_finding' || isChecked) {
+      return;
+    }
+
+    const segment = step.textSegments[segmentIndex];
+
+    setStepAttempts((previous) => ({
+      ...previous,
+      [stepIndex]: (previous[stepIndex] ?? 0) + 1,
+    }));
+
+    if (segment?.isError) {
+      setErrorFindingSelectedIndex(segmentIndex);
+      setIsChecked(true);
+      return;
+    }
+
+    setErrorFindingWrongIndices((previous) =>
+      previous.includes(segmentIndex) ? previous : [...previous, segmentIndex],
+    );
   };
 
   const primaryLabel = gradedStep && !isChecked ? t('lesson.check') : t('lesson.next');
@@ -467,6 +504,16 @@ export default function LektionScreen() {
               onSelectTerm={handleSelectMatchingTerm}
               selectedTermIndex={selectedTermIndex}
               step={step}
+            />
+          ) : null}
+
+          {step.type === 'error_finding' ? (
+            <ErrorFindingStepView
+              isChecked={isChecked}
+              onSelectSegment={handleSelectErrorFindingSegment}
+              selectedIndex={errorFindingSelectedIndex}
+              step={step}
+              wrongIndices={errorFindingWrongIndices}
             />
           ) : null}
 

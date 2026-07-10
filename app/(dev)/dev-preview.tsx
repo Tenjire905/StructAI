@@ -8,10 +8,10 @@ import {
   StatBlock,
   StreakTracker,
 } from '@/components/features';
-import { MatchingStepView } from '@/components/features/lesson-steps';
+import { ErrorFindingStepView, MatchingStepView } from '@/components/features/lesson-steps';
 import { Avatar, Badge, Button, Card, ProgressBar } from '@/components/ui';
 import type { OrbCompanionState } from '@/hooks/useOrbCompanionState';
-import type { ResolvedMatchingStep } from '@/data/mockLessons';
+import type { ResolvedErrorFindingStep, ResolvedMatchingStep } from '@/data/mockLessons';
 import { ThemeModeScope, useThemeMode, type ThemeMode } from '@/theme';
 
 const MATCHING_PREVIEW_STEP: ResolvedMatchingStep = {
@@ -25,6 +25,21 @@ const MATCHING_PREVIEW_STEP: ResolvedMatchingStep = {
   ],
   definitionOrder: [2, 0, 3, 1],
   explanation: 'Jeder Begriff hat genau eine passende Definition.',
+};
+
+const ERROR_FINDING_PREVIEW_STEP: ResolvedErrorFindingStep = {
+  type: 'error_finding',
+  instruction: 'Finde das Wort, das diesen Prompt unnötig vage macht.',
+  textSegments: [
+    { text: 'Schreibe ', isError: false },
+    { text: 'irgendwie ', isError: true },
+    { text: 'einen ', isError: false },
+    { text: 'guten ', isError: false },
+    { text: 'Prompt ', isError: false },
+    { text: 'über ', isError: false },
+    { text: 'KI.', isError: false },
+  ],
+  explanation: 'Vage Wörter wie „irgendwie“ liefern keine klare Anweisung.',
 };
 
 const COMPANION_STATES: OrbCompanionState[] = [
@@ -80,6 +95,69 @@ function MatchingStepDevSection() {
         <MatchingStepPreviewPanel testId="matching-preview-focus" />
       </ThemeModeScope>
     </View>
+  );
+}
+
+function ErrorFindingStepPreviewPanel({ testId }: { testId: string }) {
+  const { tokens } = useThemeMode();
+
+  return (
+    <View
+      nativeID={testId}
+      style={{
+        backgroundColor: tokens.colors.background.base,
+        gap: tokens.spacing.space2,
+        padding: tokens.spacing.space3,
+      }}
+      testID={testId}>
+      <ErrorFindingStepView
+        isChecked={false}
+        onSelectSegment={() => undefined}
+        selectedIndex={null}
+        step={ERROR_FINDING_PREVIEW_STEP}
+        wrongIndices={[1]}
+      />
+    </View>
+  );
+}
+
+function ErrorFindingStepDevSection() {
+  const { tokens } = useThemeMode();
+
+  return (
+    <View style={{ gap: tokens.spacing.space4 }}>
+      <Text
+        style={{
+          color: tokens.colors.text.primary,
+          fontFamily: tokens.typography.fontFamily.heading,
+          fontSize: tokens.typography.fontSize.headingMd,
+        }}>
+        ErrorFindingStepView
+      </Text>
+      <ThemeModeScope mode="playful">
+        <ErrorFindingStepPreviewPanel testId="error-finding-preview-playful" />
+      </ThemeModeScope>
+      <ThemeModeScope mode="focus">
+        <ErrorFindingStepPreviewPanel testId="error-finding-preview-focus" />
+      </ThemeModeScope>
+    </View>
+  );
+}
+
+function ErrorFindingOnlyPreview({ mode }: { mode: ThemeMode }) {
+  const { tokens } = useThemeMode();
+  const testId =
+    mode === 'focus' ? 'error-finding-preview-focus' : 'error-finding-preview-playful';
+
+  return (
+    <ScrollView
+      contentContainerStyle={{
+        padding: tokens.spacing.screenPadding,
+        paddingBottom: tokens.spacing.space7,
+      }}
+      style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
+      <ErrorFindingStepPreviewPanel testId={testId} />
+    </ScrollView>
   );
 }
 
@@ -258,6 +336,14 @@ export default function DevPreviewScreen() {
     );
   }
 
+  if (view === 'error-finding') {
+    return (
+      <ThemeModeScope mode={previewMode}>
+        <ErrorFindingOnlyPreview mode={previewMode} />
+      </ThemeModeScope>
+    );
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -289,6 +375,7 @@ export default function DevPreviewScreen() {
       </View>
 
       <MatchingStepDevSection />
+      <ErrorFindingStepDevSection />
     </ScrollView>
   );
 }

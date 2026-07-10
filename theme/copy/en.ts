@@ -145,6 +145,10 @@ export const copyEn: CopyCatalog = {
     playful: 'Tap a term on the left, then its definition on the right.',
     focus: 'Select a term, then match its definition.',
   },
+  'lesson.errorFindingInstruction': {
+    playful: 'Tap the word that causes the problem.',
+    focus: 'Tap the problematic segment.',
+  },
   'lesson.perfectBonus': {
     playful: 'Perfect! Bonus Orbs unlocked.',
     focus: 'Perfect. Bonus granted.',

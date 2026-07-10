@@ -145,6 +145,10 @@ export const copyFr: CopyCatalog = {
     playful: 'Touche un terme a gauche, puis sa definition a droite.',
     focus: 'Choisir un terme, puis associer la definition.',
   },
+  'lesson.errorFindingInstruction': {
+    playful: 'Touche le mot qui cause le probleme.',
+    focus: 'Toucher le segment problematique.',
+  },
   'lesson.perfectBonus': {
     playful: 'Parfait ! Bonus d Orbs debloque.',
     focus: 'Parfait. Bonus obtenu.',
