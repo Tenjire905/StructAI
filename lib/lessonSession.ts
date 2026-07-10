@@ -209,8 +209,8 @@ export function prepareLessonSteps(
   reorderHint: string,
   sessionNonce: string | number = Date.now(),
 ): ResolvedLessonStep[] {
-  // Dev smoke lesson: keep authored step types and order (no choice-variant morph).
-  if (lessonId === 'dev-j-mixed') {
+  // Dev smoke lessons: keep authored step types and order (no choice-variant morph).
+  if (lessonId === 'dev-j-mixed' || lessonId === 'dev-j-new-types') {
     return steps;
   }
 
