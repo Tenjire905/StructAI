@@ -13,6 +13,7 @@ import { PathCompletionView } from '@/components/features/PathCompletionView';
 import {
   ChoiceStepView,
   FillBlankStepView,
+  MatchingStepView,
   ReorderStepView,
   RetryPromptView,
   TrueFalseStepView,
@@ -66,6 +67,8 @@ export default function LektionScreen() {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [selectedTrueFalse, setSelectedTrueFalse] = useState<boolean | null>(null);
   const [reorderIndices, setReorderIndices] = useState<number[]>([]);
+  const [selectedTermIndex, setSelectedTermIndex] = useState<number | null>(null);
+  const [matchingPairs, setMatchingPairs] = useState<Record<number, number>>({});
   const [isChecked, setIsChecked] = useState(false);
   const [lessonOutcome, setLessonOutcome] = useState<LessonOutcome>('active');
   const [earnedOrbs, setEarnedOrbs] = useState(0);
@@ -153,6 +156,11 @@ export default function LektionScreen() {
           (value, index) => value === gradedStep.correctOrder[index],
         );
       case 'matching':
+        return gradedStep.pairs.every(
+          (_, termIndex) =>
+            matchingPairs[termIndex] !== undefined &&
+            gradedStep.definitionOrder[matchingPairs[termIndex]] === termIndex,
+        );
       case 'error_finding':
       case 'categorize':
         return false;
@@ -163,6 +171,8 @@ export default function LektionScreen() {
     setSelectedOption(null);
     setSelectedTrueFalse(null);
     setReorderIndices([]);
+    setSelectedTermIndex(null);
+    setMatchingPairs({});
     setIsChecked(false);
   };
 
@@ -192,6 +202,7 @@ export default function LektionScreen() {
       case 'reorder':
         return reorderIndices.length === gradedStep.items.length;
       case 'matching':
+        return Object.keys(matchingPairs).length === gradedStep.pairs.length;
       case 'error_finding':
       case 'categorize':
         return false;
@@ -244,6 +255,8 @@ export default function LektionScreen() {
     setSelectedOption(null);
     setSelectedTrueFalse(null);
     setReorderIndices([]);
+    setSelectedTermIndex(null);
+    setMatchingPairs({});
     setIsChecked(false);
     setEarnedOrbs(0);
     setFailureStats({ correctCount: 0, gradedCount: 0 });
@@ -283,6 +296,30 @@ export default function LektionScreen() {
     const { correctCount, gradedCount } = computeLessonPassRatio(results);
     setFailureStats({ correctCount, gradedCount });
     setLessonOutcome('failed');
+  };
+
+  const handleSelectMatchingTerm = (termIndex: number) => {
+    if (matchingPairs[termIndex] !== undefined) {
+      const next = { ...matchingPairs };
+      delete next[termIndex];
+      setMatchingPairs(next);
+      setSelectedTermIndex(null);
+      return;
+    }
+
+    setSelectedTermIndex((current) => (current === termIndex ? null : termIndex));
+  };
+
+  const handleSelectMatchingDefinition = (displayIndex: number) => {
+    if (selectedTermIndex === null) {
+      return;
+    }
+
+    setMatchingPairs((previous) => ({
+      ...previous,
+      [selectedTermIndex]: displayIndex,
+    }));
+    setSelectedTermIndex(null);
   };
 
   const primaryLabel = gradedStep && !isChecked ? t('lesson.check') : t('lesson.next');
@@ -418,6 +455,17 @@ export default function LektionScreen() {
               isChecked={isChecked}
               onChange={setReorderIndices}
               order={reorderIndices}
+              step={step}
+            />
+          ) : null}
+
+          {step.type === 'matching' ? (
+            <MatchingStepView
+              isChecked={isChecked}
+              matches={matchingPairs}
+              onSelectDefinition={handleSelectMatchingDefinition}
+              onSelectTerm={handleSelectMatchingTerm}
+              selectedTermIndex={selectedTermIndex}
               step={step}
             />
           ) : null}

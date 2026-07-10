@@ -113,6 +113,18 @@ export const copyEn: CopyCatalog = {
     playful: 'Order challenge',
     focus: 'Reorder',
   },
+  'lesson.typeMatching': {
+    playful: 'Match pairs',
+    focus: 'Matching',
+  },
+  'lesson.typeErrorFinding': {
+    playful: 'Find the error',
+    focus: 'Error spot',
+  },
+  'lesson.typeCategorize': {
+    playful: 'Categories',
+    focus: 'Categorize',
+  },
   'lesson.fillBlankInstruction': {
     playful: 'Fill the blank with the best fitting term.',
     focus: 'Fill in the blank correctly.',
@@ -128,6 +140,10 @@ export const copyEn: CopyCatalog = {
   'lesson.reorderHint': {
     playful: 'Put the steps into the right order.',
     focus: 'Arrange items in the correct order.',
+  },
+  'lesson.matchingInstruction': {
+    playful: 'Tap a term on the left, then its definition on the right.',
+    focus: 'Select a term, then match its definition.',
   },
   'lesson.perfectBonus': {
     playful: 'Perfect! Bonus Orbs unlocked.',

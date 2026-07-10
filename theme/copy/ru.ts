@@ -113,6 +113,18 @@ export const copyRu: CopyCatalog = {
     playful: 'Порядок шагов',
     focus: 'Порядок',
   },
+  'lesson.typeMatching': {
+    playful: 'Сопоставить',
+    focus: 'Сопоставление',
+  },
+  'lesson.typeErrorFinding': {
+    playful: 'Найти ошибку',
+    focus: 'Ошибка',
+  },
+  'lesson.typeCategorize': {
+    playful: 'Категории',
+    focus: 'Классификация',
+  },
   'lesson.fillBlankInstruction': {
     playful: 'Заполни пропуск подходящим словом.',
     focus: 'Заполните пропуск корректно.',
@@ -128,6 +140,10 @@ export const copyRu: CopyCatalog = {
   'lesson.reorderHint': {
     playful: 'Расставь шаги в правильном порядке.',
     focus: 'Расположите элементы по порядку.',
+  },
+  'lesson.matchingInstruction': {
+    playful: 'Нажми термин слева, затем подходящее определение справа.',
+    focus: 'Выберите термин, затем сопоставьте определение.',
   },
   'lesson.perfectBonus': {
     playful: 'Идеально! Бонус-орбы твои.',

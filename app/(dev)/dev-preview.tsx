@@ -1,4 +1,5 @@
 import { ScrollView, Text, View } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 
 import {
   OrbCompanion,
@@ -7,9 +8,24 @@ import {
   StatBlock,
   StreakTracker,
 } from '@/components/features';
+import { MatchingStepView } from '@/components/features/lesson-steps';
 import { Avatar, Badge, Button, Card, ProgressBar } from '@/components/ui';
 import type { OrbCompanionState } from '@/hooks/useOrbCompanionState';
-import { ThemeModeScope, useThemeMode } from '@/theme';
+import type { ResolvedMatchingStep } from '@/data/mockLessons';
+import { ThemeModeScope, useThemeMode, type ThemeMode } from '@/theme';
+
+const MATCHING_PREVIEW_STEP: ResolvedMatchingStep = {
+  type: 'matching',
+  instruction: 'Ordne jeden Begriff der richtigen Definition zu.',
+  pairs: [
+    { term: 'Prompt', definition: 'Eingabe an ein KI-Modell' },
+    { term: 'Token', definition: 'Kleinste Texteinheit' },
+    { term: 'Kontext', definition: 'Vorheriger Gesprächsverlauf' },
+    { term: 'Halluzination', definition: 'Erfundene Modell-Antwort' },
+  ],
+  definitionOrder: [2, 0, 3, 1],
+  explanation: 'Jeder Begriff hat genau eine passende Definition.',
+};
 
 const COMPANION_STATES: OrbCompanionState[] = [
   'idle',
@@ -20,6 +36,73 @@ const COMPANION_STATES: OrbCompanionState[] = [
   'sleepy',
 ];
 
+function MatchingStepPreviewPanel({ testId }: { testId: string }) {
+  const { tokens } = useThemeMode();
+
+  return (
+    <View
+      nativeID={testId}
+      style={{
+        backgroundColor: tokens.colors.background.base,
+        gap: tokens.spacing.space2,
+        padding: tokens.spacing.space3,
+      }}
+      testID={testId}>
+      <MatchingStepView
+        isChecked={false}
+        matches={{ 0: 1, 2: 0 }}
+        onSelectDefinition={() => undefined}
+        onSelectTerm={() => undefined}
+        selectedTermIndex={3}
+        step={MATCHING_PREVIEW_STEP}
+      />
+    </View>
+  );
+}
+
+function MatchingStepDevSection() {
+  const { tokens } = useThemeMode();
+
+  return (
+    <View style={{ gap: tokens.spacing.space4 }}>
+      <Text
+        style={{
+          color: tokens.colors.text.primary,
+          fontFamily: tokens.typography.fontFamily.heading,
+          fontSize: tokens.typography.fontSize.headingMd,
+        }}>
+        MatchingStepView
+      </Text>
+      <ThemeModeScope mode="playful">
+        <MatchingStepPreviewPanel testId="matching-preview-playful" />
+      </ThemeModeScope>
+      <ThemeModeScope mode="focus">
+        <MatchingStepPreviewPanel testId="matching-preview-focus" />
+      </ThemeModeScope>
+    </View>
+  );
+}
+
+function parseMode(value: string | string[] | undefined): ThemeMode {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return raw === 'focus' ? 'focus' : 'playful';
+}
+
+function MatchingOnlyPreview({ mode }: { mode: ThemeMode }) {
+  const { tokens } = useThemeMode();
+  const testId = mode === 'focus' ? 'matching-preview-focus' : 'matching-preview-playful';
+
+  return (
+    <ScrollView
+      contentContainerStyle={{
+        padding: tokens.spacing.screenPadding,
+        paddingBottom: tokens.spacing.space7,
+      }}
+      style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
+      <MatchingStepPreviewPanel testId={testId} />
+    </ScrollView>
+  );
+}
 function CompanionStatesPreview() {
   const { tokens } = useThemeMode();
 
@@ -163,7 +246,17 @@ function ModePreviewPanel({ modeLabel }: { modeLabel: 'Playful' | 'Focus' }) {
 }
 
 export default function DevPreviewScreen() {
+  const { view, mode } = useLocalSearchParams<{ view?: string; mode?: string }>();
+  const previewMode = parseMode(mode);
   const { tokens } = useThemeMode();
+
+  if (view === 'matching') {
+    return (
+      <ThemeModeScope mode={previewMode}>
+        <MatchingOnlyPreview mode={previewMode} />
+      </ThemeModeScope>
+    );
+  }
 
   return (
     <ScrollView
@@ -194,6 +287,8 @@ export default function DevPreviewScreen() {
         <ModePreviewPanel modeLabel="Playful" />
         <ModePreviewPanel modeLabel="Focus" />
       </View>
+
+      <MatchingStepDevSection />
     </ScrollView>
   );
 }
