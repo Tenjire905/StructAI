@@ -379,6 +379,22 @@ export const copyRu: CopyCatalog = {
     playful: 'Сравнить модели',
     focus: 'Сравнение',
   },
+  'promptLab.detailHintsTitle': {
+    playful: 'Конкретные идеи для улучшения',
+    focus: 'Конкретные подсказки',
+  },
+  'promptLab.comparisonTitle': {
+    playful: '+{{delta}} баллов — вот что улучшилось',
+    focus: '+{{delta}} баллов по сравнению с предыдущим черновиком',
+  },
+  'promptLab.demoWeakExample': {
+    playful: 'Загрузить слабый пример',
+    focus: 'Слабый пример',
+  },
+  'promptLab.demoImprovedExample': {
+    playful: 'Загрузить улучшенную версию',
+    focus: 'Улучшенная версия',
+  },
   'modelComparer.description': {
     playful:
       'Один промпт — несколько моделей параллельно. Листай ответы и сравнивай скорость и стоимость.',

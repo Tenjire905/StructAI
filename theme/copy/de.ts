@@ -379,6 +379,22 @@ export const copyDe: CopyCatalog = {
     playful: 'Modelle vergleichen',
     focus: 'Modellvergleich',
   },
+  'promptLab.detailHintsTitle': {
+    playful: 'Konkrete Verbesserungsideen',
+    focus: 'Konkrete Hinweise',
+  },
+  'promptLab.comparisonTitle': {
+    playful: '+{{delta}} Punkte – das hat sich verbessert',
+    focus: '+{{delta}} Punkte gegenüber dem vorherigen Entwurf',
+  },
+  'promptLab.demoWeakExample': {
+    playful: 'Schwaches Beispiel laden',
+    focus: 'Schwaches Beispiel',
+  },
+  'promptLab.demoImprovedExample': {
+    playful: 'Verbesserte Version laden',
+    focus: 'Verbesserte Version',
+  },
   'modelComparer.description': {
     playful:
       'Ein Prompt, mehrere Modelle parallel — swipe durch die Antworten und vergleiche Tempo und Kosten.',
