@@ -209,6 +209,11 @@ export function prepareLessonSteps(
   reorderHint: string,
   sessionNonce: string | number = Date.now(),
 ): ResolvedLessonStep[] {
+  // Dev smoke lesson: keep authored step types and order (no choice-variant morph).
+  if (lessonId === 'dev-j-mixed') {
+    return steps;
+  }
+
   const seed = hashSeed(`${lessonId}-${sessionNonce}`);
 
   return steps.map((step, stepIndex) => {

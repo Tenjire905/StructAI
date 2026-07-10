@@ -49,9 +49,7 @@ function stepKind(step: GradedStep): LessonAnswerResult['kind'] {
 
 type LessonOutcome = 'active' | 'passed' | 'path_complete' | 'failed';
 
-export default function LektionScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const lessonId = id ?? '';
+export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   const { tokens, t, locale } = useThemeMode();
   const router = useRouter();
   const pathProgress = useProgressStore((state) => state.pathProgress);
@@ -756,4 +754,10 @@ function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
       />
     </View>
   );
+}
+
+export default function LektionScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+
+  return <LessonSessionScreen lessonId={id ?? ''} />;
 }

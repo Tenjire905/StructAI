@@ -1,4 +1,5 @@
 import { getLessonText } from '@/data/lessonContent';
+import { getDevBlockJMixedLesson } from '@/data/devBlockJMixedLesson';
 import {
   getAllMockLessonCatalogIds,
   getMockLessonCatalog,
@@ -232,6 +233,10 @@ export function resolveCatalogLesson(
 }
 
 export function getMockLesson(id: string, locale: Locale): ResolvedLesson | undefined {
+  if (__DEV__ && id === 'dev-j-mixed') {
+    return getDevBlockJMixedLesson();
+  }
+
   const catalog = getMockLessonCatalog(id);
 
   if (!catalog) {
