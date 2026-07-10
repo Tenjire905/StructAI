@@ -597,6 +597,14 @@ export const copyFr: CopyCatalog = {
     playful: 'Se deconnecter',
     focus: 'Se deconnecter',
   },
+  'profile.privacySection': {
+    playful: 'Confidentialite et usage',
+    focus: 'Confidentialite',
+  },
+  'profile.analyticsDisclosure': {
+    playful: 'StructAI enregistre cinq evenements d usage auto-heberges. Ceux des invites restent anonymes ; apres connexion, ils sont lies au compte. Les prompts et cles API ne sont jamais inclus.',
+    focus: 'Cinq evenements d usage auto-heberges mesurent le parcours d activation. Les evenements invites sont anonymes ; ceux des comptes incluent l identifiant utilisateur. Aucun prompt ni cle API n est collecte.',
+  },
   'profile.guestDisplayName': {
     playful: 'Invite',
     focus: 'Invite',

@@ -14,6 +14,7 @@ import { ModelComparer } from '@/components/features/ModelComparer';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
 import { Badge, Button, Card, PressableScale, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
+import { trackEvent } from '@/lib/analytics';
 import {
   ScoringError,
   detectProvider,
@@ -99,6 +100,11 @@ export default function PromptLabScreen() {
       : provider
         ? getProviderLabel(provider)
         : null;
+
+  const handleDemoPromptViewed = (demoPrompt: string) => {
+    setPromptInput(demoPrompt);
+    trackEvent('guest_demo_prompt_viewed');
+  };
 
   const handleScore = async () => {
     if (isScoring) {
@@ -282,12 +288,12 @@ export default function PromptLabScreen() {
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.space2 }}>
             <Button
               label={t('promptLab.demoWeakExample')}
-              onPress={() => setPromptInput(DEMO_WEAK_PROMPT)}
+              onPress={() => handleDemoPromptViewed(DEMO_WEAK_PROMPT)}
               variant="ghost"
             />
             <Button
               label={t('promptLab.demoImprovedExample')}
-              onPress={() => setPromptInput(buildDemoImprovedPrompt(locale))}
+              onPress={() => handleDemoPromptViewed(buildDemoImprovedPrompt(locale))}
               variant="ghost"
             />
           </View>

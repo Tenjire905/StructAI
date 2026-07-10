@@ -8,6 +8,7 @@ import {
   validateApiKey,
   type AiProvider,
 } from '@/lib/aiScoring';
+import { trackEvent } from '@/lib/analytics';
 import {
   BYOK_PROVIDERS,
   listApiKeys,
@@ -134,6 +135,7 @@ export function ByokKeysManager() {
       }
 
       await upsertApiKey({ provider, key: trimmedKey });
+      trackEvent('byok_key_added_success');
       setInputByProvider((current) => ({ ...current, [provider]: '' }));
       await refreshEntries();
     } catch (error) {
