@@ -11,8 +11,11 @@ import Animated, {
 import { OrbCompanion } from '@/components/features';
 import { PathCompletionView } from '@/components/features/PathCompletionView';
 import {
+  CategorizeStepView,
   ChoiceStepView,
+  ErrorFindingStepView,
   FillBlankStepView,
+  MatchingStepView,
   ReorderStepView,
   RetryPromptView,
   TrueFalseStepView,
@@ -46,9 +49,7 @@ function stepKind(step: GradedStep): LessonAnswerResult['kind'] {
 
 type LessonOutcome = 'active' | 'passed' | 'path_complete' | 'failed';
 
-export default function LektionScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const lessonId = id ?? '';
+export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   const { tokens, t, locale } = useThemeMode();
   const router = useRouter();
   const pathProgress = useProgressStore((state) => state.pathProgress);
@@ -66,6 +67,14 @@ export default function LektionScreen() {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [selectedTrueFalse, setSelectedTrueFalse] = useState<boolean | null>(null);
   const [reorderIndices, setReorderIndices] = useState<number[]>([]);
+  const [selectedTermIndex, setSelectedTermIndex] = useState<number | null>(null);
+  const [matchingPairs, setMatchingPairs] = useState<Record<number, number>>({});
+  const [errorFindingSelectedIndex, setErrorFindingSelectedIndex] = useState<number | null>(null);
+  const [errorFindingWrongIndices, setErrorFindingWrongIndices] = useState<number[]>([]);
+  const [selectedCategorizeItemIndex, setSelectedCategorizeItemIndex] = useState<number | null>(
+    null,
+  );
+  const [categorizeAssignments, setCategorizeAssignments] = useState<Record<number, number>>({});
   const [isChecked, setIsChecked] = useState(false);
   const [lessonOutcome, setLessonOutcome] = useState<LessonOutcome>('active');
   const [earnedOrbs, setEarnedOrbs] = useState(0);
@@ -152,6 +161,21 @@ export default function LektionScreen() {
         return reorderIndices.every(
           (value, index) => value === gradedStep.correctOrder[index],
         );
+      case 'matching':
+        return gradedStep.pairs.every(
+          (_, termIndex) =>
+            matchingPairs[termIndex] !== undefined &&
+            gradedStep.definitionOrder[matchingPairs[termIndex]] === termIndex,
+        );
+      case 'error_finding':
+        return (
+          errorFindingSelectedIndex !== null &&
+          gradedStep.textSegments[errorFindingSelectedIndex]?.isError === true
+        );
+      case 'categorize':
+        return gradedStep.items.every(
+          (item, itemIndex) => categorizeAssignments[itemIndex] === item.correctCategoryIndex,
+        );
     }
   })();
 
@@ -159,6 +183,12 @@ export default function LektionScreen() {
     setSelectedOption(null);
     setSelectedTrueFalse(null);
     setReorderIndices([]);
+    setSelectedTermIndex(null);
+    setMatchingPairs({});
+    setErrorFindingSelectedIndex(null);
+    setErrorFindingWrongIndices([]);
+    setSelectedCategorizeItemIndex(null);
+    setCategorizeAssignments({});
     setIsChecked(false);
   };
 
@@ -187,6 +217,12 @@ export default function LektionScreen() {
         return selectedTrueFalse !== null;
       case 'reorder':
         return reorderIndices.length === gradedStep.items.length;
+      case 'matching':
+        return Object.keys(matchingPairs).length === gradedStep.pairs.length;
+      case 'error_finding':
+        return errorFindingSelectedIndex !== null;
+      case 'categorize':
+        return Object.keys(categorizeAssignments).length === gradedStep.items.length;
     }
   })();
 
@@ -203,11 +239,13 @@ export default function LektionScreen() {
     }
 
     if (!isChecked) {
-      setIsChecked(true);
-      setStepAttempts((previous) => ({
-        ...previous,
-        [stepIndex]: (previous[stepIndex] ?? 0) + 1,
-      }));
+      if (step.type !== 'error_finding') {
+        setIsChecked(true);
+        setStepAttempts((previous) => ({
+          ...previous,
+          [stepIndex]: (previous[stepIndex] ?? 0) + 1,
+        }));
+      }
       return;
     }
 
@@ -236,6 +274,12 @@ export default function LektionScreen() {
     setSelectedOption(null);
     setSelectedTrueFalse(null);
     setReorderIndices([]);
+    setSelectedTermIndex(null);
+    setMatchingPairs({});
+    setErrorFindingSelectedIndex(null);
+    setErrorFindingWrongIndices([]);
+    setSelectedCategorizeItemIndex(null);
+    setCategorizeAssignments({});
     setIsChecked(false);
     setEarnedOrbs(0);
     setFailureStats({ correctCount: 0, gradedCount: 0 });
@@ -275,6 +319,81 @@ export default function LektionScreen() {
     const { correctCount, gradedCount } = computeLessonPassRatio(results);
     setFailureStats({ correctCount, gradedCount });
     setLessonOutcome('failed');
+  };
+
+  const handleSelectMatchingTerm = (termIndex: number) => {
+    if (matchingPairs[termIndex] !== undefined) {
+      const next = { ...matchingPairs };
+      delete next[termIndex];
+      setMatchingPairs(next);
+      setSelectedTermIndex(null);
+      return;
+    }
+
+    setSelectedTermIndex((current) => (current === termIndex ? null : termIndex));
+  };
+
+  const handleSelectMatchingDefinition = (displayIndex: number) => {
+    if (selectedTermIndex === null) {
+      return;
+    }
+
+    setMatchingPairs((previous) => ({
+      ...previous,
+      [selectedTermIndex]: displayIndex,
+    }));
+    setSelectedTermIndex(null);
+  };
+
+  const handleSelectErrorFindingSegment = (segmentIndex: number) => {
+    if (step.type !== 'error_finding' || isChecked) {
+      return;
+    }
+
+    const segment = step.textSegments[segmentIndex];
+
+    setStepAttempts((previous) => ({
+      ...previous,
+      [stepIndex]: (previous[stepIndex] ?? 0) + 1,
+    }));
+
+    if (segment?.isError) {
+      setErrorFindingSelectedIndex(segmentIndex);
+      setIsChecked(true);
+      return;
+    }
+
+    setErrorFindingWrongIndices((previous) =>
+      previous.includes(segmentIndex) ? previous : [...previous, segmentIndex],
+    );
+  };
+
+  const handleSelectCategorizeItem = (itemIndex: number) => {
+    if (step.type !== 'categorize' || isChecked) {
+      return;
+    }
+
+    if (categorizeAssignments[itemIndex] !== undefined) {
+      const next = { ...categorizeAssignments };
+      delete next[itemIndex];
+      setCategorizeAssignments(next);
+      setSelectedCategorizeItemIndex(null);
+      return;
+    }
+
+    setSelectedCategorizeItemIndex((current) => (current === itemIndex ? null : itemIndex));
+  };
+
+  const handleSelectCategorizeCategory = (categoryIndex: number) => {
+    if (step.type !== 'categorize' || isChecked || selectedCategorizeItemIndex === null) {
+      return;
+    }
+
+    setCategorizeAssignments((previous) => ({
+      ...previous,
+      [selectedCategorizeItemIndex]: categoryIndex,
+    }));
+    setSelectedCategorizeItemIndex(null);
   };
 
   const primaryLabel = gradedStep && !isChecked ? t('lesson.check') : t('lesson.next');
@@ -414,6 +533,38 @@ export default function LektionScreen() {
             />
           ) : null}
 
+          {step.type === 'matching' ? (
+            <MatchingStepView
+              isChecked={isChecked}
+              matches={matchingPairs}
+              onSelectDefinition={handleSelectMatchingDefinition}
+              onSelectTerm={handleSelectMatchingTerm}
+              selectedTermIndex={selectedTermIndex}
+              step={step}
+            />
+          ) : null}
+
+          {step.type === 'error_finding' ? (
+            <ErrorFindingStepView
+              isChecked={isChecked}
+              onSelectSegment={handleSelectErrorFindingSegment}
+              selectedIndex={errorFindingSelectedIndex}
+              step={step}
+              wrongIndices={errorFindingWrongIndices}
+            />
+          ) : null}
+
+          {step.type === 'categorize' ? (
+            <CategorizeStepView
+              assignments={categorizeAssignments}
+              isChecked={isChecked}
+              onSelectCategory={handleSelectCategorizeCategory}
+              onSelectItem={handleSelectCategorizeItem}
+              selectedItemIndex={selectedCategorizeItemIndex}
+              step={step}
+            />
+          ) : null}
+
           {gradedStep && isChecked ? (
             <FeedbackBanner
               explanation={gradedStep.explanation}
@@ -452,6 +603,9 @@ function StepTypeBadge({ step }: { step: ResolvedLessonStep }) {
     fill_blank: 'lesson.typeFillBlank',
     true_false: 'lesson.typeTrueFalse',
     reorder: 'lesson.typeReorder',
+    matching: 'lesson.typeMatching',
+    error_finding: 'lesson.typeErrorFinding',
+    categorize: 'lesson.typeCategorize',
   }[step.type];
 
   return (
@@ -600,4 +754,10 @@ function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
       />
     </View>
   );
+}
+
+export default function LektionScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+
+  return <LessonSessionScreen lessonId={id ?? ''} />;
 }

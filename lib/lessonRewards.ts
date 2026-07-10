@@ -1,6 +1,13 @@
 export type LessonAnswerResult = {
   stepIndex: number;
-  kind: 'choice' | 'fill_blank' | 'true_false' | 'reorder';
+  kind:
+    | 'choice'
+    | 'fill_blank'
+    | 'true_false'
+    | 'reorder'
+    | 'matching'
+    | 'error_finding'
+    | 'categorize';
   correct: boolean;
   attempts: number;
 };
@@ -10,6 +17,9 @@ export const GRADED_ANSWER_KINDS = [
   'fill_blank',
   'true_false',
   'reorder',
+  'matching',
+  'error_finding',
+  'categorize',
 ] as const satisfies ReadonlyArray<LessonAnswerResult['kind']>;
 
 export const LESSON_PASS_THRESHOLD = 0.6;

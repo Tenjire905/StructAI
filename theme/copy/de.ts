@@ -113,6 +113,18 @@ export const copyDe: CopyCatalog = {
     playful: 'Reihenfolge',
     focus: 'Sortieren',
   },
+  'lesson.typeMatching': {
+    playful: 'Zuordnen',
+    focus: 'Zuordnung',
+  },
+  'lesson.typeErrorFinding': {
+    playful: 'Fehler finden',
+    focus: 'Fehlerstelle',
+  },
+  'lesson.typeCategorize': {
+    playful: 'Kategorien',
+    focus: 'Kategorisieren',
+  },
   'lesson.fillBlankInstruction': {
     playful: 'Füll die Lücke mit dem passenden Begriff.',
     focus: 'Lücke korrekt ausfüllen.',
@@ -128,6 +140,22 @@ export const copyDe: CopyCatalog = {
   'lesson.reorderHint': {
     playful: 'Bring die Schritte in die richtige Reihenfolge.',
     focus: 'Elemente korrekt anordnen.',
+  },
+  'lesson.matchingInstruction': {
+    playful: 'Tippe links einen Begriff an, dann rechts die passende Definition.',
+    focus: 'Begriff wählen, Definition zuordnen.',
+  },
+  'lesson.errorFindingInstruction': {
+    playful: 'Tippe auf das Wort, das das Problem verursacht.',
+    focus: 'Problematisches Segment antippen.',
+  },
+  'lesson.categorizeInstruction': {
+    playful: 'Tippe ein Item an, dann die passende Kategorie.',
+    focus: 'Item wählen, Kategorie zuordnen.',
+  },
+  'lesson.categorizePoolLabel': {
+    playful: 'Noch offen',
+    focus: 'Offen',
   },
   'lesson.perfectBonus': {
     playful: 'Perfekt! Bonus-Orbs eingesammelt.',

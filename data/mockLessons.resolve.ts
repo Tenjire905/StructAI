@@ -1,12 +1,17 @@
 import { getLessonText } from '@/data/lessonContent';
+import { getDevBlockJMixedLesson } from '@/data/devBlockJMixedLesson';
+import { getDevBlockJNewTypesLesson } from '@/data/devBlockJNewTypesLesson';
 import {
   getAllMockLessonCatalogIds,
   getMockLessonCatalog,
 } from '@/data/mockLessons.catalog';
 import type {
   LessonCatalogStep,
+  LessonCategorizeCatalogStep,
   LessonChoiceCatalogStep,
+  LessonErrorFindingCatalogStep,
   LessonFillBlankCatalogStep,
+  LessonMatchingCatalogStep,
   LessonReorderCatalogStep,
   LessonTrueFalseCatalogStep,
   MockLessonCatalog,
@@ -51,12 +56,39 @@ export type ResolvedReorderStep = {
   explanation: string;
 };
 
+export type ResolvedMatchingStep = {
+  type: 'matching';
+  instruction: string;
+  pairs: { term: string; definition: string }[];
+  /** Display order for the right column (indices into `pairs`). Left terms stay fixed. */
+  definitionOrder: number[];
+  explanation: string;
+};
+
+export type ResolvedErrorFindingStep = {
+  type: 'error_finding';
+  instruction: string;
+  textSegments: { text: string; isError: boolean }[];
+  explanation: string;
+};
+
+export type ResolvedCategorizeStep = {
+  type: 'categorize';
+  instruction: string;
+  categories: string[];
+  items: { text: string; correctCategoryIndex: number }[];
+  explanation: string;
+};
+
 export type ResolvedLessonStep =
   | ResolvedInfoStep
   | ResolvedChoiceStep
   | ResolvedFillBlankStep
   | ResolvedTrueFalseStep
-  | ResolvedReorderStep;
+  | ResolvedReorderStep
+  | ResolvedMatchingStep
+  | ResolvedErrorFindingStep
+  | ResolvedCategorizeStep;
 
 export type ResolvedLesson = {
   id: string;
@@ -117,6 +149,53 @@ function resolveReorderStep(
   };
 }
 
+export function resolveMatchingStep(
+  step: LessonMatchingCatalogStep,
+  locale: Locale,
+): ResolvedMatchingStep {
+  return {
+    type: 'matching',
+    instruction: getLessonText(step.instructionKey, locale),
+    pairs: step.pairs.map((pair) => ({
+      term: getLessonText(pair.termKey, locale),
+      definition: getLessonText(pair.definitionKey, locale),
+    })),
+    definitionOrder: step.pairs.map((_, index) => index),
+    explanation: getLessonText(step.explanationKey, locale),
+  };
+}
+
+export function resolveErrorFindingStep(
+  step: LessonErrorFindingCatalogStep,
+  locale: Locale,
+): ResolvedErrorFindingStep {
+  return {
+    type: 'error_finding',
+    instruction: getLessonText(step.instructionKey, locale),
+    textSegments: step.textSegments.map((segment) => ({
+      text: getLessonText(segment.segmentKey, locale),
+      isError: segment.isError,
+    })),
+    explanation: getLessonText(step.explanationKey, locale),
+  };
+}
+
+export function resolveCategorizeStep(
+  step: LessonCategorizeCatalogStep,
+  locale: Locale,
+): ResolvedCategorizeStep {
+  return {
+    type: 'categorize',
+    instruction: getLessonText(step.instructionKey, locale),
+    categories: step.categoryLabelKeys.map((key) => getLessonText(key, locale)),
+    items: step.items.map((item) => ({
+      text: getLessonText(item.itemKey, locale),
+      correctCategoryIndex: item.correctCategoryIndex,
+    })),
+    explanation: getLessonText(step.explanationKey, locale),
+  };
+}
+
 function resolveCatalogStep(step: LessonCatalogStep, locale: Locale): ResolvedLessonStep {
   switch (step.type) {
     case 'info':
@@ -133,6 +212,12 @@ function resolveCatalogStep(step: LessonCatalogStep, locale: Locale): ResolvedLe
       return resolveTrueFalseStep(step, locale);
     case 'reorder':
       return resolveReorderStep(step, locale);
+    case 'matching':
+      return resolveMatchingStep(step, locale);
+    case 'error_finding':
+      return resolveErrorFindingStep(step, locale);
+    case 'categorize':
+      return resolveCategorizeStep(step, locale);
   }
 }
 
@@ -149,6 +234,14 @@ export function resolveCatalogLesson(
 }
 
 export function getMockLesson(id: string, locale: Locale): ResolvedLesson | undefined {
+  if (__DEV__ && id === 'dev-j-mixed') {
+    return getDevBlockJMixedLesson();
+  }
+
+  if (__DEV__ && id === 'dev-j-new-types') {
+    return getDevBlockJNewTypesLesson();
+  }
+
   const catalog = getMockLessonCatalog(id);
 
   if (!catalog) {

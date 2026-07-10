@@ -1,7 +1,9 @@
 import type {
+  ResolvedCategorizeStep,
   ResolvedChoiceStep,
   ResolvedFillBlankStep,
   ResolvedLessonStep,
+  ResolvedMatchingStep,
   ResolvedReorderStep,
 } from '@/data/mockLessons.resolve';
 
@@ -71,6 +73,27 @@ function shuffleReorder(step: ResolvedReorderStep, seed: number): ResolvedReorde
   };
 }
 
+function shuffleIndexedEntries<T>(entries: T[], seed: number): T[] {
+  const indexed = entries.map((entry, index) => ({ entry, index }));
+  const shuffled = shuffleWithSeed(indexed, seed);
+
+  return shuffled.map((item) => item.entry);
+}
+
+function shuffleMatching(step: ResolvedMatchingStep, seed: number): ResolvedMatchingStep {
+  return {
+    ...step,
+    definitionOrder: shuffleWithSeed(step.definitionOrder, seed),
+  };
+}
+
+function shuffleCategorize(step: ResolvedCategorizeStep, seed: number): ResolvedCategorizeStep {
+  return {
+    ...step,
+    items: shuffleIndexedEntries(step.items, seed),
+  };
+}
+
 type VariantKind = 'choice' | 'fill_blank' | 'true_false' | 'reorder';
 
 function pickVariantKind(seed: number, stepIndex: number): VariantKind {
@@ -131,15 +154,28 @@ function toReorder(step: ResolvedChoiceStep, instruction: string): ResolvedReord
   };
 }
 
+/**
+ * Native catalog steps only — never derived from prepareChoiceStep().
+ *
+ * matching, error_finding, and categorize are authored in the catalog and must
+ * NOT appear in pickVariantKind() / prepareChoiceStep(). They pass through here
+ * (matching/categorize: display-order shuffle with index remapping;
+ * error_finding: fixed segment order).
+ */
 function prepareNativeStep(step: ResolvedLessonStep, stepSeed: number): ResolvedLessonStep {
   switch (step.type) {
     case 'info':
     case 'true_false':
+    case 'error_finding':
       return step;
     case 'fill_blank':
       return shuffleChoiceLike(step, stepSeed);
     case 'reorder':
       return shuffleReorder(step, stepSeed);
+    case 'matching':
+      return shuffleMatching(step, stepSeed);
+    case 'categorize':
+      return shuffleCategorize(step, stepSeed);
     case 'choice':
       return step;
   }
@@ -173,6 +209,11 @@ export function prepareLessonSteps(
   reorderHint: string,
   sessionNonce: string | number = Date.now(),
 ): ResolvedLessonStep[] {
+  // Dev smoke lessons: keep authored step types and order (no choice-variant morph).
+  if (lessonId === 'dev-j-mixed' || lessonId === 'dev-j-new-types') {
+    return steps;
+  }
+
   const seed = hashSeed(`${lessonId}-${sessionNonce}`);
 
   return steps.map((step, stepIndex) => {

@@ -50,6 +50,27 @@ function shuffleReorder(step, seed) {
   };
 }
 
+function shuffleMatching(step, seed) {
+  return {
+    ...step,
+    definitionOrder: shuffleWithSeed(step.definitionOrder, seed),
+  };
+}
+
+function shuffleIndexedEntries(entries, seed) {
+  const indexed = entries.map((entry, index) => ({ entry, index }));
+  const shuffled = shuffleWithSeed(indexed, seed);
+
+  return shuffled.map((item) => item.entry);
+}
+
+function shuffleCategorize(step, seed) {
+  return {
+    ...step,
+    items: shuffleIndexedEntries(step.items, seed),
+  };
+}
+
 function pickVariantKind(seed, stepIndex) {
   const random = mulberry32(seed + stepIndex * 31);
   const roll = random();
@@ -71,6 +92,22 @@ function toReorder(step, instruction) {
 
 function isReorderCorrect(step, reorderIndices) {
   return reorderIndices.every((value, index) => value === step.correctOrder[index]);
+}
+
+function isMatchingCorrect(step, matchingPairs) {
+  return step.pairs.every(
+    (_, termIndex) =>
+      matchingPairs[termIndex] !== undefined &&
+      step.definitionOrder[matchingPairs[termIndex]] === termIndex,
+  );
+}
+
+function isCategorizeCorrect(step, assignments) {
+  return step.items.every(
+    (item, itemIndex) =>
+      assignments[itemIndex] !== undefined &&
+      assignments[itemIndex] === item.correctCategoryIndex,
+  );
 }
 
 function computeExpectedUserOrder(step) {
@@ -169,6 +206,142 @@ function verifyReorderRemap(seedCount = 500, step = null) {
   return failures.length;
 }
 
+function verifyMatchingRemap(seedCount = 500) {
+  const failures = [];
+  const base = {
+    type: 'matching',
+    instruction: 'Match each term to its definition.',
+    pairs: [
+      { term: 'Prompt', definition: 'Input to a model' },
+      { term: 'Token', definition: 'Smallest text unit' },
+      { term: 'Context', definition: 'Prior conversation' },
+      { term: 'Hallucination', definition: 'Invented answer' },
+    ],
+    definitionOrder: [0, 1, 2, 3],
+    explanation: 'x',
+  };
+
+  for (let seed = 1; seed <= seedCount; seed += 1) {
+    const prepared = shuffleMatching(base, seed);
+
+    const matchingPairs = {};
+    for (let termIndex = 0; termIndex < base.pairs.length; termIndex += 1) {
+      const displayIndex = prepared.definitionOrder.indexOf(termIndex);
+
+      if (displayIndex < 0) {
+        failures.push({ seed, kind: 'missing-definition-display-index', termIndex });
+        continue;
+      }
+
+      matchingPairs[termIndex] = displayIndex;
+    }
+
+    if (!isMatchingCorrect(prepared, matchingPairs)) {
+      failures.push({
+        seed,
+        kind: 'semantic-pair-marked-wrong',
+        matchingPairs,
+        definitionOrder: prepared.definitionOrder,
+      });
+    }
+
+    for (let termIndex = 0; termIndex < base.pairs.length; termIndex += 1) {
+      const displayIndex = matchingPairs[termIndex];
+
+      if (displayIndex === undefined) {
+        continue;
+      }
+
+      const pairIndexAtDisplay = prepared.definitionOrder[displayIndex];
+      const shownDefinition = prepared.pairs[pairIndexAtDisplay]?.definition;
+      const expectedDefinition = base.pairs[termIndex].definition;
+
+      if (shownDefinition !== expectedDefinition) {
+        failures.push({
+          seed,
+          kind: 'definition-label-mismatch',
+          termIndex,
+          shownDefinition,
+          expectedDefinition,
+        });
+      }
+
+      if (prepared.pairs[termIndex]?.term !== base.pairs[termIndex].term) {
+        failures.push({
+          seed,
+          kind: 'term-column-shuffled',
+          termIndex,
+          shownTerm: prepared.pairs[termIndex]?.term,
+          expectedTerm: base.pairs[termIndex].term,
+        });
+      }
+    }
+  }
+
+  return failures.length;
+}
+
+function verifyCategorizeRemap(seedCount = 500) {
+  const failures = [];
+  const base = {
+    type: 'categorize',
+    instruction: 'Assign each item to the correct category.',
+    categories: ['Goals', 'Constraints', 'Examples'],
+    items: [
+      { text: 'Define the audience', correctCategoryIndex: 0 },
+      { text: 'Keep under 120 words', correctCategoryIndex: 1 },
+      { text: 'Show a sample output', correctCategoryIndex: 2 },
+      { text: 'State the main task', correctCategoryIndex: 0 },
+      { text: 'Use bullet points only', correctCategoryIndex: 1 },
+      { text: 'Include one counterexample', correctCategoryIndex: 2 },
+    ],
+    explanation: 'x',
+  };
+
+  for (let seed = 1; seed <= seedCount; seed += 1) {
+    const prepared = shuffleCategorize(base, seed);
+    const assignments = {};
+
+    for (let itemIndex = 0; itemIndex < prepared.items.length; itemIndex += 1) {
+      assignments[itemIndex] = prepared.items[itemIndex].correctCategoryIndex;
+    }
+
+    if (!isCategorizeCorrect(prepared, assignments)) {
+      failures.push({
+        seed,
+        kind: 'semantic-assignment-marked-wrong',
+        assignments,
+      });
+    }
+
+    for (const baseItem of base.items) {
+      const matches = prepared.items.filter((item) => item.text === baseItem.text);
+
+      if (matches.length !== 1) {
+        failures.push({
+          seed,
+          kind: 'item-label-count-mismatch',
+          text: baseItem.text,
+          count: matches.length,
+        });
+        continue;
+      }
+
+      if (matches[0].correctCategoryIndex !== baseItem.correctCategoryIndex) {
+        failures.push({
+          seed,
+          kind: 'correct-category-index-corrupted',
+          text: baseItem.text,
+          expected: baseItem.correctCategoryIndex,
+          actual: matches[0].correctCategoryIndex,
+        });
+      }
+    }
+  }
+
+  return failures.length;
+}
+
 function verifyVariantDistribution(trials = 10000, stepsPerTrial = 2) {
   const aggregate = { choice: 0, fill_blank: 0, true_false: 0, reorder: 0 };
   for (let t = 0; t < trials; t += 1) {
@@ -250,6 +423,8 @@ function verifyCm4Reward() {
 
 const fillBlankFailures = verifyFillBlankRemap(500);
 const reorderFailures = verifyReorderRemap(500);
+const matchingFailures500 = verifyMatchingRemap(500);
+const categorizeFailures500 = verifyCategorizeRemap(500);
 const distribution = verifyVariantDistribution(10000, 2);
 const dynamicReorder = verifyDynamicReorderFromChoice(500);
 const cm4Reward = verifyCm4Reward();
@@ -260,11 +435,17 @@ console.log(
       scope: {
         sharedShuffleReorder:
           'prepareChoiceStep reorder branch and prepareNativeStep reorder branch both call shuffleReorder()',
+        sharedShuffleMatching:
+          'prepareNativeStep matching branch calls shuffleMatching() — shuffles definitionOrder only, pairs stay fixed for left column',
+        sharedShuffleCategorize:
+          'prepareNativeStep categorize branch calls shuffleCategorize() — shuffles items display order only, correctCategoryIndex stays on each item',
         affectedNativeCatalog: ['cm-4'],
         affectedRuntimeChoiceVariant: 'any choice step where pickVariantKind returns reorder (~15%)',
       },
       fillBlankFailures500: fillBlankFailures,
       reorderFailures500: reorderFailures,
+      matchingFailures500,
+      categorizeFailures500,
       cm4Reward,
       distribution10000: distribution,
       dynamicReorderFromChoice500: dynamicReorder,
