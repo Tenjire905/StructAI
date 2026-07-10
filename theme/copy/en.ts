@@ -379,6 +379,22 @@ export const copyEn: CopyCatalog = {
     playful: 'Compare models',
     focus: 'Model compare',
   },
+  'promptLab.detailHintsTitle': {
+    playful: 'Specific ways to improve',
+    focus: 'Specific hints',
+  },
+  'promptLab.comparisonTitle': {
+    playful: '+{{delta}} points — here is what improved',
+    focus: '+{{delta}} points vs. the previous draft',
+  },
+  'promptLab.demoWeakExample': {
+    playful: 'Load weak example',
+    focus: 'Weak example',
+  },
+  'promptLab.demoImprovedExample': {
+    playful: 'Load improved version',
+    focus: 'Improved version',
+  },
   'modelComparer.description': {
     playful:
       'One prompt, multiple models in parallel — swipe through answers and compare speed and cost.',
