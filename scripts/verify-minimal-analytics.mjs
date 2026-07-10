@@ -110,7 +110,7 @@ const byokManager = read(callSites.byok_key_added_success);
 const validateIndex = byokManager.indexOf('await validateApiKey(trimmedKey)');
 const saveIndex = byokManager.indexOf('await upsertApiKey({ provider, key: trimmedKey })');
 const byokTrackIndex = byokManager.indexOf("trackEvent('byok_key_added_success')");
-const catchIndex = byokManager.indexOf('} catch (error)');
+const catchIndex = byokManager.indexOf('} catch (error)', byokTrackIndex);
 
 if (
   validateIndex < 0 ||
