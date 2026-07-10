@@ -50,6 +50,13 @@ function shuffleReorder(step, seed) {
   };
 }
 
+function shuffleMatching(step, seed) {
+  return {
+    ...step,
+    definitionOrder: shuffleWithSeed(step.definitionOrder, seed),
+  };
+}
+
 function pickVariantKind(seed, stepIndex) {
   const random = mulberry32(seed + stepIndex * 31);
   const roll = random();
@@ -71,6 +78,14 @@ function toReorder(step, instruction) {
 
 function isReorderCorrect(step, reorderIndices) {
   return reorderIndices.every((value, index) => value === step.correctOrder[index]);
+}
+
+function isMatchingCorrect(step, matchingPairs) {
+  return step.pairs.every(
+    (_, termIndex) =>
+      matchingPairs[termIndex] !== undefined &&
+      step.definitionOrder[matchingPairs[termIndex]] === termIndex,
+  );
 }
 
 function computeExpectedUserOrder(step) {
@@ -169,6 +184,81 @@ function verifyReorderRemap(seedCount = 500, step = null) {
   return failures.length;
 }
 
+function verifyMatchingRemap(seedCount = 500) {
+  const failures = [];
+  const base = {
+    type: 'matching',
+    instruction: 'Match each term to its definition.',
+    pairs: [
+      { term: 'Prompt', definition: 'Input to a model' },
+      { term: 'Token', definition: 'Smallest text unit' },
+      { term: 'Context', definition: 'Prior conversation' },
+      { term: 'Hallucination', definition: 'Invented answer' },
+    ],
+    definitionOrder: [0, 1, 2, 3],
+    explanation: 'x',
+  };
+
+  for (let seed = 1; seed <= seedCount; seed += 1) {
+    const prepared = shuffleMatching(base, seed);
+
+    const matchingPairs = {};
+    for (let termIndex = 0; termIndex < base.pairs.length; termIndex += 1) {
+      const displayIndex = prepared.definitionOrder.indexOf(termIndex);
+
+      if (displayIndex < 0) {
+        failures.push({ seed, kind: 'missing-definition-display-index', termIndex });
+        continue;
+      }
+
+      matchingPairs[termIndex] = displayIndex;
+    }
+
+    if (!isMatchingCorrect(prepared, matchingPairs)) {
+      failures.push({
+        seed,
+        kind: 'semantic-pair-marked-wrong',
+        matchingPairs,
+        definitionOrder: prepared.definitionOrder,
+      });
+    }
+
+    for (let termIndex = 0; termIndex < base.pairs.length; termIndex += 1) {
+      const displayIndex = matchingPairs[termIndex];
+
+      if (displayIndex === undefined) {
+        continue;
+      }
+
+      const pairIndexAtDisplay = prepared.definitionOrder[displayIndex];
+      const shownDefinition = prepared.pairs[pairIndexAtDisplay]?.definition;
+      const expectedDefinition = base.pairs[termIndex].definition;
+
+      if (shownDefinition !== expectedDefinition) {
+        failures.push({
+          seed,
+          kind: 'definition-label-mismatch',
+          termIndex,
+          shownDefinition,
+          expectedDefinition,
+        });
+      }
+
+      if (prepared.pairs[termIndex]?.term !== base.pairs[termIndex].term) {
+        failures.push({
+          seed,
+          kind: 'term-column-shuffled',
+          termIndex,
+          shownTerm: prepared.pairs[termIndex]?.term,
+          expectedTerm: base.pairs[termIndex].term,
+        });
+      }
+    }
+  }
+
+  return failures.length;
+}
+
 function verifyVariantDistribution(trials = 10000, stepsPerTrial = 2) {
   const aggregate = { choice: 0, fill_blank: 0, true_false: 0, reorder: 0 };
   for (let t = 0; t < trials; t += 1) {
@@ -250,6 +340,7 @@ function verifyCm4Reward() {
 
 const fillBlankFailures = verifyFillBlankRemap(500);
 const reorderFailures = verifyReorderRemap(500);
+const matchingFailures500 = verifyMatchingRemap(500);
 const distribution = verifyVariantDistribution(10000, 2);
 const dynamicReorder = verifyDynamicReorderFromChoice(500);
 const cm4Reward = verifyCm4Reward();
@@ -260,11 +351,14 @@ console.log(
       scope: {
         sharedShuffleReorder:
           'prepareChoiceStep reorder branch and prepareNativeStep reorder branch both call shuffleReorder()',
+        sharedShuffleMatching:
+          'prepareNativeStep matching branch calls shuffleMatching() — shuffles definitionOrder only, pairs stay fixed for left column',
         affectedNativeCatalog: ['cm-4'],
         affectedRuntimeChoiceVariant: 'any choice step where pickVariantKind returns reorder (~15%)',
       },
       fillBlankFailures500: fillBlankFailures,
       reorderFailures500: reorderFailures,
+      matchingFailures500,
       cm4Reward,
       distribution10000: distribution,
       dynamicReorderFromChoice500: dynamicReorder,
