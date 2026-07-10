@@ -36,12 +36,37 @@ export type LessonReorderCatalogStep = {
   explanationKey: string;
 };
 
+export type LessonMatchingCatalogStep = {
+  type: 'matching';
+  instructionKey: string;
+  pairs: { termKey: string; definitionKey: string }[];
+  explanationKey: string;
+};
+
+export type LessonErrorFindingCatalogStep = {
+  type: 'error_finding';
+  instructionKey: string;
+  textSegments: { segmentKey: string; isError: boolean }[];
+  explanationKey: string;
+};
+
+export type LessonCategorizeCatalogStep = {
+  type: 'categorize';
+  instructionKey: string;
+  categoryLabelKeys: string[];
+  items: { itemKey: string; correctCategoryIndex: number }[];
+  explanationKey: string;
+};
+
 export type LessonCatalogStep =
   | LessonInfoCatalogStep
   | LessonChoiceCatalogStep
   | LessonFillBlankCatalogStep
   | LessonTrueFalseCatalogStep
-  | LessonReorderCatalogStep;
+  | LessonReorderCatalogStep
+  | LessonMatchingCatalogStep
+  | LessonErrorFindingCatalogStep
+  | LessonCategorizeCatalogStep;
 
 export type MockLessonCatalog = {
   id: string;

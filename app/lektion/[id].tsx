@@ -152,6 +152,10 @@ export default function LektionScreen() {
         return reorderIndices.every(
           (value, index) => value === gradedStep.correctOrder[index],
         );
+      case 'matching':
+      case 'error_finding':
+      case 'categorize':
+        return false;
     }
   })();
 
@@ -187,6 +191,10 @@ export default function LektionScreen() {
         return selectedTrueFalse !== null;
       case 'reorder':
         return reorderIndices.length === gradedStep.items.length;
+      case 'matching':
+      case 'error_finding':
+      case 'categorize':
+        return false;
     }
   })();
 
@@ -452,6 +460,9 @@ function StepTypeBadge({ step }: { step: ResolvedLessonStep }) {
     fill_blank: 'lesson.typeFillBlank',
     true_false: 'lesson.typeTrueFalse',
     reorder: 'lesson.typeReorder',
+    matching: 'lesson.typeMatching',
+    error_finding: 'lesson.typeErrorFinding',
+    categorize: 'lesson.typeCategorize',
   }[step.type];
 
   return (
