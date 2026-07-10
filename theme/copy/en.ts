@@ -149,6 +149,14 @@ export const copyEn: CopyCatalog = {
     playful: 'Tap the word that causes the problem.',
     focus: 'Tap the problematic segment.',
   },
+  'lesson.categorizeInstruction': {
+    playful: 'Tap an item, then its category.',
+    focus: 'Select an item, then assign a category.',
+  },
+  'lesson.categorizePoolLabel': {
+    playful: 'Still open',
+    focus: 'Open',
+  },
   'lesson.perfectBonus': {
     playful: 'Perfect! Bonus Orbs unlocked.',
     focus: 'Perfect. Bonus granted.',

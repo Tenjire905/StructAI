@@ -149,6 +149,14 @@ export const copyRu: CopyCatalog = {
     playful: 'Нажми на слово, которое создаёт проблему.',
     focus: 'Нажмите проблемный сегмент.',
   },
+  'lesson.categorizeInstruction': {
+    playful: 'Нажми элемент, затем подходящую категорию.',
+    focus: 'Выберите элемент, затем назначьте категорию.',
+  },
+  'lesson.categorizePoolLabel': {
+    playful: 'Ещё не распределено',
+    focus: 'Открыто',
+  },
   'lesson.perfectBonus': {
     playful: 'Идеально! Бонус-орбы твои.',
     focus: 'Идеально. Бонус получен.',

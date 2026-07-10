@@ -11,6 +11,7 @@ import Animated, {
 import { OrbCompanion } from '@/components/features';
 import { PathCompletionView } from '@/components/features/PathCompletionView';
 import {
+  CategorizeStepView,
   ChoiceStepView,
   ErrorFindingStepView,
   FillBlankStepView,
@@ -72,6 +73,10 @@ export default function LektionScreen() {
   const [matchingPairs, setMatchingPairs] = useState<Record<number, number>>({});
   const [errorFindingSelectedIndex, setErrorFindingSelectedIndex] = useState<number | null>(null);
   const [errorFindingWrongIndices, setErrorFindingWrongIndices] = useState<number[]>([]);
+  const [selectedCategorizeItemIndex, setSelectedCategorizeItemIndex] = useState<number | null>(
+    null,
+  );
+  const [categorizeAssignments, setCategorizeAssignments] = useState<Record<number, number>>({});
   const [isChecked, setIsChecked] = useState(false);
   const [lessonOutcome, setLessonOutcome] = useState<LessonOutcome>('active');
   const [earnedOrbs, setEarnedOrbs] = useState(0);
@@ -170,7 +175,9 @@ export default function LektionScreen() {
           gradedStep.textSegments[errorFindingSelectedIndex]?.isError === true
         );
       case 'categorize':
-        return false;
+        return gradedStep.items.every(
+          (item, itemIndex) => categorizeAssignments[itemIndex] === item.correctCategoryIndex,
+        );
     }
   })();
 
@@ -182,6 +189,8 @@ export default function LektionScreen() {
     setMatchingPairs({});
     setErrorFindingSelectedIndex(null);
     setErrorFindingWrongIndices([]);
+    setSelectedCategorizeItemIndex(null);
+    setCategorizeAssignments({});
     setIsChecked(false);
   };
 
@@ -215,7 +224,7 @@ export default function LektionScreen() {
       case 'error_finding':
         return errorFindingSelectedIndex !== null;
       case 'categorize':
-        return false;
+        return Object.keys(categorizeAssignments).length === gradedStep.items.length;
     }
   })();
 
@@ -271,6 +280,8 @@ export default function LektionScreen() {
     setMatchingPairs({});
     setErrorFindingSelectedIndex(null);
     setErrorFindingWrongIndices([]);
+    setSelectedCategorizeItemIndex(null);
+    setCategorizeAssignments({});
     setIsChecked(false);
     setEarnedOrbs(0);
     setFailureStats({ correctCount: 0, gradedCount: 0 });
@@ -357,6 +368,34 @@ export default function LektionScreen() {
     setErrorFindingWrongIndices((previous) =>
       previous.includes(segmentIndex) ? previous : [...previous, segmentIndex],
     );
+  };
+
+  const handleSelectCategorizeItem = (itemIndex: number) => {
+    if (step.type !== 'categorize' || isChecked) {
+      return;
+    }
+
+    if (categorizeAssignments[itemIndex] !== undefined) {
+      const next = { ...categorizeAssignments };
+      delete next[itemIndex];
+      setCategorizeAssignments(next);
+      setSelectedCategorizeItemIndex(null);
+      return;
+    }
+
+    setSelectedCategorizeItemIndex((current) => (current === itemIndex ? null : itemIndex));
+  };
+
+  const handleSelectCategorizeCategory = (categoryIndex: number) => {
+    if (step.type !== 'categorize' || isChecked || selectedCategorizeItemIndex === null) {
+      return;
+    }
+
+    setCategorizeAssignments((previous) => ({
+      ...previous,
+      [selectedCategorizeItemIndex]: categoryIndex,
+    }));
+    setSelectedCategorizeItemIndex(null);
   };
 
   const primaryLabel = gradedStep && !isChecked ? t('lesson.check') : t('lesson.next');
@@ -514,6 +553,17 @@ export default function LektionScreen() {
               selectedIndex={errorFindingSelectedIndex}
               step={step}
               wrongIndices={errorFindingWrongIndices}
+            />
+          ) : null}
+
+          {step.type === 'categorize' ? (
+            <CategorizeStepView
+              assignments={categorizeAssignments}
+              isChecked={isChecked}
+              onSelectCategory={handleSelectCategorizeCategory}
+              onSelectItem={handleSelectCategorizeItem}
+              selectedItemIndex={selectedCategorizeItemIndex}
+              step={step}
             />
           ) : null}
 

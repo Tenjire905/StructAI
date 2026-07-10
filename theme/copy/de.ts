@@ -149,6 +149,14 @@ export const copyDe: CopyCatalog = {
     playful: 'Tippe auf das Wort, das das Problem verursacht.',
     focus: 'Problematisches Segment antippen.',
   },
+  'lesson.categorizeInstruction': {
+    playful: 'Tippe ein Item an, dann die passende Kategorie.',
+    focus: 'Item wählen, Kategorie zuordnen.',
+  },
+  'lesson.categorizePoolLabel': {
+    playful: 'Noch offen',
+    focus: 'Offen',
+  },
   'lesson.perfectBonus': {
     playful: 'Perfekt! Bonus-Orbs eingesammelt.',
     focus: 'Perfekt. Bonus erhalten.',

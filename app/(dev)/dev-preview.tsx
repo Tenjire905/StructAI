@@ -8,10 +8,14 @@ import {
   StatBlock,
   StreakTracker,
 } from '@/components/features';
-import { ErrorFindingStepView, MatchingStepView } from '@/components/features/lesson-steps';
+import { CategorizeStepView, ErrorFindingStepView, MatchingStepView } from '@/components/features/lesson-steps';
 import { Avatar, Badge, Button, Card, ProgressBar } from '@/components/ui';
 import type { OrbCompanionState } from '@/hooks/useOrbCompanionState';
-import type { ResolvedErrorFindingStep, ResolvedMatchingStep } from '@/data/mockLessons';
+import type {
+  ResolvedCategorizeStep,
+  ResolvedErrorFindingStep,
+  ResolvedMatchingStep,
+} from '@/data/mockLessons';
 import { ThemeModeScope, useThemeMode, type ThemeMode } from '@/theme';
 
 const MATCHING_PREVIEW_STEP: ResolvedMatchingStep = {
@@ -40,6 +44,20 @@ const ERROR_FINDING_PREVIEW_STEP: ResolvedErrorFindingStep = {
     { text: 'KI.', isError: false },
   ],
   explanation: 'Vage Wörter wie „irgendwie“ liefern keine klare Anweisung.',
+};
+
+const CATEGORIZE_PREVIEW_STEP: ResolvedCategorizeStep = {
+  type: 'categorize',
+  instruction: 'Ordne jedes Element der richtigen Prompt-Kategorie zu.',
+  categories: ['Ziel', 'Format', 'Kontext'],
+  items: [
+    { text: 'Zielgruppe nennen', correctCategoryIndex: 0 },
+    { text: 'Max. 120 Wörter', correctCategoryIndex: 1 },
+    { text: 'Vorherige Antwort', correctCategoryIndex: 2 },
+    { text: 'Hauptaufgabe definieren', correctCategoryIndex: 0 },
+    { text: 'Als Bulletpoints', correctCategoryIndex: 1 },
+  ],
+  explanation: 'Ziel, Format und Kontext sollten klar getrennt formuliert sein.',
 };
 
 const COMPANION_STATES: OrbCompanionState[] = [
@@ -157,6 +175,69 @@ function ErrorFindingOnlyPreview({ mode }: { mode: ThemeMode }) {
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <ErrorFindingStepPreviewPanel testId={testId} />
+    </ScrollView>
+  );
+}
+
+function CategorizeStepPreviewPanel({ testId }: { testId: string }) {
+  const { tokens } = useThemeMode();
+
+  return (
+    <View
+      nativeID={testId}
+      style={{
+        backgroundColor: tokens.colors.background.base,
+        gap: tokens.spacing.space2,
+        padding: tokens.spacing.space3,
+      }}
+      testID={testId}>
+      <CategorizeStepView
+        assignments={{ 0: 0, 3: 0, 1: 1 }}
+        isChecked={false}
+        onSelectCategory={() => undefined}
+        onSelectItem={() => undefined}
+        selectedItemIndex={2}
+        step={CATEGORIZE_PREVIEW_STEP}
+      />
+    </View>
+  );
+}
+
+function CategorizeStepDevSection() {
+  const { tokens } = useThemeMode();
+
+  return (
+    <View style={{ gap: tokens.spacing.space4 }}>
+      <Text
+        style={{
+          color: tokens.colors.text.primary,
+          fontFamily: tokens.typography.fontFamily.heading,
+          fontSize: tokens.typography.fontSize.headingMd,
+        }}>
+        CategorizeStepView
+      </Text>
+      <ThemeModeScope mode="playful">
+        <CategorizeStepPreviewPanel testId="categorize-preview-playful" />
+      </ThemeModeScope>
+      <ThemeModeScope mode="focus">
+        <CategorizeStepPreviewPanel testId="categorize-preview-focus" />
+      </ThemeModeScope>
+    </View>
+  );
+}
+
+function CategorizeOnlyPreview({ mode }: { mode: ThemeMode }) {
+  const { tokens } = useThemeMode();
+  const testId = mode === 'focus' ? 'categorize-preview-focus' : 'categorize-preview-playful';
+
+  return (
+    <ScrollView
+      contentContainerStyle={{
+        padding: tokens.spacing.screenPadding,
+        paddingBottom: tokens.spacing.space7,
+      }}
+      style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
+      <CategorizeStepPreviewPanel testId={testId} />
     </ScrollView>
   );
 }
@@ -344,6 +425,14 @@ export default function DevPreviewScreen() {
     );
   }
 
+  if (view === 'categorize') {
+    return (
+      <ThemeModeScope mode={previewMode}>
+        <CategorizeOnlyPreview mode={previewMode} />
+      </ThemeModeScope>
+    );
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -376,6 +465,7 @@ export default function DevPreviewScreen() {
 
       <MatchingStepDevSection />
       <ErrorFindingStepDevSection />
+      <CategorizeStepDevSection />
     </ScrollView>
   );
 }
