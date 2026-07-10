@@ -581,6 +581,22 @@ export const copyRu: CopyCatalog = {
     playful: 'Выйти',
     focus: 'Выйти',
   },
+  'profile.guestDisplayName': {
+    playful: 'Гость',
+    focus: 'Гость',
+  },
+  'profile.guestAccountDescription': {
+    playful: 'Ты используешь StructAI без аккаунта. Прогресс остается на этом устройстве — войди, чтобы синхронизировать.',
+    focus: 'Гостевой режим. Прогресс локально на этом устройстве; вход для синхронизации и сертификатов.',
+  },
+  'guest.saveProgressHint': {
+    playful: 'Прогресс только на этом устройстве. Аккаунт позволит синхронизировать и сохранить его.',
+    focus: 'Прогресс хранится только локально. Вход для синхронизации и сертификатов.',
+  },
+  'guest.saveProgressCta': {
+    playful: 'Сохранить прогресс – войти сейчас',
+    focus: 'Сохранить прогресс – войти сейчас',
+  },
   'auth.headline': {
     playful: 'Добро пожаловать в StructAI',
     focus: 'Вход в StructAI',

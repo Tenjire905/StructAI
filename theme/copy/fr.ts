@@ -581,6 +581,22 @@ export const copyFr: CopyCatalog = {
     playful: 'Se deconnecter',
     focus: 'Se deconnecter',
   },
+  'profile.guestDisplayName': {
+    playful: 'Invite',
+    focus: 'Invite',
+  },
+  'profile.guestAccountDescription': {
+    playful: 'Tu utilises StructAI sans compte. La progression reste sur cet appareil — connecte-toi pour synchroniser.',
+    focus: 'Mode invite. Progression locale sur cet appareil ; connexion pour sync et certificats.',
+  },
+  'guest.saveProgressHint': {
+    playful: 'Ta progression est seulement sur cet appareil. Un compte permet de synchroniser et de la sauvegarder.',
+    focus: 'Progression stockee localement. Connexion pour sync et certificats.',
+  },
+  'guest.saveProgressCta': {
+    playful: 'Sauvegarder la progression – se connecter',
+    focus: 'Sauvegarder la progression – se connecter',
+  },
   'auth.headline': {
     playful: 'Bienvenue sur StructAI',
     focus: 'Connexion a StructAI',

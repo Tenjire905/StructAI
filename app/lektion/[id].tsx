@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { OrbCompanion } from '@/components/features';
+import { GuestSaveProgressHint } from '@/components/features/GuestSaveProgressHint';
 import { PathCompletionView } from '@/components/features/PathCompletionView';
 import {
   CategorizeStepView,
@@ -36,6 +37,7 @@ import { getPathIdForLesson } from '@/lib/pathLessonUtils';
 import { prepareLessonSteps } from '@/lib/lessonSession';
 import { useProgressStore } from '@/store/progressStore';
 import { getShadow, useCelebration, useThemeMode } from '@/theme';
+import { useAuth } from '@/providers/AuthProvider';
 
 type GradedStep = Exclude<ResolvedLessonStep, { type: 'info' }>;
 
@@ -685,6 +687,8 @@ type CompletionViewProps = {
 
 function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
   const { tokens, t } = useThemeMode();
+  const { session } = useAuth();
+  const completedLessons = useProgressStore((state) => state.completedLessons);
   const { celebrate } = useCelebration();
   const companionState = useOrbCompanionState();
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
@@ -752,6 +756,10 @@ function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
         style={{ alignSelf: 'stretch' }}
         variant="primary"
       />
+
+      {!session && completedLessons === 1 ? (
+        <GuestSaveProgressHint variant="inline" />
+      ) : null}
     </View>
   );
 }

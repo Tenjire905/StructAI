@@ -10,13 +10,14 @@ function isDevRoute(rootSegment: string | undefined): boolean {
   return rootSegment === DEV_ROUTE_GROUP;
 }
 
-function resolveAuthedRoute(): Href {
+function resolveAppEntryRoute(): Href {
   return isOnboardingCompleted() ? '/(tabs)' : '/onboarding';
 }
 
 /**
- * Single navigation gate – avoids competing <Redirect> components
- * that cause "Maximum update depth exceeded" on login.
+ * Navigation gate for onboarding and post-login routing.
+ * Guest mode: no session required — onboarding and tabs stay reachable.
+ * /auth remains a freely reachable screen for optional sign-in.
  */
 export function AuthNavigationController() {
   const router = useRouter();
@@ -39,18 +40,16 @@ export function AuthNavigationController() {
 
     let target: Href | null = null;
 
-    if (!session) {
-      if (!inAuth) {
-        target = '/auth';
+    if (inAuth) {
+      if (session) {
+        target = resolveAppEntryRoute();
       }
-    } else if (inAuth) {
-      target = resolveAuthedRoute();
     } else if (!isOnboardingCompleted() && !inOnboarding) {
       target = '/onboarding';
     } else if (isOnboardingCompleted() && inOnboarding) {
       target = '/(tabs)';
     } else if (!rootSegment) {
-      target = resolveAuthedRoute();
+      target = resolveAppEntryRoute();
     }
 
     if (!target || lastTargetRef.current === target) {

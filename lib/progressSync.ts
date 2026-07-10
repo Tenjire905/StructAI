@@ -126,6 +126,7 @@ export function queueProgressSync(snapshot: ProgressSnapshot): void {
  * Pulls remote progress after login.
  * - New device / empty local cache → apply server snapshot.
  * - Same account with local + remote data → union merge (max-union-per-field).
+ * - Guest with local progress, first login (no lastSyncedUserId) → keep local, push to server.
  * - Different account than last sync → replace with server (or defaults), never merge stale local.
  * Logout intentionally does NOT clear local MMKV (offline continuation).
  */
