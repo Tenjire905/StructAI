@@ -581,6 +581,22 @@ export const copyEn: CopyCatalog = {
     playful: 'Sign out',
     focus: 'Sign out',
   },
+  'profile.guestDisplayName': {
+    playful: 'Guest',
+    focus: 'Guest',
+  },
+  'profile.guestAccountDescription': {
+    playful: 'You are using StructAI without an account. Progress stays on this device — sign in to sync across devices.',
+    focus: 'Guest mode. Progress is local on this device; sign in for sync and certificates.',
+  },
+  'guest.saveProgressHint': {
+    playful: 'Your progress is only on this device. An account lets you sync and keep it safe.',
+    focus: 'Progress is stored locally only. Sign in to sync and unlock certificates.',
+  },
+  'guest.saveProgressCta': {
+    playful: 'Save progress – sign in now',
+    focus: 'Save progress – sign in now',
+  },
   'auth.headline': {
     playful: 'Welcome to StructAI',
     focus: 'Sign in to StructAI',

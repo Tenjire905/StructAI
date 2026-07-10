@@ -1,6 +1,8 @@
 import { ScrollView, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 
 import { StatBlock } from '@/components/features';
+import { GuestSaveProgressHint } from '@/components/features/GuestSaveProgressHint';
 import { ByokKeysManager } from '@/components/features/profile/ByokKeysManager';
 import { ProfileCertificatesSection } from '@/components/features/profile/ProfileCertificatesSection';
 import { SpendingLimitSettings } from '@/components/features/profile/SpendingLimitSettings';
@@ -17,11 +19,12 @@ import {
 
 export default function ProfilScreen() {
   const { tokens, t, mode, setMode, locale, setLocale } = useThemeMode();
-  const { user, signOut } = useAuth();
+  const { user, session, signOut } = useAuth();
+  const router = useRouter();
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const currentStreak = useProgressStore((state) => state.currentStreak);
 
-  const displayName = resolveProfileDisplayName(user);
+  const displayName = session ? resolveProfileDisplayName(user) : t('profile.guestDisplayName');
 
   const handleSignOut = async () => {
     await signOut();
@@ -64,6 +67,8 @@ export default function ProfilScreen() {
           ) : null}
         </View>
       </View>
+
+      <GuestSaveProgressHint />
 
       <View style={{ gap: tokens.spacing.space3 }}>
         <Text
@@ -175,9 +180,17 @@ export default function ProfilScreen() {
                 fontSize: tokens.typography.fontSize.bodyMd,
                 lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
               }}>
-              {t('profile.accountDescription')}
+              {session ? t('profile.accountDescription') : t('profile.guestAccountDescription')}
             </Text>
-            <Button label={t('profile.signOut')} onPress={handleSignOut} variant="ghost" />
+            {session ? (
+              <Button label={t('profile.signOut')} onPress={handleSignOut} variant="ghost" />
+            ) : (
+              <Button
+                label={t('guest.saveProgressCta')}
+                onPress={() => router.push('/auth')}
+                variant="ghost"
+              />
+            )}
           </View>
         </Card>
       </View>

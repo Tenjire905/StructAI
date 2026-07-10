@@ -581,6 +581,22 @@ export const copyDe: CopyCatalog = {
     playful: 'Abmelden',
     focus: 'Abmelden',
   },
+  'profile.guestDisplayName': {
+    playful: 'Gast',
+    focus: 'Gast',
+  },
+  'profile.guestAccountDescription': {
+    playful: 'Du nutzt StructAI ohne Konto. Fortschritt bleibt auf diesem Gerät – Anmeldung sichert ihn geräteübergreifend.',
+    focus: 'Gastmodus. Fortschritt lokal auf diesem Gerät; Anmeldung für Sync und Zertifikate.',
+  },
+  'guest.saveProgressHint': {
+    playful: 'Dein Fortschritt liegt nur auf diesem Gerät. Mit Konto sicherst du ihn und kannst später synchronisieren.',
+    focus: 'Fortschritt ist nur lokal gespeichert. Anmeldung ermöglicht Sync und Zertifikate.',
+  },
+  'guest.saveProgressCta': {
+    playful: 'Fortschritt sichern – jetzt anmelden',
+    focus: 'Fortschritt sichern – jetzt anmelden',
+  },
   'auth.headline': {
     playful: 'Willkommen bei StructAI',
     focus: 'Bei StructAI anmelden',
