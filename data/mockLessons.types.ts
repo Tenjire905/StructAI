@@ -7,7 +7,7 @@ export type LessonInfoCatalogStep = {
 export type LessonChoiceCatalogStep = {
   type: 'choice';
   questionKey: string;
-  optionKeys: [string, string, string];
+  optionKeys: [string, string, ...string[]];
   correctIndex: number;
   explanationKey: string;
 };
@@ -16,7 +16,7 @@ export type LessonFillBlankCatalogStep = {
   type: 'fill_blank';
   prefixKey: string;
   suffixKey: string;
-  optionKeys: [string, string, string];
+  optionKeys: [string, string, ...string[]];
   correctIndex: number;
   explanationKey: string;
 };

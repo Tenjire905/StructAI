@@ -4,7 +4,7 @@
  */
 
 const PATH_CHAPTER_IDS = {
-  'prompt-basics': ['pb-1', 'pb-2', 'pb-3', 'pb-4', 'pb-5', 'pb-6', 'pb-7', 'pb-8'],
+  'prompt-basics': Array.from({ length: 45 }, (_, index) => `pb-${index + 1}`),
   'iteration-loops': ['il-1', 'il-2', 'il-3', 'il-4', 'il-5'],
 };
 
