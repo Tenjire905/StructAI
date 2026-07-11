@@ -211,6 +211,139 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
     ],
   },
   {
+    id: 'pb-9',
+    titleKey: 'pb-9.title',
+    orbsReward: 15,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'pb-9.s0.title',
+        bodyKey: 'pb-9.s0.body',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'pb-9.s1.statement',
+        correct: false,
+        explanationKey: 'pb-9.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'pb-9.s2.question',
+        optionKeys: ['pb-9.s2.opt0', 'pb-9.s2.opt1'],
+        correctIndex: 1,
+        explanationKey: 'pb-9.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'pb-10',
+    titleKey: 'pb-10.title',
+    orbsReward: 15,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'pb-10.s0.title',
+        bodyKey: 'pb-10.s0.body',
+      },
+      {
+        type: 'fill_blank',
+        prefixKey: 'pb-10.s1.prefix',
+        suffixKey: 'pb-10.s1.suffix',
+        optionKeys: ['pb-10.s1.blank0', 'pb-10.s1.blank1', 'pb-10.s1.blank2'],
+        correctIndex: 0,
+        explanationKey: 'pb-10.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'pb-10.s2.question',
+        optionKeys: ['pb-10.s2.opt0', 'pb-10.s2.opt1'],
+        correctIndex: 1,
+        explanationKey: 'pb-10.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'pb-11',
+    titleKey: 'pb-11.title',
+    orbsReward: 15,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'pb-11.s0.title',
+        bodyKey: 'pb-11.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'pb-11.s1.question',
+        optionKeys: ['pb-11.s1.opt0', 'pb-11.s1.opt1'],
+        correctIndex: 0,
+        explanationKey: 'pb-11.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'pb-11.s2.statement',
+        correct: false,
+        explanationKey: 'pb-11.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'pb-12',
+    titleKey: 'pb-12.title',
+    orbsReward: 18,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'pb-12.s0.title',
+        bodyKey: 'pb-12.s0.body',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'pb-12.s1.instruction',
+        itemKeys: [
+          'pb-12.s1.item0',
+          'pb-12.s1.item1',
+          'pb-12.s1.item2',
+          'pb-12.s1.item3',
+        ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'pb-12.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'pb-12.s2.question',
+        optionKeys: ['pb-12.s2.opt0', 'pb-12.s2.opt1'],
+        correctIndex: 1,
+        explanationKey: 'pb-12.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'pb-13',
+    titleKey: 'pb-13.title',
+    orbsReward: 18,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'pb-13.s0.title',
+        bodyKey: 'pb-13.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'pb-13.s1.question',
+        optionKeys: ['pb-13.s1.opt0', 'pb-13.s1.opt1', 'pb-13.s1.opt2'],
+        correctIndex: 1,
+        explanationKey: 'pb-13.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'pb-13.s2.statement',
+        correct: true,
+        explanationKey: 'pb-13.s2.explanation',
+      },
+    ],
+  },
+  {
     id: 'sl-1',
     titleKey: 'sl-1.title',
     orbsReward: 15,
