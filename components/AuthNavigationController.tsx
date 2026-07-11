@@ -87,7 +87,8 @@ export function AuthNavigationController() {
 
     const needsReturningUserCheck = session !== null && !isOnboardingCompleted();
     const hasResolvedReturningUserCheck =
-      returningUserCheck?.userId === session?.user.id &&
+      returningUserCheck !== null &&
+      returningUserCheck.userId === session?.user.id &&
       returningUserCheck.status !== 'checking';
 
     if (needsReturningUserCheck && !hasResolvedReturningUserCheck) {
