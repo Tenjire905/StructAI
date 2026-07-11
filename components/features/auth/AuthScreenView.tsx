@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 
 import { Button } from '@/components/ui';
-import { trackEvent } from '@/lib/analytics';
 import { useAuth } from '@/providers/AuthProvider';
 import { useThemeMode } from '@/theme';
 
@@ -64,7 +63,7 @@ function resolveAuthErrorMessage(error: unknown, t: (key: string) => string): st
 
 export function AuthScreenView({ onAuthenticated }: AuthScreenViewProps) {
   const { tokens, t } = useThemeMode();
-  const { isConfigured, session, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
+  const { isConfigured, signInWithEmail, signUpWithEmail, signInWithGoogle } = useAuth();
   const [mode, setMode] = useState<AuthMode>('signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -91,12 +90,7 @@ export function AuthScreenView({ onAuthenticated }: AuthScreenViewProps) {
         return;
       }
 
-      const wasGuest = session === null;
       const signUpResult = await signUpWithEmail(email.trim(), password);
-
-      if (wasGuest) {
-        trackEvent('account_created_from_guest');
-      }
 
       if (signUpResult === 'confirmation_required') {
         setInfoMessage(t('auth.signUpConfirmEmail'));

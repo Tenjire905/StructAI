@@ -10,10 +10,13 @@ import {
 } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 
+import { trackEvent } from '@/lib/analytics';
 import { createSessionFromUrl, subscribeToAuthDeepLinks } from '@/lib/authRedirect';
 import { runBootstrap } from '@/lib/bootstrap';
+import { isProgressSnapshotEmpty } from '@/lib/progressMerge';
 import { hydrateProgressOnLogin } from '@/lib/progressSync';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { useProgressStore } from '@/store/progressStore';
 
 type AuthContextValue = {
   session: Session | null;
@@ -32,6 +35,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const lastHydratedUserId = useRef<string | null>(null);
+  const activeSessionUserId = useRef<string | null>(null);
 
   const runProgressHydration = useCallback((userId: string) => {
     if (lastHydratedUserId.current === userId) {
@@ -57,6 +61,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
       const { data } = await supabase.auth.getSession();
       if (isMounted) {
+        activeSessionUserId.current = data.session?.user.id ?? null;
         setSession(data.session);
         setIsLoading(false);
       }
@@ -69,6 +74,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, nextSession) => {
+      const nextUserId = nextSession?.user.id ?? null;
+      const shouldTrackGuestConversion =
+        event === 'SIGNED_IN' &&
+        activeSessionUserId.current === null &&
+        nextUserId !== null &&
+        !isProgressSnapshotEmpty(useProgressStore.getState().getSnapshot());
+
+      activeSessionUserId.current = nextUserId;
+
       setTimeout(() => {
         setSession(nextSession);
         setIsLoading(false);
@@ -79,6 +93,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
         }
 
         if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+          if (shouldTrackGuestConversion) {
+            trackEvent('account_created_from_guest');
+          }
+
           runProgressHydration(nextSession.user.id);
         }
       }, 0);
@@ -136,6 +154,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const signOut = useCallback(async () => {
     lastHydratedUserId.current = null;
+    activeSessionUserId.current = null;
 
     if (!isSupabaseConfigured) {
       setSession(null);
