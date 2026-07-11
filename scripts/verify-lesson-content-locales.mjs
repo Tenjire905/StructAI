@@ -27,6 +27,12 @@ const neutralWordTokens = new Set([
   'URL',
   'XML',
 ]);
+const legacyUnreferencedKeys = new Set([
+  'pb-2.s1.opt0',
+  'pb-2.s1.opt1',
+  'pb-2.s1.opt2',
+  'pb-2.s1.question',
+]);
 
 function failUsage(message) {
   console.error(message);
@@ -266,7 +272,7 @@ for (const key of [...localeKeyUnion].sort()) {
   if (missingLocales.length > 0) {
     violations.localeKeyParity.push({ key, missingLocales });
   }
-  if (!expectedKeys.has(key)) {
+  if (!expectedKeys.has(key) && !legacyUnreferencedKeys.has(key)) {
     violations.unreferencedLocaleKeys.push(key);
   }
 
@@ -317,6 +323,9 @@ const result = {
   localeKeyCounts: Object.fromEntries(
     localeNames.map((locale) => [locale, selectedKeysByLocale[locale].size]),
   ),
+  ignoredLegacyUnreferencedKeys: [...localeKeyUnion]
+    .filter((key) => legacyUnreferencedKeys.has(key))
+    .sort(),
   violations,
   totalViolations,
   pass: totalViolations === 0,

@@ -10,12 +10,12 @@ const PROGRESS_MERGE_STRATEGY = 'max-union-per-field';
 const DEFAULT_STREAK_DAYS = [false, false, false, false, false, false, false];
 
 const PATH_CHAPTER_IDS = {
-  'prompt-basics': ['pb-1', 'pb-2', 'pb-3', 'pb-4', 'pb-5', 'pb-6', 'pb-7', 'pb-8'],
+  'prompt-basics': Array.from({ length: 45 }, (_, index) => `pb-${index + 1}`),
   'structure-lab': ['sl-1', 'sl-2', 'sl-3', 'sl-4', 'sl-5', 'sl-6'],
 };
 
 const PATH_TOTAL_CHAPTERS = {
-  'prompt-basics': 8,
+  'prompt-basics': 45,
   'structure-lab': 6,
 };
 
@@ -300,7 +300,7 @@ cases.push({
       : ['failedLessonIds should drop completed failures']),
     ...(unionCase.orbCount === 30 ? [] : ['orbCount should be max(12,30)=30']),
     ...(unionCase.completedLessons === 2 ? [] : ['completedLessons should be max(1,2)=2']),
-    ...(Math.abs(unionCase.pathProgress['prompt-basics'].progress - 3 / 8) < 0.001
+    ...(Math.abs(unionCase.pathProgress['prompt-basics'].progress - 3 / 45) < 0.001
       ? []
       : ['progress should be recomputed from merged completed count']),
   ],
