@@ -74,7 +74,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'structure-lab',
     title: 'Struktur & Constraints',
-    totalChapters: 6,
+    totalChapters: 11,
     currentChapter: 1,
     progress: 0.12,
     chapters: [
@@ -84,6 +84,11 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'sl-4', title: 'Prioritäten setzen', status: 'locked' },
       { id: 'sl-5', title: 'Konflikte auflösen', status: 'locked' },
       { id: 'sl-6', title: 'Abschlussprojekt', status: 'locked' },
+      { id: 'sl-7', title: "Delimiter-Typen im Vergleich", status: 'locked' },
+      { id: 'sl-8', title: "Verschachtelte Abschnitte", status: 'locked' },
+      { id: 'sl-9', title: "Constraints mit Ausnahmen", status: 'locked' },
+      { id: 'sl-10', title: "Strukturierte Ausgabeformate anfordern", status: 'locked' },
+      { id: 'sl-11', title: "Deine Struktur-Checkliste", status: 'locked' },
     ],
   },
   {
