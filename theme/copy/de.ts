@@ -597,6 +597,14 @@ export const copyDe: CopyCatalog = {
     playful: 'Abmelden',
     focus: 'Abmelden',
   },
+  'profile.privacySection': {
+    playful: 'Datenschutz & Nutzung',
+    focus: 'Datenschutz',
+  },
+  'profile.analyticsDisclosure': {
+    playful: 'StructAI erfasst fünf selbst gehostete Nutzungsereignisse. Bei Gästen bleiben sie anonym, nach der Anmeldung werden sie dem Konto zugeordnet. Prompts und API-Schlüssel senden wir dabei nie mit.',
+    focus: 'Fünf selbst gehostete Nutzungsereignisse messen den Aktivierungs-Funnel. Gast-Ereignisse sind anonym; angemeldete Ereignisse enthalten die Nutzer-ID. Prompt-Inhalte und API-Schlüssel werden nicht erfasst.',
+  },
   'profile.guestDisplayName': {
     playful: 'Gast',
     focus: 'Gast',

@@ -33,6 +33,7 @@ import {
   hasPassedLessonThreshold,
   type LessonAnswerResult,
 } from '@/lib/lessonRewards';
+import { trackEvent } from '@/lib/analytics';
 import { getPathIdForLesson } from '@/lib/pathLessonUtils';
 import { prepareLessonSteps } from '@/lib/lessonSession';
 import { useProgressStore } from '@/store/progressStore';
@@ -305,9 +306,17 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
       const reward = wasAlreadyCompleted
         ? 0
         : computeLessonOrbReward(lesson.orbsReward, results);
+      const isFirstLessonCompletion =
+        pathId !== undefined &&
+        !wasAlreadyCompleted &&
+        useProgressStore.getState().completedLessons === 0;
 
       setEarnedOrbs(reward);
       const newlyCompletedPathId = completeLesson(lesson.id, reward);
+
+      if (isFirstLessonCompletion && useProgressStore.getState().completedLessons === 1) {
+        trackEvent('first_lesson_completed');
+      }
 
       if (newlyCompletedPathId) {
         setCompletedPathId(newlyCompletedPathId);

@@ -597,6 +597,14 @@ export const copyEn: CopyCatalog = {
     playful: 'Sign out',
     focus: 'Sign out',
   },
+  'profile.privacySection': {
+    playful: 'Privacy & usage',
+    focus: 'Privacy',
+  },
+  'profile.analyticsDisclosure': {
+    playful: 'StructAI records five self-hosted usage events. Guest events stay anonymous; after sign-in they are linked to your account. Prompts and API keys are never included.',
+    focus: 'Five self-hosted usage events measure the activation funnel. Guest events are anonymous; signed-in events include the user ID. Prompt content and API keys are not collected.',
+  },
   'profile.guestDisplayName': {
     playful: 'Guest',
     focus: 'Guest',

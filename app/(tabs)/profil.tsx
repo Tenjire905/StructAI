@@ -195,6 +195,29 @@ export default function ProfilScreen() {
         </Card>
       </View>
 
+      <View style={{ gap: tokens.spacing.space3 }}>
+        <Text
+          style={{
+            color: tokens.colors.text.primary,
+            fontFamily: tokens.typography.fontFamily.heading,
+            fontSize: tokens.typography.fontSize.headingMd,
+          }}>
+          {t('profile.privacySection')}
+        </Text>
+
+        <Card variant="solid">
+          <Text
+            style={{
+              color: tokens.colors.text.secondary,
+              fontFamily: tokens.typography.fontFamily.body,
+              fontSize: tokens.typography.fontSize.bodyMd,
+              lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
+            }}>
+            {t('profile.analyticsDisclosure')}
+          </Text>
+        </Card>
+      </View>
+
       <ByokKeysManager />
       <SpendingLimitSettings />
     </ScrollView>
