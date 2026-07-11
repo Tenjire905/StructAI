@@ -379,6 +379,22 @@ export const copyEn: CopyCatalog = {
     playful: 'Compare models',
     focus: 'Model compare',
   },
+  'promptLab.detailHintsTitle': {
+    playful: 'Specific ways to improve',
+    focus: 'Specific hints',
+  },
+  'promptLab.comparisonTitle': {
+    playful: '+{{delta}} points — here is what improved',
+    focus: '+{{delta}} points vs. the previous draft',
+  },
+  'promptLab.demoWeakExample': {
+    playful: 'Load weak example',
+    focus: 'Weak example',
+  },
+  'promptLab.demoImprovedExample': {
+    playful: 'Load improved version',
+    focus: 'Improved version',
+  },
   'modelComparer.description': {
     playful:
       'One prompt, multiple models in parallel — swipe through answers and compare speed and cost.',
@@ -580,6 +596,30 @@ export const copyEn: CopyCatalog = {
   'profile.signOut': {
     playful: 'Sign out',
     focus: 'Sign out',
+  },
+  'profile.privacySection': {
+    playful: 'Privacy & usage',
+    focus: 'Privacy',
+  },
+  'profile.analyticsDisclosure': {
+    playful: 'StructAI records five self-hosted usage events. Guest events stay anonymous; after sign-in they are linked to your account. Prompts and API keys are never included.',
+    focus: 'Five self-hosted usage events measure the activation funnel. Guest events are anonymous; signed-in events include the user ID. Prompt content and API keys are not collected.',
+  },
+  'profile.guestDisplayName': {
+    playful: 'Guest',
+    focus: 'Guest',
+  },
+  'profile.guestAccountDescription': {
+    playful: 'You are using StructAI without an account. Progress stays on this device — sign in to sync across devices.',
+    focus: 'Guest mode. Progress is local on this device; sign in for sync and certificates.',
+  },
+  'guest.saveProgressHint': {
+    playful: 'Your progress is only on this device. An account lets you sync and keep it safe.',
+    focus: 'Progress is stored locally only. Sign in to sync and unlock certificates.',
+  },
+  'guest.saveProgressCta': {
+    playful: 'Save progress – sign in now',
+    focus: 'Save progress – sign in now',
   },
   'auth.headline': {
     playful: 'Welcome to StructAI',

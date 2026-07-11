@@ -14,6 +14,7 @@ import { ModelComparer } from '@/components/features/ModelComparer';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
 import { Badge, Button, Card, PressableScale, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
+import { trackEvent } from '@/lib/analytics';
 import {
   ScoringError,
   detectProvider,
@@ -21,7 +22,15 @@ import {
   scorePromptRemote,
 } from '@/lib/aiScoring';
 import { listApiKeys, type ByokKeyEntry } from '@/lib/secureKeyStore';
-import { scorePrompt, type PromptScore } from '@/lib/promptScoring';
+import {
+  buildDemoImprovedPrompt,
+  comparePromptScores,
+  DEMO_WEAK_PROMPT,
+  getMissingHints,
+  scorePrompt,
+  type PromptScore,
+  type PromptScoreComparison,
+} from '@/lib/promptScoring';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
@@ -48,6 +57,9 @@ export default function PromptLabScreen() {
   const addPromptScore = useProgressStore((state) => state.addPromptScore);
   const [promptInput, setPromptInput] = useState('');
   const [score, setScore] = useState<PromptScore | null>(null);
+  const [comparison, setComparison] = useState<PromptScoreComparison | null>(null);
+  const [baselineScore, setBaselineScore] = useState<PromptScore | null>(null);
+  const [baselinePrompt, setBaselinePrompt] = useState<string | null>(null);
   const [storedKeys, setStoredKeys] = useState<ByokKeyEntry[]>([]);
   const [isScoring, setIsScoring] = useState(false);
   const [fallbackNotice, setFallbackNotice] = useState<string | null>(null);
@@ -89,6 +101,11 @@ export default function PromptLabScreen() {
         ? getProviderLabel(provider)
         : null;
 
+  const handleDemoPromptViewed = (demoPrompt: string) => {
+    setPromptInput(demoPrompt);
+    trackEvent('guest_demo_prompt_viewed');
+  };
+
   const handleScore = async () => {
     if (isScoring) {
       return;
@@ -116,6 +133,15 @@ export default function PromptLabScreen() {
     }
 
     setScore(result);
+
+    if (baselineScore && baselinePrompt && baselinePrompt !== promptInput.trim()) {
+      setComparison(comparePromptScores(baselineScore, result));
+    } else {
+      setComparison(null);
+      setBaselineScore(result);
+      setBaselinePrompt(promptInput.trim());
+    }
+
     addPromptScore(result.total);
     setIsScoring(false);
   };
@@ -257,6 +283,21 @@ export default function PromptLabScreen() {
           onPress={handleScore}
           variant="primary"
         />
+
+        {storedKeys.length === 0 ? (
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.space2 }}>
+            <Button
+              label={t('promptLab.demoWeakExample')}
+              onPress={() => handleDemoPromptViewed(DEMO_WEAK_PROMPT)}
+              variant="ghost"
+            />
+            <Button
+              label={t('promptLab.demoImprovedExample')}
+              onPress={() => handleDemoPromptViewed(buildDemoImprovedPrompt(locale))}
+              variant="ghost"
+            />
+          </View>
+        ) : null}
       </View>
 
       {fallbackNotice !== null ? (
@@ -281,7 +322,7 @@ export default function PromptLabScreen() {
       ) : null}
 
       {score !== null && feedbackKey !== null ? (
-        <ScoreResult feedbackKey={feedbackKey} score={score} />
+        <ScoreResult comparison={comparison} feedbackKey={feedbackKey} score={score} />
       ) : null}
 
       <View style={{ gap: tokens.spacing.space3 }}>
@@ -307,9 +348,10 @@ export default function PromptLabScreen() {
 type ScoreResultProps = {
   score: PromptScore;
   feedbackKey: string;
+  comparison: PromptScoreComparison | null;
 };
 
-function ScoreResult({ score, feedbackKey }: ScoreResultProps) {
+function ScoreResult({ score, feedbackKey, comparison }: ScoreResultProps) {
   const { tokens, t } = useThemeMode();
   const scale = useSharedValue(0.97);
   const opacity = useSharedValue(0);
@@ -405,6 +447,64 @@ function ScoreResult({ score, feedbackKey }: ScoreResultProps) {
               </View>
             ))}
           </View>
+
+          {getMissingHints(score).length > 0 ? (
+            <View style={{ gap: tokens.spacing.space2 }}>
+              <Text
+                style={{
+                  color: tokens.colors.text.primary,
+                  fontFamily: tokens.typography.fontFamily.bodyMedium,
+                  fontSize: tokens.typography.fontSize.bodyMd,
+                }}>
+                {t('promptLab.detailHintsTitle')}
+              </Text>
+              {getMissingHints(score).map((hint) => (
+                <Text
+                  key={hint}
+                  style={{
+                    color: tokens.colors.text.secondary,
+                    fontFamily: tokens.typography.fontFamily.body,
+                    fontSize: tokens.typography.fontSize.bodySm,
+                    lineHeight: tokens.typography.fontSize.bodySm * 1.5,
+                  }}>
+                  • {hint}
+                </Text>
+              ))}
+            </View>
+          ) : null}
+
+          {comparison !== null && comparison.totalDelta > 0 ? (
+            <View
+              style={{
+                backgroundColor: tokens.colors.surface.card,
+                borderColor: tokens.colors.accent.success,
+                borderRadius: tokens.radius.md,
+                borderWidth: 1,
+                gap: tokens.spacing.space2,
+                padding: tokens.spacing.space3,
+              }}>
+              <Text
+                style={{
+                  color: tokens.colors.accent.success,
+                  fontFamily: tokens.typography.fontFamily.bodyMedium,
+                  fontSize: tokens.typography.fontSize.bodyMd,
+                }}>
+                {t('promptLab.comparisonTitle', { delta: comparison.totalDelta })}
+              </Text>
+              {comparison.improvementNotes.map((note) => (
+                <Text
+                  key={note}
+                  style={{
+                    color: tokens.colors.text.secondary,
+                    fontFamily: tokens.typography.fontFamily.body,
+                    fontSize: tokens.typography.fontSize.bodySm,
+                    lineHeight: tokens.typography.fontSize.bodySm * 1.5,
+                  }}>
+                  • {note}
+                </Text>
+              ))}
+            </View>
+          ) : null}
 
           <Text
             style={{

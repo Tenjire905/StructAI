@@ -1,28 +1,76 @@
 import { useRouter, useSegments, type Href } from 'expo-router';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { isOnboardingCompleted } from '@/lib/appStorage';
+import { isOnboardingCompleted, setOnboardingCompleted } from '@/lib/appStorage';
+import { isProgressSnapshotEmpty } from '@/lib/progressMerge';
+import { fetchProgressSnapshotForUser } from '@/lib/progressSync';
 import { useAuth } from '@/providers/AuthProvider';
 
 const DEV_ROUTE_GROUP = '(dev)';
+
+type ReturningUserCheck = {
+  userId: string;
+  status: 'checking' | 'new' | 'returning';
+};
 
 function isDevRoute(rootSegment: string | undefined): boolean {
   return rootSegment === DEV_ROUTE_GROUP;
 }
 
-function resolveAuthedRoute(): Href {
+function resolveAppEntryRoute(): Href {
   return isOnboardingCompleted() ? '/(tabs)' : '/onboarding';
 }
 
 /**
- * Single navigation gate – avoids competing <Redirect> components
- * that cause "Maximum update depth exceeded" on login.
+ * Navigation gate for onboarding and post-login routing.
+ * Guest mode: no session required — onboarding and tabs stay reachable.
+ * /auth remains a freely reachable screen for optional sign-in.
  */
 export function AuthNavigationController() {
   const router = useRouter();
   const segments = useSegments();
   const { session, isLoading } = useAuth();
   const lastTargetRef = useRef<Href | null>(null);
+  const [returningUserCheck, setReturningUserCheck] = useState<ReturningUserCheck | null>(null);
+
+  useEffect(() => {
+    if (isLoading || !session || isOnboardingCompleted()) {
+      setReturningUserCheck((current) => (current === null ? current : null));
+      return;
+    }
+
+    let cancelled = false;
+    const userId = session.user.id;
+
+    setReturningUserCheck({ userId, status: 'checking' });
+
+    void fetchProgressSnapshotForUser(userId)
+      .then((snapshot) => {
+        if (cancelled) {
+          return;
+        }
+
+        const hasRemoteActivity = snapshot !== null && !isProgressSnapshotEmpty(snapshot);
+
+        if (hasRemoteActivity) {
+          setOnboardingCompleted();
+        }
+
+        setReturningUserCheck({
+          userId,
+          status: hasRemoteActivity ? 'returning' : 'new',
+        });
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setReturningUserCheck({ userId, status: 'new' });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoading, session]);
 
   useEffect(() => {
     if (isLoading) {
@@ -37,20 +85,28 @@ export function AuthNavigationController() {
       return;
     }
 
+    const needsReturningUserCheck = session !== null && !isOnboardingCompleted();
+    const hasResolvedReturningUserCheck =
+      returningUserCheck !== null &&
+      returningUserCheck.userId === session?.user.id &&
+      returningUserCheck.status !== 'checking';
+
+    if (needsReturningUserCheck && !hasResolvedReturningUserCheck) {
+      return;
+    }
+
     let target: Href | null = null;
 
-    if (!session) {
-      if (!inAuth) {
-        target = '/auth';
+    if (inAuth) {
+      if (session) {
+        target = resolveAppEntryRoute();
       }
-    } else if (inAuth) {
-      target = resolveAuthedRoute();
     } else if (!isOnboardingCompleted() && !inOnboarding) {
       target = '/onboarding';
     } else if (isOnboardingCompleted() && inOnboarding) {
       target = '/(tabs)';
     } else if (!rootSegment) {
-      target = resolveAuthedRoute();
+      target = resolveAppEntryRoute();
     }
 
     if (!target || lastTargetRef.current === target) {
@@ -59,7 +115,7 @@ export function AuthNavigationController() {
 
     lastTargetRef.current = target;
     router.replace(target);
-  }, [isLoading, router, segments, session]);
+  }, [isLoading, returningUserCheck, router, segments, session]);
 
   useEffect(() => {
     if (!session) {

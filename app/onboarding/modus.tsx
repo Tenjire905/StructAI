@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from 'react-native';
 
 import { OrbIcon } from '@/components/features';
 import { Button, PressableScale, ProgressBar } from '@/components/ui';
+import { trackEvent } from '@/lib/analytics';
 import { setOnboardingCompleted } from '@/lib/appStorage';
 import { ThemeModeScope, useThemeMode, type ThemeMode } from '@/theme';
 
@@ -19,6 +20,7 @@ export default function OnboardingModusScreen() {
 
     setMode(selectedMode);
     setOnboardingCompleted();
+    trackEvent('onboarding_completed');
     router.replace('/');
   };
 

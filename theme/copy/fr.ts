@@ -379,6 +379,22 @@ export const copyFr: CopyCatalog = {
     playful: 'Comparer les modeles',
     focus: 'Comparaison',
   },
+  'promptLab.detailHintsTitle': {
+    playful: 'Pistes concretes d amelioration',
+    focus: 'Conseils precis',
+  },
+  'promptLab.comparisonTitle': {
+    playful: '+{{delta}} points — voici ce qui s est ameliore',
+    focus: '+{{delta}} points par rapport au brouillon precedent',
+  },
+  'promptLab.demoWeakExample': {
+    playful: 'Charger un exemple faible',
+    focus: 'Exemple faible',
+  },
+  'promptLab.demoImprovedExample': {
+    playful: 'Charger la version amelioree',
+    focus: 'Version amelioree',
+  },
   'modelComparer.description': {
     playful:
       'Un prompt, plusieurs modeles en parallele — fais defiler les reponses et compare vitesse et cout.',
@@ -580,6 +596,30 @@ export const copyFr: CopyCatalog = {
   'profile.signOut': {
     playful: 'Se deconnecter',
     focus: 'Se deconnecter',
+  },
+  'profile.privacySection': {
+    playful: 'Confidentialite et usage',
+    focus: 'Confidentialite',
+  },
+  'profile.analyticsDisclosure': {
+    playful: 'StructAI enregistre cinq evenements d usage auto-heberges. Ceux des invites restent anonymes ; apres connexion, ils sont lies au compte. Les prompts et cles API ne sont jamais inclus.',
+    focus: 'Cinq evenements d usage auto-heberges mesurent le parcours d activation. Les evenements invites sont anonymes ; ceux des comptes incluent l identifiant utilisateur. Aucun prompt ni cle API n est collecte.',
+  },
+  'profile.guestDisplayName': {
+    playful: 'Invite',
+    focus: 'Invite',
+  },
+  'profile.guestAccountDescription': {
+    playful: 'Tu utilises StructAI sans compte. La progression reste sur cet appareil — connecte-toi pour synchroniser.',
+    focus: 'Mode invite. Progression locale sur cet appareil ; connexion pour sync et certificats.',
+  },
+  'guest.saveProgressHint': {
+    playful: 'Ta progression est seulement sur cet appareil. Un compte permet de synchroniser et de la sauvegarder.',
+    focus: 'Progression stockee localement. Connexion pour sync et certificats.',
+  },
+  'guest.saveProgressCta': {
+    playful: 'Sauvegarder la progression – se connecter',
+    focus: 'Sauvegarder la progression – se connecter',
   },
   'auth.headline': {
     playful: 'Bienvenue sur StructAI',

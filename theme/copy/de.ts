@@ -379,6 +379,22 @@ export const copyDe: CopyCatalog = {
     playful: 'Modelle vergleichen',
     focus: 'Modellvergleich',
   },
+  'promptLab.detailHintsTitle': {
+    playful: 'Konkrete Verbesserungsideen',
+    focus: 'Konkrete Hinweise',
+  },
+  'promptLab.comparisonTitle': {
+    playful: '+{{delta}} Punkte – das hat sich verbessert',
+    focus: '+{{delta}} Punkte gegenüber dem vorherigen Entwurf',
+  },
+  'promptLab.demoWeakExample': {
+    playful: 'Schwaches Beispiel laden',
+    focus: 'Schwaches Beispiel',
+  },
+  'promptLab.demoImprovedExample': {
+    playful: 'Verbesserte Version laden',
+    focus: 'Verbesserte Version',
+  },
   'modelComparer.description': {
     playful:
       'Ein Prompt, mehrere Modelle parallel — swipe durch die Antworten und vergleiche Tempo und Kosten.',
@@ -580,6 +596,30 @@ export const copyDe: CopyCatalog = {
   'profile.signOut': {
     playful: 'Abmelden',
     focus: 'Abmelden',
+  },
+  'profile.privacySection': {
+    playful: 'Datenschutz & Nutzung',
+    focus: 'Datenschutz',
+  },
+  'profile.analyticsDisclosure': {
+    playful: 'StructAI erfasst fünf selbst gehostete Nutzungsereignisse. Bei Gästen bleiben sie anonym, nach der Anmeldung werden sie dem Konto zugeordnet. Prompts und API-Schlüssel senden wir dabei nie mit.',
+    focus: 'Fünf selbst gehostete Nutzungsereignisse messen den Aktivierungs-Funnel. Gast-Ereignisse sind anonym; angemeldete Ereignisse enthalten die Nutzer-ID. Prompt-Inhalte und API-Schlüssel werden nicht erfasst.',
+  },
+  'profile.guestDisplayName': {
+    playful: 'Gast',
+    focus: 'Gast',
+  },
+  'profile.guestAccountDescription': {
+    playful: 'Du nutzt StructAI ohne Konto. Fortschritt bleibt auf diesem Gerät – Anmeldung sichert ihn geräteübergreifend.',
+    focus: 'Gastmodus. Fortschritt lokal auf diesem Gerät; Anmeldung für Sync und Zertifikate.',
+  },
+  'guest.saveProgressHint': {
+    playful: 'Dein Fortschritt liegt nur auf diesem Gerät. Mit Konto sicherst du ihn und kannst später synchronisieren.',
+    focus: 'Fortschritt ist nur lokal gespeichert. Anmeldung ermöglicht Sync und Zertifikate.',
+  },
+  'guest.saveProgressCta': {
+    playful: 'Fortschritt sichern – jetzt anmelden',
+    focus: 'Fortschritt sichern – jetzt anmelden',
   },
   'auth.headline': {
     playful: 'Willkommen bei StructAI',

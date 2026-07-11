@@ -1,5 +1,9 @@
 import { clampScore, type PromptScore, type PromptScoreCategory } from './promptScoring';
 
+function buildEmptySignals(): PromptScore['signals'] {
+  return [];
+}
+
 export type AiProvider = 'openai' | 'anthropic' | 'google';
 
 export type ScoringErrorReason = 'invalidKey' | 'quota' | 'network' | 'generic';
@@ -162,7 +166,15 @@ function parseScorePayload(rawText: string): PromptScore {
     categories[category] < categories[weakest] ? category : weakest,
   );
 
-  return { total, structure, goal, constraints, weakestCategory };
+  return {
+    total,
+    structure,
+    goal,
+    constraints,
+    weakestCategory,
+    signals: buildEmptySignals(),
+    gamingPenalty: 1,
+  };
 }
 
 async function scoreWithOpenAi(prompt: string, apiKey: string): Promise<string> {
