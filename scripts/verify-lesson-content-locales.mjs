@@ -271,15 +271,22 @@ for (const key of [...localeKeyUnion].sort()) {
   }
 
   const values = localeNames.map((locale) => localeData[locale].values.get(key));
+  const isIntentionalEmptySuffix =
+    key.endsWith('.suffix') && values.every((value) => value === '');
   for (let index = 0; index < localeNames.length; index += 1) {
-    if (values[index] !== undefined && values[index].trim().length === 0) {
+    if (
+      values[index] !== undefined &&
+      values[index].trim().length === 0 &&
+      !isIntentionalEmptySuffix
+    ) {
       violations.emptyValues.push({ key, locale: localeNames[index] });
     }
   }
   if (
     values.every((value) => value !== undefined) &&
     values.every((value) => value === values[0]) &&
-    !isLanguageNeutral(values[0])
+    !isLanguageNeutral(values[0]) &&
+    !isIntentionalEmptySuffix
   ) {
     violations.identicalTranslations.push({ key, value: values[0] });
   }
