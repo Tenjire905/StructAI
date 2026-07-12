@@ -1514,10 +1514,8 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         textSegments: [
           { segmentKey: 'sl-16.s1.seg0', isError: false },
           { segmentKey: 'sl-16.s1.seg1', isError: false },
-          { segmentKey: 'sl-16.s1.seg2', isError: false },
+          { segmentKey: 'sl-16.s1.seg2', isError: true },
           { segmentKey: 'sl-16.s1.seg3', isError: false },
-          { segmentKey: 'sl-16.s1.seg4', isError: true },
-          { segmentKey: 'sl-16.s1.seg5', isError: false },
         ],
         explanationKey: 'sl-16.s1.explanation',
       },
