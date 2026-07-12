@@ -216,6 +216,10 @@ function isLanguageNeutral(value) {
   return wordTokens.length > 0 && wordTokens.every((token) => neutralWordTokens.has(token));
 }
 
+function isMonolingualErrorFindingSegmentKey(key) {
+  return /\.s\d+\.seg\d+$/.test(key);
+}
+
 const selection = parseSelection(process.argv.slice(2));
 const requestedIds = new Set(selection.ids);
 const catalog = readCatalog();
@@ -292,7 +296,8 @@ for (const key of [...localeKeyUnion].sort()) {
     values.every((value) => value !== undefined) &&
     values.every((value) => value === values[0]) &&
     !isLanguageNeutral(values[0]) &&
-    !isIntentionalEmptySuffix
+    !isIntentionalEmptySuffix &&
+    !isMonolingualErrorFindingSegmentKey(key)
   ) {
     violations.identicalTranslations.push({ key, value: values[0] });
   }

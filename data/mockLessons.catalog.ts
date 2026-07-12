@@ -1398,6 +1398,254 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
     ],
   },
   {
+    id: 'sl-12',
+    titleKey: 'sl-12.title',
+    orbsReward: 17,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'sl-12.s0.title',
+        bodyKey: 'sl-12.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'sl-12.s1.question',
+        optionKeys: ['sl-12.s1.opt0', 'sl-12.s1.opt1'],
+        correctIndex: 0,
+        explanationKey: 'sl-12.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'sl-12.s2.statement',
+        correct: false,
+        explanationKey: 'sl-12.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'sl-13',
+    titleKey: 'sl-13.title',
+    orbsReward: 17,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'sl-13.s0.title',
+        bodyKey: 'sl-13.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'sl-13.s1.question',
+        optionKeys: ['sl-13.s1.opt0', 'sl-13.s1.opt1'],
+        correctIndex: 0,
+        explanationKey: 'sl-13.s1.explanation',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'sl-13.s2.instruction',
+        itemKeys: [
+          'sl-13.s2.item0',
+          'sl-13.s2.item1',
+          'sl-13.s2.item2',
+          'sl-13.s2.item3',
+        ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'sl-13.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'sl-14',
+    titleKey: 'sl-14.title',
+    orbsReward: 16,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'sl-14.s0.title',
+        bodyKey: 'sl-14.s0.body',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'sl-14.s1.statement',
+        correct: false,
+        explanationKey: 'sl-14.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'sl-14.s2.question',
+        optionKeys: ['sl-14.s2.opt0', 'sl-14.s2.opt1'],
+        correctIndex: 1,
+        explanationKey: 'sl-14.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'sl-15',
+    titleKey: 'sl-15.title',
+    orbsReward: 16,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'sl-15.s0.title',
+        bodyKey: 'sl-15.s0.body',
+      },
+      {
+        type: 'fill_blank',
+        prefixKey: 'sl-15.s1.prefix',
+        suffixKey: 'sl-15.s1.suffix',
+        optionKeys: ['sl-15.s1.blank0', 'sl-15.s1.blank1'],
+        correctIndex: 0,
+        explanationKey: 'sl-15.s1.explanation',
+      },
+    ],
+  },
+  {
+    id: 'sl-16',
+    titleKey: 'sl-16.title',
+    orbsReward: 18,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'sl-16.s0.title',
+        bodyKey: 'sl-16.s0.body',
+      },
+      {
+        type: 'error_finding',
+        instructionKey: 'sl-16.s1.instruction',
+        textSegments: [
+          { segmentKey: 'sl-16.s1.seg0', isError: false },
+          { segmentKey: 'sl-16.s1.seg1', isError: false },
+          { segmentKey: 'sl-16.s1.seg2', isError: false },
+          { segmentKey: 'sl-16.s1.seg3', isError: false },
+          { segmentKey: 'sl-16.s1.seg4', isError: true },
+          { segmentKey: 'sl-16.s1.seg5', isError: false },
+        ],
+        explanationKey: 'sl-16.s1.explanation',
+      },
+    ],
+  },
+  {
+    id: 'sl-17',
+    titleKey: 'sl-17.title',
+    orbsReward: 18,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'sl-17.s0.title',
+        bodyKey: 'sl-17.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'sl-17.s1.question',
+        optionKeys: ['sl-17.s1.opt0', 'sl-17.s1.opt1'],
+        correctIndex: 1,
+        explanationKey: 'sl-17.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'sl-17.s2.statement',
+        correct: false,
+        explanationKey: 'sl-17.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'sl-18',
+    titleKey: 'sl-18.title',
+    orbsReward: 17,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'sl-18.s0.title',
+        bodyKey: 'sl-18.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'sl-18.s1.question',
+        optionKeys: ['sl-18.s1.opt0', 'sl-18.s1.opt1'],
+        correctIndex: 1,
+        explanationKey: 'sl-18.s1.explanation',
+      },
+    ],
+  },
+  {
+    id: 'sl-19',
+    titleKey: 'sl-19.title',
+    orbsReward: 18,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'sl-19.s0.title',
+        bodyKey: 'sl-19.s0.body',
+      },
+      {
+        type: 'matching',
+        instructionKey: 'sl-19.s1.instruction',
+        pairs: [
+          { termKey: 'sl-19.s1.term0', definitionKey: 'sl-19.s1.def0' },
+          { termKey: 'sl-19.s1.term1', definitionKey: 'sl-19.s1.def1' },
+          { termKey: 'sl-19.s1.term2', definitionKey: 'sl-19.s1.def2' },
+        ],
+        explanationKey: 'sl-19.s1.explanation',
+      },
+    ],
+  },
+  {
+    id: 'sl-20',
+    titleKey: 'sl-20.title',
+    orbsReward: 17,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'sl-20.s0.title',
+        bodyKey: 'sl-20.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'sl-20.s1.question',
+        optionKeys: ['sl-20.s1.opt0', 'sl-20.s1.opt1'],
+        correctIndex: 1,
+        explanationKey: 'sl-20.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'sl-20.s2.statement',
+        correct: false,
+        explanationKey: 'sl-20.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'sl-21',
+    titleKey: 'sl-21.title',
+    orbsReward: 20,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'sl-21.s0.title',
+        bodyKey: 'sl-21.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'sl-21.s1.question',
+        optionKeys: ['sl-21.s1.opt0', 'sl-21.s1.opt1'],
+        correctIndex: 0,
+        explanationKey: 'sl-21.s1.explanation',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'sl-21.s2.instruction',
+        itemKeys: [
+          'sl-21.s2.item0',
+          'sl-21.s2.item1',
+          'sl-21.s2.item2',
+          'sl-21.s2.item3',
+        ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'sl-21.s2.explanation',
+      },
+    ],
+  },
+  {
     id: 'cm-1',
     titleKey: 'cm-1.title',
     orbsReward: 18,

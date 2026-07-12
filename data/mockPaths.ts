@@ -74,7 +74,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'structure-lab',
     title: 'Struktur & Constraints',
-    totalChapters: 11,
+    totalChapters: 21,
     currentChapter: 1,
     progress: 0.12,
     chapters: [
@@ -89,6 +89,16 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'sl-9', title: "Constraints mit Ausnahmen", status: 'locked' },
       { id: 'sl-10', title: "Strukturierte Ausgabeformate anfordern", status: 'locked' },
       { id: 'sl-11', title: "Deine Struktur-Checkliste", status: 'locked' },
+      { id: 'sl-12', title: "Feste vs. variable Constraints", status: 'locked' },
+      { id: 'sl-13', title: "Reihenfolge von Constraints", status: 'locked' },
+      { id: 'sl-14', title: "Implizite vs. explizite Struktur", status: 'locked' },
+      { id: 'sl-15', title: "Wortzahl- vs. Zeichen- Constraints", status: 'locked' },
+      { id: 'sl-16', title: "Verbotene Elemente zuverlässig ausschließen", status: 'locked' },
+      { id: 'sl-17', title: "Strukturvorlagen für wiederkehrende Aufgaben", status: 'locked' },
+      { id: 'sl-18', title: "Grenzfälle bei Formatvorgaben", status: 'locked' },
+      { id: 'sl-19', title: "Erzwingen vs. Vorschlagen – die Formulierungsebene", status: 'locked' },
+      { id: 'sl-20', title: "Mehrsprachige Formatvorgaben", status: 'locked' },
+      { id: 'sl-21', title: "Zwischenbilanz: Struktur & Constraints kombiniert", status: 'locked' },
     ],
   },
   {
