@@ -52,6 +52,12 @@ import { resolveLessonLearningBeat } from '@/lib/lessonLearningBeat';
 import { resolveWrongAnswerCoaching } from '@/lib/lessonWrongAnswerCoaching';
 import { trackEvent } from '@/lib/analytics';
 import { isProfileOnboardingCompleted } from '@/lib/appStorage';
+import {
+  hapticCorrectAnswer,
+  hapticLessonComplete,
+  hapticPathComplete,
+  hapticWrongAnswer,
+} from '@/lib/haptics';
 import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
 import { leaveLesson, openLesson, returnToPath, isLessonOpenedFromPath } from '@/lib/lessonNavigation';
 import { runAfterUISettles } from '@/lib/runAfterUISettles';
@@ -266,38 +272,40 @@ function LessonSessionScreenContent({
   const isLastStep = stepIndex === lesson.steps.length - 1;
   const gradedStep = isGradedStep(step) ? step : null;
 
-  const isAnswerCorrect = (() => {
-    if (!gradedStep || !isChecked) {
+  const evaluateGradedStep = (candidate: GradedStep | null): boolean => {
+    if (!candidate) {
       return false;
     }
 
-    switch (gradedStep.type) {
+    switch (candidate.type) {
       case 'choice':
       case 'fill_blank':
-        return selectedOption === gradedStep.correctIndex;
+        return selectedOption === candidate.correctIndex;
       case 'true_false':
-        return selectedTrueFalse === gradedStep.correct;
+        return selectedTrueFalse === candidate.correct;
       case 'reorder':
         return reorderIndices.every(
-          (value, index) => value === gradedStep.correctOrder[index],
+          (value, index) => value === candidate.correctOrder[index],
         );
       case 'matching':
-        return gradedStep.pairs.every(
+        return candidate.pairs.every(
           (_, termIndex) =>
             matchingPairs[termIndex] !== undefined &&
-            gradedStep.definitionOrder[matchingPairs[termIndex]] === termIndex,
+            candidate.definitionOrder[matchingPairs[termIndex]] === termIndex,
         );
       case 'error_finding':
         return (
           errorFindingSelectedIndex !== null &&
-          gradedStep.textSegments[errorFindingSelectedIndex]?.isError === true
+          candidate.textSegments[errorFindingSelectedIndex]?.isError === true
         );
       case 'categorize':
-        return gradedStep.items.every(
+        return candidate.items.every(
           (item, itemIndex) => categorizeAssignments[itemIndex] === item.correctCategoryIndex,
         );
     }
-  })();
+  };
+
+  const isAnswerCorrect = isChecked && evaluateGradedStep(gradedStep);
 
   const resetStepInput = () => {
     setSelectedOption(null);
@@ -365,6 +373,12 @@ function LessonSessionScreenContent({
           ...previous,
           [stepIndex]: (previous[stepIndex] ?? 0) + 1,
         }));
+
+        if (evaluateGradedStep(gradedStep)) {
+          hapticCorrectAnswer(mode);
+        } else {
+          hapticWrongAnswer(mode);
+        }
       }
       return;
     }
@@ -449,12 +463,16 @@ function LessonSessionScreenContent({
       if (newlyCompletedPathId) {
         setCompletedPathId(newlyCompletedPathId);
         setLessonOutcome('path_complete');
+        hapticPathComplete(mode);
       } else if (pathId && isPathFinalCapstone(pathId, lesson.id)) {
         setLessonOutcome('capstone_incomplete');
+        hapticLessonComplete();
       } else if (pathId && isPathMidCapstone(pathId, lesson.id)) {
         setLessonOutcome('section_milestone');
+        hapticLessonComplete();
       } else {
         setLessonOutcome('passed');
+        hapticLessonComplete();
       }
       return;
     }
@@ -503,12 +521,14 @@ function LessonSessionScreenContent({
     if (segment?.isError) {
       setErrorFindingSelectedIndex(segmentIndex);
       setIsChecked(true);
+      hapticCorrectAnswer(mode);
       return;
     }
 
     setErrorFindingWrongIndices((previous) =>
       previous.includes(segmentIndex) ? previous : [...previous, segmentIndex],
     );
+    hapticWrongAnswer(mode);
   };
 
   const handleSelectCategorizeItem = (itemIndex: number) => {

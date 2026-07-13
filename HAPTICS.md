@@ -3,7 +3,9 @@
 
 Herkunft: Perplexity-Recherche zu Haptic-Feedback-Praxis in Pro-Tools vs. gamifizierten Consumer-Apps, an StructAIs Interaktionsmomente angepasst. Grundregel: **Haptics sind ein Präzisionsinstrument, kein Belohnungs-Dauerfeuer.** Wenn alles vibriert, verliert alles Bedeutung.
 
-Aktueller Stand: **Noch nicht implementiert.** Dies ist die Spezifikation für die Umsetzung (`expo-haptics`).
+**Aktueller Stand: Implementiert** (`lib/haptics.ts`, `expo-haptics`). Verdrahtet an: Lektions-Antwort richtig/falsch (`app/lektion/[id].tsx`, zentral über `evaluateGradedStep` für alle Step-Typen inkl. matching/categorize/error_finding), Lektion abgeschlossen, Pfad abgeschlossen, BYOK-Key hinzugefügt/getestet (`components/features/profile/ByokKeysManager.tsx`), Prompt-Lab-Vergleich erfolgreich/fehlgeschlagen (`components/features/ModelComparer.tsx`).
+
+**Bewusst offen gelassen (Folge-Schritt, kein Bug):** Granulare Pro-Paar-Haptik bei Matching/Categorize ("Selection" pro erfolgreicher Einzelzuordnung, nicht erst beim Gesamt-Check) würde eine Änderung der bestehenden Interaktionslogik erfordern (aktuell wird Korrektheit erst beim "Prüfen"-Button ausgewertet, nicht pro Zuordnung) – das ist eine UX-Entscheidung, keine reine Haptik-Ergänzung, daher hier nicht ungefragt umgesetzt. Orb-Gewinn ist in diesem Codebase-Stand untrennbar an Lektionsabschluss gekoppelt (kein eigenständiges Gain-Event) – die Lektionsabschluss-Haptik deckt das ab, eine zusätzliche separate Orb-Haptik im selben Moment würde gegen die Overuse-Regel (Abschnitt 3) verstoßen.
 
 ---
 

@@ -18,6 +18,7 @@ import {
   recordEstimatedSpend,
   type SpendingWarning,
 } from '@/lib/byokSpending';
+import { hapticPromptLabResult } from '@/lib/haptics';
 import {
   comparePromptAcrossModels,
   getCompareModelLabel,
@@ -109,6 +110,23 @@ export function ModelComparer({
     setSpendingWarning(
       getSpendingWarning(readSpendingSettings(), readSpendingTotals()),
     );
+
+    const hasSuccess = nextResults.some((result) => result.status === 'success');
+
+    if (hasSuccess) {
+      hapticPromptLabResult('success');
+    } else {
+      // Nur bei klarer Nutzerursache (ungültiger/limitierter Key) als echten
+      // Fehler werten; Netzwerkrauschen bekommt laut Haptics Map v1 höchstens
+      // ein sehr leichtes Warning statt eines Error-Impulses.
+      const isUserCaused = nextResults.some(
+        (result) =>
+          result.status === 'error' &&
+          (result.reason === 'invalidKey' || result.reason === 'quota'),
+      );
+
+      hapticPromptLabResult('failure', isUserCaused ? 'user' : 'network');
+    }
   }, []);
 
   useEffect(() => {

@@ -65,9 +65,11 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 8. **Content-Ingestion (`main`):** Prompt-Basics-Pfad auf 45 Lektionen erweitert (`pb-9` bis `pb-45`), in 4 Batches eingepflegt. `main` und `develop` waren zu diesem Zeitpunkt gleich.
 9. **Structure-Lab-Ausbau (aktuellster Stand, nur `develop`, NICHT in `main`):** `structure-lab`-Pfad von 6 auf **35/35 Zielumfang** erweitert (`sl-7` bis `sl-35`, 4 Batches). Ein Content-Qualitätsfehler dabei aufgedeckt und behoben (sl-11 categorize-Step war von Cursor eigenständig nachgedichtet statt aus Quelle übernommen → führte zur harten Prozessregel in `PRODUCT_CONCEPT.md` Abschnitt 3: nie improvisieren, Lücken melden). `main` ist Stand dieser Analyse **9 Commits hinter `develop`** – ein kuratierter Merge nach `main` steht noch aus.
 
+10. **Haptic Feedback (`lib/haptics.ts`, `expo-haptics`):** Umgesetzt gemäß `HAPTICS.md` ("Haptics Map v1") – Lektions-Antwort richtig/falsch, Lektion/Pfad abgeschlossen, BYOK-Key validiert, Prompt-Lab-Vergleich erfolgreich/fehlgeschlagen. Nächster offener Schritt laut Priorisierung ist danach das (zurückgestellte) Focus-Modus-Redesign.
+
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 
-Priorisierung war explizit: **Haptics + Content-Ingestion zuerst** (additiv, reversibel, geringes Risiko), **Focus-Modus-Redesign bewusst zurückgestellt** (teuer, schwer rückgängig, erst durch Nutzerinterviews validieren). Details siehe `HAPTICS.md` ("Haptics Map v1", noch nicht implementiert) und `THEME_MODES.md` Abschnitt 7 ("Focus-Mode Rules v1", spezifiziert aber zurückgestellt). Offene Fäden siehe `PRODUCT_CONCEPT.md` Abschnitt 6.
+Priorisierung war explizit: **Haptics + Content-Ingestion zuerst** (additiv, reversibel, geringes Risiko), **Focus-Modus-Redesign bewusst zurückgestellt** (teuer, schwer rückgängig, erst durch Nutzerinterviews validieren). Haptics sind jetzt umgesetzt (siehe Abschnitt 5, Punkt 10). Details zum noch offenen Focus-Redesign siehe `THEME_MODES.md` Abschnitt 7 ("Focus-Mode Rules v1", spezifiziert aber zurückgestellt bis Nutzerinterviews vorliegen). Offene Fäden siehe `PRODUCT_CONCEPT.md` Abschnitt 6.
 
 **Offene Remote-Branches** (Stand dieser Analyse, ggf. inzwischen gemerged – vor neuer Arbeit prüfen): `feature/content-lektionen-katalog`, `feature/dev-progress-i18n-lessons`, `feature/schritt-6-motion-pass`, `feature/schritt-j1..j4-*`. (`feature/content-ingestion-sl-batch-01/02/03` und `feature/schritt-k1/k2-*` sind bereits in `develop` gemerged, siehe Abschnitt 5 Punkt 7 und 9.)
 

@@ -72,7 +72,7 @@ Die App gilt erst als reif, wenn:
 ## 6. Offene strategische Fäden (Stand dieser Analyse)
 
 1. **Focus-Modus-Eigenständigkeit** – Perplexity-Recherche bestätigt: aktuelles Focus-Konzept ("Playful, nur gedimmt") ist wahrscheinlich nicht überzeugend genug für Power-User. Konkrete Regeln liegen bereits vor (`THEME_MODES.md`, "Focus-Mode Rules v1"), Umsetzung ist **bewusst zurückgestellt**, bis 5–8 Power-User-Interviews das Ausmaß bestätigen (teure, schwer rückgängig zu machende Änderung – "erst validieren, dann investieren").
-2. **Haptic Feedback** – aktuell **nicht implementiert**. Konkrete Regeln liegen vor (`HAPTICS.md`, "Haptics Map v1"). Wurde priorisiert VOR dem Focus-Redesign, weil additiv/reversibel/risikoarm.
+2. **Haptic Feedback** – **implementiert** (siehe `HAPTICS.md`, "Haptics Map v1"). Wurde priorisiert VOR dem Focus-Redesign, weil additiv/reversibel/risikoarm.
 3. **Content-Ausbau restliche Pfade** (il, cm, es) – noch nicht auf Zielumfang.
 4. **Zahlungsinfrastruktur (Block H)** – bewusst zurückgestellt.
 
