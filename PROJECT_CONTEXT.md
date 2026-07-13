@@ -9,7 +9,7 @@ Dieses Dokument existiert, damit **jede** Session mit Cursor sofort auf den voll
 
 ## 1. Produkt in einem Absatz
 
-**StructAI** ist eine mobile Prompting-Lern-App (Expo/React Native), die Nutzern in strukturierten Lektionen und Lernpfaden beibringt, wie man gute Prompts für LLMs schreibt. Kernfeatures: Lernpfade mit Kapiteln/Lektionen (mehrere Übungstypen: fill_blank, true_false, reorder, matching, error_finding, categorize), ein "Prompt Lab" mit Live-Scoring eigener Prompts (BYOK – Bring Your Own Key, gegen echte Modelle), ein Begleiter-Charakter ("Orb") mit Zuständen/Energie, Streaks/XP, Zertifikate bei Pfad-Abschluss, sowie zwei visuelle Modi ("Playful" vs. "Focus", siehe `THEME_MODES.md`). Zielgruppe explizit auch 35+ (daher keine Emoji-UI, seriöse Focus-Variante).
+**StructAI** ist eine mobile Prompting-Lern-App (Expo/React Native), die Nutzern in strukturierten Lektionen und Lernpfaden beibringt, wie man gute Prompts für LLMs schreibt. Kernfeatures: Lernpfade mit Kapiteln/Lektionen (mehrere Übungstypen: fill_blank, true_false, reorder, matching, error_finding, categorize), ein "Prompt Lab" mit Live-Scoring eigener Prompts (BYOK – Bring Your Own Key, gegen echte Modelle), ein Begleiter-Charakter ("Orb") mit Zuständen/Energie, Streaks/XP, Zertifikate bei Pfad-Abschluss, sowie zwei visuelle Modi ("Playful" vs. "Focus", siehe `THEME_MODES.md`). **Kernzielgruppe: ausschließlich Prompt-Power-User** (Menschen, die bereits regelmäßig mit KI-Modellen arbeiten) – keine Altersgruppen-Segmentierung, Playful/Focus ist reine Stil-Präferenz. Details zur Positionierung, BYOK-Philosophie und Geschäftslogik siehe **`PRODUCT_CONCEPT.md`**.
 
 ## 2. Tech-Stack (Stand: `package.json`)
 
@@ -62,19 +62,22 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 5. **Block D–G (`8244efa`):** Auth-Flow mit Supabase, Offline-first Progress-Sync mit Merge-Strategie (Timestamps, Dedupe), BYOK-Profil + Model-Comparer, Pfad-Abschluss-Flow, Zertifikat-Export (inkl. PNG-Fallback für Web ohne native Share).
 6. **Block J:** Neue Übungstypen – Matching, Error-Finding, Categorize (Schema-Erweiterung + Resolver + eigene Views), inkl. Step-State-Isolation-Verifikation bei gemischten Lektionen.
 7. **Block K (Aktivierungs-Funnel, K1–K3b):** Gastmodus (volle Nutzung ohne Account, Auth erst bei Sync-Bedarf), lokale Prompt-Heuristik verstärkt (überzeugende Gast-Demo ohne LLM-Call), minimales self-hosted Event-Tracking (`app_events`), Rückkehrer-Routing (Onboarding wird für Nutzer mit Server-Progress übersprungen).
-8. **Content-Ingestion (aktuellster Stand, `main`):** Prompt-Basics-Pfad auf 45 Lektionen erweitert (`pb-9` bis `pb-45`), in 4 Batches eingepflegt.
+8. **Content-Ingestion (`main`):** Prompt-Basics-Pfad auf 45 Lektionen erweitert (`pb-9` bis `pb-45`), in 4 Batches eingepflegt. `main` und `develop` waren zu diesem Zeitpunkt gleich.
+9. **Structure-Lab-Ausbau (aktuellster Stand, nur `develop`, NICHT in `main`):** `structure-lab`-Pfad von 6 auf **35/35 Zielumfang** erweitert (`sl-7` bis `sl-35`, 4 Batches). Ein Content-Qualitätsfehler dabei aufgedeckt und behoben (sl-11 categorize-Step war von Cursor eigenständig nachgedichtet statt aus Quelle übernommen → führte zur harten Prozessregel in `PRODUCT_CONCEPT.md` Abschnitt 3: nie improvisieren, Lücken melden). `main` ist Stand dieser Analyse **9 Commits hinter `develop`** – ein kuratierter Merge nach `main` steht noch aus.
 
-**Offene Remote-Branches** (noch nicht in `main`/`develop` gemerged, Stand dieser Analyse): `feature/content-ingestion-sl-batch-01/02/03`, `feature/content-lektionen-katalog`, `feature/dev-progress-i18n-lessons`, `feature/schritt-6-motion-pass`, `feature/schritt-j1..j4-*`, `feature/schritt-k1-gastmodus`, `feature/schritt-k2-heuristik-staerken`. Vor neuer Arbeit prüfen, ob diese noch relevant/gemerged sind.
+## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 
-## 6. Was in diesem Dokument NICHT abgedeckt ist (manuelle Übertragung nötig)
+Priorisierung war explizit: **Haptics + Content-Ingestion zuerst** (additiv, reversibel, geringes Risiko), **Focus-Modus-Redesign bewusst zurückgestellt** (teuer, schwer rückgängig, erst durch Nutzerinterviews validieren). Details siehe `HAPTICS.md` ("Haptics Map v1", noch nicht implementiert) und `THEME_MODES.md` Abschnitt 7 ("Focus-Mode Rules v1", spezifiziert aber zurückgestellt). Offene Fäden siehe `PRODUCT_CONCEPT.md` Abschnitt 6.
 
-Dinge, die ausschließlich in Claude-Chatverläufen/Artefakten existieren und NICHT aus dem Repo rekonstruierbar sind:
-- Das ursprüngliche **Produktkonzept-Dokument** (in `THEME_MODES.md` referenziert als "Produktkonzept, Abschnitt 9") – falls dieses nur bei Claude existiert, bitte als `PRODUCT_CONCEPT.md` ins Repo exportieren.
-- Business-/Monetarisierungs-Entscheidungen, Zielgruppen-Research (ggf. von Perplexity), Marketing-Copy-Vorgaben jenseits der App-UI.
-- Verworfene Ansätze und WARUM sie verworfen wurden (nicht im Code sichtbar, nur in Diskussion).
-- Nicht committete Design-Artefakte (Mockups, Figma-Links, Bild-Assets, die Claude ggf. beschrieben/generiert hat).
+**Offene Remote-Branches** (Stand dieser Analyse, ggf. inzwischen gemerged – vor neuer Arbeit prüfen): `feature/content-lektionen-katalog`, `feature/dev-progress-i18n-lessons`, `feature/schritt-6-motion-pass`, `feature/schritt-j1..j4-*`. (`feature/content-ingestion-sl-batch-01/02/03` und `feature/schritt-k1/k2-*` sind bereits in `develop` gemerged, siehe Abschnitt 5 Punkt 7 und 9.)
 
-Siehe die Meldung im Chat für den konkreten Übertragungsprozess für diese Punkte.
+## 7. Was inzwischen übertragen wurde – und was ggf. noch fehlt
+
+Aus dem hochgeladenen Claude-Chatverlauf und dem Perplexity-Sparring-Export übertragen (Stand dieser Analyse): Produktpositionierung, BYOK-Philosophie, Content-Strategie, Feature-Nicht-Ziele → **`PRODUCT_CONCEPT.md`**. Konkrete Focus-Mode- und Haptics-Spezifikationen → **`THEME_MODES.md`** Abschnitt 7 und **`HAPTICS.md`**.
+
+Weiterhin nur im Kopf des Gründers bzw. in nicht hochgeladenen Quellen vorhanden (bei Bedarf nachliefern):
+- Falls es Interview-Ergebnisse aus den geplanten 5–8 Power-User-Interviews zur Focus-Modus-Validierung gibt (siehe `PRODUCT_CONCEPT.md` Abschnitt 6) – bisher nur der Interview-Leitfaden erwähnt, keine Ergebnisse gesehen.
+- Nicht committete Design-Artefakte (Mockups, Figma-Links, Bild-Assets).
 
 ---
 
