@@ -118,7 +118,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'context-mastery',
     title: 'Kontext & Rollen',
-    totalChapters: 22,
+    totalChapters: 27,
     isNew: true,
     chapters: [
       { id: 'cm-1', title: 'Kontextfenster verstehen', status: 'locked' },
@@ -143,6 +143,11 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'cm-20', title: "Redundanz erkennen", status: 'locked' },
       { id: 'cm-21', title: "Lange Dokumente in Chunks", status: 'locked' },
       { id: 'cm-22', title: "Zweite Zwischenbilanz", status: 'locked' },
+      { id: 'cm-23', title: "Vorherige Turns sinnvoll mitgeben", status: 'locked' },
+      { id: 'cm-24', title: "Kontext-Drift erkennen", status: 'locked' },
+      { id: 'cm-25', title: "Rolling Summary führen", status: 'locked' },
+      { id: 'cm-26', title: "Thread-Neustart entscheiden", status: 'locked' },
+      { id: 'cm-27', title: "Dritte Zwischenbilanz", status: 'locked' },
     ],
   },
   {
