@@ -133,7 +133,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'iteration-loops',
     title: 'Iteratives Verfeinern',
-    totalChapters: 25,
+    totalChapters: 35,
     chapters: [
       { id: 'il-1', title: 'Erste Antwort bewerten', status: 'locked' },
       { id: 'il-2', title: 'Gezielt nachsteuern', status: 'locked' },
@@ -160,6 +160,16 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'il-23', title: "Ein Iterations-Changelog führen", status: 'locked' },
       { id: 'il-24', title: "Gleichen Prompt mehrfach testen", status: 'locked' },
       { id: 'il-25', title: "Vierte Zwischenbilanz", status: 'locked' },
+      { id: 'il-26', title: "Zur besten Version zurückrollen", status: 'locked' },
+      { id: 'il-27', title: "Kostenbewusst iterieren", status: 'locked' },
+      { id: 'il-28', title: "Wann \"gut genug\" akzeptieren", status: 'locked' },
+      { id: 'il-29', title: "Widersprüchliche Antworten über mehrere Läufe", status: 'locked' },
+      { id: 'il-30', title: "Iterations-Template für wiederkehrende Aufgaben", status: 'locked' },
+      { id: 'il-31', title: "Fünfte Zwischenbilanz", status: 'locked' },
+      { id: 'il-32', title: "Externes Feedback einbeziehen", status: 'locked' },
+      { id: 'il-33', title: "Automatisierte Iterationsschleifen", status: 'locked' },
+      { id: 'il-34', title: "Checkliste vor dem Abschlussprojekt", status: 'locked' },
+      { id: 'il-35', title: "Großes Abschlussprojekt: Dein Iterations-Workflow", status: 'locked' },
     ],
   },
   {
