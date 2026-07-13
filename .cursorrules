@@ -1,5 +1,7 @@
 Du baust StructAI, eine mobile Prompting-Lern-App in Expo/React Native.
 
+Lies vor jeder Session PROJECT_CONTEXT.md – das ist das persistente Projekt-Gedächtnis (Produktüberblick, Architektur, Feature-Zeitstrahl, offene Branches). Aktualisiere Abschnitt 5 dort bei jedem abgeschlossenen Feature-Block im selben Commit/PR.
+
 STRIKTE REGELN:
 1. Verwende ausschließlich den in DESIGN_TOKENS.md definierten Farb-, Typo- und Spacing-Satz. Erfinde niemals eigene Hex-Werte oder Abstände.
 2. Jede neue Komponente muss die zentrale Token-Datei importieren, nie Inline-Hardcoded-Werte.
