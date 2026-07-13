@@ -2559,6 +2559,121 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
     ],
   },
   {
+    id: 'il-16',
+    titleKey: 'il-16.title',
+    orbsReward: 17,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'il-16.s0.title',
+        bodyKey: 'il-16.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'il-16.s1.question',
+        optionKeys: ['il-16.s1.opt0', 'il-16.s1.opt1', 'il-16.s1.opt2'],
+        correctIndex: 1,
+        explanationKey: 'il-16.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'il-16.s2.statement',
+        correct: true,
+        explanationKey: 'il-16.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'il-17',
+    titleKey: 'il-17.title',
+    orbsReward: 16,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'il-17.s0.title',
+        bodyKey: 'il-17.s0.body',
+      },
+      {
+        type: 'fill_blank',
+        prefixKey: 'il-17.s1.prefix',
+        suffixKey: 'il-17.s1.suffix',
+        optionKeys: ['il-17.s1.opt0', 'il-17.s1.opt1', 'il-17.s1.opt2'],
+        correctIndex: 0,
+        explanationKey: 'il-17.s1.explanation',
+      },
+    ],
+  },
+  {
+    id: 'il-18',
+    titleKey: 'il-18.title',
+    orbsReward: 18,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'il-18.s0.title',
+        bodyKey: 'il-18.s0.body',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'il-18.s1.instruction',
+        itemKeys: [
+          'il-18.s1.item0',
+          'il-18.s1.item1',
+          'il-18.s1.item2',
+          'il-18.s1.item3',
+        ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'il-18.s1.explanation',
+      },
+    ],
+  },
+  {
+    id: 'il-19',
+    titleKey: 'il-19.title',
+    orbsReward: 17,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'il-19.s0.title',
+        bodyKey: 'il-19.s0.body',
+      },
+      {
+        type: 'error_finding',
+        instructionKey: 'il-19.s1.instruction',
+        textSegments: [
+          { segmentKey: 'il-19.s1.seg0', isError: false },
+          { segmentKey: 'il-19.s1.seg1', isError: true },
+          { segmentKey: 'il-19.s1.seg2', isError: false },
+        ],
+        explanationKey: 'il-19.s1.explanation',
+      },
+    ],
+  },
+  {
+    id: 'il-20',
+    titleKey: 'il-20.title',
+    orbsReward: 19,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'il-20.s0.title',
+        bodyKey: 'il-20.s0.body',
+      },
+      {
+        type: 'categorize',
+        instructionKey: 'il-20.s1.instruction',
+        categoryLabelKeys: ['il-20.s1.cat0', 'il-20.s1.cat1'],
+        items: [
+          { itemKey: 'il-20.s1.item0', correctCategoryIndex: 0 },
+          { itemKey: 'il-20.s1.item1', correctCategoryIndex: 1 },
+          { itemKey: 'il-20.s1.item2', correctCategoryIndex: 0 },
+          { itemKey: 'il-20.s1.item3', correctCategoryIndex: 1 },
+        ],
+        explanationKey: 'il-20.s1.explanation',
+      },
+    ],
+  },
+  {
     id: 'es-1',
     titleKey: 'es-1.title',
     orbsReward: 18,

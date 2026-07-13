@@ -133,7 +133,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'iteration-loops',
     title: 'Iteratives Verfeinern',
-    totalChapters: 15,
+    totalChapters: 20,
     chapters: [
       { id: 'il-1', title: 'Erste Antwort bewerten', status: 'locked' },
       { id: 'il-2', title: 'Gezielt nachsteuern', status: 'locked' },
@@ -150,6 +150,11 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'il-13', title: "A/B-Vergleich zweier Prompt-Formulierungen", status: 'locked' },
       { id: 'il-14', title: "Rückschritte beim Nachbessern erkennen", status: 'locked' },
       { id: 'il-15', title: "Dein Iterationsprotokoll", status: 'locked' },
+      { id: 'il-16', title: "Stop-Kriterien vor dem Start", status: 'locked' },
+      { id: 'il-17', title: "Nur den problematischen Teil neu anfordern", status: 'locked' },
+      { id: 'il-18', title: "Vorherige Antwort als Iterations-Kontext", status: 'locked' },
+      { id: 'il-19', title: "Wenn das Modell die Anweisung ignoriert", status: 'locked' },
+      { id: 'il-20', title: "Mehrere Probleme nacheinander angehen", status: 'locked' },
     ],
   },
   {
