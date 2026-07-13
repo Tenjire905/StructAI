@@ -74,7 +74,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'structure-lab',
     title: 'Struktur & Constraints',
-    totalChapters: 21,
+    totalChapters: 31,
     currentChapter: 1,
     progress: 0.12,
     chapters: [
@@ -99,6 +99,16 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'sl-19', title: "Erzwingen vs. Vorschlagen – die Formulierungsebene", status: 'locked' },
       { id: 'sl-20', title: "Mehrsprachige Formatvorgaben", status: 'locked' },
       { id: 'sl-21', title: "Zwischenbilanz: Struktur & Constraints kombiniert", status: 'locked' },
+      { id: 'sl-22', title: "Deine Constraints selbst testen", status: 'locked' },
+      { id: 'sl-23', title: "Häufige Struktur-Fehler", status: 'locked' },
+      { id: 'sl-24', title: "Sehr lange Prompts gliedern", status: 'locked' },
+      { id: 'sl-25', title: "Grounding: Nur den bereitgestellten Kontext nutzen", status: 'locked' },
+      { id: 'sl-26', title: "TL;DR zuerst", status: 'locked' },
+      { id: 'sl-27', title: "System-Prompt vs. Einzel-Prompt-Struktur", status: 'locked' },
+      { id: 'sl-28', title: "Verschachtelte Formate kombinieren", status: 'locked' },
+      { id: 'sl-29', title: "Wenn Constraints sich wirklich ausschließen", status: 'locked' },
+      { id: 'sl-30', title: "Strukturierte Prompts debuggen", status: 'locked' },
+      { id: 'sl-31', title: "Vierte Zwischenbilanz", status: 'locked' },
     ],
   },
   {
