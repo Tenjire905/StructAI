@@ -118,7 +118,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'context-mastery',
     title: 'Kontext & Rollen',
-    totalChapters: 27,
+    totalChapters: 35,
     isNew: true,
     chapters: [
       { id: 'cm-1', title: 'Kontextfenster verstehen', status: 'locked' },
@@ -127,7 +127,7 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'cm-4', title: 'Ton & Stil steuern', status: 'locked' },
       { id: 'cm-5', title: 'Persona-Techniken', status: 'locked' },
       { id: 'cm-6', title: 'Kontext-Overload vermeiden', status: 'locked' },
-      { id: 'cm-7', title: 'Abschlussprojekt', status: 'locked' },
+      { id: 'cm-7', title: "Kontext meisterhaft dosieren", status: 'locked' },
       { id: 'cm-8', title: "System-Prompt vs. User-Nachricht", status: 'locked' },
       { id: 'cm-9', title: "Few-Shot-Beispiele einsetzen", status: 'locked' },
       { id: 'cm-10', title: "Nur bereitgestellten Kontext nutzen", status: 'locked' },
@@ -148,6 +148,14 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'cm-25', title: "Rolling Summary führen", status: 'locked' },
       { id: 'cm-26', title: "Thread-Neustart entscheiden", status: 'locked' },
       { id: 'cm-27', title: "Dritte Zwischenbilanz", status: 'locked' },
+      { id: 'cm-28', title: "Kontext an Modellgrenzen anpassen", status: 'locked' },
+      { id: 'cm-29', title: "RAG und externe Quellen einbinden", status: 'locked' },
+      { id: 'cm-30', title: "Sensible Daten im Kontext", status: 'locked' },
+      { id: 'cm-31', title: "Kontext-Templates nutzen", status: 'locked' },
+      { id: 'cm-32', title: "Vierte Zwischenbilanz", status: 'locked' },
+      { id: 'cm-33', title: "Kontext-Inkonsistenzen auflösen", status: 'locked' },
+      { id: 'cm-34', title: "Kontext-Prompts debuggen", status: 'locked' },
+      { id: 'cm-35', title: "Großes Abschlussprojekt: Dein Kontext-Baukasten", status: 'locked' },
     ],
   },
   {

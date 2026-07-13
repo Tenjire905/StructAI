@@ -2803,6 +2803,275 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
     ],
   },
   {
+    id: 'cm-28',
+    titleKey: 'cm-28.title',
+    orbsReward: 16,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-28.s0.title',
+        bodyKey: 'cm-28.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-28.s1.question',
+        optionKeys: [
+        'cm-28.s1.opt0',
+        'cm-28.s1.opt1',
+        'cm-28.s1.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'cm-28.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'cm-28.s2.statement',
+        correct: true,
+        explanationKey: 'cm-28.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-29',
+    titleKey: 'cm-29.title',
+    orbsReward: 17,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-29.s0.title',
+        bodyKey: 'cm-29.s0.body',
+      },
+      {
+        type: 'matching',
+        instructionKey: 'cm-29.s1.instruction',
+        pairs: [
+          { termKey: 'cm-29.s1.term0', definitionKey: 'cm-29.s1.def0' },
+          { termKey: 'cm-29.s1.term1', definitionKey: 'cm-29.s1.def1' },
+          { termKey: 'cm-29.s1.term2', definitionKey: 'cm-29.s1.def2' },
+        ],
+        explanationKey: 'cm-29.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-29.s2.question',
+        optionKeys: [
+        'cm-29.s2.opt0',
+        'cm-29.s2.opt1',
+        'cm-29.s2.opt2',
+      ],
+        correctIndex: 0,
+        explanationKey: 'cm-29.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-30',
+    titleKey: 'cm-30.title',
+    orbsReward: 17,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-30.s0.title',
+        bodyKey: 'cm-30.s0.body',
+      },
+      {
+        type: 'error_finding',
+        instructionKey: 'cm-30.s1.instruction',
+        textSegments: [
+          { segmentKey: 'cm-30.s1.seg0', isError: false },
+          { segmentKey: 'cm-30.s1.seg1', isError: true },
+          { segmentKey: 'cm-30.s1.seg2', isError: false },
+        ],
+        explanationKey: 'cm-30.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-30.s2.question',
+        optionKeys: [
+        'cm-30.s2.opt0',
+        'cm-30.s2.opt1',
+        'cm-30.s2.opt2',
+      ],
+        correctIndex: 2,
+        explanationKey: 'cm-30.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-31',
+    titleKey: 'cm-31.title',
+    orbsReward: 16,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-31.s0.title',
+        bodyKey: 'cm-31.s0.body',
+      },
+      {
+        type: 'fill_blank',
+        prefixKey: 'cm-31.s1.prefix',
+        suffixKey: 'cm-31.s1.suffix',
+        optionKeys: [
+        'cm-31.s1.opt0',
+        'cm-31.s1.opt1',
+        'cm-31.s1.opt2',
+      ],
+        correctIndex: 0,
+        explanationKey: 'cm-31.s1.explanation',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'cm-31.s2.instruction',
+        itemKeys: [
+        'cm-31.s2.item0',
+        'cm-31.s2.item1',
+        'cm-31.s2.item2',
+        'cm-31.s2.item3',
+      ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'cm-31.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-32',
+    titleKey: 'cm-32.title',
+    orbsReward: 18,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-32.s0.title',
+        bodyKey: 'cm-32.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-32.s1.question',
+        optionKeys: [
+        'cm-32.s1.opt0',
+        'cm-32.s1.opt1',
+        'cm-32.s1.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'cm-32.s1.explanation',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'cm-32.s2.instruction',
+        itemKeys: [
+        'cm-32.s2.item0',
+        'cm-32.s2.item1',
+        'cm-32.s2.item2',
+        'cm-32.s2.item3',
+      ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'cm-32.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-33',
+    titleKey: 'cm-33.title',
+    orbsReward: 16,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-33.s0.title',
+        bodyKey: 'cm-33.s0.body',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'cm-33.s1.statement',
+        correct: false,
+        explanationKey: 'cm-33.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-33.s2.question',
+        optionKeys: [
+        'cm-33.s2.opt0',
+        'cm-33.s2.opt1',
+        'cm-33.s2.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'cm-33.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-34',
+    titleKey: 'cm-34.title',
+    orbsReward: 19,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-34.s0.title',
+        bodyKey: 'cm-34.s0.body',
+      },
+      {
+        type: 'categorize',
+        instructionKey: 'cm-34.s1.instruction',
+        categoryLabelKeys: [
+        'cm-34.s1.cat0',
+        'cm-34.s1.cat1',
+      ],
+        items: [
+          { itemKey: 'cm-34.s1.item0', correctCategoryIndex: 0 },
+          { itemKey: 'cm-34.s1.item1', correctCategoryIndex: 1 },
+          { itemKey: 'cm-34.s1.item2', correctCategoryIndex: 0 },
+          { itemKey: 'cm-34.s1.item3', correctCategoryIndex: 1 },
+        ],
+        explanationKey: 'cm-34.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-34.s2.question',
+        optionKeys: [
+        'cm-34.s2.opt0',
+        'cm-34.s2.opt1',
+        'cm-34.s2.opt2',
+      ],
+        correctIndex: 2,
+        explanationKey: 'cm-34.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-35',
+    titleKey: 'cm-35.title',
+    orbsReward: 25,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-35.s0.title',
+        bodyKey: 'cm-35.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-35.s1.question',
+        optionKeys: [
+        'cm-35.s1.opt0',
+        'cm-35.s1.opt1',
+        'cm-35.s1.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'cm-35.s1.explanation',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'cm-35.s2.instruction',
+        itemKeys: [
+        'cm-35.s2.item0',
+        'cm-35.s2.item1',
+        'cm-35.s2.item2',
+        'cm-35.s2.item3',
+        'cm-35.s2.item4',
+      ],
+        correctOrder: [0, 1, 2, 3, 4],
+        explanationKey: 'cm-35.s2.explanation',
+      },
+    ],
+  },
+  {
     id: 'il-1',
     titleKey: 'il-1.title',
     orbsReward: 18,
