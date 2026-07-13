@@ -2183,6 +2183,135 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
     ],
   },
   {
+    id: 'cm-8',
+    titleKey: 'cm-8.title',
+    orbsReward: 16,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-8.s0.title',
+        bodyKey: 'cm-8.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-8.s1.question',
+        optionKeys: ['cm-8.s1.opt0', 'cm-8.s1.opt1', 'cm-8.s1.opt2'],
+        correctIndex: 1,
+        explanationKey: 'cm-8.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'cm-8.s2.statement',
+        correct: false,
+        explanationKey: 'cm-8.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-9',
+    titleKey: 'cm-9.title',
+    orbsReward: 17,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-9.s0.title',
+        bodyKey: 'cm-9.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-9.s1.question',
+        optionKeys: ['cm-9.s1.opt0', 'cm-9.s1.opt1', 'cm-9.s1.opt2'],
+        correctIndex: 0,
+        explanationKey: 'cm-9.s1.explanation',
+      },
+      {
+        type: 'fill_blank',
+        prefixKey: 'cm-9.s2.prefix',
+        suffixKey: 'cm-9.s2.suffix',
+        optionKeys: ['cm-9.s2.opt0', 'cm-9.s2.opt1', 'cm-9.s2.opt2'],
+        correctIndex: 0,
+        explanationKey: 'cm-9.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-10',
+    titleKey: 'cm-10.title',
+    orbsReward: 17,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-10.s0.title',
+        bodyKey: 'cm-10.s0.body',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'cm-10.s1.instruction',
+        itemKeys: ['cm-10.s1.item0', 'cm-10.s1.item1', 'cm-10.s1.item2', 'cm-10.s1.item3'],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'cm-10.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-10.s2.question',
+        optionKeys: ['cm-10.s2.opt0', 'cm-10.s2.opt1', 'cm-10.s2.opt2'],
+        correctIndex: 2,
+        explanationKey: 'cm-10.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-11',
+    titleKey: 'cm-11.title',
+    orbsReward: 16,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-11.s0.title',
+        bodyKey: 'cm-11.s0.body',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'cm-11.s1.statement',
+        correct: true,
+        explanationKey: 'cm-11.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-11.s2.question',
+        optionKeys: ['cm-11.s2.opt0', 'cm-11.s2.opt1', 'cm-11.s2.opt2'],
+        correctIndex: 1,
+        explanationKey: 'cm-11.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'cm-12',
+    titleKey: 'cm-12.title',
+    orbsReward: 18,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'cm-12.s0.title',
+        bodyKey: 'cm-12.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'cm-12.s1.question',
+        optionKeys: ['cm-12.s1.opt0', 'cm-12.s1.opt1', 'cm-12.s1.opt2'],
+        correctIndex: 1,
+        explanationKey: 'cm-12.s1.explanation',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'cm-12.s2.instruction',
+        itemKeys: ['cm-12.s2.item0', 'cm-12.s2.item1', 'cm-12.s2.item2', 'cm-12.s2.item3'],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'cm-12.s2.explanation',
+      },
+    ],
+  },
+  {
     id: 'il-1',
     titleKey: 'il-1.title',
     orbsReward: 18,

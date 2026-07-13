@@ -118,7 +118,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'context-mastery',
     title: 'Kontext & Rollen',
-    totalChapters: 7,
+    totalChapters: 12,
     isNew: true,
     chapters: [
       { id: 'cm-1', title: 'Kontextfenster verstehen', status: 'locked' },
@@ -128,6 +128,11 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'cm-5', title: 'Persona-Techniken', status: 'locked' },
       { id: 'cm-6', title: 'Kontext-Overload vermeiden', status: 'locked' },
       { id: 'cm-7', title: 'Abschlussprojekt', status: 'locked' },
+      { id: 'cm-8', title: "System-Prompt vs. User-Nachricht", status: 'locked' },
+      { id: 'cm-9', title: "Few-Shot-Beispiele einsetzen", status: 'locked' },
+      { id: 'cm-10', title: "Nur bereitgestellten Kontext nutzen", status: 'locked' },
+      { id: 'cm-11', title: "Kontext-Reihenfolge nutzen", status: 'locked' },
+      { id: 'cm-12', title: "Erste Zwischenbilanz", status: 'locked' },
     ],
   },
   {
