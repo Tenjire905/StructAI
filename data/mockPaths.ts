@@ -74,7 +74,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'structure-lab',
     title: 'Struktur & Constraints',
-    totalChapters: 31,
+    totalChapters: 35,
     currentChapter: 1,
     progress: 0.12,
     chapters: [
@@ -109,6 +109,10 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'sl-29', title: "Wenn Constraints sich wirklich ausschließen", status: 'locked' },
       { id: 'sl-30', title: "Strukturierte Prompts debuggen", status: 'locked' },
       { id: 'sl-31', title: "Vierte Zwischenbilanz", status: 'locked' },
+      { id: 'sl-32', title: "Struktur-Vorlagen für andere dokumentieren", status: 'locked' },
+      { id: 'sl-33', title: "Redundanz vs. Wiederholung zur Betonung", status: 'locked' },
+      { id: 'sl-34', title: "Struktur an Modellgrenzen anpassen", status: 'locked' },
+      { id: 'sl-35', title: "Großes Abschlussprojekt: Dein Struktur-Baukasten", status: 'locked' },
     ],
   },
   {
