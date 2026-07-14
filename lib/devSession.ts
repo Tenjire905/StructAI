@@ -10,7 +10,7 @@ export const DEV_FRESH_SESSION_ON_LAUNCH = false;
 
 export function resetDevAccountSession(): void {
   clearPersistedProgress();
-  clearOnboardingCompleted();
+  void clearOnboardingCompleted();
 }
 
 export function shouldRunDevFreshSession(hasAuthenticatedSession: boolean): boolean {

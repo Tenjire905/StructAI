@@ -98,6 +98,7 @@ function createNativeStorage(): KeyValueStorage {
 
 let storageInstance: KeyValueStorage | null = null;
 let serverStorageInstance: KeyValueStorage | null = null;
+let hydratePromise: Promise<void> | null = null;
 
 function resolveStorage(): KeyValueStorage {
   if (!isClientEnvironment()) {
@@ -115,7 +116,7 @@ function resolveStorage(): KeyValueStorage {
   return storageInstance;
 }
 
-export async function hydrateAppStorage(): Promise<void> {
+async function hydrateAppStorageInternal(): Promise<void> {
   resolveStorage();
 
   if (!asyncStorageMemory) {
@@ -144,6 +145,35 @@ export async function hydrateAppStorage(): Promise<void> {
   }
 }
 
+export function hydrateAppStorage(): Promise<void> {
+  if (!hydratePromise) {
+    hydratePromise = hydrateAppStorageInternal();
+  }
+
+  return hydratePromise;
+}
+
+/** Durable write — awaits AsyncStorage in Expo Go instead of fire-and-forget. */
+export async function persistAppStorageValue(key: string, value: string): Promise<void> {
+  resolveStorage().set(key, value);
+
+  if (!asyncStorageMemory) {
+    return;
+  }
+
+  await AsyncStorage.setItem(STORAGE_PREFIX + key, value);
+}
+
+export async function deleteAppStorageValue(key: string): Promise<void> {
+  resolveStorage().delete(key);
+
+  if (!asyncStorageMemory) {
+    return;
+  }
+
+  await AsyncStorage.removeItem(STORAGE_PREFIX + key);
+}
+
 export const appStorage: KeyValueStorage = {
   get isMemoryOnly() {
     return resolveStorage().isMemoryOnly;
@@ -155,17 +185,45 @@ export const appStorage: KeyValueStorage = {
 };
 
 const ONBOARDING_COMPLETED_KEY = 'structai.onboarding-completed';
+const PROGRESS_STORAGE_KEY = 'structai.progress.v1';
+
+function hasPersistedGuestProgress(): boolean {
+  const raw = appStorage.getString(PROGRESS_STORAGE_KEY);
+
+  if (!raw) {
+    return false;
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as {
+      completedLessons?: number;
+      pathProgress?: Record<string, unknown>;
+    };
+
+    return (
+      (parsed.completedLessons ?? 0) > 0 ||
+      Object.keys(parsed.pathProgress ?? {}).length > 0
+    );
+  } catch {
+    return false;
+  }
+}
 
 export function isOnboardingCompleted(): boolean {
-  return appStorage.getString(ONBOARDING_COMPLETED_KEY) === 'true';
+  if (appStorage.getString(ONBOARDING_COMPLETED_KEY) === 'true') {
+    return true;
+  }
+
+  // Safety net: guests with saved lesson progress already finished onboarding once.
+  return hasPersistedGuestProgress();
 }
 
-export function setOnboardingCompleted(): void {
-  appStorage.set(ONBOARDING_COMPLETED_KEY, 'true');
+export async function setOnboardingCompleted(): Promise<void> {
+  await persistAppStorageValue(ONBOARDING_COMPLETED_KEY, 'true');
 }
 
-export function clearOnboardingCompleted(): void {
-  appStorage.delete(ONBOARDING_COMPLETED_KEY);
+export async function clearOnboardingCompleted(): Promise<void> {
+  await deleteAppStorageValue(ONBOARDING_COMPLETED_KEY);
 }
 
 export function isExpoGoMemoryStorage(): boolean {

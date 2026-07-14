@@ -21,8 +21,8 @@ export default function OnboardingLoopScreen() {
   const router = useRouter();
   const firstLessonId = getFirstLessonIdForPath(DEFAULT_START_PATH_ID);
 
-  const finishOnboarding = () => {
-    setOnboardingCompleted();
+  const finishOnboarding = async () => {
+    await setOnboardingCompleted();
     trackEvent('onboarding_completed');
   };
 
@@ -82,18 +82,20 @@ export default function OnboardingLoopScreen() {
         <Button
           label={t('onboarding.loopCta')}
           onPress={() => {
-            finishOnboarding();
-            if (firstLessonId) {
-              router.replace(`/lektion/${firstLessonId}`);
-            }
+            void finishOnboarding().then(() => {
+              if (firstLessonId) {
+                router.replace(`/lektion/${firstLessonId}`);
+              }
+            });
           }}
           variant="primary"
         />
         <Button
           label={t('onboarding.loopHomeCta')}
           onPress={() => {
-            finishOnboarding();
-            router.replace('/');
+            void finishOnboarding().then(() => {
+              router.replace('/');
+            });
           }}
           variant="ghost"
         />

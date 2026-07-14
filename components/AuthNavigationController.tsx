@@ -1,7 +1,7 @@
 import { useRouter, useSegments, type Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 
-import { isOnboardingCompleted, setOnboardingCompleted } from '@/lib/appStorage';
+import { hydrateAppStorage, isOnboardingCompleted, setOnboardingCompleted } from '@/lib/appStorage';
 import { isProgressSnapshotEmpty } from '@/lib/progressMerge';
 import { fetchProgressSnapshotForUser } from '@/lib/progressSync';
 import { useAuth } from '@/providers/AuthProvider';
@@ -66,7 +66,7 @@ export function AuthNavigationController() {
         const hasRemoteActivity = snapshot !== null && !isProgressSnapshotEmpty(snapshot);
 
         if (hasRemoteActivity) {
-          setOnboardingCompleted();
+          void setOnboardingCompleted();
         }
 
         setReturningUserCheck({
@@ -90,54 +90,67 @@ export function AuthNavigationController() {
       return;
     }
 
-    const rootSegment = segments[0];
-    const inAuth = rootSegment === 'auth';
-    const inOnboarding = rootSegment === 'onboarding';
+    let cancelled = false;
+    let navigationTimer: ReturnType<typeof setTimeout> | undefined;
 
-    if (isDevRoute(rootSegment)) {
-      return;
-    }
-
-    const needsReturningUserCheck = session !== null && !isOnboardingCompleted();
-    const hasResolvedReturningUserCheck =
-      returningUserCheck !== null &&
-      returningUserCheck.userId === session?.user.id &&
-      returningUserCheck.status !== 'checking';
-
-    if (needsReturningUserCheck && !hasResolvedReturningUserCheck) {
-      return;
-    }
-
-    let target: Href | null = null;
-
-    if (inAuth) {
-      if (session) {
-        target = resolveAppEntryRoute();
-      }
-    } else if (!isOnboardingCompleted() && !inOnboarding) {
-      target = '/onboarding';
-    } else if (isOnboardingCompleted() && inOnboarding) {
-      target = '/(tabs)';
-    } else if (!rootSegment) {
-      target = resolveAppEntryRoute();
-    }
-
-    if (!target || lastTargetRef.current === target) {
-      return;
-    }
-
-    lastTargetRef.current = target;
-
-    const navigationTimer = setTimeout(() => {
-      if (!isMountedRef.current) {
+    void hydrateAppStorage().then(() => {
+      if (cancelled || !isMountedRef.current) {
         return;
       }
 
-      router.replace(target);
-    }, 0);
+      const rootSegment = segments[0];
+      const inAuth = rootSegment === 'auth';
+      const inOnboarding = rootSegment === 'onboarding';
+
+      if (isDevRoute(rootSegment)) {
+        return;
+      }
+
+      const needsReturningUserCheck = session !== null && !isOnboardingCompleted();
+      const hasResolvedReturningUserCheck =
+        returningUserCheck !== null &&
+        returningUserCheck.userId === session?.user.id &&
+        returningUserCheck.status !== 'checking';
+
+      if (needsReturningUserCheck && !hasResolvedReturningUserCheck) {
+        return;
+      }
+
+      let target: Href | null = null;
+
+      if (inAuth) {
+        if (session) {
+          target = resolveAppEntryRoute();
+        }
+      } else if (!isOnboardingCompleted() && !inOnboarding) {
+        target = '/onboarding';
+      } else if (isOnboardingCompleted() && inOnboarding) {
+        target = '/(tabs)';
+      } else if (!rootSegment) {
+        target = resolveAppEntryRoute();
+      }
+
+      if (!target || lastTargetRef.current === target) {
+        return;
+      }
+
+      lastTargetRef.current = target;
+
+      navigationTimer = setTimeout(() => {
+        if (!isMountedRef.current) {
+          return;
+        }
+
+        router.replace(target);
+      }, 0);
+    });
 
     return () => {
-      clearTimeout(navigationTimer);
+      cancelled = true;
+
+      if (navigationTimer) {
+        clearTimeout(navigationTimer);
+      }
     };
   }, [isLoading, returningUserCheck, router, segments, session]);
 

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { appStorage } from '@/lib/appStorage';
+import { appStorage, deleteAppStorageValue, persistAppStorageValue } from '@/lib/appStorage';
 import {
   detectNewlyCompletedPathId,
   reconcileCompletedPathIds,
@@ -68,7 +68,9 @@ function readProgressSnapshot(): ProgressSnapshot {
 }
 
 function writeProgressSnapshot(snapshot: ProgressSnapshot): void {
-  appStorage.set(PROGRESS_STORAGE_KEY, JSON.stringify(snapshot));
+  const serialized = JSON.stringify(snapshot);
+  appStorage.set(PROGRESS_STORAGE_KEY, serialized);
+  void persistAppStorageValue(PROGRESS_STORAGE_KEY, serialized);
 }
 
 function scheduleProgressSync(snapshot: ProgressSnapshot): void {
@@ -382,4 +384,5 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
 /** Außerhalb von React: Fortschritt löschen (Dev-Reset). */
 export function clearPersistedProgress(): void {
   appStorage.delete(PROGRESS_STORAGE_KEY);
+  void deleteAppStorageValue(PROGRESS_STORAGE_KEY);
 }
