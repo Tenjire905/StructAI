@@ -116,7 +116,6 @@ export default function HomeScreen() {
             return (
             <PathCard
               currentChapter={path.currentChapter}
-              failedSegments={progressBar.failedSegments}
               key={path.id}
               onPress={() => router.push(`/lektion/${path.resumeLessonId}`)}
               progress={progressBar.completedRatio}

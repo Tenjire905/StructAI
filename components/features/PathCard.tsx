@@ -7,7 +7,6 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Badge, ProgressBar } from '@/components/ui';
-import type { PathProgressSegment } from '@/lib/pathProgress';
 import { getShadow, useThemeMode } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -18,7 +17,6 @@ type PathCardProps = {
   /** Ohne currentChapter/progress rendert die Karte den "nicht gestartet"-Zustand. */
   currentChapter?: number;
   progress?: number;
-  failedSegments?: PathProgressSegment[];
   badgeLabel?: string;
   badgeTone?: 'primary' | 'structure' | 'warning' | 'success';
   locked?: boolean;
@@ -30,7 +28,6 @@ export function PathCard({
   totalChapters,
   currentChapter,
   progress,
-  failedSegments,
   badgeLabel,
   badgeTone = 'primary',
   locked = false,
@@ -117,11 +114,7 @@ export function PathCard({
       </Text>
 
       {isStarted ? (
-        <ProgressBar
-          color="structure"
-          failedSegments={failedSegments}
-          progress={progress}
-        />
+        <ProgressBar color="structure" progress={progress} />
       ) : null}
     </AnimatedPressable>
   );

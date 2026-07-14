@@ -58,7 +58,6 @@ export default function LernpfadeScreen() {
             return (
             <PathCard
               currentChapter={path.currentChapter}
-              failedSegments={progressBar.failedSegments}
               key={path.id}
               onPress={() => router.push(`/lernpfad/${path.id}`)}
               progress={progressBar.completedRatio}

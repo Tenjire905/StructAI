@@ -112,11 +112,7 @@ export default function LernpfadDetailScreen() {
               </Text>
             </View>
 
-            <ProgressBar
-              color="structure"
-              failedSegments={progressBar.failedSegments}
-              progress={progressBar.completedRatio}
-            />
+            <ProgressBar color="structure" progress={progressBar.completedRatio} />
 
             <Text
               style={{
