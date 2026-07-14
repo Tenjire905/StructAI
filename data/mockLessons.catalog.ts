@@ -4598,6 +4598,171 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
       },
     ],
   },
+  {
+    id: 'es-23',
+    titleKey: 'es-23.title',
+    orbsReward: 19,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-23.s0.title',
+        bodyKey: 'es-23.s0.body',
+      },
+      {
+        type: 'fill_blank',
+        prefixKey: 'es-23.s1.prefix',
+        suffixKey: 'es-23.s1.suffix',
+        optionKeys: [
+        'es-23.s1.opt0',
+        'es-23.s1.opt1',
+        'es-23.s1.opt2',
+      ],
+        correctIndex: 0,
+        explanationKey: 'es-23.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-23.s2.question',
+        optionKeys: [
+        'es-23.s2.opt0',
+        'es-23.s2.opt1',
+        'es-23.s2.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'es-23.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-24',
+    titleKey: 'es-24.title',
+    orbsReward: 20,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-24.s0.title',
+        bodyKey: 'es-24.s0.body',
+      },
+      {
+        type: 'matching',
+        instructionKey: 'es-24.s1.instruction',
+        pairs: [
+          { termKey: 'es-24.s1.term0', definitionKey: 'es-24.s1.def0' },
+          { termKey: 'es-24.s1.term1', definitionKey: 'es-24.s1.def1' },
+          { termKey: 'es-24.s1.term2', definitionKey: 'es-24.s1.def2' },
+        ],
+        explanationKey: 'es-24.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-24.s2.question',
+        optionKeys: [
+        'es-24.s2.opt0',
+        'es-24.s2.opt1',
+        'es-24.s2.opt2',
+      ],
+        correctIndex: 0,
+        explanationKey: 'es-24.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-25',
+    titleKey: 'es-25.title',
+    orbsReward: 21,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-25.s0.title',
+        bodyKey: 'es-25.s0.body',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'es-25.s1.statement',
+        correct: false,
+        explanationKey: 'es-25.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-25.s2.question',
+        optionKeys: [
+        'es-25.s2.opt0',
+        'es-25.s2.opt1',
+        'es-25.s2.opt2',
+      ],
+        correctIndex: 2,
+        explanationKey: 'es-25.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-26',
+    titleKey: 'es-26.title',
+    orbsReward: 21,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-26.s0.title',
+        bodyKey: 'es-26.s0.body',
+      },
+      {
+        type: 'error_finding',
+        instructionKey: 'es-26.s1.instruction',
+        textSegments: [
+          { segmentKey: 'es-26.s1.seg0', isError: false },
+          { segmentKey: 'es-26.s1.seg1', isError: true },
+          { segmentKey: 'es-26.s1.seg2', isError: false },
+        ],
+        explanationKey: 'es-26.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-26.s2.question',
+        optionKeys: [
+        'es-26.s2.opt0',
+        'es-26.s2.opt1',
+        'es-26.s2.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'es-26.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-27',
+    titleKey: 'es-27.title',
+    orbsReward: 23,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-27.s0.title',
+        bodyKey: 'es-27.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-27.s1.question',
+        optionKeys: [
+        'es-27.s1.opt0',
+        'es-27.s1.opt1',
+        'es-27.s1.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'es-27.s1.explanation',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'es-27.s2.instruction',
+        itemKeys: [
+        'es-27.s2.item0',
+        'es-27.s2.item1',
+        'es-27.s2.item2',
+        'es-27.s2.item3',
+      ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'es-27.s2.explanation',
+      },
+    ],
+  },
 
 ];
 
