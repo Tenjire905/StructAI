@@ -12,8 +12,10 @@ import { useThemeMode } from '@/theme';
 type ProgressColor = 'primary' | 'structure';
 
 type ProgressBarProps = {
-  /** Completed portion (0–1). */
+  /** Completed portion (0–1) for simple aggregate bars. */
   progress: number;
+  /** Positional completed chapters — overrides aggregate fill when provided. */
+  completedSegments?: PathProgressSegment[];
   /** Skipped/failed chapters at their path positions (not yet passed). */
   failedSegments?: PathProgressSegment[];
   color?: ProgressColor;
@@ -22,28 +24,29 @@ type ProgressBarProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-type FailedSegmentLayout = {
+type SegmentLayout = {
   key: string;
   left: number;
   width: number;
 };
 
-const MIN_FAILED_SEGMENT_PX = 4;
+const MIN_SEGMENT_PX = 4;
 
-function layoutFailedSegments(
+function layoutPathSegments(
   segments: PathProgressSegment[],
   trackWidthPx: number,
-): FailedSegmentLayout[] {
+  keyPrefix: string,
+): SegmentLayout[] {
   if (trackWidthPx <= 0 || segments.length === 0) {
     return [];
   }
 
   return segments.map((segment, index) => {
     const left = trackWidthPx * segment.start;
-    const width = Math.max(trackWidthPx * segment.width, MIN_FAILED_SEGMENT_PX);
+    const width = Math.max(trackWidthPx * segment.width, MIN_SEGMENT_PX);
 
     return {
-      key: `failed-${segment.start}-${index}`,
+      key: `${keyPrefix}-${segment.start}-${index}`,
       left: Math.min(left, Math.max(0, trackWidthPx - width)),
       width: Math.min(width, trackWidthPx - left),
     };
@@ -52,6 +55,7 @@ function layoutFailedSegments(
 
 export function ProgressBar({
   progress,
+  completedSegments,
   failedSegments = [],
   color = 'primary',
   height,
@@ -60,18 +64,26 @@ export function ProgressBar({
   const { tokens } = useThemeMode();
   const barHeight = height ?? tokens.spacing.space2;
   const clampedProgress = Math.min(1, Math.max(0, progress));
+  const usePositionalCompleted = completedSegments !== undefined;
   const animatedProgress = useSharedValue(clampedProgress);
   const trackWidth = useSharedValue(0);
   const [trackWidthPx, setTrackWidthPx] = useState(0);
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
 
   useEffect(() => {
-    animatedProgress.value = withTiming(clampedProgress, {
-      duration: tokens.motion.duration.medium,
-    });
-  }, [animatedProgress, clampedProgress, tokens.motion.duration.medium]);
+    if (!usePositionalCompleted) {
+      animatedProgress.value = withTiming(clampedProgress, {
+        duration: tokens.motion.duration.medium,
+      });
+    }
+  }, [
+    animatedProgress,
+    clampedProgress,
+    tokens.motion.duration.medium,
+    usePositionalCompleted,
+  ]);
 
-  const completedStyle = useAnimatedStyle(() => ({
+  const aggregateFillStyle = useAnimatedStyle(() => ({
     width: trackWidth.value * animatedProgress.value,
   }));
 
@@ -87,7 +99,12 @@ export function ProgressBar({
       : tokens.colors.accent.primary;
 
   const warningOpacity = isPlayful ? 0.85 : 0.72;
-  const failedLayouts = layoutFailedSegments(failedSegments, trackWidthPx);
+  const completedLayouts = layoutPathSegments(
+    completedSegments ?? [],
+    trackWidthPx,
+    'completed',
+  );
+  const failedLayouts = layoutPathSegments(failedSegments, trackWidthPx, 'failed');
 
   return (
     <View
@@ -109,17 +126,35 @@ export function ProgressBar({
             height: barHeight,
           },
         ]}>
-        <Animated.View
-          style={[
-            completedStyle,
-            {
-              backgroundColor: fillColor,
-              borderRadius: tokens.radius.pill,
-              height: barHeight,
-            },
-          ]}
-        />
+        {!usePositionalCompleted ? (
+          <Animated.View
+            style={[
+              aggregateFillStyle,
+              {
+                backgroundColor: fillColor,
+                borderRadius: tokens.radius.pill,
+                height: barHeight,
+              },
+            ]}
+          />
+        ) : null}
       </View>
+      {usePositionalCompleted
+        ? completedLayouts.map((segment) => (
+            <View
+              key={segment.key}
+              style={{
+                backgroundColor: fillColor,
+                borderRadius: tokens.radius.pill,
+                height: barHeight,
+                left: segment.left,
+                position: 'absolute',
+                top: 0,
+                width: segment.width,
+              }}
+            />
+          ))
+        : null}
       {failedLayouts.map((segment) => (
         <View
           key={segment.key}

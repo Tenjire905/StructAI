@@ -1,5 +1,5 @@
 /**
- * Verification harness for path progress bar ratios and failed segments.
+ * Verification harness for path progress bar ratios and segment positions.
  * Keep logic in sync with lib/pathProgress.ts.
  */
 
@@ -30,7 +30,7 @@ function mergeAdjacentPathProgressSegments(segments) {
 
 function computePathProgressBarModel(totalChapters, chapters, record) {
   if (totalChapters === 0) {
-    return { completedRatio: 0, failedRatio: 0, failedSegments: [] };
+    return { completedRatio: 0, failedRatio: 0, completedSegments: [], failedSegments: [] };
   }
 
   const slotWidth = 1 / totalChapters;
@@ -40,6 +40,16 @@ function computePathProgressBarModel(totalChapters, chapters, record) {
   const failedCount = (record?.failedLessonIds ?? []).filter(
     (lessonId) => !completedSet.has(lessonId),
   ).length;
+
+  const completedSegments = mergeAdjacentPathProgressSegments(
+    chapters
+      .map((chapterId, index) => ({ chapterId, index }))
+      .filter(({ chapterId }) => completedSet.has(chapterId))
+      .map(({ index }) => ({
+        start: index * slotWidth,
+        width: slotWidth,
+      })),
+  );
 
   const failedSegments = mergeAdjacentPathProgressSegments(
     chapters
@@ -54,6 +64,7 @@ function computePathProgressBarModel(totalChapters, chapters, record) {
   return {
     completedRatio: Math.min(1, completedCount / totalChapters),
     failedRatio: Math.min(1, failedCount / totalChapters),
+    completedSegments,
     failedSegments,
   };
 }
@@ -70,6 +81,7 @@ const cases = [
     expect: {
       completedRatio: 0.25,
       failedRatio: 0,
+      completedSegments: [{ start: 0, width: 0.25 }],
       failedSegments: [],
     },
   },
@@ -82,6 +94,7 @@ const cases = [
     expect: {
       completedRatio: 0.125,
       failedRatio: 0.125,
+      completedSegments: [{ start: 0, width: 0.125 }],
       failedSegments: [{ start: 0.125, width: 0.125 }],
     },
   },
@@ -94,6 +107,7 @@ const cases = [
     expect: {
       completedRatio: 0.25,
       failedRatio: 0.25,
+      completedSegments: [{ start: 0, width: 0.25 }],
       failedSegments: [{ start: 0.25, width: 0.25 }],
     },
   },
@@ -106,19 +120,28 @@ const cases = [
     expect: {
       completedRatio: 0.375,
       failedRatio: 0,
+      completedSegments: [{ start: 0, width: 0.375 }],
       failedSegments: [],
     },
   },
   {
-    label: 'non-adjacent failed lessons stay separate',
+    label: 'completed lessons between failed blocks stay separate',
     record: {
-      completedLessonIds: ['pb-1', 'pb-2', 'pb-5'],
-      failedLessonIds: ['pb-3', 'pb-4'],
+      completedLessonIds: ['pb-1', 'pb-2', 'pb-5', 'pb-7'],
+      failedLessonIds: ['pb-3', 'pb-4', 'pb-6'],
     },
     expect: {
-      completedRatio: 0.375,
-      failedRatio: 0.25,
-      failedSegments: [{ start: 0.25, width: 0.25 }],
+      completedRatio: 0.5,
+      failedRatio: 0.375,
+      completedSegments: [
+        { start: 0, width: 0.25 },
+        { start: 0.5, width: 0.125 },
+        { start: 0.75, width: 0.125 },
+      ],
+      failedSegments: [
+        { start: 0.25, width: 0.25 },
+        { start: 0.625, width: 0.125 },
+      ],
     },
   },
 ];
@@ -146,6 +169,10 @@ const results = cases.map((testCase) => {
     violations.push('failedRatio-mismatch');
   }
 
+  if (!segmentsEqual(actual.completedSegments, testCase.expect.completedSegments)) {
+    violations.push('completedSegments-mismatch');
+  }
+
   if (!segmentsEqual(actual.failedSegments, testCase.expect.failedSegments)) {
     violations.push('failedSegments-mismatch');
   }
@@ -164,7 +191,7 @@ console.log(
   JSON.stringify(
     {
       rule:
-        'completedRatio counts passes; failedSegments mark skipped chapters at path positions',
+        'completedSegments and failedSegments mark chapters at path positions; gaps show completed lessons between skips',
       cases: results,
       pass: totalViolations === 0,
       totalViolations,

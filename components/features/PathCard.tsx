@@ -18,6 +18,7 @@ type PathCardProps = {
   /** Ohne currentChapter/progress rendert die Karte den "nicht gestartet"-Zustand. */
   currentChapter?: number;
   progress?: number;
+  completedSegments?: PathProgressSegment[];
   failedSegments?: PathProgressSegment[];
   badgeLabel?: string;
   badgeTone?: 'primary' | 'structure' | 'warning' | 'success';
@@ -30,6 +31,7 @@ export function PathCard({
   totalChapters,
   currentChapter,
   progress,
+  completedSegments,
   failedSegments,
   badgeLabel,
   badgeTone = 'primary',
@@ -117,7 +119,12 @@ export function PathCard({
       </Text>
 
       {isStarted ? (
-        <ProgressBar color="structure" failedSegments={failedSegments} progress={progress} />
+        <ProgressBar
+          color="structure"
+          completedSegments={completedSegments}
+          failedSegments={failedSegments}
+          progress={progress}
+        />
       ) : null}
     </AnimatedPressable>
   );

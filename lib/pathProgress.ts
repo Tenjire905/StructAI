@@ -13,6 +13,8 @@ export type PathProgressBarModel = {
   completedRatio: number;
   /** Share of path chapters skipped/failed (not passed). */
   failedRatio: number;
+  /** Positional segments for completed chapters on the progress bar. */
+  completedSegments: PathProgressSegment[];
   /** Positional segments for skipped chapters on the progress bar. */
   failedSegments: PathProgressSegment[];
 };
@@ -55,7 +57,7 @@ export function computePathProgressBarModel(
   const template = getPathTemplate(pathId);
 
   if (!template || template.totalChapters === 0) {
-    return { completedRatio: 0, failedRatio: 0, failedSegments: [] };
+    return { completedRatio: 0, failedRatio: 0, completedSegments: [], failedSegments: [] };
   }
 
   const slotWidth = 1 / template.totalChapters;
@@ -65,6 +67,16 @@ export function computePathProgressBarModel(
   const failedCount = (record?.failedLessonIds ?? []).filter(
     (lessonId) => !completedSet.has(lessonId),
   ).length;
+
+  const completedSegments = mergeAdjacentPathProgressSegments(
+    template.chapters
+      .map((chapter, index) => ({ chapter, index }))
+      .filter(({ chapter }) => completedSet.has(chapter.id))
+      .map(({ index }) => ({
+        start: index * slotWidth,
+        width: slotWidth,
+      })),
+  );
 
   const failedSegments = mergeAdjacentPathProgressSegments(
     template.chapters
@@ -79,6 +91,7 @@ export function computePathProgressBarModel(
   return {
     completedRatio: Math.min(1, completedCount / template.totalChapters),
     failedRatio: Math.min(1, failedCount / template.totalChapters),
+    completedSegments,
     failedSegments,
   };
 }

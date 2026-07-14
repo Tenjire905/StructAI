@@ -32,6 +32,7 @@ function HomePreview() {
       </Text>
       <PathCard
         currentChapter={3}
+        completedSegments={progressBar.completedSegments}
         failedSegments={progressBar.failedSegments}
         progress={progressBar.completedRatio}
         title={t(pathTitleKey(DEMO_PATH_ID))}
@@ -84,7 +85,8 @@ function DetailPreview() {
 
           <ProgressBar
             color="structure"
-            failedSegments={progressBar.failedSegments}
+            completedSegments={progressBar.completedSegments}
+        failedSegments={progressBar.failedSegments}
             progress={progressBar.completedRatio}
           />
 
