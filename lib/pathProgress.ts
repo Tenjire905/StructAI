@@ -14,6 +14,33 @@ export type PathProgressBarModel = {
   failedSegments: PathProgressSegment[];
 };
 
+function mergeAdjacentPathProgressSegments(
+  segments: PathProgressSegment[],
+): PathProgressSegment[] {
+  if (segments.length === 0) {
+    return [];
+  }
+
+  const sorted = [...segments].sort((a, b) => a.start - b.start);
+  const merged: PathProgressSegment[] = [{ ...sorted[0] }];
+
+  for (let index = 1; index < sorted.length; index += 1) {
+    const next = sorted[index];
+    const current = merged[merged.length - 1];
+    const currentEnd = current.start + current.width;
+
+    if (next.start <= currentEnd + 0.000_001) {
+      const nextEnd = next.start + next.width;
+      current.width = Math.max(currentEnd, nextEnd) - current.start;
+      continue;
+    }
+
+    merged.push({ ...next });
+  }
+
+  return merged;
+}
+
 export function pathTitleKey(pathId: string): string {
   return `paths.title.${pathId.replace(/-/g, '_')}`;
 }
@@ -32,13 +59,15 @@ export function computePathProgressBarModel(
   const failedIds = new Set(record?.failedLessonIds ?? []);
   const completedCount = record?.completedLessonIds.length ?? 0;
 
-  const failedSegments = template.chapters
-    .map((chapter, index) => ({ chapter, index }))
-    .filter(({ chapter }) => failedIds.has(chapter.id))
-    .map(({ index }) => ({
-      start: index * slotWidth,
-      width: slotWidth,
-    }));
+  const failedSegments = mergeAdjacentPathProgressSegments(
+    template.chapters
+      .map((chapter, index) => ({ chapter, index }))
+      .filter(({ chapter }) => failedIds.has(chapter.id))
+      .map(({ index }) => ({
+        start: index * slotWidth,
+        width: slotWidth,
+      })),
+  );
 
   return {
     completedRatio: Math.min(1, completedCount / template.totalChapters),

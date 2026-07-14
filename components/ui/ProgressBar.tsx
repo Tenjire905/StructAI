@@ -20,6 +20,38 @@ type ProgressBarProps = {
   style?: StyleProp<ViewStyle>;
 };
 
+type FailedSegmentLayout = {
+  key: string;
+  left: number;
+  width: number;
+  borderRadius: number;
+};
+
+function layoutFailedSegments(
+  segments: PathProgressSegment[],
+  trackWidthPx: number,
+  barHeight: number,
+): FailedSegmentLayout[] {
+  if (trackWidthPx <= 0) {
+    return [];
+  }
+
+  return segments.map((segment, index) => {
+    const slotWidthPx = trackWidthPx * segment.width;
+    const slotLeftPx = trackWidthPx * segment.start;
+    const width = Math.max(slotWidthPx, barHeight * 0.45);
+    const center = slotLeftPx + slotWidthPx / 2;
+    const left = Math.max(0, Math.min(trackWidthPx - width, center - width / 2));
+
+    return {
+      key: `failed-${segment.start}-${index}`,
+      left,
+      width,
+      borderRadius: Math.min(barHeight / 2, width / 2),
+    };
+  });
+}
+
 export function ProgressBar({
   progress,
   color = 'primary',
@@ -57,52 +89,63 @@ export function ProgressBar({
       : tokens.colors.accent.primary;
 
   const warningOpacity = isPlayful ? 0.78 : 0.58;
+  const failedLayouts = layoutFailedSegments(failedSegments, trackWidthPx, barHeight);
 
   return (
     <View
       style={[
-        styles.track,
+        styles.root,
         {
-          backgroundColor: tokens.colors.border.subtle,
           borderRadius: tokens.radius.pill,
           height: barHeight,
         },
         style,
       ]}
       onLayout={handleTrackLayout}>
-      <Animated.View
+      <View
         style={[
-          fillStyle,
+          styles.track,
           {
-            backgroundColor: fillColor,
+            backgroundColor: tokens.colors.border.subtle,
             borderRadius: tokens.radius.pill,
             height: barHeight,
           },
-        ]}
-      />
-      {trackWidthPx > 0
-        ? failedSegments.map((segment, index) => (
-            <View
-              key={`failed-${segment.start}-${index}`}
-              style={{
-                backgroundColor: tokens.colors.accent.warning,
-                borderRadius: tokens.radius.pill,
-                height: barHeight,
-                left: trackWidthPx * segment.start,
-                opacity: warningOpacity,
-                position: 'absolute',
-                top: 0,
-                width: trackWidthPx * segment.width,
-                zIndex: 1,
-              }}
-            />
-          ))
-        : null}
+        ]}>
+        <Animated.View
+          style={[
+            fillStyle,
+            {
+              backgroundColor: fillColor,
+              borderRadius: tokens.radius.pill,
+              height: barHeight,
+            },
+          ]}
+        />
+      </View>
+      {failedLayouts.map((segment) => (
+        <View
+          key={segment.key}
+          style={{
+            backgroundColor: tokens.colors.accent.warning,
+            borderRadius: segment.borderRadius,
+            height: barHeight,
+            left: segment.left,
+            opacity: warningOpacity,
+            position: 'absolute',
+            top: 0,
+            width: segment.width,
+          }}
+        />
+      ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    position: 'relative',
+    width: '100%',
+  },
   track: {
     overflow: 'hidden',
     width: '100%',

@@ -55,7 +55,7 @@ export function ChapterRow({ chapter, number, isLast, title, onPress }: ChapterR
   const titleColor = {
     completed: tokens.colors.text.secondary,
     current: tokens.colors.text.primary,
-    failed: tokens.colors.text.secondary,
+    failed: tokens.colors.text.primary,
     locked: tokens.colors.text.tertiary,
   }[chapter.status];
 
