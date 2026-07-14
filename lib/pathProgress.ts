@@ -1,6 +1,8 @@
-import { getPathTemplate } from '@/lib/pathLessonUtils';
-import { MOCK_PATHS, type MockChapter, type MockPath } from '@/data/mockPaths';
+import { getPathIdForLesson, getPathTemplate } from '@/lib/pathLessonUtils';
+import { MOCK_PATHS, type MockChapter, type MockChapterStatus, type MockPath } from '@/data/mockPaths';
 import type { PathProgressRecord } from '@/store/progressStore';
+
+export type LessonChapterStatus = MockChapterStatus;
 
 export type PathProgressSegment = {
   start: number;
@@ -128,4 +130,24 @@ export function getPathProgressBarModel(
   pathProgress: Record<string, PathProgressRecord>,
 ): PathProgressBarModel {
   return computePathProgressBarModel(pathId, pathProgress[pathId]);
+}
+
+export function getLessonChapterStatus(
+  lessonId: string,
+  pathProgress: Record<string, PathProgressRecord>,
+): LessonChapterStatus | undefined {
+  const pathId = getPathIdForLesson(lessonId);
+
+  if (!pathId) {
+    return undefined;
+  }
+
+  const merged = getMergedPath(pathId, pathProgress);
+  const chapter = merged?.chapters.find((entry) => entry.id === lessonId);
+
+  return chapter?.status;
+}
+
+export function isLessonPlayable(status: LessonChapterStatus | undefined): boolean {
+  return status === 'completed' || status === 'current' || status === 'failed';
 }

@@ -34,7 +34,8 @@ import {
   type LessonAnswerResult,
 } from '@/lib/lessonRewards';
 import { trackEvent } from '@/lib/analytics';
-import { getPathIdForLesson } from '@/lib/pathLessonUtils';
+import { getPathIdForLesson, getNextLessonId } from '@/lib/pathLessonUtils';
+import { getLessonChapterStatus, isLessonPlayable } from '@/lib/pathProgress';
 import { prepareLessonSteps } from '@/lib/lessonSession';
 import { useProgressStore } from '@/store/progressStore';
 import { getShadow, useCelebration, useThemeMode } from '@/theme';
@@ -64,6 +65,12 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
     () => getMockLesson(lessonId, locale),
     [lessonId, locale],
   );
+  const pathId = useMemo(() => getPathIdForLesson(lessonId), [lessonId]);
+  const lessonChapterStatus = useMemo(
+    () => getLessonChapterStatus(lessonId, pathProgress),
+    [lessonId, pathProgress],
+  );
+  const canPlayLesson = isLessonPlayable(lessonChapterStatus);
 
   const [sessionNonce, setSessionNonce] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
@@ -104,13 +111,13 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   }, [baseLesson, sessionNonce, t]);
 
   useEffect(() => {
-    if (!lessonId || openedRef.current) {
+    if (!lessonId || openedRef.current || !canPlayLesson) {
       return;
     }
 
     openedRef.current = true;
     recordLessonOpened(lessonId);
-  }, [lessonId, recordLessonOpened]);
+  }, [canPlayLesson, lessonId, recordLessonOpened]);
 
   const headerOptions = {
     headerShown: true,
@@ -141,6 +148,15 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
             {t('lesson.notFound')}
           </Text>
         </View>
+      </>
+    );
+  }
+
+  if (!canPlayLesson) {
+    return (
+      <>
+        <Stack.Screen options={headerOptions} />
+        <LockedLessonView onBack={() => router.back()} />
       </>
     );
   }
@@ -428,8 +444,11 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
       <>
         <Stack.Screen options={headerOptions} />
         <CompletionView
+          lessonId={lesson.id}
+          onContinueNext={(nextLessonId) => router.replace(`/lektion/${nextLessonId}`)}
           onFinish={() => router.back()}
           orbsReward={earnedOrbs}
+          pathId={pathId}
         />
       </>
     );
@@ -690,11 +709,20 @@ function FeedbackBanner({ isCorrect, explanation }: FeedbackBannerProps) {
 }
 
 type CompletionViewProps = {
+  lessonId: string;
+  pathId: string | undefined;
   orbsReward: number;
   onFinish: () => void;
+  onContinueNext: (nextLessonId: string) => void;
 };
 
-function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
+function CompletionView({
+  lessonId,
+  pathId,
+  orbsReward,
+  onFinish,
+  onContinueNext,
+}: CompletionViewProps) {
   const { tokens, t } = useThemeMode();
   const { session } = useAuth();
   const completedLessons = useProgressStore((state) => state.completedLessons);
@@ -702,6 +730,7 @@ function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
   const companionState = useOrbCompanionState();
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
   const finishedRef = useRef(false);
+  const nextLessonId = pathId ? getNextLessonId(pathId, lessonId) : undefined;
 
   useEffect(() => {
     if (finishedRef.current) {
@@ -759,16 +788,88 @@ function CompletionView({ orbsReward, onFinish }: CompletionViewProps) {
         {orbsReward > 0 ? t('lesson.orbsEarned', { count: orbsReward }) : t('lesson.practiceComplete')}
       </Text>
 
-      <Button
-        label={t('lesson.backToPath')}
-        onPress={onFinish}
-        style={{ alignSelf: 'stretch' }}
-        variant="primary"
-      />
+      <View
+        style={{
+          alignSelf: 'stretch',
+          gap: tokens.spacing.space3,
+          width: '100%',
+        }}>
+        {nextLessonId ? (
+          <>
+            <Button
+              label={t('lesson.continueNext')}
+              onPress={() => onContinueNext(nextLessonId)}
+              style={{ alignSelf: 'stretch' }}
+              variant="primary"
+            />
+            <Button
+              label={t('lesson.backToPath')}
+              onPress={onFinish}
+              style={{ alignSelf: 'stretch' }}
+              variant="ghost"
+            />
+          </>
+        ) : (
+          <Button
+            label={t('lesson.backToPath')}
+            onPress={onFinish}
+            style={{ alignSelf: 'stretch' }}
+            variant="primary"
+          />
+        )}
+      </View>
 
       {!session && completedLessons === 1 ? (
         <GuestSaveProgressHint variant="inline" />
       ) : null}
+    </View>
+  );
+}
+
+type LockedLessonViewProps = {
+  onBack: () => void;
+};
+
+function LockedLessonView({ onBack }: LockedLessonViewProps) {
+  const { tokens, t } = useThemeMode();
+
+  return (
+    <View
+      style={{
+        alignItems: 'center',
+        backgroundColor: tokens.colors.background.base,
+        flex: 1,
+        gap: tokens.spacing.space5,
+        justifyContent: 'center',
+        paddingHorizontal: tokens.spacing.screenPadding,
+      }}>
+      <Text
+        style={{
+          color: tokens.colors.text.primary,
+          fontFamily: tokens.typography.fontFamily.display,
+          fontSize: tokens.typography.fontSize.displayLg,
+          textAlign: 'center',
+        }}>
+        {t('lesson.lockedTitle')}
+      </Text>
+
+      <Text
+        style={{
+          color: tokens.colors.text.secondary,
+          fontFamily: tokens.typography.fontFamily.body,
+          fontSize: tokens.typography.fontSize.bodyLg,
+          lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
+          textAlign: 'center',
+        }}>
+        {t('lesson.lockedBody')}
+      </Text>
+
+      <Button
+        label={t('lesson.backToPath')}
+        onPress={onBack}
+        style={{ alignSelf: 'stretch' }}
+        variant="primary"
+      />
     </View>
   );
 }

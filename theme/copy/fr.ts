@@ -193,6 +193,18 @@ export const copyFr: CopyCatalog = {
     playful: 'Retour au parcours',
     focus: 'Retour au parcours',
   },
+  'lesson.continueNext': {
+    playful: 'Vers la prochaine lecon !',
+    focus: 'Chapitre suivant',
+  },
+  'lesson.lockedTitle': {
+    playful: 'Ce chapitre est encore verrouille',
+    focus: 'Chapitre verrouille',
+  },
+  'lesson.lockedBody': {
+    playful: 'Termine d abord les chapitres precedents pour continuer ici.',
+    focus: 'Termine d abord les chapitres precedents.',
+  },
   'lesson.notFound': {
     playful: 'Cette lecon n existe pas encore.',
     focus: 'Lecon introuvable.',

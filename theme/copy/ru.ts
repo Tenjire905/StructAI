@@ -193,6 +193,18 @@ export const copyRu: CopyCatalog = {
     playful: 'Назад к треку',
     focus: 'Назад к треку',
   },
+  'lesson.continueNext': {
+    playful: 'К следующему уроку!',
+    focus: 'Следующая глава',
+  },
+  'lesson.lockedTitle': {
+    playful: 'Эта глава пока закрыта',
+    focus: 'Глава заблокирована',
+  },
+  'lesson.lockedBody': {
+    playful: 'Сначала пройди предыдущие главы — тогда откроется доступ сюда.',
+    focus: 'Сначала заверши предыдущие главы.',
+  },
   'lesson.notFound': {
     playful: 'Такого урока пока нет.',
     focus: 'Урок не найден.',
