@@ -13,7 +13,7 @@ export type PathProgressBarModel = {
   completedRatio: number;
   /** Share of path chapters skipped/failed (not passed). */
   failedRatio: number;
-  /** @deprecated Positional segments — use failedRatio for UI. */
+  /** Positional segments for skipped chapters on the progress bar. */
   failedSegments: PathProgressSegment[];
 };
 
@@ -69,7 +69,7 @@ export function computePathProgressBarModel(
   const failedSegments = mergeAdjacentPathProgressSegments(
     template.chapters
       .map((chapter, index) => ({ chapter, index }))
-      .filter(({ chapter }) => failedIds.has(chapter.id))
+      .filter(({ chapter }) => failedIds.has(chapter.id) && !completedSet.has(chapter.id))
       .map(({ index }) => ({
         start: index * slotWidth,
         width: slotWidth,

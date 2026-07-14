@@ -1,24 +1,64 @@
 /**
- * Verification harness for path progress bar ratios.
+ * Verification harness for path progress bar ratios and failed segments.
  * Keep logic in sync with lib/pathProgress.ts.
  */
 
-function computePathProgressBarModel(totalChapters, record) {
-  if (totalChapters === 0) {
-    return { completedRatio: 0, failedRatio: 0 };
+function mergeAdjacentPathProgressSegments(segments) {
+  if (segments.length === 0) {
+    return [];
   }
 
+  const sorted = [...segments].sort((a, b) => a.start - b.start);
+  const merged = [{ ...sorted[0] }];
+
+  for (let index = 1; index < sorted.length; index += 1) {
+    const next = sorted[index];
+    const current = merged[merged.length - 1];
+    const currentEnd = current.start + current.width;
+
+    if (next.start <= currentEnd + 0.000_001) {
+      const nextEnd = next.start + next.width;
+      current.width = Math.max(currentEnd, nextEnd) - current.start;
+      continue;
+    }
+
+    merged.push({ ...next });
+  }
+
+  return merged;
+}
+
+function computePathProgressBarModel(totalChapters, chapters, record) {
+  if (totalChapters === 0) {
+    return { completedRatio: 0, failedRatio: 0, failedSegments: [] };
+  }
+
+  const slotWidth = 1 / totalChapters;
+  const failedIds = new Set(record?.failedLessonIds ?? []);
   const completedSet = new Set(record?.completedLessonIds ?? []);
   const completedCount = record?.completedLessonIds?.length ?? 0;
   const failedCount = (record?.failedLessonIds ?? []).filter(
     (lessonId) => !completedSet.has(lessonId),
   ).length;
 
+  const failedSegments = mergeAdjacentPathProgressSegments(
+    chapters
+      .map((chapterId, index) => ({ chapterId, index }))
+      .filter(({ chapterId }) => failedIds.has(chapterId) && !completedSet.has(chapterId))
+      .map(({ index }) => ({
+        start: index * slotWidth,
+        width: slotWidth,
+      })),
+  );
+
   return {
     completedRatio: Math.min(1, completedCount / totalChapters),
     failedRatio: Math.min(1, failedCount / totalChapters),
+    failedSegments,
   };
 }
+
+const CHAPTERS = ['pb-1', 'pb-2', 'pb-3', 'pb-4', 'pb-5', 'pb-6', 'pb-7', 'pb-8'];
 
 const cases = [
   {
@@ -30,6 +70,7 @@ const cases = [
     expect: {
       completedRatio: 0.25,
       failedRatio: 0,
+      failedSegments: [],
     },
   },
   {
@@ -41,6 +82,7 @@ const cases = [
     expect: {
       completedRatio: 0.125,
       failedRatio: 0.125,
+      failedSegments: [{ start: 0.125, width: 0.125 }],
     },
   },
   {
@@ -52,10 +94,11 @@ const cases = [
     expect: {
       completedRatio: 0.25,
       failedRatio: 0.25,
+      failedSegments: [{ start: 0.25, width: 0.25 }],
     },
   },
   {
-    label: 'passed lesson removes failed ratio contribution',
+    label: 'passed lesson removes failed segment',
     record: {
       completedLessonIds: ['pb-1', 'pb-2', 'pb-3'],
       failedLessonIds: ['pb-3'],
@@ -63,12 +106,36 @@ const cases = [
     expect: {
       completedRatio: 0.375,
       failedRatio: 0,
+      failedSegments: [],
+    },
+  },
+  {
+    label: 'non-adjacent failed lessons stay separate',
+    record: {
+      completedLessonIds: ['pb-1', 'pb-2', 'pb-5'],
+      failedLessonIds: ['pb-3', 'pb-4'],
+    },
+    expect: {
+      completedRatio: 0.375,
+      failedRatio: 0.25,
+      failedSegments: [{ start: 0.25, width: 0.25 }],
     },
   },
 ];
 
+function segmentsEqual(actual, expected) {
+  if (actual.length !== expected.length) {
+    return false;
+  }
+
+  return actual.every((segment, index) => {
+    const target = expected[index];
+    return segment.start === target.start && segment.width === target.width;
+  });
+}
+
 const results = cases.map((testCase) => {
-  const actual = computePathProgressBarModel(8, testCase.record);
+  const actual = computePathProgressBarModel(8, CHAPTERS, testCase.record);
   const violations = [];
 
   if (actual.completedRatio !== testCase.expect.completedRatio) {
@@ -77,6 +144,10 @@ const results = cases.map((testCase) => {
 
   if (actual.failedRatio !== testCase.expect.failedRatio) {
     violations.push('failedRatio-mismatch');
+  }
+
+  if (!segmentsEqual(actual.failedSegments, testCase.expect.failedSegments)) {
+    violations.push('failedSegments-mismatch');
   }
 
   return {
@@ -92,7 +163,8 @@ const totalViolations = results.reduce((sum, entry) => sum + entry.violations.le
 console.log(
   JSON.stringify(
     {
-      rule: 'completedRatio counts passes; failedRatio counts skipped lessons not yet passed',
+      rule:
+        'completedRatio counts passes; failedSegments mark skipped chapters at path positions',
       cases: results,
       pass: totalViolations === 0,
       totalViolations,
