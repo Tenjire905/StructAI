@@ -10,17 +10,16 @@ import {
 } from '@/components/features';
 import { Avatar } from '@/components/ui';
 import { computePathProgressBarModel, pathTitleKey } from '@/lib/pathProgress';
+import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
+import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
-
-const MOCK_USER = {
-  name: 'Alex',
-  initialsName: 'Alex Muster',
-};
 
 export default function HomeScreen() {
   const { tokens, t } = useThemeMode();
   const router = useRouter();
+  const { user, session } = useAuth();
+  const displayName = session ? resolveProfileDisplayName(user) : t('profile.guestDisplayName');
   const orbCount = useProgressStore((state) => state.orbCount);
   const orbMax = useProgressStore((state) => state.orbMax);
   const completedLessons = useProgressStore((state) => state.completedLessons);
@@ -55,9 +54,9 @@ export default function HomeScreen() {
               fontFamily: tokens.typography.fontFamily.display,
               fontSize: tokens.typography.fontSize.headingLg,
             }}>
-            {t('home.greeting', { name: MOCK_USER.name })}
+            {t('home.greeting', { name: displayName })}
           </Text>
-          <Avatar name={MOCK_USER.initialsName} size="md" />
+          <Avatar name={displayName} size="md" />
         </View>
         <OrbCounter count={orbCount} max={orbMax} />
       </View>
