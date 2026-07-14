@@ -31,22 +31,35 @@ export function AuthNavigationController() {
   const segments = useSegments();
   const { session, isLoading } = useAuth();
   const lastTargetRef = useRef<Href | null>(null);
+  const isMountedRef = useRef(false);
   const [returningUserCheck, setReturningUserCheck] = useState<ReturningUserCheck | null>(null);
 
   useEffect(() => {
+    isMountedRef.current = true;
+
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
     if (isLoading || !session || isOnboardingCompleted()) {
-      setReturningUserCheck((current) => (current === null ? current : null));
+      if (isMountedRef.current) {
+        setReturningUserCheck((current) => (current === null ? current : null));
+      }
       return;
     }
 
     let cancelled = false;
     const userId = session.user.id;
 
-    setReturningUserCheck({ userId, status: 'checking' });
+    if (isMountedRef.current) {
+      setReturningUserCheck({ userId, status: 'checking' });
+    }
 
     void fetchProgressSnapshotForUser(userId)
       .then((snapshot) => {
-        if (cancelled) {
+        if (cancelled || !isMountedRef.current) {
           return;
         }
 
@@ -62,7 +75,7 @@ export function AuthNavigationController() {
         });
       })
       .catch(() => {
-        if (!cancelled) {
+        if (!cancelled && isMountedRef.current) {
           setReturningUserCheck({ userId, status: 'new' });
         }
       });
@@ -114,7 +127,18 @@ export function AuthNavigationController() {
     }
 
     lastTargetRef.current = target;
-    router.replace(target);
+
+    const navigationTimer = setTimeout(() => {
+      if (!isMountedRef.current) {
+        return;
+      }
+
+      router.replace(target);
+    }, 0);
+
+    return () => {
+      clearTimeout(navigationTimer);
+    };
   }, [isLoading, returningUserCheck, router, segments, session]);
 
   useEffect(() => {

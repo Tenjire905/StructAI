@@ -2,12 +2,13 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type PropsWithChildren,
 } from 'react';
 
-import { appStorage } from '@/lib/appStorage';
+import { appStorage, hydrateAppStorage } from '@/lib/appStorage';
 
 import { getCatalogForLocale } from './copy/index';
 import { formatCopyText, type CopyCatalog } from './copy/types';
@@ -59,6 +60,23 @@ function readStoredLocale(): Locale {
 export function ThemeModeProvider({ children }: PropsWithChildren) {
   const [mode, setModeState] = useState<ThemeMode>(() => readStoredMode());
   const [locale, setLocaleState] = useState<Locale>(() => readStoredLocale());
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void hydrateAppStorage().then(() => {
+      if (cancelled) {
+        return;
+      }
+
+      setModeState(readStoredMode());
+      setLocaleState(readStoredLocale());
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const setMode = useCallback((nextMode: ThemeMode) => {
     setModeState(nextMode);

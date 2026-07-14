@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { AuthNavigationController } from '@/components/AuthNavigationController';
@@ -19,7 +19,6 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [storageReady, setStorageReady] = useState(false);
   const [loaded, error] = useFonts({
     'ClashDisplay-Semibold': require('../assets/fonts/ClashDisplay-Semibold.otf'),
     'ClashDisplay-Medium': require('../assets/fonts/ClashDisplay-Medium.otf'),
@@ -35,24 +34,21 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    void hydrateAppStorage().finally(() => {
-      setStorageReady(true);
-    });
+    void hydrateAppStorage();
   }, []);
 
   useEffect(() => {
-    if (loaded && storageReady) {
+    if (loaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, storageReady]);
+  }, [loaded]);
 
-  if (!loaded || !storageReady) {
+  if (!loaded) {
     return null;
   }
 
   return (
     <AuthProvider>
-      <AuthNavigationController />
       <ThemeModeProvider>
         <CelebrationProvider>
           <Stack
@@ -66,6 +62,7 @@ export default function RootLayout() {
             <Stack.Screen name="onboarding" />
             {__DEV__ ? <Stack.Screen name="(dev)" options={{ headerShown: false }} /> : null}
           </Stack>
+          <AuthNavigationController />
         </CelebrationProvider>
       </ThemeModeProvider>
     </AuthProvider>
