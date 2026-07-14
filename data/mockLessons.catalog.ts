@@ -4069,6 +4069,170 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
       },
     ],
   },
+  {
+    id: 'es-7',
+    titleKey: 'es-7.title',
+    orbsReward: 18,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-7.s0.title',
+        bodyKey: 'es-7.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-7.s1.question',
+        optionKeys: [
+        'es-7.s1.opt0',
+        'es-7.s1.opt1',
+        'es-7.s1.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'es-7.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'es-7.s2.statement',
+        correct: false,
+        explanationKey: 'es-7.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-8',
+    titleKey: 'es-8.title',
+    orbsReward: 19,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-8.s0.title',
+        bodyKey: 'es-8.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-8.s1.question',
+        optionKeys: [
+        'es-8.s1.opt0',
+        'es-8.s1.opt1',
+        'es-8.s1.opt2',
+      ],
+        correctIndex: 0,
+        explanationKey: 'es-8.s1.explanation',
+      },
+      {
+        type: 'fill_blank',
+        prefixKey: 'es-8.s2.prefix',
+        suffixKey: 'es-8.s2.suffix',
+        optionKeys: [
+        'es-8.s2.opt0',
+        'es-8.s2.opt1',
+        'es-8.s2.opt2',
+      ],
+        correctIndex: 0,
+        explanationKey: 'es-8.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-9',
+    titleKey: 'es-9.title',
+    orbsReward: 20,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-9.s0.title',
+        bodyKey: 'es-9.s0.body',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'es-9.s1.instruction',
+        itemKeys: [
+        'es-9.s1.item0',
+        'es-9.s1.item1',
+        'es-9.s1.item2',
+        'es-9.s1.item3',
+      ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'es-9.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-9.s2.question',
+        optionKeys: [
+        'es-9.s2.opt0',
+        'es-9.s2.opt1',
+        'es-9.s2.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'es-9.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-10',
+    titleKey: 'es-10.title',
+    orbsReward: 20,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-10.s0.title',
+        bodyKey: 'es-10.s0.body',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'es-10.s1.statement',
+        correct: false,
+        explanationKey: 'es-10.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-10.s2.question',
+        optionKeys: [
+        'es-10.s2.opt0',
+        'es-10.s2.opt1',
+        'es-10.s2.opt2',
+      ],
+        correctIndex: 2,
+        explanationKey: 'es-10.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-11',
+    titleKey: 'es-11.title',
+    orbsReward: 22,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-11.s0.title',
+        bodyKey: 'es-11.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-11.s1.question',
+        optionKeys: [
+        'es-11.s1.opt0',
+        'es-11.s1.opt1',
+        'es-11.s1.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'es-11.s1.explanation',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'es-11.s2.instruction',
+        itemKeys: [
+        'es-11.s2.item0',
+        'es-11.s2.item1',
+        'es-11.s2.item2',
+        'es-11.s2.item3',
+      ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'es-11.s2.explanation',
+      },
+    ],
+  },
+
 ];
 
 export function getMockLessonCatalog(id: string): MockLessonCatalog | undefined {
