@@ -9,7 +9,7 @@
 |---|---|
 | Pfad | `content-ingestion/es-batch-05.json` |
 | Branch | `feature/content-ingestion-es-batch-05` |
-| Source-Commit | *(wird nach Push gesetzt)* |
+| Source-Commit | `2d4671a` (`chore: add es-batch-05 FINAL content source JSON for ingestion`) |
 
 **Erster Schritt:** Branch auschecken und Datei lesen:
 
