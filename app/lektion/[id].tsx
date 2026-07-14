@@ -485,6 +485,13 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
           gradedCount={failureStats.gradedCount}
           onContinueLater={() => {
             recordLessonFailed(lesson.id);
+            const nextLessonId = pathId ? getNextLessonId(pathId, lesson.id) : undefined;
+
+            if (nextLessonId) {
+              router.replace(`/lektion/${nextLessonId}`);
+              return;
+            }
+
             goBackToPath();
           }}
           onRetry={retryLesson}

@@ -178,13 +178,16 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         failedSet.add(lessonId);
       }
 
+      const nextLessonId = getNextLessonId(pathId, lessonId);
+      const resumeLessonId = nextLessonId ?? lessonId;
+
       const nextPathProgress = {
         ...state.pathProgress,
         [pathId]: {
           ...pathRecord,
           failedLessonIds: [...failedSet],
-          lastTouchedLessonId: lessonId,
-          currentLessonId: pathRecord.currentLessonId || lessonId,
+          lastTouchedLessonId: resumeLessonId,
+          currentLessonId: resumeLessonId,
         },
       };
 

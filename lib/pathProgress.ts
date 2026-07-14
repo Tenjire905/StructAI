@@ -105,10 +105,11 @@ export function mergePathWithProgress(
 }
 
 export function getContinueLessonId(path: MockPath): string {
-  const failedChapter = path.chapters.find((chapter) => chapter.status === 'failed');
   const currentChapter = path.chapters.find((chapter) => chapter.status === 'current');
+  const failedChapter = path.chapters.find((chapter) => chapter.status === 'failed');
 
-  return (failedChapter ?? currentChapter ?? path.chapters[0]).id;
+  // Prefer current (next in path) over failed — failed chapters stay replayable from the list.
+  return (currentChapter ?? failedChapter ?? path.chapters[0]).id;
 }
 
 export function getMergedPath(pathId: string, pathProgress: Record<string, PathProgressRecord>): MockPath | undefined {
