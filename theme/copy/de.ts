@@ -193,6 +193,18 @@ export const copyDe: CopyCatalog = {
     playful: 'Zurück zum Pfad',
     focus: 'Zurück zum Pfad',
   },
+  'lesson.continueNext': {
+    playful: 'Weiter zur nächsten Lektion!',
+    focus: 'Nächstes Kapitel',
+  },
+  'lesson.lockedTitle': {
+    playful: 'Dieses Kapitel ist noch gesperrt',
+    focus: 'Kapitel gesperrt',
+  },
+  'lesson.lockedBody': {
+    playful: 'Schließe zuerst die vorherigen Kapitel ab, dann geht es hier weiter.',
+    focus: 'Schließe zuerst die vorherigen Kapitel ab.',
+  },
   'lesson.notFound': {
     playful: 'Diese Lektion gibt es noch nicht.',
     focus: 'Lektion nicht gefunden.',

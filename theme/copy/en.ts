@@ -193,6 +193,18 @@ export const copyEn: CopyCatalog = {
     playful: 'Back to path',
     focus: 'Back to path',
   },
+  'lesson.continueNext': {
+    playful: 'On to the next lesson!',
+    focus: 'Next chapter',
+  },
+  'lesson.lockedTitle': {
+    playful: 'This chapter is still locked',
+    focus: 'Chapter locked',
+  },
+  'lesson.lockedBody': {
+    playful: 'Finish the earlier chapters first, then you can continue here.',
+    focus: 'Complete the previous chapters first.',
+  },
   'lesson.notFound': {
     playful: "This lesson doesn't exist yet.",
     focus: 'Lesson not found.',
