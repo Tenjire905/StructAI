@@ -6,6 +6,13 @@ import {
   reconcileCompletedPathIds,
 } from '@/lib/pathCompletion';
 import { normalizeProgressSnapshot } from '@/lib/progressMerge';
+import {
+  DEFAULT_PROGRESS,
+  DEFAULT_STREAK_DAY_FLAGS,
+  type PathProgressRecord,
+  type ProgressSnapshot,
+  type PromptScoreHistoryEntry,
+} from '@/lib/progressTypes';
 import { applyLessonCompletionStreak } from '@/lib/streak';
 import {
   getFirstLessonIdForPath,
@@ -16,30 +23,12 @@ import {
 
 export const PROGRESS_STORAGE_KEY = 'structai.progress.v1';
 
-export type PathProgressRecord = {
-  completedLessonIds: string[];
-  failedLessonIds: string[];
-  currentLessonId: string;
-  lastTouchedLessonId: string;
-  progress: number;
-};
-
-export type PromptScoreHistoryEntry = {
-  score: number;
-  recordedAt: string;
-};
-
-export type ProgressSnapshot = {
-  orbCount: number;
-  orbMax: number;
-  completedLessons: number;
-  currentStreak: number;
-  streakDays: boolean[];
-  pathProgress: Record<string, PathProgressRecord>;
-  completedPathIds: string[];
-  pathCompletedAt: Record<string, string>;
-  promptScoreHistory: PromptScoreHistoryEntry[];
-};
+export type {
+  PathProgressRecord,
+  ProgressSnapshot,
+  PromptScoreHistoryEntry,
+} from '@/lib/progressTypes';
+export { DEFAULT_PROGRESS } from '@/lib/progressTypes';
 
 type ProgressActions = {
   hydrate: () => void;
@@ -63,32 +52,18 @@ type ProgressActions = {
 
 type ProgressStore = ProgressSnapshot & ProgressActions;
 
-const DEFAULT_STREAK_DAYS: boolean[] = [false, false, false, false, false, false, false];
-
-export const DEFAULT_PROGRESS: ProgressSnapshot = {
-  orbCount: 0,
-  orbMax: 200,
-  completedLessons: 0,
-  currentStreak: 0,
-  streakDays: [...DEFAULT_STREAK_DAYS],
-  pathProgress: {},
-  completedPathIds: [],
-  pathCompletedAt: {},
-  promptScoreHistory: [],
-};
-
 function readProgressSnapshot(): ProgressSnapshot {
   const raw = appStorage.getString(PROGRESS_STORAGE_KEY);
 
   if (!raw) {
-    return { ...DEFAULT_PROGRESS, streakDays: [...DEFAULT_STREAK_DAYS] };
+    return { ...DEFAULT_PROGRESS, streakDays: [...DEFAULT_STREAK_DAY_FLAGS] };
   }
 
   try {
     const parsed = JSON.parse(raw) as Partial<ProgressSnapshot>;
     return normalizeProgressSnapshot(parsed);
   } catch {
-    return { ...DEFAULT_PROGRESS, streakDays: [...DEFAULT_STREAK_DAYS] };
+    return { ...DEFAULT_PROGRESS, streakDays: [...DEFAULT_STREAK_DAY_FLAGS] };
   }
 }
 
@@ -163,7 +138,7 @@ function computePathProgressRatio(pathId: string, completedIds: string[]): numbe
 
 export const useProgressStore = create<ProgressStore>((set, get) => ({
   ...DEFAULT_PROGRESS,
-  streakDays: [...DEFAULT_STREAK_DAYS],
+  streakDays: [...DEFAULT_STREAK_DAY_FLAGS],
 
   hydrate: () => {
     const snapshot = readProgressSnapshot();
@@ -173,7 +148,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
   reset: () => {
     const fresh = {
       ...DEFAULT_PROGRESS,
-      streakDays: [...DEFAULT_STREAK_DAYS],
+      streakDays: [...DEFAULT_STREAK_DAY_FLAGS],
     };
     writeProgressSnapshot(fresh);
     set(fresh);

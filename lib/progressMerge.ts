@@ -1,7 +1,11 @@
 import { getPathTemplate } from '@/lib/pathLessonUtils';
 import { reconcileCompletedPathIds } from '@/lib/pathCompletion';
-import type { PathProgressRecord, ProgressSnapshot, PromptScoreHistoryEntry } from '@/store/progressStore';
-import { DEFAULT_PROGRESS } from '@/store/progressStore';
+import {
+  DEFAULT_PROGRESS,
+  type PathProgressRecord,
+  type ProgressSnapshot,
+  type PromptScoreHistoryEntry,
+} from '@/lib/progressTypes';
 
 /** Proposed conflict strategy – active on login when local and remote both exist. */
 export const PROGRESS_MERGE_STRATEGY = 'max-union-per-field' as const;
