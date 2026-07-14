@@ -97,6 +97,10 @@ export const copyEn: CopyCatalog = {
     playful: 'Evaluation and Scoring',
     focus: 'Scoring System',
   },
+  'paths.title.prompt_mastery': {
+    playful: 'Prompt Mastery',
+    focus: 'Prompt Mastery',
+  },
   'paths.emptyActive': {
     playful: 'Ready for your first adventure? Pick a learning path and jump in!',
     focus: 'Choose a learning path to begin.',

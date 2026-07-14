@@ -8,6 +8,7 @@ const LESSON_PREFIX_TO_PATH: Record<string, string> = {
   cm: 'context-mastery',
   il: 'iteration-loops',
   es: 'eval-scoring',
+  pm: 'prompt-mastery',
 };
 
 export function getPathIdForLesson(lessonId: string): string | undefined {

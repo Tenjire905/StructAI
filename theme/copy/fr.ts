@@ -97,6 +97,10 @@ export const copyFr: CopyCatalog = {
     playful: 'Evaluation et score',
     focus: 'Systeme de score',
   },
+  'paths.title.prompt_mastery': {
+    playful: 'Maîtrise du prompt',
+    focus: 'Maîtrise du prompt',
+  },
   'paths.emptyActive': {
     playful: 'Pret pour ta premiere aventure ? Choisis un parcours et lance-toi !',
     focus: 'Choisis un parcours pour commencer.',

@@ -97,6 +97,10 @@ export const copyDe: CopyCatalog = {
     playful: 'Bewertung und Punkte',
     focus: 'Bewertungssystem',
   },
+  'paths.title.prompt_mastery': {
+    playful: 'Prompt-Meisterschaft',
+    focus: 'Prompt-Meisterschaft',
+  },
   'paths.emptyActive': {
     playful: 'Bereit für dein erstes Abenteuer? Wähle deinen Lernpfad und leg los!',
     focus: 'Wähle einen Lernpfad, um zu beginnen.',

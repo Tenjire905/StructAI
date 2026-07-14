@@ -97,6 +97,10 @@ export const copyRu: CopyCatalog = {
     playful: 'Оценка и баллы',
     focus: 'Оценивание',
   },
+  'paths.title.prompt_mastery': {
+    playful: 'Мастерство промптов',
+    focus: 'Мастерство промптов',
+  },
   'paths.emptyActive': {
     playful: 'Готов к первому приключению? Выбери трек и начинай!',
     focus: 'Выберите трек, чтобы начать.',

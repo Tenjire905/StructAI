@@ -5033,7 +5033,72 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
       },
     ],
   },
-
+  {
+    id: 'pm-1',
+    titleKey: 'pm-1.title',
+    orbsReward: 20,
+    steps: [
+      { type: 'info', titleKey: 'pm-1.s0.title', bodyKey: 'pm-1.s0.body' },
+      {
+        type: 'choice',
+        questionKey: 'pm-1.s1.question',
+        optionKeys: ['pm-1.s1.opt0', 'pm-1.s1.opt1', 'pm-1.s1.opt2'],
+        correctIndex: 1,
+        explanationKey: 'pm-1.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'pm-1.s2.statement',
+        correct: true,
+        explanationKey: 'pm-1.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'pm-2',
+    titleKey: 'pm-2.title',
+    orbsReward: 21,
+    steps: [
+      { type: 'info', titleKey: 'pm-2.s0.title', bodyKey: 'pm-2.s0.body' },
+      {
+        type: 'reorder',
+        instructionKey: 'pm-2.s1.instruction',
+        itemKeys: ['pm-2.s1.item0', 'pm-2.s1.item1', 'pm-2.s1.item2', 'pm-2.s1.item3'],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'pm-2.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'pm-2.s2.question',
+        optionKeys: ['pm-2.s2.opt0', 'pm-2.s2.opt1', 'pm-2.s2.opt2'],
+        correctIndex: 0,
+        explanationKey: 'pm-2.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'pm-3',
+    titleKey: 'pm-3.title',
+    orbsReward: 19,
+    steps: [
+      { type: 'info', titleKey: 'pm-3.s0.title', bodyKey: 'pm-3.s0.body' },
+      {
+        type: 'fill_blank',
+        prefixKey: 'pm-3.s1.prefix',
+        suffixKey: 'pm-3.s1.suffix',
+        optionKeys: ['pm-3.s1.opt0', 'pm-3.s1.opt1', 'pm-3.s1.opt2'],
+        correctIndex: 1,
+        explanationKey: 'pm-3.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'pm-3.s2.question',
+        optionKeys: ['pm-3.s2.opt0', 'pm-3.s2.opt1', 'pm-3.s2.opt2'],
+        correctIndex: 2,
+        explanationKey: 'pm-3.s2.explanation',
+      },
+    ],
+  }
 ];
 
 export function getMockLessonCatalog(id: string): MockLessonCatalog | undefined {

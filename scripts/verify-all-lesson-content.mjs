@@ -1,5 +1,5 @@
 /**
- * Runs lesson-content locale verification for all five learning paths.
+ * Runs lesson-content locale verification for all learning paths.
  * Exit 0 only when every path passes with zero violations.
  */
 
@@ -16,6 +16,7 @@ const paths = [
   { id: 'il', label: 'iterative-loop', range: 'il-1..il-35' },
   { id: 'cm', label: 'context-management', range: 'cm-1..cm-35' },
   { id: 'es', label: 'eval-scoring', range: 'es-1..es-35' },
+  { id: 'pm', label: 'prompt-mastery', range: 'pm-1..pm-3' },
 ];
 
 const results = [];
