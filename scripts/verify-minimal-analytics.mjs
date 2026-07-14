@@ -20,7 +20,7 @@ const expectedEvents = [
 ];
 
 const callSites = {
-  onboarding_completed: 'app/onboarding/modus.tsx',
+  onboarding_completed: 'app/onboarding/loop.tsx',
   guest_demo_prompt_viewed: 'app/(tabs)/prompt-lab.tsx',
   byok_key_added_success: 'components/features/profile/ByokKeysManager.tsx',
   first_lesson_completed: 'app/lektion/[id].tsx',

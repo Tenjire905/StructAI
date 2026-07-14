@@ -2,6 +2,8 @@ import { useRouter } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 
 import { Button } from '@/components/ui';
+import { trackEvent } from '@/lib/analytics';
+import { setOnboardingCompleted } from '@/lib/appStorage';
 import {
   DEFAULT_START_PATH_ID,
   getFirstLessonIdForPath,
@@ -18,6 +20,11 @@ export default function OnboardingLoopScreen() {
   const { tokens, t } = useThemeMode();
   const router = useRouter();
   const firstLessonId = getFirstLessonIdForPath(DEFAULT_START_PATH_ID);
+
+  const finishOnboarding = () => {
+    setOnboardingCompleted();
+    trackEvent('onboarding_completed');
+  };
 
   return (
     <ScrollView
@@ -75,6 +82,7 @@ export default function OnboardingLoopScreen() {
         <Button
           label={t('onboarding.loopCta')}
           onPress={() => {
+            finishOnboarding();
             if (firstLessonId) {
               router.replace(`/lektion/${firstLessonId}`);
             }
@@ -83,7 +91,10 @@ export default function OnboardingLoopScreen() {
         />
         <Button
           label={t('onboarding.loopHomeCta')}
-          onPress={() => router.replace('/')}
+          onPress={() => {
+            finishOnboarding();
+            router.replace('/');
+          }}
           variant="ghost"
         />
       </View>
