@@ -1,16 +1,34 @@
 # Build-Cursor-Prompt: eval-scoring Batch 3 (es-17…es-22)
 
+## JSON-Quelle — **bereits im Repo, nicht im Chat**
+
+> **WICHTIG:** Die Inhalts-JSON liegt **bereits committed** auf dem Feature-Branch.  
+> **Nicht** auf eine JSON im Chat warten und **nichts** improvisieren.
+
+| Feld | Wert |
+|---|---|
+| Pfad | `content-ingestion/es-batch-03.json` |
+| Branch | `feature/content-ingestion-es-batch-03` |
+| Source-Commit | `b6cd748` (`chore: add es-batch-03 content source JSON for ingestion`) |
+
+**Erster Schritt:** Branch auschecken und Datei lesen:
+
+```bash
+git fetch origin feature/content-ingestion-es-batch-03
+git checkout feature/content-ingestion-es-batch-03
+test -f content-ingestion/es-batch-03.json && echo "JSON OK"
+```
+
 ## Auftrag
 
 Ingestiere **exakt** den Inhalt aus `content-ingestion/es-batch-03.json` für den Pfad `eval-scoring`. Keine inhaltlichen Änderungen, keine Nachdichtung, keine fehlenden Keys improvisieren.
 
-## Branch
+## Branch (falls noch nicht ausgecheckt)
 
 ```bash
 git checkout develop
 git pull origin develop
 git checkout feature/content-ingestion-es-batch-03
-# JSON-Quelle liegt bereits auf diesem Branch
 ```
 
 ## Dateien anpassen
@@ -72,6 +90,6 @@ Melde:
 - Keys je Locale (erwartet: **78**)
 - **Kein Merge nach develop** ohne Freigabe
 
-## JSON-Quelle
+## JSON-Quelle (Reminder)
 
-Liegt im Repo: `content-ingestion/es-batch-03.json`
+Siehe Abschnitt oben — Datei liegt im Repo auf `feature/content-ingestion-es-batch-03`, **nicht** im Chat.
