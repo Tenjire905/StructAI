@@ -2,7 +2,7 @@
 
 | Datum | Tester | develop tip | Tests | Ergebnis | Notizen |
 |-------|--------|-------------|-------|----------|---------|
-| 2026-07-14 | Cloud Agent | *(nach Merge)* | C4, D1, D2 | Code-verified | Logik in `lektion/[id].tsx` + `lib/streak.ts` geprüft; Geräte-Retest empfohlen |
+| 2026-07-14 | Cloud Agent | `7a341161052b21fd009cbc6726b4c0b0b8959452` | C4, D1, D2 | Code-verified | Logik geprüft; Geräte-Retest empfohlen |
 
 ---
 

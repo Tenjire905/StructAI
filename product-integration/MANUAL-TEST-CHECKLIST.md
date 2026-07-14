@@ -1,6 +1,6 @@
 # StructAI — Manuelle Test-Checkliste (Expo)
 
-**Stand:** develop nach Sprint 5–7 + Expo-Go-Hotfixes  
+**Stand:** develop `7a341161052b21fd009cbc6726b4c0b0b8959452` (Sprint 5–7)  
 **Gerät:** Expo Go **SDK 57** (nicht Play Store SDK 56)  
 **Vorbereitung:** Guest-Modus (nicht eingeloggt), ggf. Progress löschen (Profil/Dev oder frische Install)
 

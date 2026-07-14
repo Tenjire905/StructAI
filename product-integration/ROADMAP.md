@@ -15,17 +15,14 @@ Jeder Sprint = eine Prompt-Datei in diesem Ordner → Build-Cursor kopiert Promp
 | 2 | Streak, Onboarding-Loop, Guest-Name | `sprint-02-engagement-onboarding-PROMPT.md` | ✅ gemergt |
 | 3 | QA-Härtung, Full-Verify | `sprint-03-qa-hardening-PROMPT.md` | ✅ gemergt |
 | 4 | First-Run CTA (Home + Loop → pb-1) | `sprint-04-first-run-cta-PROMPT.md` | ✅ gemergt |
-| — | Expo-Go Storage, Onboarding, useLinking | Hotfix-Branches | ✅ gemergt |
+| — | Expo-Go Storage, Onboarding, useLinking | ✅ gemergt |
 
----
+## Offen
 
-## Offen (Priorität — in dieser Reihenfolge abarbeiten)
-
-| Prio | Sprint | Prompt-Datei | Ziel |
-|------|--------|--------------|------|
-| **1** | 5 | `sprint-05-path-unlock-PROMPT.md` | Lineare Pfad-Freischaltung; Pfade 2–5 gesperrt |
-| **2** | 6 | `sprint-06-qa-checklist-retest-PROMPT.md` | Checkliste aktualisieren; C4 + D1/D2 retesten |
-| **3** | 7 | `sprint-07-prompt-mastery-PROMPT.md` | 6. Pfad Skeleton + pm-1…3 + Ingestion-Prompt |
+| Prio | Thema |
+|------|--------|
+| 1 | Content-Ingestion pm-4…pm-35 (`content-ingestion/pm-batch-01-PROMPT.md`) |
+| 2 | Geräte-Retest Checkliste A–H auf Expo Go |
 
 ---
 
