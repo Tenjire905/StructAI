@@ -9,8 +9,10 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { OrbCompanion, LockedPathView } from '@/components/features';
+import { CapstoneIncompleteView } from '@/components/features/CapstoneIncompleteView';
 import { GuestSaveProgressHint } from '@/components/features/GuestSaveProgressHint';
 import { PathCompletionView } from '@/components/features/PathCompletionView';
+import { SectionMilestoneView } from '@/components/features/SectionMilestoneView';
 import {
   CategorizeStepView,
   ChoiceStepView,
@@ -34,9 +36,10 @@ import {
   type LessonAnswerResult,
 } from '@/lib/lessonRewards';
 import { trackEvent } from '@/lib/analytics';
-import { getPathIdForLesson, getNextLessonId } from '@/lib/pathLessonUtils';
+import { getPathIdForLesson, getFirstLessonIdForPath, getNextLessonId } from '@/lib/pathLessonUtils';
+import { isPathFinalCapstone, isPathMidCapstone } from '@/lib/pathCapstone';
 import { getLessonChapterStatus, isLessonPlayable, pathTitleKey } from '@/lib/pathProgress';
-import { getPathUnlockBlockReason } from '@/lib/pathUnlock';
+import { getNextPathId, getPathUnlockBlockReason } from '@/lib/pathUnlock';
 import { prepareLessonSteps } from '@/lib/lessonSession';
 import { useProgressStore } from '@/store/progressStore';
 import { getShadow, useCelebration, useThemeMode } from '@/theme';
@@ -52,7 +55,13 @@ function stepKind(step: GradedStep): LessonAnswerResult['kind'] {
   return step.type;
 }
 
-type LessonOutcome = 'active' | 'passed' | 'path_complete' | 'failed';
+type LessonOutcome =
+  | 'active'
+  | 'passed'
+  | 'path_complete'
+  | 'capstone_incomplete'
+  | 'section_milestone'
+  | 'failed';
 
 export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   const { tokens, t, locale } = useThemeMode();
@@ -359,6 +368,10 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
       if (newlyCompletedPathId) {
         setCompletedPathId(newlyCompletedPathId);
         setLessonOutcome('path_complete');
+      } else if (pathId && isPathFinalCapstone(pathId, lesson.id)) {
+        setLessonOutcome('capstone_incomplete');
+      } else if (pathId && isPathMidCapstone(pathId, lesson.id)) {
+        setLessonOutcome('section_milestone');
       } else {
         setLessonOutcome('passed');
       }
@@ -449,13 +462,59 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   const primaryDisabled = gradedStep !== null && !isChecked && !hasSelection;
 
   if (lessonOutcome === 'path_complete' && completedPathId) {
+    const nextPathId = getNextPathId(completedPathId);
+
     return (
       <>
         <Stack.Screen options={headerOptions} />
         <PathCompletionView
           onFinish={goBackToPath}
+          onStartNextPath={
+            nextPathId
+              ? () => {
+                  const firstLessonId = getFirstLessonIdForPath(nextPathId);
+
+                  if (firstLessonId) {
+                    router.replace(`/lektion/${firstLessonId}`);
+                    return;
+                  }
+
+                  router.replace(`/lernpfad/${nextPathId}`);
+                }
+              : undefined
+          }
           orbsReward={earnedOrbs}
           pathId={completedPathId}
+        />
+      </>
+    );
+  }
+
+  if (lessonOutcome === 'capstone_incomplete' && pathId) {
+    return (
+      <>
+        <Stack.Screen options={headerOptions} />
+        <CapstoneIncompleteView
+          onBackToPath={goBackToPath}
+          onOpenMissing={goBackToPath}
+          orbsReward={earnedOrbs}
+          pathId={pathId}
+        />
+      </>
+    );
+  }
+
+  if (lessonOutcome === 'section_milestone') {
+    const nextLessonId = pathId ? getNextLessonId(pathId, lesson.id) : undefined;
+
+    return (
+      <>
+        <Stack.Screen options={headerOptions} />
+        <SectionMilestoneView
+          nextLessonId={nextLessonId}
+          onBackToPath={goBackToPath}
+          onContinueNext={(nextId) => router.replace(`/lektion/${nextId}`)}
+          orbsReward={earnedOrbs}
         />
       </>
     );

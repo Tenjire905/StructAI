@@ -873,6 +873,86 @@ export const copyEn: CopyCatalog = {
     playful: 'Path complete: {{path}}!',
     focus: 'Learning path completed: {{path}}.',
   },
+  'celebration.capstoneComplete': {
+    playful: 'Capstone project complete!',
+    focus: 'Capstone project passed.',
+  },
+  'celebration.sectionMilestone': {
+    playful: 'Chapter complete!',
+    focus: 'Milestone reached.',
+  },
+  'capstoneIncomplete.title': {
+    playful: 'Path almost done — not fully complete',
+    focus: 'Path finished — not fully complete',
+  },
+  'capstoneIncomplete.subtitle': {
+    playful:
+      'Capstone passed. {{missing}} of {{total}} lessons remain before the next path unlocks.',
+    focus:
+      'Capstone project passed. {{missing}} of {{total}} lessons remain to unlock the next path.',
+  },
+  'capstoneIncomplete.statCompleted': {
+    playful: 'Passed',
+    focus: 'Completed',
+  },
+  'capstoneIncomplete.statSkipped': {
+    playful: 'Skipped',
+    focus: 'Skipped/missing',
+  },
+  'capstoneIncomplete.lockHint': {
+    playful: 'The next path stays locked until every lesson is passed.',
+    focus: 'The next path stays locked until every lesson is passed.',
+  },
+  'capstoneIncomplete.openMissingCta': {
+    playful: 'Go to open lessons',
+    focus: 'Go to open lessons',
+  },
+  'capstoneIncomplete.backToPath': {
+    playful: 'Back to path',
+    focus: 'Back to path',
+  },
+  'sectionMilestone.title': {
+    playful: 'Chapter complete!',
+    focus: 'Capstone project passed',
+  },
+  'sectionMilestone.subtitle': {
+    playful: 'Nice work — continue with the next section.',
+    focus: 'You reached an important milestone.',
+  },
+  'sectionMilestone.continueCta': {
+    playful: 'Next chapter',
+    focus: 'Continue',
+  },
+  'sectionMilestone.backToPath': {
+    playful: 'Back to path',
+    focus: 'Back to path',
+  },
+  'pathPreview.lockedHint': {
+    playful: 'Still locked — pass every lesson in this path first.',
+    focus: 'Still locked — pass every lesson in this path first.',
+  },
+  'pathCompletion.titleFull': {
+    playful: 'Path fully complete!',
+    focus: 'Path fully completed',
+  },
+  'pathCompletion.subtitleFull': {
+    playful:
+      'All {{total}} chapters of "{{path}}" passed. Your certificate is ready and the next path is unlocked.',
+    focus:
+      'All lessons passed. Your certificate is ready and the next path is unlocked.',
+  },
+  'pathCompletion.statCompleted': {
+    playful: 'Chapters passed',
+    focus: 'Lessons passed',
+  },
+  'pathCompletion.statCertificate': {
+    playful: 'Certificate',
+    focus: 'Certificate available',
+  },
+  'pathCompletion.startNextPathCta': {
+    playful: 'Continue to {{path}}',
+    focus: 'Start next path: {{path}}',
+  },
   'pathCompletion.title': {
     playful: 'Path complete!',
     focus: 'Learning path completed',

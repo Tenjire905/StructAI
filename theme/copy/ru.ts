@@ -873,6 +873,86 @@ export const copyRu: CopyCatalog = {
     playful: 'Путь пройден: {{path}}!',
     focus: 'Учебный путь завершён: {{path}}.',
   },
+  'celebration.capstoneComplete': {
+    playful: 'Финальный проект пройден!',
+    focus: 'Финальный проект сдан.',
+  },
+  'celebration.sectionMilestone': {
+    playful: 'Глава завершена!',
+    focus: 'Достигнута веха.',
+  },
+  'capstoneIncomplete.title': {
+    playful: 'Путь почти пройден — ещё не полностью',
+    focus: 'Путь завершён — ещё не полностью',
+  },
+  'capstoneIncomplete.subtitle': {
+    playful:
+      'Финальный проект сдан. До открытия следующего пути осталось {{missing}} из {{total}} уроков.',
+    focus:
+      'Финальный проект сдан. До открытия следующего пути осталось {{missing}} из {{total}} уроков.',
+  },
+  'capstoneIncomplete.statCompleted': {
+    playful: 'Пройдено',
+    focus: 'Завершено',
+  },
+  'capstoneIncomplete.statSkipped': {
+    playful: 'Пропущено',
+    focus: 'Пропущено/не сдано',
+  },
+  'capstoneIncomplete.lockHint': {
+    playful: 'Следующий путь останется закрыт, пока не сданы все уроки.',
+    focus: 'Следующий путь останется закрыт, пока не сданы все уроки.',
+  },
+  'capstoneIncomplete.openMissingCta': {
+    playful: 'К открытым урокам',
+    focus: 'К открытым урокам',
+  },
+  'capstoneIncomplete.backToPath': {
+    playful: 'Назад к пути',
+    focus: 'Назад к пути',
+  },
+  'sectionMilestone.title': {
+    playful: 'Глава завершена!',
+    focus: 'Финальный проект сдан',
+  },
+  'sectionMilestone.subtitle': {
+    playful: 'Отлично — продолжай со следующим разделом.',
+    focus: 'Ты достиг важной вехи.',
+  },
+  'sectionMilestone.continueCta': {
+    playful: 'Следующая глава',
+    focus: 'Продолжить',
+  },
+  'sectionMilestone.backToPath': {
+    playful: 'Назад к пути',
+    focus: 'Назад к пути',
+  },
+  'pathPreview.lockedHint': {
+    playful: 'Ещё закрыт — сначала сдай все уроки этого пути.',
+    focus: 'Ещё закрыт — сначала сдай все уроки этого пути.',
+  },
+  'pathCompletion.titleFull': {
+    playful: 'Путь полностью пройден!',
+    focus: 'Путь полностью завершён',
+  },
+  'pathCompletion.subtitleFull': {
+    playful:
+      'Все {{total}} глав «{{path}}» сданы. Сертификат готов, следующий путь открыт.',
+    focus:
+      'Все уроки сданы. Сертификат готов, следующий путь открыт.',
+  },
+  'pathCompletion.statCompleted': {
+    playful: 'Глав сдано',
+    focus: 'Уроков сдано',
+  },
+  'pathCompletion.statCertificate': {
+    playful: 'Сертификат',
+    focus: 'Сертификат доступен',
+  },
+  'pathCompletion.startNextPathCta': {
+    playful: 'Далее: {{path}}',
+    focus: 'Начать следующий путь: {{path}}',
+  },
   'pathCompletion.title': {
     playful: 'Путь пройден!',
     focus: 'Учебный путь завершён',

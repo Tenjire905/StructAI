@@ -15,6 +15,16 @@ export function getPrerequisitePathId(pathId: string): string | undefined {
   return PATH_UNLOCK_ORDER[index - 1];
 }
 
+export function getNextPathId(pathId: string): string | undefined {
+  const index = PATH_UNLOCK_ORDER.indexOf(pathId);
+
+  if (index < 0 || index >= PATH_UNLOCK_ORDER.length - 1) {
+    return undefined;
+  }
+
+  return PATH_UNLOCK_ORDER[index + 1];
+}
+
 export function isPathUnlocked(
   pathId: string,
   pathProgress: Record<string, PathProgressRecord>,

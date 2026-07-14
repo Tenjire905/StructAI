@@ -17,6 +17,8 @@ export type CelebrationType =
   | 'orb_gain'
   | 'streak_milestone'
   | 'lesson_complete'
+  | 'section_milestone'
+  | 'capstone_complete'
   | 'path_complete';
 
 export type CelebrationOverlayEvent = {
@@ -159,7 +161,13 @@ function FocusPulse({ celebrationType }: { celebrationType: CelebrationType }) {
     );
     const half = duration / 2;
     pulseOpacity.value = withSequence(
-      withTiming(celebrationType === 'path_complete' ? 0.28 : 0.18, {
+      withTiming(
+        celebrationType === 'path_complete'
+          ? 0.28
+          : celebrationType === 'capstone_complete'
+            ? 0.22
+            : 0.18,
+        {
         duration: half,
         easing: Easing.out(Easing.quad),
       }),
@@ -194,6 +202,10 @@ function getCelebrationCopyKey(type: CelebrationType): string {
       return 'celebration.streakMilestone';
     case 'lesson_complete':
       return 'celebration.lessonComplete';
+    case 'section_milestone':
+      return 'celebration.sectionMilestone';
+    case 'capstone_complete':
+      return 'celebration.capstoneComplete';
     case 'path_complete':
       return 'celebration.pathComplete';
   }
@@ -203,11 +215,31 @@ function getCelebrationDurationMs(
   type: CelebrationType,
   defaultDuration: number,
 ): number {
-  return type === 'path_complete' ? defaultDuration * 2 : defaultDuration;
+  if (type === 'path_complete') {
+    return defaultDuration * 2;
+  }
+
+  if (type === 'capstone_complete') {
+    return Math.round(defaultDuration * 1.35);
+  }
+
+  return defaultDuration;
 }
 
 function getConfettiCount(type: CelebrationType): number {
-  return type === 'path_complete' ? CONFETTI_COUNT * 2 : CONFETTI_COUNT;
+  if (type === 'path_complete') {
+    return CONFETTI_COUNT * 2;
+  }
+
+  if (type === 'capstone_complete') {
+    return Math.round(CONFETTI_COUNT * 1.25);
+  }
+
+  if (type === 'section_milestone') {
+    return Math.round(CONFETTI_COUNT * 0.75);
+  }
+
+  return CONFETTI_COUNT;
 }
 
 export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps) {
@@ -266,7 +298,8 @@ export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps
 
   const copyKey = getCelebrationCopyKey(event.type);
   const label =
-    event.type === 'path_complete' && event.pathTitleKey
+    (event.type === 'path_complete' || event.type === 'capstone_complete') &&
+    event.pathTitleKey
       ? t(copyKey, { path: t(event.pathTitleKey) })
       : event.type === 'orb_gain' && event.orbCount !== undefined
         ? t(copyKey, { count: event.orbCount })

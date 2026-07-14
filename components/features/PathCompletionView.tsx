@@ -4,13 +4,16 @@ import { ScrollView, Text, View } from 'react-native';
 import { CertificateShareAction } from '@/components/features/CertificateShareAction';
 import { CertificateView } from '@/components/features/CertificateView';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
+import { StatBlock } from '@/components/features/StatBlock';
 import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import {
   CERTIFICATE_LAYOUT_HEIGHT,
   CERTIFICATE_LAYOUT_WIDTH,
 } from '@/lib/certificateExport';
+import { getPathCompletionStats } from '@/lib/pathCapstone';
 import { pathTitleKey } from '@/lib/pathProgress';
+import { getNextPathId } from '@/lib/pathUnlock';
 import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { getPathTemplate } from '@/lib/pathLessonUtils';
 import { useAuth } from '@/providers/AuthProvider';
@@ -20,10 +23,16 @@ import { getShadow, useCelebration, useThemeMode } from '@/theme';
 type PathCompletionViewProps = {
   pathId: string;
   orbsReward: number;
+  onStartNextPath?: () => void;
   onFinish: () => void;
 };
 
-export function PathCompletionView({ pathId, orbsReward, onFinish }: PathCompletionViewProps) {
+export function PathCompletionView({
+  pathId,
+  orbsReward,
+  onStartNextPath,
+  onFinish,
+}: PathCompletionViewProps) {
   const { tokens, t, locale, mode } = useThemeMode();
   const { celebrate } = useCelebration();
   const { user } = useAuth();
@@ -32,6 +41,9 @@ export function PathCompletionView({ pathId, orbsReward, onFinish }: PathComplet
   const finishedRef = useRef(false);
   const path = getPathTemplate(pathId);
   const totalChapters = path?.totalChapters ?? 0;
+  const pathProgress = useProgressStore((state) => state.pathProgress[pathId]);
+  const stats = getPathCompletionStats(pathId, pathProgress);
+  const nextPathId = getNextPathId(pathId);
   const completedAt =
     useProgressStore((state) => state.pathCompletedAt[pathId]) ?? new Date().toISOString();
   const recipientName = resolveProfileDisplayName(user);
@@ -82,7 +94,7 @@ export function PathCompletionView({ pathId, orbsReward, onFinish }: PathComplet
           fontSize: tokens.typography.fontSize.displayLg,
           textAlign: 'center',
         }}>
-        {t('pathCompletion.title')}
+        {t('pathCompletion.titleFull')}
       </Text>
 
       <Text
@@ -93,11 +105,24 @@ export function PathCompletionView({ pathId, orbsReward, onFinish }: PathComplet
           lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
           textAlign: 'center',
         }}>
-        {t('pathCompletion.subtitle', {
+        {t('pathCompletion.subtitleFull', {
           path: t(pathTitleKey(pathId)),
           total: totalChapters,
         })}
       </Text>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: tokens.spacing.space3,
+          width: '100%',
+        }}>
+        <StatBlock
+          copyKey="pathCompletion.statCompleted"
+          value={`${stats.completed}/${stats.total}`}
+        />
+        <StatBlock copyKey="pathCompletion.statCertificate" value="✓" />
+      </View>
 
       {orbsReward > 0 ? (
         <Text
@@ -133,18 +158,21 @@ export function PathCompletionView({ pathId, orbsReward, onFinish }: PathComplet
         />
       </View>
 
-      <CertificateShareAction
-        completedAt={completedAt}
-        fullWidth
-        pathId={pathId}
-      />
+      <View style={{ alignSelf: 'stretch', gap: tokens.spacing.space3, width: '100%' }}>
+        {nextPathId && onStartNextPath ? (
+          <Button
+            label={t('pathCompletion.startNextPathCta', {
+              path: t(pathTitleKey(nextPathId)),
+            })}
+            onPress={onStartNextPath}
+            variant="primary"
+          />
+        ) : null}
 
-      <Button
-        label={t('pathCompletion.backToPaths')}
-        onPress={onFinish}
-        style={{ alignSelf: 'stretch' }}
-        variant="ghost"
-      />
+        <CertificateShareAction completedAt={completedAt} fullWidth pathId={pathId} />
+
+        <Button label={t('pathCompletion.backToPaths')} onPress={onFinish} variant="ghost" />
+      </View>
     </ScrollView>
   );
 }

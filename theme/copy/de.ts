@@ -873,6 +873,86 @@ export const copyDe: CopyCatalog = {
     playful: 'Lernpfad geschafft: {{path}}!',
     focus: 'Lernpfad abgeschlossen: {{path}}.',
   },
+  'celebration.capstoneComplete': {
+    playful: 'Abschlussprojekt geschafft!',
+    focus: 'Abschlussprojekt bestanden.',
+  },
+  'celebration.sectionMilestone': {
+    playful: 'Kapitel geschafft!',
+    focus: 'Meilenstein erreicht.',
+  },
+  'capstoneIncomplete.title': {
+    playful: 'Pfad fast geschafft — noch nicht vollständig',
+    focus: 'Pfad abgeschlossen — noch nicht vollständig',
+  },
+  'capstoneIncomplete.subtitle': {
+    playful:
+      'Das Abschlussprojekt ist geschafft. Für den nächsten Pfad fehlen noch {{missing}} von {{total}} Lektionen.',
+    focus:
+      'Das Abschlussprojekt ist bestanden. Für die Freischaltung des nächsten Pfads fehlen noch {{missing}} von {{total}} Lektionen.',
+  },
+  'capstoneIncomplete.statCompleted': {
+    playful: 'Bestanden',
+    focus: 'Abgeschlossen',
+  },
+  'capstoneIncomplete.statSkipped': {
+    playful: 'Übersprungen',
+    focus: 'Übersprungen/fehlend',
+  },
+  'capstoneIncomplete.lockHint': {
+    playful: 'Der nächste Pfad bleibt gesperrt, bis alle Lektionen bestanden sind.',
+    focus: 'Der nächste Pfad bleibt gesperrt, bis alle Lektionen bestanden sind.',
+  },
+  'capstoneIncomplete.openMissingCta': {
+    playful: 'Zu den offenen Lektionen',
+    focus: 'Zu den offenen Lektionen',
+  },
+  'capstoneIncomplete.backToPath': {
+    playful: 'Zurück zum Pfad',
+    focus: 'Zurück zum Pfad',
+  },
+  'sectionMilestone.title': {
+    playful: 'Kapitel abgeschlossen!',
+    focus: 'Abschlussprojekt geschafft',
+  },
+  'sectionMilestone.subtitle': {
+    playful: 'Gut gemacht — weiter mit dem nächsten Abschnitt.',
+    focus: 'Du hast einen wichtigen Meilenstein erreicht.',
+  },
+  'sectionMilestone.continueCta': {
+    playful: 'Zum nächsten Kapitel',
+    focus: 'Weiter',
+  },
+  'sectionMilestone.backToPath': {
+    playful: 'Zurück zum Pfad',
+    focus: 'Zurück zum Pfad',
+  },
+  'pathPreview.lockedHint': {
+    playful: 'Noch gesperrt — erst alle Lektionen dieses Pfads bestehen.',
+    focus: 'Noch gesperrt — erst alle Lektionen dieses Pfads bestehen.',
+  },
+  'pathCompletion.titleFull': {
+    playful: 'Lernpfad vollständig abgeschlossen!',
+    focus: 'Pfad vollständig abgeschlossen',
+  },
+  'pathCompletion.subtitleFull': {
+    playful:
+      'Alle {{total}} Kapitel von „{{path}}“ bestanden. Dein Zertifikat ist bereit und der nächste Pfad ist freigeschaltet.',
+    focus:
+      'Alle Lektionen bestanden. Dein Zertifikat ist bereit und der nächste Pfad ist freigeschaltet.',
+  },
+  'pathCompletion.statCompleted': {
+    playful: 'Kapitel bestanden',
+    focus: 'Lektionen bestanden',
+  },
+  'pathCompletion.statCertificate': {
+    playful: 'Zertifikat',
+    focus: 'Zertifikat verfügbar',
+  },
+  'pathCompletion.startNextPathCta': {
+    playful: 'Weiter zu {{path}}',
+    focus: 'Nächsten Pfad starten: {{path}}',
+  },
   'pathCompletion.title': {
     playful: 'Lernpfad komplett!',
     focus: 'Lernpfad abgeschlossen',

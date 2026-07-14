@@ -873,6 +873,86 @@ export const copyFr: CopyCatalog = {
     playful: 'Parcours termine : {{path}} !',
     focus: 'Parcours d\'apprentissage termine : {{path}}.',
   },
+  'celebration.capstoneComplete': {
+    playful: 'Projet final reussi !',
+    focus: 'Projet final valide.',
+  },
+  'celebration.sectionMilestone': {
+    playful: 'Chapitre termine !',
+    focus: 'Jalon atteint.',
+  },
+  'capstoneIncomplete.title': {
+    playful: 'Parcours presque fini — pas encore complet',
+    focus: 'Parcours termine — pas encore complet',
+  },
+  'capstoneIncomplete.subtitle': {
+    playful:
+      'Projet final reussi. Il reste {{missing}} lecons sur {{total}} pour debloquer le parcours suivant.',
+    focus:
+      'Projet final valide. Il reste {{missing}} lecons sur {{total}} pour debloquer le parcours suivant.',
+  },
+  'capstoneIncomplete.statCompleted': {
+    playful: 'Reussies',
+    focus: 'Terminees',
+  },
+  'capstoneIncomplete.statSkipped': {
+    playful: 'Passees',
+    focus: 'Passees/manquantes',
+  },
+  'capstoneIncomplete.lockHint': {
+    playful: 'Le parcours suivant reste verrouille tant que toutes les lecons ne sont pas reussies.',
+    focus: 'Le parcours suivant reste verrouille tant que toutes les lecons ne sont pas reussies.',
+  },
+  'capstoneIncomplete.openMissingCta': {
+    playful: 'Voir les lecons ouvertes',
+    focus: 'Voir les lecons ouvertes',
+  },
+  'capstoneIncomplete.backToPath': {
+    playful: 'Retour au parcours',
+    focus: 'Retour au parcours',
+  },
+  'sectionMilestone.title': {
+    playful: 'Chapitre termine !',
+    focus: 'Projet final reussi',
+  },
+  'sectionMilestone.subtitle': {
+    playful: 'Bien joue — continue avec la section suivante.',
+    focus: 'Tu as atteint un jalon important.',
+  },
+  'sectionMilestone.continueCta': {
+    playful: 'Chapitre suivant',
+    focus: 'Continuer',
+  },
+  'sectionMilestone.backToPath': {
+    playful: 'Retour au parcours',
+    focus: 'Retour au parcours',
+  },
+  'pathPreview.lockedHint': {
+    playful: 'Toujours verrouille — reussis d\'abord toutes les lecons de ce parcours.',
+    focus: 'Toujours verrouille — reussis d\'abord toutes les lecons de ce parcours.',
+  },
+  'pathCompletion.titleFull': {
+    playful: 'Parcours entierement termine !',
+    focus: 'Parcours entierement termine',
+  },
+  'pathCompletion.subtitleFull': {
+    playful:
+      'Les {{total}} chapitres de « {{path}} » sont reussis. Ton certificat est pret et le parcours suivant est debloque.',
+    focus:
+      'Toutes les lecons reussies. Ton certificat est pret et le parcours suivant est debloque.',
+  },
+  'pathCompletion.statCompleted': {
+    playful: 'Chapitres reussis',
+    focus: 'Lecons reussies',
+  },
+  'pathCompletion.statCertificate': {
+    playful: 'Certificat',
+    focus: 'Certificat disponible',
+  },
+  'pathCompletion.startNextPathCta': {
+    playful: 'Continuer vers {{path}}',
+    focus: 'Demarrer le parcours suivant : {{path}}',
+  },
   'pathCompletion.title': {
     playful: 'Parcours complete !',
     focus: 'Parcours d\'apprentissage termine',
