@@ -131,11 +131,9 @@ async function hydrateAppStorageInternal(): Promise<void> {
       return;
     }
 
-    const entries = await AsyncStorage.getMany(prefixedKeys);
+    const entries = await AsyncStorage.multiGet(prefixedKeys);
 
-    for (const fullKey of prefixedKeys) {
-      const value = entries[fullKey];
-
+    for (const [fullKey, value] of entries) {
       if (value != null) {
         asyncStorageMemory.set(fullKey.slice(STORAGE_PREFIX.length), value);
       }
@@ -155,23 +153,23 @@ export function hydrateAppStorage(): Promise<void> {
 
 /** Durable write — awaits AsyncStorage in Expo Go instead of fire-and-forget. */
 export async function persistAppStorageValue(key: string, value: string): Promise<void> {
-  resolveStorage().set(key, value);
-
-  if (!asyncStorageMemory) {
+  if (asyncStorageMemory) {
+    asyncStorageMemory.set(key, value);
+    await AsyncStorage.setItem(STORAGE_PREFIX + key, value);
     return;
   }
 
-  await AsyncStorage.setItem(STORAGE_PREFIX + key, value);
+  resolveStorage().set(key, value);
 }
 
 export async function deleteAppStorageValue(key: string): Promise<void> {
-  resolveStorage().delete(key);
-
-  if (!asyncStorageMemory) {
+  if (asyncStorageMemory) {
+    asyncStorageMemory.delete(key);
+    await AsyncStorage.removeItem(STORAGE_PREFIX + key);
     return;
   }
 
-  await AsyncStorage.removeItem(STORAGE_PREFIX + key);
+  resolveStorage().delete(key);
 }
 
 export const appStorage: KeyValueStorage = {
