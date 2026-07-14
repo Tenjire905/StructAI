@@ -11,7 +11,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { useThemeMode } from '@/theme';
+import { useThemeMode } from '@/theme/ThemeModeContext';
 
 export type CelebrationType =
   | 'orb_gain'
