@@ -60,11 +60,6 @@ export const lessonEnCm: Record<string, string> = {
   "cm-4.s1.item1": "Replace vague adjectives with concrete rules",
   "cm-4.s1.item2": "Add a mini example sentence in the target tone",
   "cm-4.s1.item3": "Remove conflicting examples in a different style",
-  "cm-4.s1.opt0": "Please phrase it nicely.",
-  "cm-4.s1.opt1":
-    "Use formal address, matter-of-fact tone, max. 20 words per sentence, no metaphors.",
-  "cm-4.s1.opt2": "Modern and fresh.",
-  "cm-4.s1.question": "Which style instruction is the most precise?",
   "cm-4.s2.explanation":
     "Examples are strong signals - they must match the desired style.",
   "cm-4.s2.opt0": "The model always ignores examples.",

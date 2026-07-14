@@ -71,11 +71,6 @@ export const lessonFrCm: Record<string, string> = {
   "cm-4.s1.item1": "Remplacer les adjectifs vagues par des règles concrètes",
   "cm-4.s1.item2": "Ajouter une mini-phrase d'exemple dans le ton visé",
   "cm-4.s1.item3": "Retirer les exemples contradictoires dans un autre style",
-  "cm-4.s1.opt0": "Merci de le formuler gentiment.",
-  "cm-4.s1.opt1":
-    "Vouvoiement, ton factuel, 20 mots max. par phrase, pas de métaphores.",
-  "cm-4.s1.opt2": "Moderne et frais.",
-  "cm-4.s1.question": "Quelle consigne de style est la plus précise ?",
   "cm-4.s2.explanation":
     "Les exemples sont des signaux puissants - ils doivent correspondre au style souhaité.",
   "cm-4.s2.opt0": "Le modèle ignore toujours les exemples.",
