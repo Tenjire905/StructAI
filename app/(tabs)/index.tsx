@@ -8,8 +8,9 @@ import {
   StatBlock,
   StreakTracker,
 } from '@/components/features';
-import { Avatar } from '@/components/ui';
+import { Avatar, Button, Card } from '@/components/ui';
 import { computePathProgressBarModel, pathTitleKey } from '@/lib/pathProgress';
+import { DEFAULT_START_PATH_ID } from '@/lib/pathLessonUtils';
 import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
@@ -79,14 +80,32 @@ export default function HomeScreen() {
         </Text>
 
         {activePaths.length === 0 ? (
-          <Text
-            style={{
-              color: tokens.colors.text.secondary,
-              fontFamily: tokens.typography.fontFamily.body,
-              fontSize: tokens.typography.fontSize.bodyMd,
-            }}>
-            {t('paths.emptyActive')}
-          </Text>
+          <Card variant="solid">
+            <View style={{ gap: tokens.spacing.space3 }}>
+              <Text
+                style={{
+                  color: tokens.colors.text.primary,
+                  fontFamily: tokens.typography.fontFamily.heading,
+                  fontSize: tokens.typography.fontSize.headingMd,
+                }}>
+                {t(pathTitleKey(DEFAULT_START_PATH_ID))}
+              </Text>
+              <Text
+                style={{
+                  color: tokens.colors.text.secondary,
+                  fontFamily: tokens.typography.fontFamily.body,
+                  fontSize: tokens.typography.fontSize.bodyMd,
+                  lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
+                }}>
+                {t('home.startHint')}
+              </Text>
+              <Button
+                label={t('home.startCta')}
+                onPress={() => router.push(`/lernpfad/${DEFAULT_START_PATH_ID}`)}
+                variant="primary"
+              />
+            </View>
+          </Card>
         ) : (
           activePaths.map((path) => {
             const progressBar = computePathProgressBarModel(
