@@ -57,6 +57,26 @@ export const copyRu: CopyCatalog = {
     playful: 'Открой новое',
     focus: 'Доступные треки',
   },
+  'paths.sectionLocked': {
+    playful: 'Пока закрыто',
+    focus: 'Закрытые пути',
+  },
+  'paths.lockedBadge': {
+    playful: 'Закрыто',
+    focus: 'Закрыто',
+  },
+  'paths.lockedTitle': {
+    playful: 'Этот путь пока закрыт',
+    focus: 'Путь закрыт',
+  },
+  'paths.lockedBody': {
+    playful: 'Сначала заверши «{{path}}» — потом откроется этот путь!',
+    focus: 'Сначала завершите «{{path}}», чтобы открыть этот путь обучения.',
+  },
+  'paths.lockedCta': {
+    playful: 'К списку путей',
+    focus: 'К списку путей',
+  },
   'paths.title.prompt_basics': {
     playful: 'Основы промптов',
     focus: 'Основы промптов',

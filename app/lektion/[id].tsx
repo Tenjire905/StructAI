@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { OrbCompanion } from '@/components/features';
+import { OrbCompanion, LockedPathView } from '@/components/features';
 import { GuestSaveProgressHint } from '@/components/features/GuestSaveProgressHint';
 import { PathCompletionView } from '@/components/features/PathCompletionView';
 import {
@@ -35,7 +35,8 @@ import {
 } from '@/lib/lessonRewards';
 import { trackEvent } from '@/lib/analytics';
 import { getPathIdForLesson, getNextLessonId } from '@/lib/pathLessonUtils';
-import { getLessonChapterStatus, isLessonPlayable } from '@/lib/pathProgress';
+import { getLessonChapterStatus, isLessonPlayable, pathTitleKey } from '@/lib/pathProgress';
+import { getPathUnlockBlockReason } from '@/lib/pathUnlock';
 import { prepareLessonSteps } from '@/lib/lessonSession';
 import { useProgressStore } from '@/store/progressStore';
 import { getShadow, useCelebration, useThemeMode } from '@/theme';
@@ -71,6 +72,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
     [lessonId, pathProgress],
   );
   const canPlayLesson = isLessonPlayable(lessonChapterStatus);
+  const pathBlockReason = pathId ? getPathUnlockBlockReason(pathId, pathProgress) : null;
 
   const goBackToPath = () => {
     if (pathId) {
@@ -157,6 +159,17 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
             {t('lesson.notFound')}
           </Text>
         </View>
+      </>
+    );
+  }
+
+  if (pathBlockReason) {
+    const prerequisiteTitle = t(pathTitleKey(pathBlockReason.prerequisitePathId));
+
+    return (
+      <>
+        <Stack.Screen options={headerOptions} />
+        <LockedPathView onBack={goBackToPath} prerequisitePathTitle={prerequisiteTitle} />
       </>
     );
   }

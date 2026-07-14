@@ -57,6 +57,26 @@ export const copyFr: CopyCatalog = {
     playful: 'Decouvre-en plus',
     focus: 'Parcours disponibles',
   },
+  'paths.sectionLocked': {
+    playful: 'Encore verrouillés',
+    focus: 'Parcours verrouillés',
+  },
+  'paths.lockedBadge': {
+    playful: 'Verrouillé',
+    focus: 'Verrouillé',
+  },
+  'paths.lockedTitle': {
+    playful: 'Ce parcours est encore fermé',
+    focus: 'Parcours verrouillé',
+  },
+  'paths.lockedBody': {
+    playful: 'Termine d\'abord « {{path}} » — ensuite tu pourras continuer ici !',
+    focus: 'Terminez d\'abord « {{path}} » pour débloquer ce parcours.',
+  },
+  'paths.lockedCta': {
+    playful: 'Retour aux parcours',
+    focus: 'Retour aux parcours',
+  },
   'paths.title.prompt_basics': {
     playful: 'Bases du prompt',
     focus: 'Bases du prompt',

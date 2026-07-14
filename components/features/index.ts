@@ -3,6 +3,7 @@ export { ChapterRow } from './ChapterRow';
 export { OrbCompanion } from './OrbCompanion';
 export { OrbCounter } from './OrbCounter';
 export { OrbIcon } from './OrbIcon';
+export { LockedPathView } from './LockedPathView';
 export { PathCard } from './PathCard';
 export { ScoreChart } from './ScoreChart';
 export { StatBlock } from './StatBlock';

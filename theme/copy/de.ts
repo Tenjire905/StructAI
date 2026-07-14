@@ -57,6 +57,26 @@ export const copyDe: CopyCatalog = {
     playful: 'Entdecke mehr',
     focus: 'Verfügbare Lernpfade',
   },
+  'paths.sectionLocked': {
+    playful: 'Noch verschlossen',
+    focus: 'Gesperrte Pfade',
+  },
+  'paths.lockedBadge': {
+    playful: 'Verschlossen',
+    focus: 'Gesperrt',
+  },
+  'paths.lockedTitle': {
+    playful: 'Dieser Pfad ist noch zu',
+    focus: 'Pfad gesperrt',
+  },
+  'paths.lockedBody': {
+    playful: 'Erst „{{path}}" abschließen — dann geht\'s hier weiter!',
+    focus: 'Schließe zuerst „{{path}}" ab, um diesen Pfad freizuschalten.',
+  },
+  'paths.lockedCta': {
+    playful: 'Zurück zu den Pfaden',
+    focus: 'Zurück zu den Pfaden',
+  },
   'paths.title.prompt_basics': {
     playful: 'Prompt-Grundlagen',
     focus: 'Prompt-Grundlagen',

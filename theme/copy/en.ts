@@ -57,6 +57,26 @@ export const copyEn: CopyCatalog = {
     playful: 'Discover more',
     focus: 'Available learning paths',
   },
+  'paths.sectionLocked': {
+    playful: 'Still locked',
+    focus: 'Locked paths',
+  },
+  'paths.lockedBadge': {
+    playful: 'Locked',
+    focus: 'Locked',
+  },
+  'paths.lockedTitle': {
+    playful: 'This path is still locked',
+    focus: 'Path locked',
+  },
+  'paths.lockedBody': {
+    playful: 'Finish "{{path}}" first — then you can continue here!',
+    focus: 'Complete "{{path}}" first to unlock this learning path.',
+  },
+  'paths.lockedCta': {
+    playful: 'Back to paths',
+    focus: 'Back to paths',
+  },
   'paths.title.prompt_basics': {
     playful: 'Prompt Basics',
     focus: 'Prompt Basics',

@@ -3,6 +3,7 @@ import { ScrollView, Text, View } from 'react-native';
 
 import { PathCard } from '@/components/features';
 import { computePathProgressBarModel, getMergedPaths, pathTitleKey } from '@/lib/pathProgress';
+import { isPathUnlocked } from '@/lib/pathUnlock';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
@@ -13,7 +14,11 @@ export default function LernpfadeScreen() {
   const mergedPaths = getMergedPaths(pathProgress);
 
   const activePaths = mergedPaths.filter((path) => path.progress !== undefined);
-  const availablePaths = mergedPaths.filter((path) => path.progress === undefined);
+  const notStartedPaths = mergedPaths.filter((path) => path.progress === undefined);
+  const unlockedAvailablePaths = notStartedPaths.filter((path) =>
+    isPathUnlocked(path.id, pathProgress),
+  );
+  const lockedPaths = notStartedPaths.filter((path) => !isPathUnlocked(path.id, pathProgress));
 
   return (
     <ScrollView
@@ -65,27 +70,51 @@ export default function LernpfadeScreen() {
         )}
       </View>
 
-      <View style={{ gap: tokens.spacing.space3 }}>
-        <Text
-          style={{
-            color: tokens.colors.text.primary,
-            fontFamily: tokens.typography.fontFamily.heading,
-            fontSize: tokens.typography.fontSize.headingMd,
-          }}>
-          {t('paths.sectionAvailable')}
-        </Text>
+      {unlockedAvailablePaths.length > 0 ? (
+        <View style={{ gap: tokens.spacing.space3 }}>
+          <Text
+            style={{
+              color: tokens.colors.text.primary,
+              fontFamily: tokens.typography.fontFamily.heading,
+              fontSize: tokens.typography.fontSize.headingMd,
+            }}>
+            {t('paths.sectionAvailable')}
+          </Text>
 
-        {availablePaths.map((path) => (
-          <PathCard
-            badgeLabel={path.isNew ? t('paths.badgeNew') : undefined}
-            badgeTone="primary"
-            key={path.id}
-            onPress={() => router.push(`/lernpfad/${path.id}`)}
-            title={t(pathTitleKey(path.id))}
-            totalChapters={path.totalChapters}
-          />
-        ))}
-      </View>
+          {unlockedAvailablePaths.map((path) => (
+            <PathCard
+              badgeLabel={path.isNew ? t('paths.badgeNew') : undefined}
+              badgeTone="primary"
+              key={path.id}
+              onPress={() => router.push(`/lernpfad/${path.id}`)}
+              title={t(pathTitleKey(path.id))}
+              totalChapters={path.totalChapters}
+            />
+          ))}
+        </View>
+      ) : null}
+
+      {lockedPaths.length > 0 ? (
+        <View style={{ gap: tokens.spacing.space3 }}>
+          <Text
+            style={{
+              color: tokens.colors.text.primary,
+              fontFamily: tokens.typography.fontFamily.heading,
+              fontSize: tokens.typography.fontSize.headingMd,
+            }}>
+            {t('paths.sectionLocked')}
+          </Text>
+
+          {lockedPaths.map((path) => (
+            <PathCard
+              key={path.id}
+              locked
+              title={t(pathTitleKey(path.id))}
+              totalChapters={path.totalChapters}
+            />
+          ))}
+        </View>
+      ) : null}
     </ScrollView>
   );
 }

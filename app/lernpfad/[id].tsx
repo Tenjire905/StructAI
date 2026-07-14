@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 
-import { ChapterRow } from '@/components/features';
+import { ChapterRow, LockedPathView } from '@/components/features';
 import { Button, Card, ProgressBar } from '@/components/ui';
 import { getLessonText } from '@/data/lessonContent';
 import {
@@ -10,6 +10,7 @@ import {
   getPathProgressBarModel,
   pathTitleKey,
 } from '@/lib/pathProgress';
+import { getPathUnlockBlockReason } from '@/lib/pathUnlock';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
@@ -55,6 +56,22 @@ export default function LernpfadDetailScreen() {
   }
 
   const isStarted = path.currentChapter !== undefined && path.progress !== undefined;
+  const blockReason = getPathUnlockBlockReason(pathId, pathProgress);
+
+  if (!isStarted && blockReason) {
+    const prerequisiteTitle = t(pathTitleKey(blockReason.prerequisitePathId));
+
+    return (
+      <>
+        <Stack.Screen options={headerOptions} />
+        <LockedPathView
+          onBack={() => router.replace('/(tabs)/lernpfade')}
+          prerequisitePathTitle={prerequisiteTitle}
+        />
+      </>
+    );
+  }
+
   const progressBar = getPathProgressBarModel(pathId, pathProgress);
   const progressPercent = Math.round(progressBar.completedRatio * 100);
 

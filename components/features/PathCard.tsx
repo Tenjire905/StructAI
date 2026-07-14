@@ -1,3 +1,4 @@
+import { Lock } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -20,6 +21,7 @@ type PathCardProps = {
   failedSegments?: PathProgressSegment[];
   badgeLabel?: string;
   badgeTone?: 'primary' | 'structure' | 'warning' | 'success';
+  locked?: boolean;
   onPress?: () => void;
 };
 
@@ -31,33 +33,37 @@ export function PathCard({
   failedSegments,
   badgeLabel,
   badgeTone = 'primary',
+  locked = false,
   onPress,
 }: PathCardProps) {
   const { tokens, t } = useThemeMode();
   const scale = useSharedValue(1);
   const isStarted = currentChapter !== undefined && progress !== undefined;
+  const isPressable = Boolean(onPress) && !locked;
+  const resolvedBadgeLabel = locked ? t('paths.lockedBadge') : badgeLabel;
+  const resolvedBadgeTone = locked ? 'warning' : badgeTone;
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
   const handlePressIn = () => {
-    if (onPress) {
+    if (isPressable) {
       scale.value = withSpring(0.97, tokens.motion.spring.default);
     }
   };
 
   const handlePressOut = () => {
-    if (onPress) {
+    if (isPressable) {
       scale.value = withSpring(1, tokens.motion.spring.default);
     }
   };
 
   return (
     <AnimatedPressable
-      accessibilityRole={onPress ? 'button' : undefined}
-      disabled={!onPress}
-      onPress={onPress}
+      accessibilityRole={isPressable ? 'button' : undefined}
+      disabled={!isPressable}
+      onPress={isPressable ? onPress : undefined}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={[
@@ -79,19 +85,29 @@ export function PathCard({
         }}>
         <Text
           style={{
-            color: tokens.colors.text.primary,
+            color: locked ? tokens.colors.text.tertiary : tokens.colors.text.primary,
+            flex: 1,
             flexShrink: 1,
             fontFamily: tokens.typography.fontFamily.heading,
             fontSize: tokens.typography.fontSize.headingLg,
           }}>
           {title}
         </Text>
-        {badgeLabel ? <Badge label={badgeLabel} tone={badgeTone} /> : null}
+        {locked ? (
+          <Lock
+            color={tokens.colors.text.tertiary}
+            size={tokens.icons.sizes.md}
+            strokeWidth={tokens.icons.strokeWidth}
+          />
+        ) : null}
+        {resolvedBadgeLabel ? (
+          <Badge label={resolvedBadgeLabel} tone={resolvedBadgeTone} />
+        ) : null}
       </View>
 
       <Text
         style={{
-          color: tokens.colors.text.secondary,
+          color: locked ? tokens.colors.text.tertiary : tokens.colors.text.secondary,
           fontFamily: tokens.typography.fontFamily.body,
           fontSize: tokens.typography.fontSize.bodyMd,
         }}>
