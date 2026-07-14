@@ -39,14 +39,12 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      void SplashScreen.hideAsync();
     }
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
-
+  // Always mount Stack/providers so expo-router useLinking can resolve exp:// URLs
+  // without triggering "state update on unmounted component" (async getInitialURL).
   return (
     <AuthProvider>
       <ThemeModeProvider>
