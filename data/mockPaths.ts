@@ -203,7 +203,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'eval-scoring',
     title: 'Prompts bewerten',
-    totalChapters: 22,
+    totalChapters: 27,
     chapters: [
       { id: 'es-1', title: 'Bewertungskriterien', status: 'locked' },
       { id: 'es-2', title: 'Score-Systeme', status: 'locked' },
@@ -227,6 +227,11 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'es-20', title: "Gold-Standard-Testfälle", status: 'locked' },
       { id: 'es-21', title: "Score-Probleme diagnostizieren", status: 'locked' },
       { id: 'es-22', title: "Dritte Zwischenbilanz", status: 'locked' },
+      { id: 'es-23', title: "Monitoring-Metriken definieren", status: 'locked' },
+      { id: 'es-24', title: "Score-Dashboards lesen", status: 'locked' },
+      { id: 'es-25', title: "Alert-Schwellwerte setzen", status: 'locked' },
+      { id: 'es-26', title: "Produktions-Ausreißer analysieren", status: 'locked' },
+      { id: 'es-27', title: "Vierte Zwischenbilanz", status: 'locked' },
     ],
   },
 ];
