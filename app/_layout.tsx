@@ -2,10 +2,11 @@ import 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 
 import { AuthNavigationController } from '@/components/AuthNavigationController';
+import { hydrateAppStorage } from '@/lib/appStorage';
 import { AuthProvider } from '@/providers/AuthProvider';
 import { ThemeModeProvider, CelebrationProvider, colors } from '@/theme';
 
@@ -18,6 +19,7 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [storageReady, setStorageReady] = useState(false);
   const [loaded, error] = useFonts({
     'ClashDisplay-Semibold': require('../assets/fonts/ClashDisplay-Semibold.otf'),
     'ClashDisplay-Medium': require('../assets/fonts/ClashDisplay-Medium.otf'),
@@ -33,12 +35,18 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
+    void hydrateAppStorage().finally(() => {
+      setStorageReady(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (loaded && storageReady) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, storageReady]);
 
-  if (!loaded) {
+  if (!loaded || !storageReady) {
     return null;
   }
 

@@ -1,5 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
-import { createMMKV, type MMKV } from 'react-native-mmkv';
 
 type KeyValueStorage = {
   getString: (key: string) => string | undefined;
@@ -8,6 +9,8 @@ type KeyValueStorage = {
   contains: (key: string) => boolean;
   isMemoryOnly: boolean;
 };
+
+const STORAGE_PREFIX = '@structai/';
 
 function isClientEnvironment(): boolean {
   if (typeof window === 'undefined') {
@@ -20,6 +23,10 @@ function isClientEnvironment(): boolean {
   }
 
   return true;
+}
+
+function isExpoGo(): boolean {
+  return Constants.appOwnership === 'expo';
 }
 
 function createMemoryStorage(): KeyValueStorage {
@@ -38,23 +45,54 @@ function createMemoryStorage(): KeyValueStorage {
   };
 }
 
-function createNativeStorage(): KeyValueStorage {
-  try {
-    const mmkv: MMKV = createMMKV({ id: 'structai-storage' });
+let asyncStorageMemory: Map<string, string> | null = null;
 
-    return {
-      isMemoryOnly: false,
-      getString: (key) => mmkv.getString(key),
-      set: (key, value) => {
-        mmkv.set(key, value);
-      },
-      delete: (key) => {
-        mmkv.remove(key);
-      },
-      contains: (key) => mmkv.contains(key),
-    };
+function createAsyncStorageBackedStorage(): KeyValueStorage {
+  const memory = new Map<string, string>();
+  asyncStorageMemory = memory;
+
+  return {
+    isMemoryOnly: false,
+    getString: (key) => memory.get(key),
+    set: (key, value) => {
+      memory.set(key, value);
+      void AsyncStorage.setItem(STORAGE_PREFIX + key, value).catch(() => undefined);
+    },
+    delete: (key) => {
+      memory.delete(key);
+      void AsyncStorage.removeItem(STORAGE_PREFIX + key).catch(() => undefined);
+    },
+    contains: (key) => memory.has(key),
+  };
+}
+
+function createMMKVStorage(): KeyValueStorage {
+  // Lazy require: react-native-mmkv pulls in NitroModules at import time.
+  const { createMMKV } = require('react-native-mmkv') as typeof import('react-native-mmkv');
+  const mmkv = createMMKV({ id: 'structai-storage' });
+
+  return {
+    isMemoryOnly: false,
+    getString: (key) => mmkv.getString(key),
+    set: (key, value) => {
+      mmkv.set(key, value);
+    },
+    delete: (key) => {
+      mmkv.remove(key);
+    },
+    contains: (key) => mmkv.contains(key),
+  };
+}
+
+function createNativeStorage(): KeyValueStorage {
+  if (isExpoGo()) {
+    return createAsyncStorageBackedStorage();
+  }
+
+  try {
+    return createMMKVStorage();
   } catch {
-    return createMemoryStorage();
+    return createAsyncStorageBackedStorage();
   }
 }
 
@@ -75,6 +113,35 @@ function resolveStorage(): KeyValueStorage {
   }
 
   return storageInstance;
+}
+
+export async function hydrateAppStorage(): Promise<void> {
+  resolveStorage();
+
+  if (!asyncStorageMemory) {
+    return;
+  }
+
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const prefixedKeys = keys.filter((key) => key.startsWith(STORAGE_PREFIX));
+
+    if (prefixedKeys.length === 0) {
+      return;
+    }
+
+    const entries = await AsyncStorage.getMany(prefixedKeys);
+
+    for (const fullKey of prefixedKeys) {
+      const value = entries[fullKey];
+
+      if (value != null) {
+        asyncStorageMemory.set(fullKey.slice(STORAGE_PREFIX.length), value);
+      }
+    }
+  } catch {
+    // Fall back to empty in-memory cache when AsyncStorage is unavailable.
+  }
 }
 
 export const appStorage: KeyValueStorage = {

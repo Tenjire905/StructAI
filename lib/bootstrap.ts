@@ -1,3 +1,4 @@
+import { hydrateAppStorage } from '@/lib/appStorage';
 import { initializeDevSession } from '@/lib/devSession';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { useProgressStore } from '@/store/progressStore';
@@ -24,6 +25,7 @@ export function runBootstrap(): Promise<void> {
   }
 
   bootstrapPromise = (async () => {
+    await hydrateAppStorage();
     const hasAuthenticatedSession = await resolveHasAuthenticatedSession();
     initializeDevSession(hasAuthenticatedSession);
     useProgressStore.getState().hydrate();
