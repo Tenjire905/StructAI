@@ -4232,6 +4232,171 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
       },
     ],
   },
+  {
+    id: 'es-12',
+    titleKey: 'es-12.title',
+    orbsReward: 19,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-12.s0.title',
+        bodyKey: 'es-12.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-12.s1.question',
+        optionKeys: [
+        'es-12.s1.opt0',
+        'es-12.s1.opt1',
+        'es-12.s1.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'es-12.s1.explanation',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'es-12.s2.statement',
+        correct: false,
+        explanationKey: 'es-12.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-13',
+    titleKey: 'es-13.title',
+    orbsReward: 20,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-13.s0.title',
+        bodyKey: 'es-13.s0.body',
+      },
+      {
+        type: 'matching',
+        instructionKey: 'es-13.s1.instruction',
+        pairs: [
+          { termKey: 'es-13.s1.term0', definitionKey: 'es-13.s1.def0' },
+          { termKey: 'es-13.s1.term1', definitionKey: 'es-13.s1.def1' },
+          { termKey: 'es-13.s1.term2', definitionKey: 'es-13.s1.def2' },
+        ],
+        explanationKey: 'es-13.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-13.s2.question',
+        optionKeys: [
+        'es-13.s2.opt0',
+        'es-13.s2.opt1',
+        'es-13.s2.opt2',
+      ],
+        correctIndex: 0,
+        explanationKey: 'es-13.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-14',
+    titleKey: 'es-14.title',
+    orbsReward: 20,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-14.s0.title',
+        bodyKey: 'es-14.s0.body',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'es-14.s1.instruction',
+        itemKeys: [
+        'es-14.s1.item0',
+        'es-14.s1.item1',
+        'es-14.s1.item2',
+        'es-14.s1.item3',
+      ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'es-14.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-14.s2.question',
+        optionKeys: [
+        'es-14.s2.opt0',
+        'es-14.s2.opt1',
+        'es-14.s2.opt2',
+      ],
+        correctIndex: 2,
+        explanationKey: 'es-14.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-15',
+    titleKey: 'es-15.title',
+    orbsReward: 21,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-15.s0.title',
+        bodyKey: 'es-15.s0.body',
+      },
+      {
+        type: 'error_finding',
+        instructionKey: 'es-15.s1.instruction',
+        textSegments: [
+          { segmentKey: 'es-15.s1.seg0', isError: false },
+          { segmentKey: 'es-15.s1.seg1', isError: true },
+          { segmentKey: 'es-15.s1.seg2', isError: false },
+        ],
+        explanationKey: 'es-15.s1.explanation',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-15.s2.question',
+        optionKeys: [
+        'es-15.s2.opt0',
+        'es-15.s2.opt1',
+        'es-15.s2.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'es-15.s2.explanation',
+      },
+    ],
+  },
+  {
+    id: 'es-16',
+    titleKey: 'es-16.title',
+    orbsReward: 22,
+    steps: [
+      {
+        type: 'info',
+        titleKey: 'es-16.s0.title',
+        bodyKey: 'es-16.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'es-16.s1.question',
+        optionKeys: [
+        'es-16.s1.opt0',
+        'es-16.s1.opt1',
+        'es-16.s1.opt2',
+      ],
+        correctIndex: 1,
+        explanationKey: 'es-16.s1.explanation',
+      },
+      {
+        type: 'reorder',
+        instructionKey: 'es-16.s2.instruction',
+        itemKeys: [
+        'es-16.s2.item0',
+        'es-16.s2.item1',
+        'es-16.s2.item2',
+        'es-16.s2.item3',
+      ],
+        correctOrder: [0, 1, 2, 3],
+        explanationKey: 'es-16.s2.explanation',
+      },
+    ],
+  },
 
 ];
 
