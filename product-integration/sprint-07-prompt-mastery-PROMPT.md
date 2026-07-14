@@ -1,12 +1,22 @@
-# Build-Cursor-Prompt: Sprint 7 — 6. Pfad „Prompt Mastery“ (Scoping + Ingestion)
+# Build-Cursor-Prompt: Sprint 7 — 6. Pfad „Prompt Mastery“ (Scoping + Skeleton)
 
 ## Kontext
 
-**Voraussetzung:** Sprints 5–6 abgeschlossen; 5-Pfad-Guest-Loop manuell grün (`MANUAL-TEST-CHECKLIST.md` + `RETEST-LOG.md`).
+**Voraussetzung (hart):**
 
-Der 6. Pfad **`prompt-mastery`** (Arbeitstitel) bündelt fortgeschrittene Themen — **30–35 Lektionen**, Prefix-Vorschlag `pm` (pm-1…pm-35). Er schaltet frei nach vollständigem **`eval-scoring`**.
+- Sprint 5 gemergt (Pfad-Unlock-Kette)
+- Sprint 6 gemergt (Checkliste + Retest C4/D grün)
+- 5-Pfad-Guest-Loop manuell validiert
+
+Der 6. Pfad **`prompt-mastery`** bündelt fortgeschrittene Prompt-Themen:
+
+- **35 Lektionen** (wie SL/CM/IL/ES)
+- Prefix: **`pm`** → `pm-1` … `pm-35`
+- Freischaltung: erst nach **vollständigem** `eval-scoring`
 
 **develop tip:** *(nach Sprint-6-Merge eintragen)*
+
+---
 
 ## Branch
 
@@ -16,79 +26,211 @@ git pull origin develop
 git checkout -b feature/product-integration-sprint-07
 ```
 
-## Scope dieses Sprints
-
-**Phase A only** — Infrastruktur + Content-Skeleton, **kein** vollständiger 35-Lektionen-Content in einem Commit.
-
-Spätere Batches (07b, 07c…) können Content-Ingestion-PROMPTs in `content-ingestion/` folgen — analog zu `es-batch-*` / `cm-batch-*`.
+Cloud Agent alternativ: `cursor/prompt-mastery-skeleton-fd20`
 
 ---
 
-## Auftrag (5 Tasks, ein oder zwei Commits)
+## Scope Sprint 7 (Phase A)
+
+In **einem** Sprint:
+
+1. Datenmodell + Unlock-Kette erweitern
+2. Copy-Keys Pfad-Titel
+3. **Erste 3 Lektionen** vollständig (Catalog + 4 Locales)
+4. Verify-Script auf 6 Pfade
+5. Ingestion-Prompt für pm-4…pm-35 **nur als Datei** (nicht ausführen)
+
+**Nicht** in Sprint 7: alle 35 Lektionen content-complete.
+
+---
+
+## Unlock-Kette nach Sprint 7
+
+```
+prompt-basics → structure-lab → context-mastery → iteration-loops → eval-scoring → prompt-mastery
+```
+
+In `lib/pathUnlock.ts`: automatisch via `MOCK_PATHS`-Reihenfolge — neuer Eintrag **ans Ende** von `data/mockPaths.ts`.
+
+---
+
+## Auftrag (5 Tasks)
 
 ### Task 7a — Pfad in Datenmodell
 
-**Dateien:**
-- `data/mockPaths.ts` — neuer Eintrag `prompt-mastery`, 35 Kapitel-Platzhalter (IDs `pm-1`…`pm-35`, Titel aus Catalog oder „TBD“-Titel aus erstem Batch)
-- `lib/pathLessonUtils.ts` — `pm: 'prompt-mastery'` in `LESSON_PREFIX_TO_PATH`
-- `lib/pathUnlock.ts` — `prompt-mastery` ans Ende von `PATH_UNLOCK_ORDER`; Prerequisite = `eval-scoring`
+#### `data/mockPaths.ts`
 
-**Unlock-Kette danach:**
+Neuen Eintrag **nach** `eval-scoring` anfügen:
+
+```ts
+{
+  id: 'prompt-mastery',
+  title: 'Prompt-Meisterschaft', // Mock-Titel; UI nutzt paths.title.prompt_mastery
+  totalChapters: 35,
+  isNew: true,
+  chapters: [
+    { id: 'pm-1', title: '…', status: 'locked' },
+    // … pm-2 … pm-35
+  ],
+},
 ```
-… → eval-scoring → prompt-mastery
+
+Titel in `chapters` = Platzhalter aus Catalog/`pm-1.title`-Keys oder kurze DE-Titel aus Task 7c.
+
+#### `lib/pathLessonUtils.ts`
+
+```ts
+const LESSON_PREFIX_TO_PATH: Record<string, string> = {
+  pb: 'prompt-basics',
+  sl: 'structure-lab',
+  cm: 'context-mastery',
+  il: 'iteration-loops',
+  es: 'eval-scoring',
+  pm: 'prompt-mastery', // NEU
+};
+```
+
+#### `lib/pathUnlock.ts`
+
+Keine manuelle Änderung nötig wenn `PATH_UNLOCK_ORDER = MOCK_PATHS.map(p => p.id)`.
+
+---
+
+### Task 7b — Copy-Keys Pfad-Titel (4 Locales)
+
+```ts
+// de.ts
+'paths.title.prompt_mastery': {
+  playful: 'Prompt-Meisterschaft',
+  focus: 'Prompt-Meisterschaft',
+},
+
+// en.ts
+'paths.title.prompt_mastery': {
+  playful: 'Prompt Mastery',
+  focus: 'Prompt Mastery',
+},
+
+// fr.ts
+'paths.title.prompt_mastery': {
+  playful: 'Maîtrise du prompt',
+  focus: 'Maîtrise du prompt',
+},
+
+// ru.ts
+'paths.title.prompt_mastery': {
+  playful: 'Мастерство промптов',
+  focus: 'Мастерство промптов',
+},
 ```
 
 ---
 
-### Task 7b — Copy-Keys Pfad-Titel
+### Task 7c — Lesson-Content: pm-1, pm-2, pm-3 vollständig
 
-**4 Locales:** `paths.title.prompt_mastery` (focus + playful)
+**Analog zu** bestehenden Pfaden (z. B. `es-1`):
 
-DE focus Richtung: „Prompt-Meisterschaft“ / EN: „Prompt Mastery“
+1. **`data/mockLessons.catalog.ts`** — 3 Einträge `pm-1`, `pm-2`, `pm-3`
+2. **`data/lessonContent/de.ts`** — Keys in `lessonDe`
+3. **Neu:** `data/lessonContent/en_pm.ts`, `fr_pm.ts`, `ru_pm.ts` (Pattern wie `en_es.ts`)
+4. In `data/mockLessons.ts` (falls Locale-Routing) pm-Prefix registrieren wie andere Pfade
 
----
+**Themen-Vorschlag (Director kann anpassen):**
 
-### Task 7c — Lesson-Content Skeleton
+| ID | Titel (DE) | Step-Typen |
+|----|------------|------------|
+| pm-1 | Multi-Step-Prompts planen | info, choice, true_false |
+| pm-2 | Prompt-Ketten und Abhängigkeiten | info, reorder, choice |
+| pm-3 | Qualitäts-Gates vor dem Senden | info, fill_blank, choice |
 
-**Minimal:** Erste **3 Lektionen** vollständig (Catalog + DE + en_pm.ts + fr_pm.ts + ru_pm.ts) als Muster — Rest als Stub-Einträge im Catalog mit `// TODO batch 07b` **oder** nur pm-1…pm-3 committen und Verifier-Range anpassen.
+**Regeln:**
 
-**Wichtig:** `npm run verify:lessons` muss grün bleiben — entweder:
-- Range `pm-1..pm-3` im Full-Verify-Script ergänzen **wenn** alle 35 existieren, oder
-- Erst pm-1..pm-3 anlegen und Script um optionalen 6. Pfad erweitern wenn `pm-4` fehlt noch nicht im Catalog referenziert wird
+- Step-Typen aus Catalog — **kein** choice→fill_blank Morphing in `prepareLessonSession`
+- Alle Keys in 4 Locales referenziert
+- `node scripts/verify-lesson-content-locales.mjs --range pm-1..pm-3` → 0 Violations
 
-**Skript:** `scripts/verify-all-lesson-content.mjs` — 6. Pfad `pm-1..pm-35` (oder gestaffelt dokumentieren)
-
----
-
-### Task 7d — UI-Smoke
-
-Keine neuen Screens — bestehende Pfad-Liste zeigt 6. Pfad automatisch via `MOCK_PATHS`.
-
-**Prüfen:**
-- Gesperrt bis `eval-scoring` complete
-- Nach Unlock: Pfad-Detail + pm-1 startbar
-- Home/Lernpfade: 6 Karten, kein Layout-Bruch
+**pm-4…pm-35:** Nur IDs + Platzhalter-Titel in `mockPaths.ts` (`status: 'locked'`). **Kein** Catalog-Eintrag bis Batch-Ingestion — Verifier darf pm-4+ nicht erwarten.
 
 ---
 
-### Task 7e — Content-Ingestion Prompt für Rest
+### Task 7d — Verify-Script erweitern
+
+**Datei:** `scripts/verify-all-lesson-content.mjs`
+
+6. Eintrag:
+
+```js
+{ path: 'pm', label: 'prompt-mastery', range: 'pm-1..pm-3' }, // erst pm-1..3; später pm-1..pm-35
+```
+
+Erwartung nach Sprint 7: **6 paths checked, 6 passed** (pb, sl, il, cm, es, pm mit Range 3).
+
+---
+
+### Task 7e — Ingestion-Prompt für Rest-Content
 
 **Neu:** `content-ingestion/pm-batch-01-PROMPT.md`
 
-Enthält:
-- Themen-Gliederung pm-4…pm-35 (Director liefert Outline oder Build-Cursor schlägt 32 Themen vor)
-- JSON-Schema wie bestehende Batches
-- Verifier-Ranges pro Batch
-- Regeln: Step-Typen aus Catalog, keine choice→fill_blank Morphing in Session
+Vollständiger Prompt für Folge-Session (pm-4…pm-12, Batch-Größe 9):
 
-**Nicht** in Sprint 7 ausführen — nur Prompt-Datei für Folge-Sessions.
+```markdown
+# Build-Cursor-Prompt: prompt-mastery Batch 1 (pm-4…pm-12)
+
+## Auftrag
+Ingestiere Inhalt aus `content-ingestion/pm-batch-01.json` für Pfad `prompt-mastery`.
+
+## Branch
+git checkout -b feature/content-ingestion-pm-batch-01
+
+## Dateien
+- data/mockLessons.catalog.ts — nach pm-3 einfügen
+- data/mockPaths.ts — totalChapters bleibt 35, pm-4…pm-12 Kapitel-Titel aktualisieren
+- data/lessonContent/de.ts, en_pm.ts, fr_pm.ts, ru_pm.ts
+
+## Themen pm-4…pm-12 (Outline)
+| ID | Thema |
+|----|-------|
+| pm-4 | Tool-Use in Prompts |
+| pm-5 | System vs. Developer vs. User Messages |
+| pm-6 | Prompt-Injection erkennen |
+| pm-7 | Guardrails formulieren |
+| pm-8 | Multi-Agent-Orchestrierung (Konzept) |
+| pm-9 | Prompt-Bibliotheken versionieren |
+| pm-10 | A/B-Tests in Produktion |
+| pm-11 | Kosten-Nutzen pro Prompt-Variante |
+| pm-12 | Erste Zwischenbilanz Prompt Mastery |
+
+## Verifikation
+node scripts/verify-lesson-content-locales.mjs --range pm-4..pm-12
+npm run verify:lessons
+
+## Kein Merge ohne Freigabe
+```
+
+JSON-Datei `pm-batch-01.json` **nicht** in Sprint 7 erfinden — nur PROMPT + Outline.
+
+Weitere Batches in Outline erwähnen:
+
+- pm-batch-02: pm-13…pm-24
+- pm-batch-03: pm-25…pm-35 (Abschlussprojekt pm-35)
+
+---
+
+## UI-Smoke (kein neuer Screen)
+
+| Check | Erwartung |
+|-------|-----------|
+| Lernpfade (frischer Guest) | `prompt-mastery` unter „Gesperrt" |
+| Nach ES vollständig (Dev) | PM unter „Verfügbar" |
+| `/lernpfad/prompt-mastery` | pm-1 startbar, pm-2 locked |
+| `/lektion/pm-1` ohne ES | Path-Lock |
 
 ---
 
 ## Design-Regeln
 
-- Wie alle Pfade: Tokens, Theme-Modi, Lucide-Icons
-- Keine neuen UI-Komponenten unless PathCard/ChapterRow reichen
+- Wie alle Pfade: Tokens, Theme-Modi, Lucide
+- Keine neuen UI-Komponenten
 
 ---
 
@@ -97,20 +239,16 @@ Enthält:
 ```bash
 npx tsc --noEmit
 npm run verify:lessons
+node scripts/verify-lesson-content-locales.mjs --range pm-1..pm-3
 ```
-
-**Manuell:**
-1. Frischer Guest: `prompt-mastery` unter „Gesperrt“
-2. Dev: ES vollständig → PM unter „Verfügbar“
-3. pm-1 spielbar, pm-2 locked bis pm-1 done
 
 ---
 
 ## Commit & Push
 
 ```bash
-git add data/mockPaths.ts lib/pathLessonUtils.ts lib/pathUnlock.ts theme/copy/*.ts theme/copy/types.ts data/lessonContent/* scripts/verify-all-lesson-content.mjs content-ingestion/pm-batch-01-PROMPT.md
-git commit -m "feat: add prompt-mastery path skeleton, unlock chain, and ingestion prompt"
+git add data/mockPaths.ts data/mockLessons.catalog.ts data/mockLessons.ts data/lessonContent/de.ts data/lessonContent/en_pm.ts data/lessonContent/fr_pm.ts data/lessonContent/ru_pm.ts lib/pathLessonUtils.ts scripts/verify-all-lesson-content.mjs theme/copy/de.ts theme/copy/en.ts theme/copy/fr.ts theme/copy/ru.ts content-ingestion/pm-batch-01-PROMPT.md
+git commit -m "feat: add prompt-mastery path skeleton with pm-1..3 and ingestion prompt"
 git push -u origin feature/product-integration-sprint-07
 ```
 
@@ -118,8 +256,8 @@ git push -u origin feature/product-integration-sprint-07
 
 ## Report zurück an Director
 
-- Commit-Hash
-- Wie viele PM-Lektionen vollständig vs. geplant
-- verify:lessons Output (6 Pfade?)
-- Outline pm-4…pm-35 in `pm-batch-01-PROMPT.md`
-- **Kein Merge** ohne Freigabe — **besonders:** Sprint 7 erst freigeben wenn Sprint 5+6 produktiv grün
+1. Commit-Hash
+2. verify:lessons — 6/6 paths?
+3. pm-1..3 Key-Counts je Locale
+4. Link zu `content-ingestion/pm-batch-01-PROMPT.md`
+5. **Kein Merge ohne Freigabe** — Sprint 7 erst wenn Sprint 5+6 produktiv grün
