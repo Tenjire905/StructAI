@@ -6,6 +6,7 @@ import {
   reconcileCompletedPathIds,
 } from '@/lib/pathCompletion';
 import { normalizeProgressSnapshot } from '@/lib/progressMerge';
+import { applyLessonCompletionStreak } from '@/lib/streak';
 import {
   getFirstLessonIdForPath,
   getNextLessonId,
@@ -315,14 +316,22 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
             }
           : state.pathCompletedAt;
 
+      const streakUpdate = applyLessonCompletionStreak(
+        {
+          currentStreak: state.currentStreak,
+          streakDays: state.streakDays,
+        },
+        { isNewCompletion: !wasAlreadyCompleted },
+      );
+
       const snapshot: ProgressSnapshot = {
         orbCount: state.orbCount + awardedOrbs,
         orbMax: state.orbMax,
         completedLessons: wasAlreadyCompleted
           ? state.completedLessons
           : state.completedLessons + 1,
-        currentStreak: state.currentStreak,
-        streakDays: state.streakDays,
+        currentStreak: streakUpdate.currentStreak,
+        streakDays: streakUpdate.streakDays,
         pathProgress: {
           ...state.pathProgress,
           [pathId]: nextPathRecord,

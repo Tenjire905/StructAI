@@ -21,7 +21,7 @@ export default function OnboardingModusScreen() {
     setMode(selectedMode);
     setOnboardingCompleted();
     trackEvent('onboarding_completed');
-    router.replace('/');
+    router.push('/onboarding/loop');
   };
 
   return (

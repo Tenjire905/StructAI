@@ -757,6 +757,26 @@ export const copyRu: CopyCatalog = {
     playful: 'Подтвердить выбор',
     focus: 'Подтвердить',
   },
+  'onboarding.loopTitle': {
+    playful: 'Как устроен StructAI',
+    focus: 'Цикл обучения в три шага',
+  },
+  'onboarding.loopStep1': {
+    playful: 'Выбери трек с понятной структурой глав.',
+    focus: 'Выбрать трек: задать тему и порядок глав.',
+  },
+  'onboarding.loopStep2': {
+    playful: 'Проходи уроки с короткими упражнениями шаг за шагом.',
+    focus: 'Завершить урок: выполнить короткие упражнения по порядку.',
+  },
+  'onboarding.loopStep3': {
+    playful: 'Собирай орбы и открывай следующую главу.',
+    focus: 'Заработать орбы и открыть следующую главу.',
+  },
+  'onboarding.loopCta': {
+    playful: 'Поехали!',
+    focus: 'На главную',
+  },
   'onboarding.previewPathTitle': {
     playful: 'Основы промптов',
     focus: 'Основы промптов',

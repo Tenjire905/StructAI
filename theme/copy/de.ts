@@ -757,6 +757,26 @@ export const copyDe: CopyCatalog = {
     playful: 'Auswahl bestätigen',
     focus: 'Bestätigen',
   },
+  'onboarding.loopTitle': {
+    playful: 'So funktioniert StructAI',
+    focus: 'Lernablauf in drei Schritten',
+  },
+  'onboarding.loopStep1': {
+    playful: 'Wähle einen Lernpfad mit klarer Kapitelstruktur.',
+    focus: 'Lernpfad wählen: Thema und Reihenfolge der Kapitel festlegen.',
+  },
+  'onboarding.loopStep2': {
+    playful: 'Spiele Lektionen mit kurzen Übungen Schritt für Schritt durch.',
+    focus: 'Lektion abschließen: Übungen in kurzen Schritten bearbeiten.',
+  },
+  'onboarding.loopStep3': {
+    playful: 'Sammle Orbs und schalte das nächste Kapitel frei.',
+    focus: 'Orbs verdienen und das nächste Kapitel freischalten.',
+  },
+  'onboarding.loopCta': {
+    playful: 'Zum Start!',
+    focus: 'Zur Startseite',
+  },
   'onboarding.previewPathTitle': {
     playful: 'Prompt-Grundlagen',
     focus: 'Prompt-Grundlagen',
