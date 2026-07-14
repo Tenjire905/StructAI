@@ -71,25 +71,6 @@ function shuffleCategorize(step, seed) {
   };
 }
 
-function pickVariantKind(seed, stepIndex) {
-  const random = mulberry32(seed + stepIndex * 31);
-  const roll = random();
-  if (roll < 0.45) return 'choice';
-  if (roll < 0.7) return 'fill_blank';
-  if (roll < 0.85) return 'true_false';
-  return 'reorder';
-}
-
-function toReorder(step, instruction) {
-  return {
-    type: 'reorder',
-    instruction,
-    items: [...step.options],
-    correctOrder: step.options.map((_, index) => index),
-    explanation: step.explanation,
-  };
-}
-
 function isReorderCorrect(step, reorderIndices) {
   return reorderIndices.every((value, index) => value === step.correctOrder[index]);
 }
@@ -342,55 +323,36 @@ function verifyCategorizeRemap(seedCount = 500) {
   return failures.length;
 }
 
-function verifyVariantDistribution(trials = 10000, stepsPerTrial = 2) {
-  const aggregate = { choice: 0, fill_blank: 0, true_false: 0, reorder: 0 };
-  for (let t = 0; t < trials; t += 1) {
-    for (let stepIndex = 0; stepIndex < stepsPerTrial; stepIndex += 1) {
-      aggregate[pickVariantKind(t, stepIndex)] += 1;
-    }
-  }
-  const total = trials * stepsPerTrial;
-  return Object.fromEntries(
-    Object.entries(aggregate).map(([key, value]) => [key, Number((value / total).toFixed(3))]),
-  );
-}
-
-function verifyDynamicReorderFromChoice(seedCount = 500) {
+function verifyChoiceStaysChoice(seedCount = 500) {
   const choiceStep = {
     type: 'choice',
-    question: 'Which is clearest?',
-    options: ['Option A', 'Option B', 'Option C'],
+    question: 'Was macht „Schreib einen guten Bericht" problematisch?',
+    options: [
+      'Das Wort „Bericht" ist zu fachlich.',
+      '„Gut" ist nicht messbar – Länge, Ton und Struktur fehlen.',
+      'Berichte dürfen in Prompts nicht vorkommen.',
+    ],
     correctIndex: 1,
-    explanation: 'Because B.',
+    explanation: 'x',
   };
-
-  let reorderSeedsFound = 0;
+  const correctLabel = choiceStep.options[choiceStep.correctIndex];
   let failures = 0;
 
   for (let seed = 1; seed <= seedCount; seed += 1) {
-    for (let stepIndex = 0; stepIndex < 8; stepIndex += 1) {
-      if (pickVariantKind(seed, stepIndex) !== 'reorder') {
-        continue;
-      }
+    const prepared = shuffleChoiceLike(choiceStep, seed);
 
-      reorderSeedsFound += 1;
-      const stepSeed = seed + stepIndex * 17;
-      const shuffledChoice = shuffleChoiceLike(choiceStep, stepSeed);
-      const reorderStep = shuffleReorder(
-        toReorder(shuffledChoice, 'Arrange in the correct order.'),
-        stepSeed + 7,
-      );
-      const userOrder = shuffledChoice.options.map((option) =>
-        reorderStep.items.indexOf(option),
-      );
+    // Authored choice steps must never morph into another type or lose the question.
+    if (prepared.type !== 'choice' || prepared.question !== choiceStep.question) {
+      failures += 1;
+      continue;
+    }
 
-      if (!isReorderCorrect(reorderStep, userOrder)) {
-        failures += 1;
-      }
+    if (prepared.options[prepared.correctIndex] !== correctLabel) {
+      failures += 1;
     }
   }
 
-  return { reorderSeedsFound, failures };
+  return failures;
 }
 
 function verifyCm4Reward() {
@@ -425,30 +387,28 @@ const fillBlankFailures = verifyFillBlankRemap(500);
 const reorderFailures = verifyReorderRemap(500);
 const matchingFailures500 = verifyMatchingRemap(500);
 const categorizeFailures500 = verifyCategorizeRemap(500);
-const distribution = verifyVariantDistribution(10000, 2);
-const dynamicReorder = verifyDynamicReorderFromChoice(500);
+const choiceStaysChoiceFailures = verifyChoiceStaysChoice(500);
 const cm4Reward = verifyCm4Reward();
 
 console.log(
   JSON.stringify(
     {
       scope: {
-        sharedShuffleReorder:
-          'prepareChoiceStep reorder branch and prepareNativeStep reorder branch both call shuffleReorder()',
+        authoredStepTypesPreserved:
+          'choice/fill_blank/true_false/reorder stay as authored; only option/display order is shuffled',
+        sharedShuffleReorder: 'prepareStep reorder branch calls shuffleReorder()',
         sharedShuffleMatching:
-          'prepareNativeStep matching branch calls shuffleMatching() — shuffles definitionOrder only, pairs stay fixed for left column',
+          'prepareStep matching branch calls shuffleMatching() — shuffles definitionOrder only, pairs stay fixed for left column',
         sharedShuffleCategorize:
-          'prepareNativeStep categorize branch calls shuffleCategorize() — shuffles items display order only, correctCategoryIndex stays on each item',
+          'prepareStep categorize branch calls shuffleCategorize() — shuffles items display order only, correctCategoryIndex stays on each item',
         affectedNativeCatalog: ['cm-4'],
-        affectedRuntimeChoiceVariant: 'any choice step where pickVariantKind returns reorder (~15%)',
       },
       fillBlankFailures500: fillBlankFailures,
       reorderFailures500: reorderFailures,
       matchingFailures500,
       categorizeFailures500,
+      choiceStaysChoiceFailures500: choiceStaysChoiceFailures,
       cm4Reward,
-      distribution10000: distribution,
-      dynamicReorderFromChoice500: dynamicReorder,
     },
     null,
     2,

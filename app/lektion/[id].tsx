@@ -72,6 +72,20 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   );
   const canPlayLesson = isLessonPlayable(lessonChapterStatus);
 
+  const goBackToPath = () => {
+    if (pathId) {
+      router.replace(`/lernpfad/${pathId}`);
+      return;
+    }
+
+    if (router.canGoBack()) {
+      router.back();
+      return;
+    }
+
+    router.replace('/(tabs)');
+  };
+
   const [sessionNonce, setSessionNonce] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -101,14 +115,9 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
 
     return {
       ...baseLesson,
-      steps: prepareLessonSteps(
-        baseLesson.steps,
-        baseLesson.id,
-        t('lesson.reorderHint'),
-        sessionNonce,
-      ),
+      steps: prepareLessonSteps(baseLesson.steps, baseLesson.id, sessionNonce),
     };
-  }, [baseLesson, sessionNonce, t]);
+  }, [baseLesson, sessionNonce]);
 
   useEffect(() => {
     if (!lessonId || openedRef.current || !canPlayLesson) {
@@ -156,7 +165,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
     return (
       <>
         <Stack.Screen options={headerOptions} />
-        <LockedLessonView onBack={() => router.back()} />
+        <LockedLessonView onBack={goBackToPath} />
       </>
     );
   }
@@ -431,7 +440,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
       <>
         <Stack.Screen options={headerOptions} />
         <PathCompletionView
-          onFinish={() => router.back()}
+          onFinish={goBackToPath}
           orbsReward={earnedOrbs}
           pathId={completedPathId}
         />
@@ -446,7 +455,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
         <CompletionView
           lessonId={lesson.id}
           onContinueNext={(nextLessonId) => router.replace(`/lektion/${nextLessonId}`)}
-          onFinish={() => router.back()}
+          onFinish={goBackToPath}
           orbsReward={earnedOrbs}
           pathId={pathId}
         />
@@ -463,7 +472,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
           gradedCount={failureStats.gradedCount}
           onContinueLater={() => {
             recordLessonFailed(lesson.id);
-            router.back();
+            goBackToPath();
           }}
           onRetry={retryLesson}
         />

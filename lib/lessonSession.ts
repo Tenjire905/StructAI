@@ -94,80 +94,24 @@ function shuffleCategorize(step: ResolvedCategorizeStep, seed: number): Resolved
   };
 }
 
-type VariantKind = 'choice' | 'fill_blank' | 'true_false' | 'reorder';
-
-function pickVariantKind(seed: number, stepIndex: number): VariantKind {
-  const random = mulberry32(seed + stepIndex * 31);
-  const roll = random();
-
-  if (roll < 0.45) {
-    return 'choice';
-  }
-
-  if (roll < 0.7) {
-    return 'fill_blank';
-  }
-
-  if (roll < 0.85) {
-    return 'true_false';
-  }
-
-  return 'reorder';
-}
-
-function toFillBlank(step: ResolvedChoiceStep): ResolvedFillBlankStep {
-  const correct = step.options[step.correctIndex] ?? step.options[0] ?? '';
-  const words = step.question.split(' ');
-  const mid = Math.max(1, Math.floor(words.length / 2));
-
-  return {
-    type: 'fill_blank',
-    prefix: `${words.slice(0, mid).join(' ')} `,
-    suffix: ` ${words.slice(mid).join(' ')}`.trim() || ` (${correct})`,
-    options: step.options,
-    correctIndex: step.correctIndex,
-    explanation: step.explanation,
-  };
-}
-
-function toTrueFalse(step: ResolvedChoiceStep, seed: number): ResolvedLessonStep {
-  const random = mulberry32(seed);
-  const useCorrect = random() > 0.5;
-  const wrongIndex = step.options.findIndex((_, index) => index !== step.correctIndex);
-  const pickedIndex = useCorrect ? step.correctIndex : wrongIndex >= 0 ? wrongIndex : 0;
-
-  return {
-    type: 'true_false',
-    statement: step.options[pickedIndex] ?? step.question,
-    correct: pickedIndex === step.correctIndex,
-    explanation: step.explanation,
-  };
-}
-
-function toReorder(step: ResolvedChoiceStep, instruction: string): ResolvedReorderStep {
-  return {
-    type: 'reorder',
-    instruction,
-    items: [...step.options],
-    correctOrder: step.options.map((_, index) => index),
-    explanation: step.explanation,
-  };
-}
-
 /**
- * Native catalog steps only — never derived from prepareChoiceStep().
+ * Prepares one authored catalog step for a session.
  *
- * matching, error_finding, and categorize are authored in the catalog and must
- * NOT appear in pickVariantKind() / prepareChoiceStep(). They pass through here
- * (matching/categorize: display-order shuffle with index remapping;
- * error_finding: fixed segment order).
+ * Authored step types are preserved exactly — a `choice` stays a `choice`,
+ * a `fill_blank` stays a `fill_blank`. Only answer/display order is shuffled
+ * for anti-memorization, with correctIndex/correctOrder remapped accordingly.
+ *
+ * We intentionally do NOT synthesize `fill_blank`, `true_false`, or `reorder`
+ * variants from `choice` steps: those transforms produced grammatically broken
+ * questions (e.g. inserting whole answer sentences into the middle of a blank).
  */
-function prepareNativeStep(step: ResolvedLessonStep, stepSeed: number): ResolvedLessonStep {
+function prepareStep(step: ResolvedLessonStep, stepSeed: number): ResolvedLessonStep {
   switch (step.type) {
     case 'info':
     case 'true_false':
     case 'error_finding':
       return step;
+    case 'choice':
     case 'fill_blank':
       return shuffleChoiceLike(step, stepSeed);
     case 'reorder':
@@ -176,53 +120,20 @@ function prepareNativeStep(step: ResolvedLessonStep, stepSeed: number): Resolved
       return shuffleMatching(step, stepSeed);
     case 'categorize':
       return shuffleCategorize(step, stepSeed);
-    case 'choice':
-      return step;
-  }
-}
-
-function prepareChoiceStep(
-  step: ResolvedChoiceStep,
-  stepSeed: number,
-  seed: number,
-  stepIndex: number,
-  reorderHint: string,
-): ResolvedLessonStep {
-  const shuffledChoice = shuffleChoiceLike(step, stepSeed) as ResolvedChoiceStep;
-  const variant = pickVariantKind(seed, stepIndex);
-
-  switch (variant) {
-    case 'choice':
-      return shuffledChoice;
-    case 'fill_blank':
-      return shuffleChoiceLike(toFillBlank(shuffledChoice), stepSeed + 3);
-    case 'true_false':
-      return toTrueFalse(shuffledChoice, stepSeed + 5);
-    case 'reorder':
-      return shuffleReorder(toReorder(shuffledChoice, reorderHint), stepSeed + 7);
   }
 }
 
 export function prepareLessonSteps(
   steps: ResolvedLessonStep[],
   lessonId: string,
-  reorderHint: string,
   sessionNonce: string | number = Date.now(),
 ): ResolvedLessonStep[] {
-  // Dev smoke lessons: keep authored step types and order (no choice-variant morph).
+  // Dev smoke lessons: keep authored step order without shuffling.
   if (lessonId === 'dev-j-mixed' || lessonId === 'dev-j-new-types') {
     return steps;
   }
 
   const seed = hashSeed(`${lessonId}-${sessionNonce}`);
 
-  return steps.map((step, stepIndex) => {
-    const stepSeed = seed + stepIndex * 17;
-
-    if (step.type === 'choice') {
-      return prepareChoiceStep(step, stepSeed, seed, stepIndex, reorderHint);
-    }
-
-    return prepareNativeStep(step, stepSeed);
-  });
+  return steps.map((step, stepIndex) => prepareStep(step, seed + stepIndex * 17));
 }
