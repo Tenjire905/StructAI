@@ -25,6 +25,14 @@ export const copyDe: CopyCatalog = {
     playful: 'Weiterlernen',
     focus: 'Aktuelle Lernpfade',
   },
+  'home.startHint': {
+    playful: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
+    focus: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
+  },
+  'home.startCta': {
+    playful: 'Los geht\'s!',
+    focus: 'Ersten Pfad öffnen',
+  },
   'orbCounter.label': {
     playful: 'Energie-Orbs',
     focus: 'Orbs',
@@ -774,7 +782,11 @@ export const copyDe: CopyCatalog = {
     focus: 'Orbs verdienen und das nächste Kapitel freischalten.',
   },
   'onboarding.loopCta': {
-    playful: 'Zum Start!',
+    playful: 'Erste Lektion starten!',
+    focus: 'Erste Lektion starten',
+  },
+  'onboarding.loopHomeCta': {
+    playful: 'Erst mal zur Übersicht',
     focus: 'Zur Startseite',
   },
   'onboarding.previewPathTitle': {

@@ -1,5 +1,7 @@
 import { MOCK_PATHS, type MockPath } from '@/data/mockPaths';
 
+export const DEFAULT_START_PATH_ID = 'prompt-basics';
+
 const LESSON_PREFIX_TO_PATH: Record<string, string> = {
   pb: 'prompt-basics',
   sl: 'structure-lab',

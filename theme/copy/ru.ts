@@ -25,6 +25,14 @@ export const copyRu: CopyCatalog = {
     playful: 'Продолжить обучение',
     focus: 'Текущие треки',
   },
+  'home.startHint': {
+    playful: 'Начни с основ промптов — первый шаг к структурированному prompting.',
+    focus: 'Начните с основ промптов — первый шаг к структурированному prompting.',
+  },
+  'home.startCta': {
+    playful: 'Поехали!',
+    focus: 'Открыть первый трек',
+  },
   'orbCounter.label': {
     playful: 'Энерго-орбы',
     focus: 'Орбы',
@@ -774,7 +782,11 @@ export const copyRu: CopyCatalog = {
     focus: 'Заработать орбы и открыть следующую главу.',
   },
   'onboarding.loopCta': {
-    playful: 'Поехали!',
+    playful: 'Начать первый урок!',
+    focus: 'Начать первый урок',
+  },
+  'onboarding.loopHomeCta': {
+    playful: 'Сначала к обзору',
     focus: 'На главную',
   },
   'onboarding.previewPathTitle': {
