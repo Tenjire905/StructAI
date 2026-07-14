@@ -118,6 +118,7 @@ export default function HomeScreen() {
               currentChapter={path.currentChapter}
               key={path.id}
               onPress={() => router.push(`/lektion/${path.resumeLessonId}`)}
+              failedRatio={progressBar.failedRatio}
               progress={progressBar.completedRatio}
               title={t(path.titleKey)}
               totalChapters={path.totalChapters}

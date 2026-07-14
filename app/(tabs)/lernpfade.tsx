@@ -60,6 +60,7 @@ export default function LernpfadeScreen() {
               currentChapter={path.currentChapter}
               key={path.id}
               onPress={() => router.push(`/lernpfad/${path.id}`)}
+              failedRatio={progressBar.failedRatio}
               progress={progressBar.completedRatio}
               title={t(pathTitleKey(path.id))}
               totalChapters={path.totalChapters}
