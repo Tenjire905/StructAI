@@ -203,7 +203,7 @@ export const MOCK_PATHS: MockPath[] = [
   {
     id: 'eval-scoring',
     title: 'Prompts bewerten',
-    totalChapters: 16,
+    totalChapters: 22,
     chapters: [
       { id: 'es-1', title: 'Bewertungskriterien', status: 'locked' },
       { id: 'es-2', title: 'Score-Systeme', status: 'locked' },
@@ -221,6 +221,12 @@ export const MOCK_PATHS: MockPath[] = [
       { id: 'es-14', title: "Menschliches Review strukturieren", status: 'locked' },
       { id: 'es-15', title: "Bewertungs-Bias erkennen", status: 'locked' },
       { id: 'es-16', title: "Zweite Zwischenbilanz", status: 'locked' },
+      { id: 'es-17', title: "Judge-Prompt kalibrieren", status: 'locked' },
+      { id: 'es-18', title: "Score-Drift erkennen", status: 'locked' },
+      { id: 'es-19', title: "Kalibrierungs-Workflow", status: 'locked' },
+      { id: 'es-20', title: "Gold-Standard-Testfälle", status: 'locked' },
+      { id: 'es-21', title: "Score-Probleme diagnostizieren", status: 'locked' },
+      { id: 'es-22', title: "Dritte Zwischenbilanz", status: 'locked' },
     ],
   },
 ];
