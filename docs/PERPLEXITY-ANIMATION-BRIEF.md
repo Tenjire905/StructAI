@@ -236,31 +236,18 @@ Output format:
 
 ---
 
-## 11. Key source files (in attached zip)
+## 11. Tablet / ohne ZIP
 
-```
-DESIGN_TOKENS.md
-THEME_MODES.md
-theme/theme.ts
-components/features/CelebrationOverlay.tsx
-components/features/OrbCompanion.tsx
-hooks/useOrbCompanionState.ts
-components/ui/PressableScale.tsx
-components/ui/Button.tsx
-components/ui/ProgressBar.tsx
-components/features/PathCard.tsx
-components/features/StreakTracker.tsx
-components/features/PathCompletionView.tsx
-components/features/CapstoneIncompleteView.tsx
-components/features/SectionMilestoneView.tsx
-components/features/ChapterRow.tsx
-app/lektion/[id].tsx
-app/(tabs)/index.tsx
-```
+**Eine Datei zum Kopieren:** `docs/PERPLEXITY-ANIMATION-PROMPT-FULL.md`  
+Enthält: Auftrag + Brief + DESIGN_TOKENS + THEME_MODES + Code-Referenz.  
+Generieren: `./scripts/export-perplexity-tablet-prompt.sh`
+
+GitHub Raw (Tablet):  
+`https://raw.githubusercontent.com/Tenjire905/StructAI/develop/docs/PERPLEXITY-ANIMATION-PROMPT-FULL.md`
 
 ---
 
-## 12. Suggested Perplexity prompt (paste after attaching files)
+## 12. Suggested Perplexity prompt (Desktop mit ZIP)
 
 ```
 You are a senior mobile UX psychologist and motion designer reviewing StructAI.
