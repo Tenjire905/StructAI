@@ -11,7 +11,7 @@ import {
 import { Avatar, Button, Card } from '@/components/ui';
 import { computePathProgressBarModel, pathTitleKey } from '@/lib/pathProgress';
 import { DEFAULT_START_PATH_ID } from '@/lib/pathLessonUtils';
-import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
+import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
@@ -20,7 +20,9 @@ export default function HomeScreen() {
   const { tokens, t } = useThemeMode();
   const router = useRouter();
   const { user, session } = useAuth();
-  const displayName = session ? resolveProfileDisplayName(user) : t('profile.guestDisplayName');
+  const displayName = session
+    ? resolveProfileDisplayName(user)
+    : resolveGuestDisplayName(t('profile.guestDisplayName'));
   const orbCount = useProgressStore((state) => state.orbCount);
   const orbMax = useProgressStore((state) => state.orbMax);
   const completedLessons = useProgressStore((state) => state.completedLessons);

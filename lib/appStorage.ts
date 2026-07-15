@@ -131,9 +131,11 @@ async function hydrateAppStorageInternal(): Promise<void> {
       return;
     }
 
-    const entries = await AsyncStorage.multiGet(prefixedKeys);
+    const valuesByKey = await AsyncStorage.getMany(prefixedKeys);
 
-    for (const [fullKey, value] of entries) {
+    for (const fullKey of prefixedKeys) {
+      const value = valuesByKey[fullKey];
+
       if (value != null) {
         asyncStorageMemory.set(fullKey.slice(STORAGE_PREFIX.length), value);
       }
@@ -222,6 +224,46 @@ export async function setOnboardingCompleted(): Promise<void> {
 
 export async function clearOnboardingCompleted(): Promise<void> {
   await deleteAppStorageValue(ONBOARDING_COMPLETED_KEY);
+}
+
+const PROFILE_ONBOARDING_COMPLETED_KEY = 'structai.profile-onboarding-completed';
+const GUEST_DISPLAY_NAME_KEY = 'structai.guest-display-name';
+const PROFILE_AGE_KEY = 'structai.profile-age';
+
+export function isProfileOnboardingCompleted(): boolean {
+  return appStorage.getString(PROFILE_ONBOARDING_COMPLETED_KEY) === 'true';
+}
+
+export async function setProfileOnboardingCompleted(): Promise<void> {
+  await persistAppStorageValue(PROFILE_ONBOARDING_COMPLETED_KEY, 'true');
+}
+
+export function isProfileOnboardingPending(completedLessons: number): boolean {
+  return completedLessons >= 1 && !isProfileOnboardingCompleted();
+}
+
+export function getGuestDisplayName(): string | undefined {
+  const value = appStorage.getString(GUEST_DISPLAY_NAME_KEY)?.trim();
+  return value && value.length > 0 ? value : undefined;
+}
+
+export async function setGuestDisplayName(name: string): Promise<void> {
+  await persistAppStorageValue(GUEST_DISPLAY_NAME_KEY, name.trim());
+}
+
+export function getProfileAge(): number | undefined {
+  const raw = appStorage.getString(PROFILE_AGE_KEY);
+
+  if (!raw) {
+    return undefined;
+  }
+
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+export async function setProfileAge(age: number): Promise<void> {
+  await persistAppStorageValue(PROFILE_AGE_KEY, String(age));
 }
 
 export function isExpoGoMemoryStorage(): boolean {

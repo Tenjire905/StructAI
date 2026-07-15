@@ -813,6 +813,78 @@ export const copyRu: CopyCatalog = {
     playful: 'Сначала к обзору',
     focus: 'На главную',
   },
+  'onboarding.profileTitle': {
+    playful: 'Почти готово — как тебя зовут?',
+    focus: 'Заполните профиль',
+  },
+  'onboarding.profileSubtitle': {
+    playful: 'Ты завершил первый урок! Расскажи, как тебя зовут — мы настроим StructAI под тебя.',
+    focus: 'Первый урок завершен. Укажите имя и возраст, чтобы мы могли рекомендовать режим обучения.',
+  },
+  'onboarding.profileNameLabel': {
+    playful: 'Твое имя',
+    focus: 'Отображаемое имя',
+  },
+  'onboarding.profileNamePlaceholder': {
+    playful: 'Как к тебе обращаться?',
+    focus: 'Введите отображаемое имя',
+  },
+  'onboarding.profileAgeLabel': {
+    playful: 'Твой возраст',
+    focus: 'Возраст',
+  },
+  'onboarding.profileAgePlaceholder': {
+    playful: 'напр. 14',
+    focus: 'Возраст в годах',
+  },
+  'onboarding.profileAgeDisclaimer': {
+    playful: 'Возраст нужен только для рекомендации режима — не для изменения сложности заданий.',
+    focus: 'Возраст используется исключительно для рекомендации режима, а не для манипуляции сложностью.',
+  },
+  'onboarding.profileAgeInvalid': {
+    playful: 'Введи возраст от 1 до 120.',
+    focus: 'Введите корректный возраст от 1 до 120.',
+  },
+  'onboarding.profileAuthSection': {
+    playful: 'Сохранить прогресс',
+    focus: 'Привязать аккаунт',
+  },
+  'onboarding.profileAuthHint': {
+    playful: 'Необязательно: войди, чтобы сохранить прогресс. После входа ты вернешься сюда.',
+    focus: 'Необязательно: вход через Google или email. После авторизации вы вернетесь на этот шаг.',
+  },
+  'onboarding.profileModeSection': {
+    playful: 'Выбери режим',
+    focus: 'Выбор режима обучения',
+  },
+  'onboarding.profileModeHintRecommended': {
+    playful: 'Для твоего возраста рекомендуем Playful — проще задания и легче понимание. Focus тоже доступен.',
+    focus: 'Для этого возраста рекомендуется Playful: проще задания и легче понимание. Focus остается доступным.',
+  },
+  'onboarding.profileModeHintNeutral': {
+    playful: 'Оба режима равноправны — выбирай, что подходит.',
+    focus: 'Оба режима доступны без предпочтения.',
+  },
+  'onboarding.profilePlayfulBadge': {
+    playful: 'Рекомендуем',
+    focus: 'Рекомендуем',
+  },
+  'onboarding.profilePlayfulRecommendCopy': {
+    playful: 'Проще задания, легче понимание',
+    focus: 'Проще задания, легче понимание',
+  },
+  'onboarding.profileCta': {
+    playful: 'Поехали!',
+    focus: 'Сохранить профиль и начать',
+  },
+  'onboarding.profileSaving': {
+    playful: 'Сохраняем…',
+    focus: 'Сохранение…',
+  },
+  'onboarding.profileSaveError': {
+    playful: 'Не удалось сохранить — попробуй еще раз.',
+    focus: 'Не удалось сохранить профиль. Попробуйте снова.',
+  },
   'onboarding.previewPathTitle': {
     playful: 'Основы промптов',
     focus: 'Основы промптов',

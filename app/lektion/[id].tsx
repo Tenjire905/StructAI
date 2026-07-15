@@ -36,6 +36,7 @@ import {
   type LessonAnswerResult,
 } from '@/lib/lessonRewards';
 import { trackEvent } from '@/lib/analytics';
+import { isProfileOnboardingCompleted } from '@/lib/appStorage';
 import { getPathIdForLesson, getFirstLessonIdForPath, getNextLessonId } from '@/lib/pathLessonUtils';
 import { isPathFinalCapstone, isPathMidCapstone } from '@/lib/pathCapstone';
 import { getLessonChapterStatus, isLessonPlayable, pathTitleKey } from '@/lib/pathProgress';
@@ -363,6 +364,15 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
 
       if (isFirstLessonCompletion && useProgressStore.getState().completedLessons === 1) {
         trackEvent('first_lesson_completed');
+      }
+
+      if (
+        isFirstLessonCompletion &&
+        useProgressStore.getState().completedLessons === 1 &&
+        !isProfileOnboardingCompleted()
+      ) {
+        router.replace('/onboarding/profil');
+        return;
       }
 
       if (newlyCompletedPathId) {

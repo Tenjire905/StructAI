@@ -813,6 +813,78 @@ export const copyDe: CopyCatalog = {
     playful: 'Erst mal zur Übersicht',
     focus: 'Zur Startseite',
   },
+  'onboarding.profileTitle': {
+    playful: 'Fast geschafft — wer bist du?',
+    focus: 'Profil vervollständigen',
+  },
+  'onboarding.profileSubtitle': {
+    playful: 'Du hast deine erste Lektion gemeistert! Sag uns kurz, wie du heißt — dann passen wir StructAI an dich an.',
+    focus: 'Erste Lektion abgeschlossen. Bitte Name und Alter angeben, damit wir den Lernmodus empfehlen können.',
+  },
+  'onboarding.profileNameLabel': {
+    playful: 'Dein Name',
+    focus: 'Anzeigename',
+  },
+  'onboarding.profileNamePlaceholder': {
+    playful: 'Wie sollen wir dich nennen?',
+    focus: 'Anzeigename eingeben',
+  },
+  'onboarding.profileAgeLabel': {
+    playful: 'Dein Alter',
+    focus: 'Alter',
+  },
+  'onboarding.profileAgePlaceholder': {
+    playful: 'z. B. 14',
+    focus: 'Alter in Jahren',
+  },
+  'onboarding.profileAgeDisclaimer': {
+    playful: 'Dein Alter nutzen wir nur für die Modus-Empfehlung — nicht für schwerere oder leichtere Aufgaben.',
+    focus: 'Das Alter wird ausschließlich für die Modus-Empfehlung verwendet, nicht zur Manipulation des Gameplays.',
+  },
+  'onboarding.profileAgeInvalid': {
+    playful: 'Bitte gib ein Alter zwischen 1 und 120 ein.',
+    focus: 'Bitte ein gültiges Alter zwischen 1 und 120 eingeben.',
+  },
+  'onboarding.profileAuthSection': {
+    playful: 'Fortschritt sichern',
+    focus: 'Konto verknüpfen',
+  },
+  'onboarding.profileAuthHint': {
+    playful: 'Optional: Melde dich an, damit dein Fortschritt erhalten bleibt. Du landest danach wieder hier.',
+    focus: 'Optional: Mit Google oder E-Mail anmelden. Nach der Anmeldung kehren Sie zu diesem Schritt zurück.',
+  },
+  'onboarding.profileModeSection': {
+    playful: 'Wähle deinen Modus',
+    focus: 'Lernmodus wählen',
+  },
+  'onboarding.profileModeHintRecommended': {
+    playful: 'Für dein Alter empfehlen wir Playful — einfachere Aufgaben und leichteres Verständnis. Focus bleibt jederzeit wählbar.',
+    focus: 'Für dieses Alter wird Playful empfohlen: einfachere Aufgaben und leichteres Verständnis. Focus bleibt wählbar.',
+  },
+  'onboarding.profileModeHintNeutral': {
+    playful: 'Beide Modi sind gleichwertig — wähle, was zu dir passt.',
+    focus: 'Beide Modi stehen gleichberechtigt zur Verfügung.',
+  },
+  'onboarding.profilePlayfulBadge': {
+    playful: 'Empfohlen',
+    focus: 'Empfohlen',
+  },
+  'onboarding.profilePlayfulRecommendCopy': {
+    playful: 'Einfachere Aufgaben, leichteres Verständnis',
+    focus: 'Einfachere Aufgaben, leichteres Verständnis',
+  },
+  'onboarding.profileCta': {
+    playful: 'Los geht\'s!',
+    focus: 'Profil speichern und starten',
+  },
+  'onboarding.profileSaving': {
+    playful: 'Wird gespeichert…',
+    focus: 'Speichern…',
+  },
+  'onboarding.profileSaveError': {
+    playful: 'Speichern hat nicht geklappt — bitte nochmal versuchen.',
+    focus: 'Profil konnte nicht gespeichert werden. Bitte erneut versuchen.',
+  },
   'onboarding.previewPathTitle': {
     playful: 'Prompt-Grundlagen',
     focus: 'Prompt-Grundlagen',
