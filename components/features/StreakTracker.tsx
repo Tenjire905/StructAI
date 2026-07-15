@@ -5,6 +5,7 @@ import Animated, {
   useSharedValue,
   withSequence,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 
@@ -77,28 +78,47 @@ type StreakDayProps = {
 function StreakDay({ completed, isMilestoneDay, label }: StreakDayProps) {
   const { tokens } = useThemeMode();
   const scale = useSharedValue(completed ? 1 : 0.92);
+  const fillProgress = useSharedValue(completed ? 1 : 0);
+  const checkScale = useSharedValue(completed ? 1 : 0);
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
 
   useEffect(() => {
+    fillProgress.value = withTiming(completed ? 1 : 0, {
+      duration: tokens.motion.duration.medium,
+    });
+
     if (completed && isMilestoneDay && tokens.presentation.allowCelebrationSpring) {
       scale.value = withSequence(
         withSpring(1.12, tokens.motion.spring.bouncy),
+        withSpring(1, tokens.motion.spring.default),
+      );
+      checkScale.value = withSequence(
+        withSpring(1.2, tokens.motion.spring.bouncy),
         withSpring(1, tokens.motion.spring.default),
       );
       return;
     }
 
     scale.value = withSpring(completed ? 1 : 0.92, tokens.motion.spring.default);
+    checkScale.value = withSpring(completed ? 1 : 0, tokens.motion.spring.default);
   }, [
+    checkScale,
     completed,
+    fillProgress,
     isMilestoneDay,
     scale,
+    tokens.motion.duration.medium,
     tokens.motion.spring,
     tokens.presentation.allowCelebrationSpring,
   ]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
+    opacity: 0.55 + fillProgress.value * 0.45,
+  }));
+
+  const checkStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: checkScale.value }],
   }));
 
   return (
@@ -122,15 +142,17 @@ function StreakDay({ completed, isMilestoneDay, label }: StreakDayProps) {
           },
         ]}>
         {completed ? (
-          isPlayful ? (
-            <OrbIcon size={tokens.icons.sizes.sm} />
-          ) : (
-            <Check
-              color={tokens.colors.accent.success}
-              size={tokens.icons.sizes.sm}
-              strokeWidth={tokens.icons.strokeWidth}
-            />
-          )
+          <Animated.View style={checkStyle}>
+            {isPlayful ? (
+              <OrbIcon size={tokens.icons.sizes.sm} />
+            ) : (
+              <Check
+                color={tokens.colors.accent.success}
+                size={tokens.icons.sizes.sm}
+                strokeWidth={tokens.icons.strokeWidth}
+              />
+            )}
+          </Animated.View>
         ) : null}
       </Animated.View>
       <Text

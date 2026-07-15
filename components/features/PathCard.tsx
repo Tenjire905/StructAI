@@ -3,10 +3,12 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
-import { Badge, ProgressBar } from '@/components/ui';
+import { Badge, ProgressBar, StaggeredReveal } from '@/components/ui';
 import type { PathProgressSegment } from '@/lib/pathProgress';
 import { getShadow, useThemeMode } from '@/theme';
 
@@ -24,6 +26,10 @@ type PathCardProps = {
   badgeTone?: 'primary' | 'structure' | 'warning' | 'success';
   locked?: boolean;
   onPress?: () => void;
+  /** Staggered screen-entry index. */
+  entryIndex?: number;
+  /** Slide-up reveal for newly unlocked paths. */
+  isNewUnlock?: boolean;
 };
 
 export function PathCard({
@@ -37,47 +43,57 @@ export function PathCard({
   badgeTone = 'primary',
   locked = false,
   onPress,
+  entryIndex = 0,
+  isNewUnlock = false,
 }: PathCardProps) {
   const { tokens, t } = useThemeMode();
   const scale = useSharedValue(1);
+  const shakeX = useSharedValue(0);
+  const flashOpacity = useSharedValue(0);
   const isStarted = currentChapter !== undefined && progress !== undefined;
   const isPressable = Boolean(onPress) && !locked;
   const resolvedBadgeLabel = locked ? t('paths.lockedBadge') : badgeLabel;
   const resolvedBadgeTone = locked ? 'warning' : badgeTone;
+  const liftSpring = tokens.motion.spring[tokens.presentation.springPreset];
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+    transform: [{ scale: scale.value }, { translateX: shakeX.value }],
+  }));
+
+  const flashStyle = useAnimatedStyle(() => ({
+    opacity: flashOpacity.value,
   }));
 
   const handlePressIn = () => {
     if (isPressable) {
-      scale.value = withSpring(0.97, tokens.motion.spring.default);
+      scale.value = withSpring(0.95, tokens.motion.spring.default);
     }
   };
 
   const handlePressOut = () => {
     if (isPressable) {
-      scale.value = withSpring(1, tokens.motion.spring.default);
+      scale.value = withSequence(
+        withSpring(1.02, liftSpring),
+        withSpring(1, tokens.motion.spring.default),
+      );
     }
   };
 
-  return (
-    <AnimatedPressable
-      accessibilityRole={isPressable ? 'button' : undefined}
-      disabled={!isPressable}
-      onPress={isPressable ? onPress : undefined}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      style={[
-        animatedStyle,
-        getShadow(1),
-        {
-          backgroundColor: tokens.colors.surface.card,
-          borderRadius: tokens.presentation.preferredCardRadius,
-          gap: tokens.spacing.space3,
-          padding: tokens.spacing.space4,
-        },
-      ]}>
+  const handleLockedPress = () => {
+    flashOpacity.value = withSequence(
+      withTiming(0.35, { duration: tokens.motion.duration.instant }),
+      withTiming(0, { duration: tokens.motion.duration.fast }),
+    );
+    shakeX.value = withSequence(
+      withTiming(-4, { duration: tokens.motion.duration.instant }),
+      withTiming(4, { duration: tokens.motion.duration.instant }),
+      withTiming(-3, { duration: tokens.motion.duration.instant }),
+      withTiming(0, { duration: tokens.motion.duration.instant }),
+    );
+  };
+
+  const cardBody = (
+    <>
       <View
         style={{
           alignItems: 'center',
@@ -126,6 +142,51 @@ export function PathCard({
           progress={progress}
         />
       ) : null}
+    </>
+  );
+
+  const cardShell = (
+    <AnimatedPressable
+      accessibilityRole={isPressable || locked ? 'button' : undefined}
+      disabled={!isPressable && !locked}
+      onPress={locked ? handleLockedPress : isPressable ? onPress : undefined}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={[
+        animatedStyle,
+        getShadow(isNewUnlock ? 'glow' : 1),
+        {
+          backgroundColor: tokens.colors.surface.card,
+          borderRadius: tokens.presentation.preferredCardRadius,
+          gap: tokens.spacing.space3,
+          overflow: 'hidden',
+          padding: tokens.spacing.space4,
+          position: 'relative',
+        },
+      ]}>
+      {locked ? (
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            flashStyle,
+            {
+              backgroundColor: tokens.colors.accent.danger,
+              bottom: 0,
+              left: 0,
+              position: 'absolute',
+              right: 0,
+              top: 0,
+            },
+          ]}
+        />
+      ) : null}
+      {cardBody}
     </AnimatedPressable>
+  );
+
+  return (
+    <StaggeredReveal enabled index={entryIndex}>
+      {cardShell}
+    </StaggeredReveal>
   );
 }

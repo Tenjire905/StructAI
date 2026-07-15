@@ -1,8 +1,18 @@
+import { useEffect } from 'react';
 import { AlertCircle, Check, Lock, Play } from 'lucide-react-native';
 import { Text, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
-import { PressableScale } from '@/components/ui';
+import { PressableScale, StaggeredReveal } from '@/components/ui';
 import type { MockChapter } from '@/data/mockPaths';
+import { staggerDelay } from '@/lib/motionUtils';
 import { useThemeMode } from '@/theme';
 
 export type ChapterRowProps = {
@@ -11,46 +21,27 @@ export type ChapterRowProps = {
   isLast: boolean;
   title: string;
   onPress?: (lessonId: string) => void;
+  entryIndex?: number;
 };
 
 function isChapterPressable(status: MockChapter['status']): boolean {
   return status === 'completed' || status === 'failed' || status === 'current';
 }
 
-export function ChapterRow({ chapter, number, isLast, title, onPress }: ChapterRowProps) {
+export function ChapterRow({
+  chapter,
+  number,
+  isLast,
+  title,
+  onPress,
+  entryIndex = 0,
+}: ChapterRowProps) {
   const { tokens } = useThemeMode();
   const pressable = isChapterPressable(chapter.status) && onPress !== undefined;
 
-  const statusIcon = {
-    completed: (
-      <Check
-        color={tokens.colors.accent.success}
-        size={tokens.icons.sizes.md}
-        strokeWidth={tokens.icons.strokeWidth}
-      />
-    ),
-    current: (
-      <Play
-        color={tokens.colors.accent.primary}
-        size={tokens.icons.sizes.md}
-        strokeWidth={tokens.icons.strokeWidth}
-      />
-    ),
-    failed: (
-      <AlertCircle
-        color={tokens.colors.accent.warning}
-        size={tokens.icons.sizes.md}
-        strokeWidth={tokens.icons.strokeWidth}
-      />
-    ),
-    locked: (
-      <Lock
-        color={tokens.colors.text.tertiary}
-        size={tokens.icons.sizes.md}
-        strokeWidth={tokens.icons.strokeWidth}
-      />
-    ),
-  }[chapter.status];
+  const statusIcon = (
+    <ChapterStatusIcon status={chapter.status} entryIndex={entryIndex} />
+  );
 
   const titleColor = {
     completed: tokens.colors.text.secondary,
@@ -96,15 +87,67 @@ export function ChapterRow({ chapter, number, isLast, title, onPress }: ChapterR
   };
 
   if (!pressable) {
-    return <View style={rowStyle}>{content}</View>;
+    return (
+      <StaggeredReveal enabled index={entryIndex}>
+        <View style={rowStyle}>{content}</View>
+      </StaggeredReveal>
+    );
   }
 
   return (
-    <PressableScale
-      accessibilityRole="button"
-      onPress={() => onPress?.(chapter.id)}
-      style={rowStyle}>
-      {content}
-    </PressableScale>
+    <StaggeredReveal enabled index={entryIndex}>
+      <PressableScale
+        accessibilityRole="button"
+        onPress={() => onPress?.(chapter.id)}
+        style={rowStyle}>
+        {content}
+      </PressableScale>
+    </StaggeredReveal>
   );
+}
+
+type ChapterStatusIconProps = {
+  status: MockChapter['status'];
+  entryIndex: number;
+};
+
+function ChapterStatusIcon({ status, entryIndex }: ChapterStatusIconProps) {
+  const { tokens } = useThemeMode();
+  const scale = useSharedValue(status === 'completed' ? 1 : 0.85);
+  const spring = tokens.motion.spring[tokens.presentation.springPreset];
+
+  useEffect(() => {
+    if (status === 'completed') {
+      scale.value = withDelay(
+        staggerDelay(entryIndex, tokens.motion),
+        withSequence(
+          withSpring(1.2, spring),
+          withSpring(1, tokens.motion.spring.default),
+        ),
+      );
+      return;
+    }
+
+    scale.value = withSpring(0.85, tokens.motion.spring.default);
+  }, [entryIndex, scale, spring, status, tokens.motion]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const iconProps = {
+    size: tokens.icons.sizes.md,
+    strokeWidth: tokens.icons.strokeWidth,
+  };
+
+  const icon = {
+    completed: (
+      <Check color={tokens.colors.accent.success} {...iconProps} />
+    ),
+    current: <Play color={tokens.colors.accent.primary} {...iconProps} />,
+    failed: <AlertCircle color={tokens.colors.accent.warning} {...iconProps} />,
+    locked: <Lock color={tokens.colors.text.tertiary} {...iconProps} />,
+  }[status];
+
+  return <Animated.View style={animatedStyle}>{icon}</Animated.View>;
 }

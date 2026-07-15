@@ -9,6 +9,11 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { OrbCompanion, LockedPathView } from '@/components/features';
+import {
+  LessonStepCheckmarks,
+  LessonStepTransition,
+  StepFlashOverlay,
+} from '@/components/features/LessonStepMotion';
 import { CapstoneIncompleteView } from '@/components/features/CapstoneIncompleteView';
 import { GuestSaveProgressHint } from '@/components/features/GuestSaveProgressHint';
 import { PathCompletionView } from '@/components/features/PathCompletionView';
@@ -117,7 +122,13 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   const [failureStats, setFailureStats] = useState({ correctCount: 0, gradedCount: 0 });
   const [stepAttempts, setStepAttempts] = useState<Record<number, number>>({});
   const [answerResults, setAnswerResults] = useState<LessonAnswerResult[]>([]);
+  const [stepFlashTone, setStepFlashTone] = useState<'success' | 'warning' | null>(null);
+  const [companionOverride, setCompanionOverride] = useState<
+    'idle' | 'attentive' | 'happy' | undefined
+  >(undefined);
   const openedRef = useRef(false);
+
+  const lessonCompanionState = useOrbCompanionState(companionOverride);
 
   const lesson = useMemo(() => {
     if (!baseLesson) {
@@ -240,6 +251,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
     setSelectedCategorizeItemIndex(null);
     setCategorizeAssignments({});
     setIsChecked(false);
+    setStepFlashTone(null);
   };
 
   const initReorder = (nextStep: GradedStep) => {
@@ -253,6 +265,26 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
       initReorder(gradedStep);
     }
   }, [gradedStep, reorderIndices.length]);
+
+  useEffect(() => {
+    if (!isChecked || !gradedStep) {
+      return;
+    }
+
+    if (isAnswerCorrect) {
+      setStepFlashTone('success');
+      setCompanionOverride('happy');
+      const resetTimer = setTimeout(() => {
+        setCompanionOverride(undefined);
+      }, tokens.motion.duration.medium);
+      return () => {
+        clearTimeout(resetTimer);
+      };
+    }
+
+    setStepFlashTone('warning');
+    return undefined;
+  }, [gradedStep, isAnswerCorrect, isChecked, tokens.motion.duration.medium]);
 
   const hasSelection = (() => {
     if (!gradedStep) {
@@ -563,6 +595,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
     <>
       <Stack.Screen options={headerOptions} />
       <View style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
+        <StepFlashOverlay tone={stepFlashTone} />
         <ScrollView
           contentContainerStyle={{
             gap: tokens.spacing.space5,
@@ -572,123 +605,138 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
           }}
           style={{ flex: 1 }}>
           <View style={{ gap: tokens.spacing.space2 }}>
-            <Text
+            <View
               style={{
-                color: tokens.colors.text.secondary,
-                fontFamily: tokens.typography.fontFamily.mono,
-                fontSize: tokens.typography.fontSize.bodySm,
+                alignItems: 'center',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
               }}>
-              {t('lesson.stepLabel', {
-                current: stepIndex + 1,
-                total: lesson.steps.length,
-              })}
-            </Text>
+              <Text
+                style={{
+                  color: tokens.colors.text.secondary,
+                  fontFamily: tokens.typography.fontFamily.mono,
+                  fontSize: tokens.typography.fontSize.bodySm,
+                }}>
+                {t('lesson.stepLabel', {
+                  current: stepIndex + 1,
+                  total: lesson.steps.length,
+                })}
+              </Text>
+              <OrbCompanion size={tokens.icons.sizes.lg} state={lessonCompanionState} />
+            </View>
             <ProgressBar
               color="primary"
               progress={(stepIndex + 1) / lesson.steps.length}
             />
+            <LessonStepCheckmarks
+              completedStepCount={stepIndex}
+              currentStepIndex={stepIndex}
+              totalSteps={lesson.steps.length}
+            />
           </View>
 
-          <StepTypeBadge step={step} />
+          <LessonStepTransition stepKey={stepIndex}>
+            <StepTypeBadge step={step} />
 
-          {step.type === 'info' ? (
-            <Card variant="solid">
-              <View style={{ gap: tokens.spacing.space3 }}>
-                <Text
-                  style={{
-                    color: tokens.colors.text.primary,
-                    fontFamily: tokens.typography.fontFamily.heading,
-                    fontSize: tokens.typography.fontSize.headingLg,
-                  }}>
-                  {step.title}
-                </Text>
-                <Text
-                  style={{
-                    color: tokens.colors.text.secondary,
-                    fontFamily: tokens.typography.fontFamily.body,
-                    fontSize: tokens.typography.fontSize.bodyLg,
-                    lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
-                  }}>
-                  {step.body}
-                </Text>
-              </View>
-            </Card>
-          ) : null}
+            {step.type === 'info' ? (
+              <Card variant="solid">
+                <View style={{ gap: tokens.spacing.space3 }}>
+                  <Text
+                    style={{
+                      color: tokens.colors.text.primary,
+                      fontFamily: tokens.typography.fontFamily.heading,
+                      fontSize: tokens.typography.fontSize.headingLg,
+                    }}>
+                    {step.title}
+                  </Text>
+                  <Text
+                    style={{
+                      color: tokens.colors.text.secondary,
+                      fontFamily: tokens.typography.fontFamily.body,
+                      fontSize: tokens.typography.fontSize.bodyLg,
+                      lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
+                    }}>
+                    {step.body}
+                  </Text>
+                </View>
+              </Card>
+            ) : null}
 
-          {step.type === 'choice' ? (
-            <ChoiceStepView
-              isChecked={isChecked}
-              onSelect={setSelectedOption}
-              selectedOption={selectedOption}
-              step={step}
-            />
-          ) : null}
+            {step.type === 'choice' ? (
+              <ChoiceStepView
+                isChecked={isChecked}
+                onSelect={setSelectedOption}
+                selectedOption={selectedOption}
+                step={step}
+              />
+            ) : null}
 
-          {step.type === 'fill_blank' ? (
-            <FillBlankStepView
-              isChecked={isChecked}
-              onSelect={setSelectedOption}
-              selectedOption={selectedOption}
-              step={step}
-            />
-          ) : null}
+            {step.type === 'fill_blank' ? (
+              <FillBlankStepView
+                isChecked={isChecked}
+                onSelect={setSelectedOption}
+                selectedOption={selectedOption}
+                step={step}
+              />
+            ) : null}
 
-          {step.type === 'true_false' ? (
-            <TrueFalseStepView
-              isChecked={isChecked}
-              onSelect={setSelectedTrueFalse}
-              selected={selectedTrueFalse}
-              step={step}
-            />
-          ) : null}
+            {step.type === 'true_false' ? (
+              <TrueFalseStepView
+                isChecked={isChecked}
+                onSelect={setSelectedTrueFalse}
+                selected={selectedTrueFalse}
+                step={step}
+              />
+            ) : null}
 
-          {step.type === 'reorder' ? (
-            <ReorderStepView
-              isChecked={isChecked}
-              onChange={setReorderIndices}
-              order={reorderIndices}
-              step={step}
-            />
-          ) : null}
+            {step.type === 'reorder' ? (
+              <ReorderStepView
+                isChecked={isChecked}
+                onChange={setReorderIndices}
+                order={reorderIndices}
+                step={step}
+              />
+            ) : null}
 
-          {step.type === 'matching' ? (
-            <MatchingStepView
-              isChecked={isChecked}
-              matches={matchingPairs}
-              onSelectDefinition={handleSelectMatchingDefinition}
-              onSelectTerm={handleSelectMatchingTerm}
-              selectedTermIndex={selectedTermIndex}
-              step={step}
-            />
-          ) : null}
+            {step.type === 'matching' ? (
+              <MatchingStepView
+                isChecked={isChecked}
+                matches={matchingPairs}
+                onSelectDefinition={handleSelectMatchingDefinition}
+                onSelectTerm={handleSelectMatchingTerm}
+                selectedTermIndex={selectedTermIndex}
+                step={step}
+              />
+            ) : null}
 
-          {step.type === 'error_finding' ? (
-            <ErrorFindingStepView
-              isChecked={isChecked}
-              onSelectSegment={handleSelectErrorFindingSegment}
-              selectedIndex={errorFindingSelectedIndex}
-              step={step}
-              wrongIndices={errorFindingWrongIndices}
-            />
-          ) : null}
+            {step.type === 'error_finding' ? (
+              <ErrorFindingStepView
+                isChecked={isChecked}
+                onSelectSegment={handleSelectErrorFindingSegment}
+                selectedIndex={errorFindingSelectedIndex}
+                step={step}
+                wrongIndices={errorFindingWrongIndices}
+              />
+            ) : null}
 
-          {step.type === 'categorize' ? (
-            <CategorizeStepView
-              assignments={categorizeAssignments}
-              isChecked={isChecked}
-              onSelectCategory={handleSelectCategorizeCategory}
-              onSelectItem={handleSelectCategorizeItem}
-              selectedItemIndex={selectedCategorizeItemIndex}
-              step={step}
-            />
-          ) : null}
+            {step.type === 'categorize' ? (
+              <CategorizeStepView
+                assignments={categorizeAssignments}
+                isChecked={isChecked}
+                onSelectCategory={handleSelectCategorizeCategory}
+                onSelectItem={handleSelectCategorizeItem}
+                selectedItemIndex={selectedCategorizeItemIndex}
+                step={step}
+              />
+            ) : null}
 
-          {gradedStep && isChecked ? (
-            <FeedbackBanner
-              explanation={gradedStep.explanation}
-              isCorrect={isAnswerCorrect}
-            />
-          ) : null}
+            {gradedStep && isChecked ? (
+              <FeedbackBanner
+                explanation={gradedStep.explanation}
+                isCorrect={isAnswerCorrect}
+              />
+            ) : null}
+          </LessonStepTransition>
         </ScrollView>
 
         <View
