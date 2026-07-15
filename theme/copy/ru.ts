@@ -209,6 +209,10 @@ export const copyRu: CopyCatalog = {
     playful: 'Почти! Посмотри объяснение.',
     focus: 'Неверно. См. объяснение.',
   },
+  'lesson.hintLabel': {
+    playful: 'Подсказка:',
+    focus: 'Подсказка:',
+  },
   'lesson.completeTitle': {
     playful: 'Урок пройден!',
     focus: 'Урок завершен.',

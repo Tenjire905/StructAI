@@ -28,12 +28,21 @@ export type LessonTrueFalseCatalogStep = {
   explanationKey: string;
 };
 
+export type LessonReorderHints = {
+  swappedPairs?: { swappedPair: [number, number]; hintKey: string }[];
+  tooEarly?: { itemIndex: number; hintKey: string }[];
+  tooLate?: { itemIndex: number; hintKey: string }[];
+  /** Overrides explanationKey as fallback when no rule matches. */
+  fallbackExplanationKey?: string;
+};
+
 export type LessonReorderCatalogStep = {
   type: 'reorder';
   instructionKey: string;
   itemKeys: string[];
   correctOrder: number[];
   explanationKey: string;
+  reorderHints?: LessonReorderHints;
 };
 
 export type LessonMatchingCatalogStep = {

@@ -209,6 +209,10 @@ export const copyEn: CopyCatalog = {
     playful: 'Close! Check the explanation.',
     focus: 'Incorrect. See explanation.',
   },
+  'lesson.hintLabel': {
+    playful: 'Hint:',
+    focus: 'Hint:',
+  },
   'lesson.completeTitle': {
     playful: 'Lesson complete!',
     focus: 'Lesson completed.',

@@ -41,6 +41,7 @@ import { isPathFinalCapstone, isPathMidCapstone } from '@/lib/pathCapstone';
 import { getLessonChapterStatus, isLessonPlayable, pathTitleKey } from '@/lib/pathProgress';
 import { getNextPathId, getPathUnlockBlockReason } from '@/lib/pathUnlock';
 import { prepareLessonSteps } from '@/lib/lessonSession';
+import { matchReorderHint } from '@/lib/reorderHints';
 import { useProgressStore } from '@/store/progressStore';
 import { getShadow, useCelebration, useThemeMode } from '@/theme';
 import { useAuth } from '@/providers/AuthProvider';
@@ -686,6 +687,15 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
           {gradedStep && isChecked ? (
             <FeedbackBanner
               explanation={gradedStep.explanation}
+              hint={
+                gradedStep.type === 'reorder' && !isAnswerCorrect
+                  ? matchReorderHint(
+                      gradedStep.correctOrder,
+                      reorderIndices,
+                      gradedStep.reorderHints,
+                    )
+                  : undefined
+              }
               isCorrect={isAnswerCorrect}
             />
           ) : null}
@@ -741,9 +751,10 @@ function StepTypeBadge({ step }: { step: ResolvedLessonStep }) {
 type FeedbackBannerProps = {
   isCorrect: boolean;
   explanation: string;
+  hint?: string;
 };
 
-function FeedbackBanner({ isCorrect, explanation }: FeedbackBannerProps) {
+function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
   const { tokens, t } = useThemeMode();
   const scale = useSharedValue(0.9);
   const opacity = useSharedValue(0);
@@ -751,7 +762,7 @@ function FeedbackBanner({ isCorrect, explanation }: FeedbackBannerProps) {
   useEffect(() => {
     opacity.value = withTiming(1, { duration: tokens.motion.duration.fast });
     scale.value = withSpring(1, tokens.motion.spring.default);
-  }, [isCorrect, opacity, scale, tokens.motion]);
+  }, [isCorrect, hint, opacity, scale, tokens.motion]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -761,6 +772,8 @@ function FeedbackBanner({ isCorrect, explanation }: FeedbackBannerProps) {
   const accentColor = isCorrect
     ? tokens.colors.accent.success
     : tokens.colors.accent.danger;
+
+  const showHint = !isCorrect && hint !== undefined;
 
   return (
     <Animated.View
@@ -783,15 +796,37 @@ function FeedbackBanner({ isCorrect, explanation }: FeedbackBannerProps) {
         }}>
         {isCorrect ? t('lesson.correctFeedback') : t('lesson.wrongFeedback')}
       </Text>
-      <Text
-        style={{
-          color: tokens.colors.text.secondary,
-          fontFamily: tokens.typography.fontFamily.body,
-          fontSize: tokens.typography.fontSize.bodyMd,
-          lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
-        }}>
-        {explanation}
-      </Text>
+      {showHint ? (
+        <View style={{ gap: tokens.spacing.space1 }}>
+          <Text
+            style={{
+              color: tokens.colors.accent.warning,
+              fontFamily: tokens.typography.fontFamily.bodyMedium,
+              fontSize: tokens.typography.fontSize.bodyMd,
+            }}>
+            {t('lesson.hintLabel')}
+          </Text>
+          <Text
+            style={{
+              color: tokens.colors.text.secondary,
+              fontFamily: tokens.typography.fontFamily.body,
+              fontSize: tokens.typography.fontSize.bodyMd,
+              lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
+            }}>
+            {hint}
+          </Text>
+        </View>
+      ) : (
+        <Text
+          style={{
+            color: tokens.colors.text.secondary,
+            fontFamily: tokens.typography.fontFamily.body,
+            fontSize: tokens.typography.fontSize.bodyMd,
+            lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
+          }}>
+          {explanation}
+        </Text>
+      )}
     </Animated.View>
   );
 }

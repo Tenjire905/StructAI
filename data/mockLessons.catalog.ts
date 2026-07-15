@@ -308,6 +308,19 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         ],
         correctOrder: [0, 1, 2, 3],
         explanationKey: 'pb-12.s1.explanation',
+        reorderHints: {
+          swappedPairs: [
+            { swappedPair: [0, 1], hintKey: 'pb-12.s1.hint.swapGoalContext' },
+            { swappedPair: [2, 3], hintKey: 'pb-12.s1.hint.swapFormatFinish' },
+          ],
+          tooEarly: [
+            { itemIndex: 3, hintKey: 'pb-12.s1.hint.finishTooEarly' },
+            { itemIndex: 2, hintKey: 'pb-12.s1.hint.formatTooEarly' },
+          ],
+          tooLate: [
+            { itemIndex: 0, hintKey: 'pb-12.s1.hint.goalTooLate' },
+          ],
+        },
       },
       {
         type: 'choice',
@@ -364,6 +377,19 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         ],
         correctOrder: [0, 1, 2, 3],
         explanationKey: 'pb-14.s1.explanation',
+        reorderHints: {
+          swappedPairs: [
+            { swappedPair: [0, 1], hintKey: 'pb-14.s1.hint.swapContextTask' },
+            { swappedPair: [1, 2], hintKey: 'pb-14.s1.hint.swapTaskFormat' },
+          ],
+          tooEarly: [
+            { itemIndex: 2, hintKey: 'pb-14.s1.hint.formatTooEarly' },
+            { itemIndex: 3, hintKey: 'pb-14.s1.hint.constraintsTooEarly' },
+          ],
+          tooLate: [
+            { itemIndex: 0, hintKey: 'pb-14.s1.hint.contextTooLate' },
+          ],
+        },
       },
       {
         type: 'true_false',

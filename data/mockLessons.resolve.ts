@@ -16,6 +16,7 @@ import type {
   LessonTrueFalseCatalogStep,
   MockLessonCatalog,
 } from '@/data/mockLessons.types';
+import type { ResolvedReorderHintRules } from '@/lib/reorderHints';
 import type { Locale } from '@/theme/locale';
 
 export type ResolvedInfoStep = {
@@ -54,6 +55,7 @@ export type ResolvedReorderStep = {
   items: string[];
   correctOrder: number[];
   explanation: string;
+  reorderHints?: ResolvedReorderHintRules;
 };
 
 export type ResolvedMatchingStep = {
@@ -136,6 +138,29 @@ function resolveTrueFalseStep(
   };
 }
 
+function resolveReorderHints(
+  hints: NonNullable<LessonReorderCatalogStep['reorderHints']>,
+  locale: Locale,
+): ResolvedReorderHintRules {
+  return {
+    swappedPairs:
+      hints.swappedPairs?.map((rule) => ({
+        swappedPair: rule.swappedPair,
+        hint: getLessonText(rule.hintKey, locale),
+      })) ?? [],
+    tooEarly:
+      hints.tooEarly?.map((rule) => ({
+        itemIndex: rule.itemIndex,
+        hint: getLessonText(rule.hintKey, locale),
+      })) ?? [],
+    tooLate:
+      hints.tooLate?.map((rule) => ({
+        itemIndex: rule.itemIndex,
+        hint: getLessonText(rule.hintKey, locale),
+      })) ?? [],
+  };
+}
+
 function resolveReorderStep(
   step: LessonReorderCatalogStep,
   locale: Locale,
@@ -146,6 +171,7 @@ function resolveReorderStep(
     items: step.itemKeys.map((key) => getLessonText(key, locale)),
     correctOrder: [...step.correctOrder],
     explanation: getLessonText(step.explanationKey, locale),
+    reorderHints: step.reorderHints ? resolveReorderHints(step.reorderHints, locale) : undefined,
   };
 }
 
