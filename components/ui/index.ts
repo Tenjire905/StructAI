@@ -4,4 +4,3 @@ export { Button } from './Button';
 export { Card } from './Card';
 export { PressableScale } from './PressableScale';
 export { ProgressBar } from './ProgressBar';
-export { StaggeredReveal } from './StaggeredReveal';

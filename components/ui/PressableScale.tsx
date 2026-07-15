@@ -2,7 +2,6 @@ import { Pressable, type PressableProps, type StyleProp, type ViewStyle } from '
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSequence,
   withSpring,
 } from 'react-native-reanimated';
 
@@ -29,7 +28,6 @@ export function PressableScale({
 }: PressableScaleProps) {
   const { tokens } = useThemeMode();
   const scale = useSharedValue(1);
-  const liftSpring = tokens.motion.spring[tokens.presentation.springPreset];
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -37,17 +35,14 @@ export function PressableScale({
 
   const handlePressIn: PressableProps['onPressIn'] = (event) => {
     if (!disabled && !pressFeedbackDisabled && onPress) {
-      scale.value = withSpring(0.95, tokens.motion.spring.default);
+      scale.value = withSpring(0.97, tokens.motion.spring.default);
     }
     onPressIn?.(event);
   };
 
   const handlePressOut: PressableProps['onPressOut'] = (event) => {
     if (!disabled && !pressFeedbackDisabled && onPress) {
-      scale.value = withSequence(
-        withSpring(1.02, liftSpring),
-        withSpring(1, tokens.motion.spring.default),
-      );
+      scale.value = withSpring(1, tokens.motion.spring.default);
     }
     onPressOut?.(event);
   };

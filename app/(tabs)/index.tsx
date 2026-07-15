@@ -107,7 +107,7 @@ export default function HomeScreen() {
             </View>
           </Card>
         ) : (
-          activePaths.map((path, index) => {
+          activePaths.map((path) => {
             const progressBar = computePathProgressBarModel(
               path.id,
               pathProgress[path.id],
@@ -116,7 +116,6 @@ export default function HomeScreen() {
             return (
             <PathCard
               currentChapter={path.currentChapter}
-              entryIndex={index}
               key={path.id}
               onPress={() => router.push(`/lektion/${path.resumeLessonId}`)}
               completedSegments={progressBar.completedSegments}

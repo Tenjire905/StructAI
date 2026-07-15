@@ -1,13 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withSequence,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
 
 import { LockedPathPreview } from '@/components/features/LockedPathPreview';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
@@ -42,11 +34,6 @@ export function CapstoneIncompleteView({
   const companionState = useOrbCompanionState('happy');
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
   const finishedRef = useRef(false);
-  const spring = tokens.motion.spring[tokens.presentation.springPreset];
-
-  const orbScale = useSharedValue(0.85);
-  const titleScale = useSharedValue(0.8);
-  const statsOpacity = useSharedValue(0);
 
   useEffect(() => {
     if (finishedRef.current) {
@@ -55,48 +42,7 @@ export function CapstoneIncompleteView({
 
     finishedRef.current = true;
     celebrate('capstone_complete', { pathTitleKey: pathTitleKey(pathId) });
-
-    const d = tokens.motion.duration;
-
-    orbScale.value = withDelay(
-      d.instant,
-      withSequence(
-        withSpring(1.15, spring),
-        withSpring(1, tokens.motion.spring.default),
-      ),
-    );
-
-    titleScale.value = withDelay(
-      d.medium,
-      withSequence(
-        withSpring(1.15, spring),
-        withSpring(1, tokens.motion.spring.default),
-      ),
-    );
-
-    statsOpacity.value = withDelay(d.medium, withTiming(1, { duration: d.fast }));
-  }, [
-    celebrate,
-    orbScale,
-    pathId,
-    spring,
-    statsOpacity,
-    titleScale,
-    tokens.motion.duration,
-    tokens.motion.spring.default,
-  ]);
-
-  const orbStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: orbScale.value }],
-  }));
-
-  const titleStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: titleScale.value }],
-  }));
-
-  const statsStyle = useAnimatedStyle(() => ({
-    opacity: statsOpacity.value,
-  }));
+  }, [celebrate, pathId]);
 
   return (
     <ScrollView
@@ -109,9 +55,8 @@ export function CapstoneIncompleteView({
         paddingVertical: tokens.spacing.space6,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
-      <Animated.View
+      <View
         style={[
-          orbStyle,
           isPlayful ? getShadow('glow') : undefined,
           {
             alignItems: 'center',
@@ -123,20 +68,17 @@ export function CapstoneIncompleteView({
           },
         ]}>
         <OrbCompanion size={tokens.spacing.space8 * 0.75} state={companionState} />
-      </Animated.View>
+      </View>
 
-      <Animated.Text
-        style={[
-          titleStyle,
-          {
-            color: tokens.colors.text.primary,
-            fontFamily: tokens.typography.fontFamily.display,
-            fontSize: tokens.typography.fontSize.displayLg,
-            textAlign: 'center',
-          },
-        ]}>
+      <Text
+        style={{
+          color: tokens.colors.text.primary,
+          fontFamily: tokens.typography.fontFamily.display,
+          fontSize: tokens.typography.fontSize.displayLg,
+          textAlign: 'center',
+        }}>
         {t('capstoneIncomplete.title')}
-      </Animated.Text>
+      </Text>
 
       <Text
         style={{
@@ -154,23 +96,19 @@ export function CapstoneIncompleteView({
 
       <View style={{ alignSelf: 'stretch', gap: tokens.spacing.space2 }}>
         <ProgressBar
-          animateOnMount
           color="structure"
           completedSegments={progressBar.completedSegments}
           failedSegments={progressBar.failedSegments}
           progress={progressBar.completedRatio}
         />
-        <Animated.View
-          style={[
-            statsStyle,
-            {
-              flexDirection: 'row',
-              gap: tokens.spacing.space3,
-            },
-          ]}>
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: tokens.spacing.space3,
+          }}>
           <StatBlock copyKey="capstoneIncomplete.statCompleted" value={`${stats.completed}/${stats.total}`} />
           <StatBlock copyKey="capstoneIncomplete.statSkipped" value={stats.skipped} />
-        </Animated.View>
+        </View>
       </View>
 
       <Text

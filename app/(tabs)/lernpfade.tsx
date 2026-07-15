@@ -49,7 +49,7 @@ export default function LernpfadeScreen() {
             {t('paths.emptyActive')}
           </Text>
         ) : (
-          activePaths.map((path, index) => {
+          activePaths.map((path) => {
             const progressBar = computePathProgressBarModel(
               path.id,
               pathProgress[path.id],
@@ -58,7 +58,6 @@ export default function LernpfadeScreen() {
             return (
             <PathCard
               currentChapter={path.currentChapter}
-              entryIndex={index}
               key={path.id}
               onPress={() => router.push(`/lernpfad/${path.id}`)}
               completedSegments={progressBar.completedSegments}
@@ -83,12 +82,10 @@ export default function LernpfadeScreen() {
             {t('paths.sectionAvailable')}
           </Text>
 
-          {unlockedAvailablePaths.map((path, index) => (
+          {unlockedAvailablePaths.map((path) => (
             <PathCard
               badgeLabel={path.isNew ? t('paths.badgeNew') : undefined}
               badgeTone="primary"
-              entryIndex={index}
-              isNewUnlock={path.isNew}
               key={path.id}
               onPress={() => router.push(`/lernpfad/${path.id}`)}
               title={t(pathTitleKey(path.id))}
@@ -109,9 +106,8 @@ export default function LernpfadeScreen() {
             {t('paths.sectionLocked')}
           </Text>
 
-          {lockedPaths.map((path, index) => (
+          {lockedPaths.map((path) => (
             <PathCard
-              entryIndex={index}
               key={path.id}
               locked
               title={t(pathTitleKey(path.id))}

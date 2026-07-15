@@ -1,14 +1,5 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
 
 import { ChapterRow, LockedPathView } from '@/components/features';
 import { Button, Card, ProgressBar } from '@/components/ui';
@@ -21,7 +12,7 @@ import {
 } from '@/lib/pathProgress';
 import { getPathUnlockBlockReason } from '@/lib/pathUnlock';
 import { useProgressStore } from '@/store/progressStore';
-import { getShadow, useThemeMode } from '@/theme';
+import { useThemeMode } from '@/theme';
 
 export default function LernpfadDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -83,7 +74,6 @@ export default function LernpfadDetailScreen() {
 
   const progressBar = getPathProgressBarModel(pathId, pathProgress);
   const progressPercent = Math.round(progressBar.completedRatio * 100);
-  const shouldPulseCta = progressPercent > 80;
 
   return (
     <>
@@ -123,7 +113,6 @@ export default function LernpfadDetailScreen() {
             </View>
 
             <ProgressBar
-              animateOnMount
               color="structure"
               completedSegments={progressBar.completedSegments}
               failedSegments={progressBar.failedSegments}
@@ -146,15 +135,13 @@ export default function LernpfadDetailScreen() {
           </View>
         </Card>
 
-        <PulsingCta enabled={shouldPulseCta}>
-          <Button
-            label={isStarted ? t('pathDetail.continueCta') : t('pathDetail.startCta')}
-            onPress={() => {
-              router.push(`/lektion/${getContinueLessonId(path)}`);
-            }}
-            variant="primary"
-          />
-        </PulsingCta>
+        <Button
+          label={isStarted ? t('pathDetail.continueCta') : t('pathDetail.startCta')}
+          onPress={() => {
+            router.push(`/lektion/${getContinueLessonId(path)}`);
+          }}
+          variant="primary"
+        />
 
         <View style={{ gap: tokens.spacing.space3 }}>
           <Text
@@ -171,7 +158,6 @@ export default function LernpfadDetailScreen() {
               {path.chapters.map((chapter, index) => (
                 <ChapterRow
                   chapter={chapter}
-                  entryIndex={index}
                   isLast={index === path.chapters.length - 1}
                   key={chapter.id}
                   number={index + 1}
@@ -184,43 +170,5 @@ export default function LernpfadDetailScreen() {
         </View>
       </ScrollView>
     </>
-  );
-}
-
-function PulsingCta({
-  children,
-  enabled,
-}: {
-  children: React.ReactNode;
-  enabled: boolean;
-}) {
-  const { tokens } = useThemeMode();
-  const scale = useSharedValue(1);
-  const isPlayful = tokens.presentation.orbStyle === 'illustrated';
-
-  useEffect(() => {
-    if (!enabled) {
-      scale.value = withSpring(1, tokens.motion.spring.default);
-      return;
-    }
-
-    scale.value = withRepeat(
-      withSequence(
-        withTiming(1.03, { duration: tokens.motion.duration.medium }),
-        withTiming(1, { duration: tokens.motion.duration.medium }),
-      ),
-      -1,
-      false,
-    );
-  }, [enabled, scale, tokens.motion.duration, tokens.motion.spring.default]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  return (
-    <Animated.View style={[animatedStyle, enabled && isPlayful ? getShadow('glow') : undefined]}>
-      {children}
-    </Animated.View>
   );
 }
