@@ -131,11 +131,9 @@ async function hydrateAppStorageInternal(): Promise<void> {
       return;
     }
 
-    const valuesByKey = await AsyncStorage.getMany(prefixedKeys);
+    const entries = await AsyncStorage.multiGet(prefixedKeys);
 
-    for (const fullKey of prefixedKeys) {
-      const value = valuesByKey[fullKey];
-
+    for (const [fullKey, value] of entries) {
       if (value != null) {
         asyncStorageMemory.set(fullKey.slice(STORAGE_PREFIX.length), value);
       }

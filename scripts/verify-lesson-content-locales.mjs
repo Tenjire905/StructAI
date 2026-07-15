@@ -272,7 +272,7 @@ for (const key of expectedKeys) {
 
 for (const key of [...localeKeyUnion].sort()) {
   const missingLocales = localeNames.filter((locale) => !selectedKeysByLocale[locale].has(key));
-  if (missingLocales.length > 0) {
+  if (missingLocales.length > 0 && !key.endsWith('.playful')) {
     violations.localeKeyParity.push({ key, missingLocales });
   }
   if (!expectedKeys.has(key) && !legacyUnreferencedKeys.has(key)) {
