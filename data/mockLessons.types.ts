@@ -1,7 +1,20 @@
+export type ModeContentVariant<T> = {
+  playful?: Partial<T>;
+  focus?: Partial<T>;
+};
+
 export type LessonInfoCatalogStep = {
   type: 'info';
   titleKey: string;
   bodyKey: string;
+  titleKeyPlayful?: string;
+  titleKeyFocus?: string;
+  bodyKeyPlayful?: string;
+  bodyKeyFocus?: string;
+  content?: ModeContentVariant<{
+    titleKey: string;
+    bodyKey: string;
+  }>;
 };
 
 export type LessonChoiceCatalogStep = {
@@ -10,6 +23,17 @@ export type LessonChoiceCatalogStep = {
   optionKeys: [string, string, ...string[]];
   correctIndex: number;
   explanationKey: string;
+  questionKeyPlayful?: string;
+  questionKeyFocus?: string;
+  optionKeysPlayful?: [string, string, ...string[]];
+  optionKeysFocus?: [string, string, ...string[]];
+  explanationKeyPlayful?: string;
+  explanationKeyFocus?: string;
+  content?: ModeContentVariant<{
+    questionKey: string;
+    optionKeys: [string, string, ...string[]];
+    explanationKey: string;
+  }>;
 };
 
 export type LessonFillBlankCatalogStep = {
@@ -19,6 +43,20 @@ export type LessonFillBlankCatalogStep = {
   optionKeys: [string, string, ...string[]];
   correctIndex: number;
   explanationKey: string;
+  prefixKeyPlayful?: string;
+  prefixKeyFocus?: string;
+  suffixKeyPlayful?: string;
+  suffixKeyFocus?: string;
+  optionKeysPlayful?: [string, string, ...string[]];
+  optionKeysFocus?: [string, string, ...string[]];
+  explanationKeyPlayful?: string;
+  explanationKeyFocus?: string;
+  content?: ModeContentVariant<{
+    prefixKey: string;
+    suffixKey: string;
+    optionKeys: [string, string, ...string[]];
+    explanationKey: string;
+  }>;
 };
 
 export type LessonTrueFalseCatalogStep = {
@@ -26,6 +64,14 @@ export type LessonTrueFalseCatalogStep = {
   statementKey: string;
   correct: boolean;
   explanationKey: string;
+  statementKeyPlayful?: string;
+  statementKeyFocus?: string;
+  explanationKeyPlayful?: string;
+  explanationKeyFocus?: string;
+  content?: ModeContentVariant<{
+    statementKey: string;
+    explanationKey: string;
+  }>;
 };
 
 export type LessonReorderCatalogStep = {
@@ -34,6 +80,20 @@ export type LessonReorderCatalogStep = {
   itemKeys: string[];
   correctOrder: number[];
   explanationKey: string;
+  instructionKeyPlayful?: string;
+  instructionKeyFocus?: string;
+  itemKeysPlayful?: string[];
+  itemKeysFocus?: string[];
+  explanationKeyPlayful?: string;
+  explanationKeyFocus?: string;
+  reorderHintKeyPlayful?: string;
+  reorderHintKeyFocus?: string;
+  content?: ModeContentVariant<{
+    instructionKey: string;
+    itemKeys: string[];
+    explanationKey: string;
+    reorderHintKey?: string;
+  }>;
 };
 
 export type LessonMatchingCatalogStep = {
@@ -41,6 +101,15 @@ export type LessonMatchingCatalogStep = {
   instructionKey: string;
   pairs: { termKey: string; definitionKey: string }[];
   explanationKey: string;
+  instructionKeyPlayful?: string;
+  instructionKeyFocus?: string;
+  explanationKeyPlayful?: string;
+  explanationKeyFocus?: string;
+  content?: ModeContentVariant<{
+    instructionKey: string;
+    pairs: { termKey: string; definitionKey: string }[];
+    explanationKey: string;
+  }>;
 };
 
 export type LessonErrorFindingCatalogStep = {
@@ -48,6 +117,15 @@ export type LessonErrorFindingCatalogStep = {
   instructionKey: string;
   textSegments: { segmentKey: string; isError: boolean }[];
   explanationKey: string;
+  instructionKeyPlayful?: string;
+  instructionKeyFocus?: string;
+  explanationKeyPlayful?: string;
+  explanationKeyFocus?: string;
+  content?: ModeContentVariant<{
+    instructionKey: string;
+    textSegments: { segmentKey: string; isError: boolean }[];
+    explanationKey: string;
+  }>;
 };
 
 export type LessonCategorizeCatalogStep = {
@@ -56,6 +134,16 @@ export type LessonCategorizeCatalogStep = {
   categoryLabelKeys: string[];
   items: { itemKey: string; correctCategoryIndex: number }[];
   explanationKey: string;
+  instructionKeyPlayful?: string;
+  instructionKeyFocus?: string;
+  explanationKeyPlayful?: string;
+  explanationKeyFocus?: string;
+  content?: ModeContentVariant<{
+    instructionKey: string;
+    categoryLabelKeys: string[];
+    items: { itemKey: string; correctCategoryIndex: number }[];
+    explanationKey: string;
+  }>;
 };
 
 export type LessonCatalogStep =
@@ -71,6 +159,8 @@ export type LessonCatalogStep =
 export type MockLessonCatalog = {
   id: string;
   titleKey: string;
+  titleKeyPlayful?: string;
+  titleKeyFocus?: string;
   orbsReward: number;
   steps: LessonCatalogStep[];
 };

@@ -64,7 +64,7 @@ type LessonOutcome =
   | 'failed';
 
 export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
-  const { tokens, t, locale } = useThemeMode();
+  const { tokens, t, locale, mode } = useThemeMode();
   const router = useRouter();
   const pathProgress = useProgressStore((state) => state.pathProgress);
   const recordLessonOpened = useProgressStore((state) => state.recordLessonOpened);
@@ -72,8 +72,8 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   const completeLesson = useProgressStore((state) => state.completeLesson);
 
   const baseLesson = useMemo(
-    () => getMockLesson(lessonId, locale),
-    [lessonId, locale],
+    () => getMockLesson(lessonId, locale, mode),
+    [lessonId, locale, mode],
   );
   const pathId = useMemo(() => getPathIdForLesson(lessonId), [lessonId]);
   const lessonChapterStatus = useMemo(
