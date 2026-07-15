@@ -1,265 +1,62 @@
-import { getLessonText } from '@/data/lessonContent';
 import { getDevBlockJMixedLesson } from '@/data/devBlockJMixedLesson';
 import { getDevBlockJNewTypesLesson } from '@/data/devBlockJNewTypesLesson';
 import {
   getAllMockLessonCatalogIds,
   getMockLessonCatalog,
 } from '@/data/mockLessons.catalog';
+import type { LessonChoiceCatalogStep, MockLessonCatalog } from '@/data/mockLessons.types';
 import type {
-  LessonCatalogStep,
-  LessonCategorizeCatalogStep,
-  LessonChoiceCatalogStep,
-  LessonErrorFindingCatalogStep,
-  LessonFillBlankCatalogStep,
-  LessonMatchingCatalogStep,
-  LessonReorderCatalogStep,
-  LessonTrueFalseCatalogStep,
-  MockLessonCatalog,
-} from '@/data/mockLessons.types';
-import type { ResolvedReorderHintRules } from '@/lib/reorderHints';
+  ResolvedCategorizeStep,
+  ResolvedChoiceStep,
+  ResolvedErrorFindingStep,
+  ResolvedFillBlankStep,
+  ResolvedLesson,
+  ResolvedLessonStep,
+  ResolvedMatchingStep,
+  ResolvedReorderStep,
+  ResolvedTrueFalseStep,
+} from '@/data/mockLessons.resolved.types';
+import {
+  resolveCatalogTitle,
+  resolveCategorizeStep,
+  resolveErrorFindingStep,
+  resolveMatchingStep,
+  resolveStepCopy,
+} from '@/lib/resolveLessonContent';
 import type { Locale } from '@/theme/locale';
+import type { ThemeMode } from '@/theme/theme';
 
-export type ResolvedInfoStep = {
-  type: 'info';
-  title: string;
-  body: string;
-};
-
-export type ResolvedChoiceStep = {
-  type: 'choice';
-  question: string;
-  options: string[];
-  correctIndex: number;
-  explanation: string;
-};
-
-export type ResolvedFillBlankStep = {
-  type: 'fill_blank';
-  prefix: string;
-  suffix: string;
-  options: string[];
-  correctIndex: number;
-  explanation: string;
-};
-
-export type ResolvedTrueFalseStep = {
-  type: 'true_false';
-  statement: string;
-  correct: boolean;
-  explanation: string;
-};
-
-export type ResolvedReorderStep = {
-  type: 'reorder';
-  instruction: string;
-  items: string[];
-  correctOrder: number[];
-  explanation: string;
-  reorderHints?: ResolvedReorderHintRules;
-};
-
-export type ResolvedMatchingStep = {
-  type: 'matching';
-  instruction: string;
-  pairs: { term: string; definition: string }[];
-  /** Display order for the right column (indices into `pairs`). Left terms stay fixed. */
-  definitionOrder: number[];
-  explanation: string;
-};
-
-export type ResolvedErrorFindingStep = {
-  type: 'error_finding';
-  instruction: string;
-  textSegments: { text: string; isError: boolean }[];
-  explanation: string;
-};
-
-export type ResolvedCategorizeStep = {
-  type: 'categorize';
-  instruction: string;
-  categories: string[];
-  items: { text: string; correctCategoryIndex: number }[];
-  explanation: string;
-};
-
-export type ResolvedLessonStep =
-  | ResolvedInfoStep
-  | ResolvedChoiceStep
-  | ResolvedFillBlankStep
-  | ResolvedTrueFalseStep
-  | ResolvedReorderStep
-  | ResolvedMatchingStep
-  | ResolvedErrorFindingStep
-  | ResolvedCategorizeStep;
-
-export type ResolvedLesson = {
-  id: string;
-  title: string;
-  orbsReward: number;
-  steps: ResolvedLessonStep[];
-};
-
-function resolveChoiceStep(
-  step: LessonChoiceCatalogStep,
-  locale: Locale,
-): ResolvedChoiceStep {
-  return {
-    type: 'choice',
-    question: getLessonText(step.questionKey, locale),
-    options: step.optionKeys.map((key) => getLessonText(key, locale)),
-    correctIndex: step.correctIndex,
-    explanation: getLessonText(step.explanationKey, locale),
-  };
-}
-
-function resolveFillBlankStep(
-  step: LessonFillBlankCatalogStep,
-  locale: Locale,
-): ResolvedFillBlankStep {
-  return {
-    type: 'fill_blank',
-    prefix: getLessonText(step.prefixKey, locale),
-    suffix: getLessonText(step.suffixKey, locale),
-    options: step.optionKeys.map((key) => getLessonText(key, locale)),
-    correctIndex: step.correctIndex,
-    explanation: getLessonText(step.explanationKey, locale),
-  };
-}
-
-function resolveTrueFalseStep(
-  step: LessonTrueFalseCatalogStep,
-  locale: Locale,
-): ResolvedTrueFalseStep {
-  return {
-    type: 'true_false',
-    statement: getLessonText(step.statementKey, locale),
-    correct: step.correct,
-    explanation: getLessonText(step.explanationKey, locale),
-  };
-}
-
-function resolveReorderHints(
-  hints: NonNullable<LessonReorderCatalogStep['reorderHints']>,
-  locale: Locale,
-): ResolvedReorderHintRules {
-  return {
-    swappedPairs:
-      hints.swappedPairs?.map((rule) => ({
-        swappedPair: rule.swappedPair,
-        hint: getLessonText(rule.hintKey, locale),
-      })) ?? [],
-    tooEarly:
-      hints.tooEarly?.map((rule) => ({
-        itemIndex: rule.itemIndex,
-        hint: getLessonText(rule.hintKey, locale),
-      })) ?? [],
-    tooLate:
-      hints.tooLate?.map((rule) => ({
-        itemIndex: rule.itemIndex,
-        hint: getLessonText(rule.hintKey, locale),
-      })) ?? [],
-  };
-}
-
-function resolveReorderStep(
-  step: LessonReorderCatalogStep,
-  locale: Locale,
-): ResolvedReorderStep {
-  return {
-    type: 'reorder',
-    instruction: getLessonText(step.instructionKey, locale),
-    items: step.itemKeys.map((key) => getLessonText(key, locale)),
-    correctOrder: [...step.correctOrder],
-    explanation: getLessonText(step.explanationKey, locale),
-    reorderHints: step.reorderHints ? resolveReorderHints(step.reorderHints, locale) : undefined,
-  };
-}
-
-export function resolveMatchingStep(
-  step: LessonMatchingCatalogStep,
-  locale: Locale,
-): ResolvedMatchingStep {
-  return {
-    type: 'matching',
-    instruction: getLessonText(step.instructionKey, locale),
-    pairs: step.pairs.map((pair) => ({
-      term: getLessonText(pair.termKey, locale),
-      definition: getLessonText(pair.definitionKey, locale),
-    })),
-    definitionOrder: step.pairs.map((_, index) => index),
-    explanation: getLessonText(step.explanationKey, locale),
-  };
-}
-
-export function resolveErrorFindingStep(
-  step: LessonErrorFindingCatalogStep,
-  locale: Locale,
-): ResolvedErrorFindingStep {
-  return {
-    type: 'error_finding',
-    instruction: getLessonText(step.instructionKey, locale),
-    textSegments: step.textSegments.map((segment) => ({
-      text: getLessonText(segment.segmentKey, locale),
-      isError: segment.isError,
-    })),
-    explanation: getLessonText(step.explanationKey, locale),
-  };
-}
-
-export function resolveCategorizeStep(
-  step: LessonCategorizeCatalogStep,
-  locale: Locale,
-): ResolvedCategorizeStep {
-  return {
-    type: 'categorize',
-    instruction: getLessonText(step.instructionKey, locale),
-    categories: step.categoryLabelKeys.map((key) => getLessonText(key, locale)),
-    items: step.items.map((item) => ({
-      text: getLessonText(item.itemKey, locale),
-      correctCategoryIndex: item.correctCategoryIndex,
-    })),
-    explanation: getLessonText(step.explanationKey, locale),
-  };
-}
-
-function resolveCatalogStep(step: LessonCatalogStep, locale: Locale): ResolvedLessonStep {
-  switch (step.type) {
-    case 'info':
-      return {
-        type: 'info',
-        title: getLessonText(step.titleKey, locale),
-        body: getLessonText(step.bodyKey, locale),
-      };
-    case 'choice':
-      return resolveChoiceStep(step, locale);
-    case 'fill_blank':
-      return resolveFillBlankStep(step, locale);
-    case 'true_false':
-      return resolveTrueFalseStep(step, locale);
-    case 'reorder':
-      return resolveReorderStep(step, locale);
-    case 'matching':
-      return resolveMatchingStep(step, locale);
-    case 'error_finding':
-      return resolveErrorFindingStep(step, locale);
-    case 'categorize':
-      return resolveCategorizeStep(step, locale);
-  }
-}
+export type {
+  ResolvedCategorizeStep,
+  ResolvedChoiceStep,
+  ResolvedErrorFindingStep,
+  ResolvedFillBlankStep,
+  ResolvedInfoStep,
+  ResolvedLesson,
+  ResolvedLessonStep,
+  ResolvedMatchingStep,
+  ResolvedReorderStep,
+  ResolvedTrueFalseStep,
+} from '@/data/mockLessons.resolved.types';
 
 export function resolveCatalogLesson(
   catalog: MockLessonCatalog,
   locale: Locale,
+  mode: ThemeMode,
 ): ResolvedLesson {
   return {
     id: catalog.id,
-    title: getLessonText(catalog.titleKey, locale),
+    title: resolveCatalogTitle(catalog, locale, mode),
     orbsReward: catalog.orbsReward,
-    steps: catalog.steps.map((step) => resolveCatalogStep(step, locale)),
+    steps: catalog.steps.map((step) => resolveStepCopy(step, locale, mode)),
   };
 }
 
-export function getMockLesson(id: string, locale: Locale): ResolvedLesson | undefined {
+export function getMockLesson(
+  id: string,
+  locale: Locale,
+  mode: ThemeMode = 'focus',
+): ResolvedLesson | undefined {
   if (__DEV__ && id === 'dev-j-mixed') {
     return getDevBlockJMixedLesson();
   }
@@ -274,7 +71,7 @@ export function getMockLesson(id: string, locale: Locale): ResolvedLesson | unde
     return undefined;
   }
 
-  return resolveCatalogLesson(catalog, locale);
+  return resolveCatalogLesson(catalog, locale, mode);
 }
 
 export function getAllMockLessonIds(): string[] {
@@ -282,3 +79,9 @@ export function getAllMockLessonIds(): string[] {
 }
 
 export type { LessonChoiceCatalogStep as LessonChoiceStep };
+
+export {
+  resolveCategorizeStep,
+  resolveErrorFindingStep,
+  resolveMatchingStep,
+};
