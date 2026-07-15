@@ -1,54 +1,37 @@
 # StructAI — Perplexity Gesamt-Prompt (Tablet: alles kopieren & einfügen)
 
-**develop-Stand:** siehe git log · **Kein ZIP nötig** — diese eine Datei enthält Prompt + alle Kontext-Texte.
+**Kein ZIP nötig** — diese eine Datei = Auftrag + Brief + DESIGN_TOKENS + THEME_MODES + Code-Referenz.
 
----
-
-## SO NUTZT DU ES AUF DEM TABLET
-
-1. Öffne diese Datei auf GitHub (Raw) oder kopiere sie aus dem Repo.
-2. **Alles markieren → Kopieren**
-3. Perplexity → Neuer Thread → **Einfügen**
-4. Optional: 3–5 Screenshots der App anhängen (Home, Pfad-Detail, Lektion fertig, Capstone)
+## Tablet-Anleitung
+1. GitHub Raw öffnen (Link unten) **oder** diese Datei im Repo öffnen
+2. Alles markieren → Kopieren
+3. Perplexity → Neuer Thread → Einfügen
+4. Optional: 3–5 App-Screenshots anhängen
 5. Senden
 
-Falls Perplexity die Länge limitiert: zuerst nur **Abschnitt A (Auftrag)** senden, dann **B + C + D** als Follow-up.
+**Raw-Link:** https://raw.githubusercontent.com/Tenjire905/StructAI/develop/docs/PERPLEXITY-ANIMATION-PROMPT-FULL.md
+
+Bei Zeichenlimit: erst Abschnitt A senden, dann B–E als zweite Nachricht.
 
 ---
 
-# ABSCHNITT A — DEIN AUFTAG AN PERPLEXITY
+# ABSCHNITT A — AUFTAG AN PERPLEXITY
 
-Du bist Senior Mobile-UX-Psychologe und Motion Designer. Du reviewst **StructAI**, eine Expo/React-Native-Lern-App (Prompt Engineering, Duolingo-artige Pfade).
+Du bist Senior Mobile-UX-Psychologe und Motion Designer. Du reviewst StructAI (Expo/React Native, Prompt-Lern-App, Duolingo-artige Pfade).
 
-Lies **den kompletten Kontext in Abschnitt B–D** dieses Dokuments.
+Lies Abschnitt B–E vollständig.
 
-**Problem:** Die App funktioniert, wirkt aber zu **STARR** für ein gamifiziertes Produkt. Celebration-Overlays existieren, aber Peak-Momente (Lektion fertig, Capstone, Pfad-Unlock) landen emotional nicht. Zwischen Interaktionen fühlt es sich wie ein Formular an, nicht wie ein Spiel.
+Problem: App funktioniert, wirkt aber zu STARR für Gamification. Celebrations existieren, Peak-Momente landen nicht. Zwischen Taps fühlt es sich wie Formular an, nicht Spiel.
 
-**Deine Aufgabe:** Mit Lern-App-Psychologie (Duolingo, Codecademy, Peak-End-Rule, Endowed Progress, Variable Reward, Flow, Zeigarnik, Loss Aversion) sag uns **EXAKT**:
+Aufgabe — sag EXAKT: WO / WANN / WIE Motion (Spring/Timing nur aus DESIGN_TOKENS), Playful vs. Focus.
 
-- **WO** Motion hin muss (Screen + UI-Element)
-- **WANN** sie triggert
-- **WIE** sie sich anfühlt (Spring/Timing — nur unsere Token aus DESIGN_TOKENS)
-- Unterschied **Playful vs. Focus**
+Constraints: Reanimated 3, Design-Tokens only, keine Emoji-UI-Icons, 60fps Android, keine neuen Features.
 
-**Constraints (bindend):**
-- Reanimated 3 only
-- Keine neuen Hex-Farben / Spacing erfinden
-- Beide Theme-Modi müssen funktionieren
-- Keine Emoji als UI-Icons
-- 60fps Android (Expo Go)
-- Keine neuen Features (Leaderboard, Social) — nur Motion auf bestehendem UI
-
-**Lieferformat:**
-1. Executive Summary — Top 5 Quick Wins
-2. Tabelle pro Screen (P0–P2, Psychologie-Prinzip, Komplexität S/M/L)
-3. Drei Storyboards (ASCII): (a) Lektions-Schritt-Wechsel, (b) Capstone unvollständig, (c) Pfad 100% + nächster Pfad frei
+Lieferung: Top 5 Quick Wins + Tabelle P0–P2 pro Screen + 3 ASCII-Storyboards (Schritt-Wechsel, Capstone incomplete, Pfad 100%).
 
 ---
-
 
 # ABSCHNITT B — PRODUCT & VISUAL BRIEF
-
 
 ## 1. What StructAI is
 
@@ -89,6 +72,15 @@ StructAI is a **mobile prompt-engineering learning app** (Duolingo-style linear 
 - Lucide icons, stroke 1.75, no emoji
 
 ### Motion tokens (current)
+```
+duration-instant: 100ms   (press)
+duration-fast:    200ms   (toggles)
+duration-medium:  300ms   (progress fill)
+duration-celebration: 600ms (milestones only)
+
+spring-default: { damping: 15, stiffness: 150 }
+spring-bouncy:  { damping: 10, stiffness: 120 }  // Playful celebrations only
+```
 
 **Rule:** Interactions ≤300ms except explicit celebrations. No bounce on standard navigation.
 
@@ -111,6 +103,31 @@ StructAI is a **mobile prompt-engineering learning app** (Duolingo-style linear 
 ## 4. Screen-by-screen visual description
 
 ### 4.1 Home (Start)
+```
+┌─────────────────────────────────────┐
+│ Start                          ⚙️  │
+├─────────────────────────────────────┤
+│ Willkommen zurück, Gast!    [GA]   │
+│                    Energie-Orbs 281│
+│                    (glowing orb)   │
+│                                     │
+│ Deine Woche                         │
+│ Mo Di Mi Do Fr Sa So               │
+│ ○  ●  ○  ○  ○  ○  ○   (Di active)  │
+│                                     │
+│ ┌──────────┐ ┌──────────┐          │
+│ │ 16       │ │ 1        │          │
+│ │ Lektionen│ │ Serie    │          │
+│ └──────────┘ └──────────┘          │
+│                                     │
+│ Weiterlernen                        │
+│ ┌─────────────────────────────────┐│
+│ │ Prompt-Grundlagen               ││
+│ │ Kapitel 17 von 45               ││
+│ │ [türkis|orange|grau progress bar]││
+│ └─────────────────────────────────┘│
+└─────────────────────────────────────┘
+```
 **Psychology moment:** Return visit, endowed progress, “continue” CTA — needs **momentum**, not static cards.
 
 ### 4.2 Lernpfade
@@ -170,6 +187,10 @@ Percent number = completed count / total (not linear position).
 
 ## 6. Path unlock chain
 
+```
+prompt-basics (45) → structure-lab (35) → context-mastery (35)
+→ iteration-loops (35) → eval-scoring (35) → prompt-mastery (35)
+```
 
 100% of lessons must be **passed** (not skipped) to unlock next path.
 
@@ -243,14 +264,9 @@ Output format:
 ---
 
 
-
 ---
 
-*Generated for StructAI develop — animation & gamification audit.*
-
----
-
-# ABSCHNITT C — DESIGN_TOKENS.md (verbindlich)
+# ABSCHNITT C — DESIGN_TOKENS.md
 
 # DESIGN_TOKENS.md
 ### StructAI – verbindliche Design-Tokens. Cursor MUSS diese Datei referenzieren, niemals eigene Werte erfinden.
@@ -406,7 +422,7 @@ gradient-card-overlay:    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4
 
 ---
 
-# ABSCHNITT D — THEME_MODES.md (Playful vs. Focus)
+# ABSCHNITT D — THEME_MODES.md
 
 # THEME_MODES.md
 ### StructAI – Playful vs. Focus Modus. Gleiche Daten, gleiche Logik, unterschiedliche Hülle.
@@ -505,45 +521,26 @@ Modus ist jederzeit in den Einstellungen wechselbar, nicht nur beim Onboarding.
 
 ---
 
-# ABSCHNITT E — ANIMATION CODE-REFERENZ (Ist-Zustand)
+# ABSCHNITT E — ANIMATION CODE-REFERENZ
 
-## Celebration-Typen (CelebrationOverlay.tsx)
-- `orb_gain` — Orbs erhalten
-- `lesson_complete` — normale Lektion bestanden (leicht)
-- `section_milestone` — Mid-Path Abschlussprojekt (mittel, ~75% Confetti)
-- `capstone_complete` — finales Abschlussprojekt, Pfad noch nicht 100% (mittel-stark, ~125% Confetti)
-- `path_complete` — Pfad 100% (stark, 2× Confetti, 2× Dauer)
-- `streak_milestone` — 7-Tage-Serie
+## Celebration-Typen
+- orb_gain, lesson_complete, section_milestone, capstone_complete, path_complete, streak_milestone
+- Playful: Confetti 24–48 Partikel | Focus: nur Lila-Puls
 
-**Playful:** Confetti-Partikel (24–48)
-**Focus:** Nur lila Puls-Flash, keine Partikel
+## Orb Companion States
+idle, attentive, happy, low_energy, celebrating, sleepy
 
-## Orb Companion States (useOrbCompanionState.ts)
-Priorität: celebrating > attentive > low_energy > sleepy > idle
-- `idle`, `attentive`, `happy`, `low_energy`, `celebrating`, `sleepy`
-- Playful: volle SVG-Illustration + Glow
-- Focus: reduzierter Ring
+## Completion Screens
+1. SectionMilestoneView (pb-8) — mittel
+2. CapstoneIncompleteView (pb-45 + Skips) — State A
+3. PathCompletionView (100%) — State B + Zertifikat
 
-## Press / Card Feedback
-- Button & PathCard: scale 0.97 on press, spring-default zurück
+## Rigidity-Lücken
+- Lektions-Schritte: kein Slide/Fade
+- Kapitelliste: kein Status-Anim
+- Pfad-Unlock: instant
+- Orb selten in Lektion sichtbar
+- Stack-Transitions: Standard Expo Router
 
-## ProgressBar
-- Positional segments: cyan = bestanden, orange = übersprungen
-- withTiming only, keine Stagger-Animation
-
-## Completion Screens (3 Stufen)
-1. **SectionMilestoneView** — pb-8 etc.
-2. **CapstoneIncompleteView** — pb-45 mit offenen Lektionen (State A)
-3. **PathCompletionView** — 100% + Zertifikat + „Nächsten Pfad starten“ (State B)
-
-## Bekannte Rigidity-Lücken
-- Lektions-Schritte: harter Content-Swap, kein Slide/Fade
-- Kapitelliste: keine Status-Wechsel-Animation
-- Pfad-Freischaltung: instant, kein Unlock-Reveal
-- Orb Companion selten während Lektion sichtbar
-- Screen-Transitions: Standard Expo Router Stack
-
----
-
-*Ende des Perplexity Gesamt-Prompts — StructAI develop*
+*Ende — StructAI develop*
 
