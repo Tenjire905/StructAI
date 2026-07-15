@@ -7,7 +7,7 @@ import { ByokKeysManager } from '@/components/features/profile/ByokKeysManager';
 import { ProfileCertificatesSection } from '@/components/features/profile/ProfileCertificatesSection';
 import { SpendingLimitSettings } from '@/components/features/profile/SpendingLimitSettings';
 import { Avatar, Button, Card } from '@/components/ui';
-import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
+import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
 import {
@@ -24,7 +24,9 @@ export default function ProfilScreen() {
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const currentStreak = useProgressStore((state) => state.currentStreak);
 
-  const displayName = session ? resolveProfileDisplayName(user) : t('profile.guestDisplayName');
+  const displayName = session
+    ? resolveProfileDisplayName(user)
+    : resolveGuestDisplayName(t('profile.guestDisplayName'));
 
   const handleSignOut = async () => {
     await signOut();

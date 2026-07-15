@@ -817,6 +817,78 @@ export const copyEn: CopyCatalog = {
     playful: 'Go to overview first',
     focus: 'Go to home',
   },
+  'onboarding.profileTitle': {
+    playful: 'Almost there — who are you?',
+    focus: 'Complete your profile',
+  },
+  'onboarding.profileSubtitle': {
+    playful: 'You finished your first lesson! Tell us your name so we can tailor StructAI to you.',
+    focus: 'First lesson completed. Please enter your name and age so we can recommend a learning mode.',
+  },
+  'onboarding.profileNameLabel': {
+    playful: 'Your name',
+    focus: 'Display name',
+  },
+  'onboarding.profileNamePlaceholder': {
+    playful: 'What should we call you?',
+    focus: 'Enter display name',
+  },
+  'onboarding.profileAgeLabel': {
+    playful: 'Your age',
+    focus: 'Age',
+  },
+  'onboarding.profileAgePlaceholder': {
+    playful: 'e.g. 14',
+    focus: 'Age in years',
+  },
+  'onboarding.profileAgeDisclaimer': {
+    playful: 'We only use your age for mode recommendations — not to make tasks harder or easier.',
+    focus: 'Age is used exclusively for mode recommendations, not to manipulate gameplay difficulty.',
+  },
+  'onboarding.profileAgeInvalid': {
+    playful: 'Please enter an age between 1 and 120.',
+    focus: 'Please enter a valid age between 1 and 120.',
+  },
+  'onboarding.profileAuthSection': {
+    playful: 'Save your progress',
+    focus: 'Link an account',
+  },
+  'onboarding.profileAuthHint': {
+    playful: 'Optional: Sign in to keep your progress. You will return here afterward.',
+    focus: 'Optional: Sign in with Google or email. You will return to this step after authentication.',
+  },
+  'onboarding.profileModeSection': {
+    playful: 'Choose your mode',
+    focus: 'Select learning mode',
+  },
+  'onboarding.profileModeHintRecommended': {
+    playful: 'For your age we recommend Playful — simpler tasks and easier understanding. Focus remains available.',
+    focus: 'For this age, Playful is recommended: simpler tasks and easier understanding. Focus remains selectable.',
+  },
+  'onboarding.profileModeHintNeutral': {
+    playful: 'Both modes are equal — pick what fits you.',
+    focus: 'Both modes are available without preference.',
+  },
+  'onboarding.profilePlayfulBadge': {
+    playful: 'Recommended',
+    focus: 'Recommended',
+  },
+  'onboarding.profilePlayfulRecommendCopy': {
+    playful: 'Simpler tasks, easier understanding',
+    focus: 'Simpler tasks, easier understanding',
+  },
+  'onboarding.profileCta': {
+    playful: 'Let\'s go!',
+    focus: 'Save profile and start',
+  },
+  'onboarding.profileSaving': {
+    playful: 'Saving…',
+    focus: 'Saving…',
+  },
+  'onboarding.profileSaveError': {
+    playful: 'Could not save — please try again.',
+    focus: 'Profile could not be saved. Please try again.',
+  },
   'onboarding.previewPathTitle': {
     playful: 'Prompt Basics',
     focus: 'Prompt Basics',

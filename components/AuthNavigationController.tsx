@@ -1,12 +1,20 @@
 import { useRouter, useSegments, type Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 
-import { hydrateAppStorage, isOnboardingCompleted, setOnboardingCompleted } from '@/lib/appStorage';
+import {
+  hydrateAppStorage,
+  isOnboardingCompleted,
+  isProfileOnboardingPending,
+  setOnboardingCompleted,
+  setProfileOnboardingCompleted,
+} from '@/lib/appStorage';
 import { isProgressSnapshotEmpty } from '@/lib/progressMerge';
 import { fetchProgressSnapshotForUser } from '@/lib/progressSync';
 import { useAuth } from '@/providers/AuthProvider';
+import { useProgressStore } from '@/store/progressStore';
 
 const DEV_ROUTE_GROUP = '(dev)';
+const PROFILE_ONBOARDING_ROUTE = '/onboarding/profil';
 
 type ReturningUserCheck = {
   userId: string;
@@ -17,7 +25,15 @@ function isDevRoute(rootSegment: string | undefined): boolean {
   return rootSegment === DEV_ROUTE_GROUP;
 }
 
-function resolveAppEntryRoute(): Href {
+function isOnProfileOnboardingRoute(segments: readonly string[]): boolean {
+  return segments[0] === 'onboarding' && segments[1] === 'profil';
+}
+
+function resolveAppEntryRoute(completedLessons: number): Href {
+  if (isProfileOnboardingPending(completedLessons)) {
+    return PROFILE_ONBOARDING_ROUTE;
+  }
+
   return isOnboardingCompleted() ? '/(tabs)' : '/onboarding';
 }
 
@@ -30,9 +46,13 @@ export function AuthNavigationController() {
   const router = useRouter();
   const segments = useSegments();
   const { session, isLoading } = useAuth();
+  const completedLessons = useProgressStore((state) => state.completedLessons);
   const lastTargetRef = useRef<Href | null>(null);
   const isMountedRef = useRef(false);
   const [returningUserCheck, setReturningUserCheck] = useState<ReturningUserCheck | null>(null);
+
+  const profilePending = isProfileOnboardingPending(completedLessons);
+  const onProfileRoute = isOnProfileOnboardingRoute(segments);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -67,6 +87,10 @@ export function AuthNavigationController() {
 
         if (hasRemoteActivity) {
           void setOnboardingCompleted();
+
+          if ((snapshot?.completedLessons ?? 0) >= 1) {
+            void setProfileOnboardingCompleted();
+          }
         }
 
         setReturningUserCheck({
@@ -120,14 +144,18 @@ export function AuthNavigationController() {
 
       if (inAuth) {
         if (session) {
-          target = resolveAppEntryRoute();
+          target = resolveAppEntryRoute(completedLessons);
+        }
+      } else if (profilePending) {
+        if (!onProfileRoute) {
+          target = PROFILE_ONBOARDING_ROUTE;
         }
       } else if (!isOnboardingCompleted() && !inOnboarding) {
         target = '/onboarding';
-      } else if (isOnboardingCompleted() && inOnboarding) {
+      } else if (isOnboardingCompleted() && inOnboarding && !onProfileRoute) {
         target = '/(tabs)';
       } else if (!rootSegment) {
-        target = resolveAppEntryRoute();
+        target = resolveAppEntryRoute(completedLessons);
       }
 
       if (!target || lastTargetRef.current === target) {
@@ -152,7 +180,7 @@ export function AuthNavigationController() {
         clearTimeout(navigationTimer);
       }
     };
-  }, [isLoading, returningUserCheck, router, segments, session]);
+  }, [completedLessons, isLoading, onProfileRoute, profilePending, returningUserCheck, router, segments, session]);
 
   useEffect(() => {
     if (!session) {
