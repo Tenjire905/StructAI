@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import { CertificateShareAction } from '@/components/features/CertificateShareAction';
@@ -18,7 +17,7 @@ import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { getPathTemplate } from '@/lib/pathLessonUtils';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
-import { getShadow, useCelebration, useThemeMode } from '@/theme';
+import { getShadow, useThemeMode } from '@/theme';
 
 type PathCompletionViewProps = {
   pathId: string;
@@ -34,11 +33,9 @@ export function PathCompletionView({
   onFinish,
 }: PathCompletionViewProps) {
   const { tokens, t, locale, mode } = useThemeMode();
-  const { celebrate } = useCelebration();
   const { user } = useAuth();
   const companionState = useOrbCompanionState('celebrating');
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
-  const finishedRef = useRef(false);
   const path = getPathTemplate(pathId);
   const totalChapters = path?.totalChapters ?? 0;
   const pathProgress = useProgressStore((state) => state.pathProgress[pathId]);
@@ -48,18 +45,6 @@ export function PathCompletionView({
     useProgressStore((state) => state.pathCompletedAt[pathId]) ?? new Date().toISOString();
   const recipientName = resolveProfileDisplayName(user);
   const previewScale = 0.72;
-
-  useEffect(() => {
-    if (finishedRef.current) {
-      return;
-    }
-
-    finishedRef.current = true;
-    celebrate('path_complete', {
-      orbCount: orbsReward > 0 ? orbsReward : undefined,
-      pathTitleKey: pathTitleKey(pathId),
-    });
-  }, [celebrate, orbsReward, pathId]);
 
   return (
     <ScrollView

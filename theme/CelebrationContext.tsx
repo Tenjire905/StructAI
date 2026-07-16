@@ -22,6 +22,7 @@ type CelebrateOptions = {
 
 type CelebrationContextValue = {
   celebrate: (type: CelebrationType, options?: CelebrateOptions) => void;
+  dismissCelebration: () => void;
   /** Most recent celebration event; isActive while the overlay is visible. */
   lastEvent: CelebrationLastEvent | null;
 };
@@ -50,9 +51,10 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
   const value = useMemo(
     () => ({
       celebrate,
+      dismissCelebration: dismiss,
       lastEvent,
     }),
-    [celebrate, lastEvent],
+    [celebrate, dismiss, lastEvent],
   );
 
   return (

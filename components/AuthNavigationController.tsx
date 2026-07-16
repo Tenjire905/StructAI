@@ -34,6 +34,11 @@ function isOnDailyGoalSetupRoute(segments: readonly string[]): boolean {
   return segments[0] === 'onboarding' && segments[1] === 'tagesziel';
 }
 
+function isInLessonFlowRoute(segments: readonly string[]): boolean {
+  const root = segments[0];
+  return root === 'lektion' || root === 'lernpfad';
+}
+
 function resolveAppEntryRoute(completedLessons: number): Href {
   if (isProfileOnboardingPending(completedLessons)) {
     return PROFILE_ONBOARDING_ROUTE;
@@ -157,7 +162,7 @@ export function AuthNavigationController() {
           target = resolveAppEntryRoute(completedLessons);
         }
       } else if (profilePending) {
-        if (!onProfileRoute) {
+        if (!onProfileRoute && !isInLessonFlowRoute(segments)) {
           target = PROFILE_ONBOARDING_ROUTE;
         }
       } else if (!isOnboardingCompleted() && !inOnboarding) {

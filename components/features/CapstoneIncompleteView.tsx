@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import { LockedPathPreview } from '@/components/features/LockedPathPreview';
@@ -10,7 +9,7 @@ import { getPathCompletionStats } from '@/lib/pathCapstone';
 import { computePathProgressBarModel, pathTitleKey } from '@/lib/pathProgress';
 import { getNextPathId } from '@/lib/pathUnlock';
 import { useProgressStore } from '@/store/progressStore';
-import { getShadow, useCelebration, useThemeMode } from '@/theme';
+import { getShadow, useThemeMode } from '@/theme';
 
 type CapstoneIncompleteViewProps = {
   pathId: string;
@@ -26,23 +25,12 @@ export function CapstoneIncompleteView({
   onBackToPath,
 }: CapstoneIncompleteViewProps) {
   const { tokens, t } = useThemeMode();
-  const { celebrate } = useCelebration();
   const pathProgress = useProgressStore((state) => state.pathProgress[pathId]);
   const stats = getPathCompletionStats(pathId, pathProgress);
   const progressBar = computePathProgressBarModel(pathId, pathProgress);
   const nextPathId = getNextPathId(pathId);
   const companionState = useOrbCompanionState('happy');
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
-  const finishedRef = useRef(false);
-
-  useEffect(() => {
-    if (finishedRef.current) {
-      return;
-    }
-
-    finishedRef.current = true;
-    celebrate('capstone_complete', { pathTitleKey: pathTitleKey(pathId) });
-  }, [celebrate, pathId]);
 
   return (
     <ScrollView

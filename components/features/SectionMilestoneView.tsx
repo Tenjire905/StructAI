@@ -1,10 +1,9 @@
-import { useEffect, useRef } from 'react';
 import { Text, View } from 'react-native';
 
 import { OrbCompanion } from '@/components/features/OrbCompanion';
 import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
-import { getShadow, useCelebration, useThemeMode } from '@/theme';
+import { getShadow, useThemeMode } from '@/theme';
 
 type SectionMilestoneViewProps = {
   orbsReward: number;
@@ -20,19 +19,8 @@ export function SectionMilestoneView({
   nextLessonId,
 }: SectionMilestoneViewProps) {
   const { tokens, t } = useThemeMode();
-  const { celebrate } = useCelebration();
   const companionState = useOrbCompanionState('happy');
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
-  const finishedRef = useRef(false);
-
-  useEffect(() => {
-    if (finishedRef.current) {
-      return;
-    }
-
-    finishedRef.current = true;
-    celebrate('section_milestone');
-  }, [celebrate]);
 
   return (
     <View

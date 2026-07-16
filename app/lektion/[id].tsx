@@ -41,6 +41,7 @@ import {
 } from '@/lib/lessonRewards';
 import { trackEvent } from '@/lib/analytics';
 import { isProfileOnboardingCompleted } from '@/lib/appStorage';
+import { resolveHomeRoute } from '@/lib/homeNavigation';
 import { getPathIdForLesson, getFirstLessonIdForPath, getNextLessonId } from '@/lib/pathLessonUtils';
 import { isPathFinalCapstone, isPathMidCapstone } from '@/lib/pathCapstone';
 import { getLessonChapterStatus, isLessonPlayable, pathTitleKey } from '@/lib/pathProgress';
@@ -48,8 +49,8 @@ import { getNextPathId, getPathUnlockBlockReason } from '@/lib/pathUnlock';
 import { prepareLessonSteps } from '@/lib/lessonSession';
 import { matchReorderHint } from '@/lib/reorderHints';
 import { useProgressStore } from '@/store/progressStore';
-import { getShadow, useCelebration, useThemeMode } from '@/theme';
 import { useAuth } from '@/providers/AuthProvider';
+import { getShadow, useCelebration, useThemeMode } from '@/theme';
 
 type GradedStep = Exclude<ResolvedLessonStep, { type: 'info' }>;
 
@@ -72,6 +73,7 @@ type LessonOutcome =
 export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   const { tokens, t, locale, mode } = useThemeMode();
   const router = useRouter();
+  const { dismissCelebration } = useCelebration();
   const pathProgress = useProgressStore((state) => state.pathProgress);
   const recordLessonOpened = useProgressStore((state) => state.recordLessonOpened);
   const recordLessonFailed = useProgressStore((state) => state.recordLessonFailed);
@@ -90,6 +92,8 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   const pathBlockReason = pathId ? getPathUnlockBlockReason(pathId, pathProgress) : null;
 
   const goBackToPath = () => {
+    dismissCelebration();
+
     if (pathId) {
       router.replace(`/lernpfad/${pathId}`);
       return;
@@ -100,7 +104,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
       return;
     }
 
-    router.replace('/(tabs)');
+    router.replace(resolveHomeRoute(useProgressStore.getState().completedLessons));
   };
 
   const [sessionNonce, setSessionNonce] = useState(0);
@@ -905,23 +909,9 @@ function CompletionView({
   const { tokens, t } = useThemeMode();
   const { session } = useAuth();
   const completedLessons = useProgressStore((state) => state.completedLessons);
-  const { celebrate } = useCelebration();
   const companionState = useOrbCompanionState();
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
-  const finishedRef = useRef(false);
   const nextLessonId = pathId ? getNextLessonId(pathId, lessonId) : undefined;
-
-  useEffect(() => {
-    if (finishedRef.current) {
-      return;
-    }
-
-    finishedRef.current = true;
-
-    if (orbsReward > 0) {
-      celebrate('lesson_complete', { orbCount: orbsReward });
-    }
-  }, [celebrate, orbsReward]);
 
   return (
     <View
