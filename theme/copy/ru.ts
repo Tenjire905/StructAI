@@ -33,6 +33,14 @@ export const copyRu: CopyCatalog = {
     playful: 'Поехали!',
     focus: 'Открыть первый трек',
   },
+  'home.retryFailedCta': {
+    playful: 'Повторить первую открытую главу',
+    focus: 'К первой непройденной главе',
+  },
+  'home.retryFailedNone': {
+    playful: 'Все главы пройдены — повтор не нужен',
+    focus: 'Все главы завершены — повтор не требуется',
+  },
   'orbCounter.label': {
     playful: 'Энерго-орбы',
     focus: 'Орбы',

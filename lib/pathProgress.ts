@@ -162,6 +162,29 @@ export function getContinueLessonId(path: MockPath): string {
   return (currentChapter ?? failedChapter ?? path.chapters[0]).id;
 }
 
+/** First failed lesson in path chapter order that is not yet completed. */
+export function getFirstFailedLessonIdInOrder(
+  pathId: string,
+  record?: PathProgressRecord,
+): string | undefined {
+  const template = getPathTemplate(pathId);
+
+  if (!template || !record) {
+    return undefined;
+  }
+
+  const completedSet = new Set(record.completedLessonIds);
+  const failedSet = new Set(record.failedLessonIds ?? []);
+
+  for (const chapter of template.chapters) {
+    if (failedSet.has(chapter.id) && !completedSet.has(chapter.id)) {
+      return chapter.id;
+    }
+  }
+
+  return undefined;
+}
+
 export function getMergedPath(pathId: string, pathProgress: Record<string, PathProgressRecord>): MockPath | undefined {
   const template = MOCK_PATHS.find((path) => path.id === pathId);
 

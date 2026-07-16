@@ -33,6 +33,14 @@ export const copyDe: CopyCatalog = {
     playful: 'Los geht\'s!',
     focus: 'Ersten Pfad öffnen',
   },
+  'home.retryFailedCta': {
+    playful: 'Erste offene Lektion wiederholen',
+    focus: 'Zur ersten nicht bestandenen Lektion',
+  },
+  'home.retryFailedNone': {
+    playful: 'Alle Lektionen geschafft — keine Wiederholung nötig',
+    focus: 'Alle Lektionen abgeschlossen — keine Wiederholung erforderlich',
+  },
   'orbCounter.label': {
     playful: 'Energie-Orbs',
     focus: 'Orbs',

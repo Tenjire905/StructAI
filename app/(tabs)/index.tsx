@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import {
@@ -9,7 +9,11 @@ import {
   StreakTracker,
 } from '@/components/features';
 import { Avatar, Button, Card } from '@/components/ui';
-import { computePathProgressBarModel, pathTitleKey } from '@/lib/pathProgress';
+import {
+  computePathProgressBarModel,
+  getFirstFailedLessonIdInOrder,
+  pathTitleKey,
+} from '@/lib/pathProgress';
 import { DEFAULT_START_PATH_ID } from '@/lib/pathLessonUtils';
 import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
@@ -19,6 +23,7 @@ import { useThemeMode } from '@/theme';
 export default function HomeScreen() {
   const { tokens, t } = useThemeMode();
   const router = useRouter();
+  const [retryMenuPathId, setRetryMenuPathId] = useState<string | null>(null);
   const { user, session } = useAuth();
   const displayName = session
     ? resolveProfileDisplayName(user)
@@ -110,18 +115,45 @@ export default function HomeScreen() {
           </Card>
         ) : (
           activePaths.map((path) => {
-            const progressBar = computePathProgressBarModel(
-              path.id,
-              pathProgress[path.id],
-            );
+            const pathRecord = pathProgress[path.id];
+            const progressBar = computePathProgressBarModel(path.id, pathRecord);
+            const firstFailedLessonId = getFirstFailedLessonIdInOrder(path.id, pathRecord);
+            const showRetryMenu = retryMenuPathId === path.id;
 
             return (
             <PathCard
               currentChapter={path.currentChapter}
               key={path.id}
-              onPress={() => router.push(`/lektion/${path.resumeLessonId}`)}
+              onLongPress={() =>
+                setRetryMenuPathId((current) => (current === path.id ? null : path.id))
+              }
+              onPress={() => {
+                setRetryMenuPathId(null);
+                router.push(`/lernpfad/${path.id}`);
+              }}
               completedSegments={progressBar.completedSegments}
               failedSegments={progressBar.failedSegments}
+              footer={
+                showRetryMenu ? (
+                  <Button
+                    disabled={!firstFailedLessonId}
+                    label={
+                      firstFailedLessonId
+                        ? t('home.retryFailedCta')
+                        : t('home.retryFailedNone')
+                    }
+                    onPress={() => {
+                      if (!firstFailedLessonId) {
+                        return;
+                      }
+
+                      setRetryMenuPathId(null);
+                      router.push(`/lektion/${firstFailedLessonId}`);
+                    }}
+                    variant={firstFailedLessonId ? 'primary' : 'ghost'}
+                  />
+                ) : null
+              }
               progress={progressBar.completedRatio}
               title={t(path.titleKey)}
               totalChapters={path.totalChapters}

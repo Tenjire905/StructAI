@@ -33,6 +33,14 @@ export const copyFr: CopyCatalog = {
     playful: 'C\'est parti !',
     focus: 'Ouvrir le premier parcours',
   },
+  'home.retryFailedCta': {
+    playful: 'Reprendre la premiere lecon ouverte',
+    focus: 'Aller a la premiere lecon non reussie',
+  },
+  'home.retryFailedNone': {
+    playful: 'Toutes les lecons sont faites — pas de reprise necessaire',
+    focus: 'Toutes les lecons sont terminees — aucune reprise requise',
+  },
   'orbCounter.label': {
     playful: "Orbs d'energie",
     focus: 'Orbs',

@@ -1,4 +1,5 @@
 import { Lock } from 'lucide-react-native';
+import type { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -24,6 +25,8 @@ type PathCardProps = {
   badgeTone?: 'primary' | 'structure' | 'warning' | 'success';
   locked?: boolean;
   onPress?: () => void;
+  onLongPress?: () => void;
+  footer?: ReactNode;
 };
 
 export function PathCard({
@@ -37,11 +40,14 @@ export function PathCard({
   badgeTone = 'primary',
   locked = false,
   onPress,
+  onLongPress,
+  footer,
 }: PathCardProps) {
   const { tokens, t } = useThemeMode();
   const scale = useSharedValue(1);
   const isStarted = currentChapter !== undefined && progress !== undefined;
   const isPressable = Boolean(onPress) && !locked;
+  const isLongPressable = Boolean(onLongPress) && !locked;
   const resolvedBadgeLabel = locked ? t('paths.lockedBadge') : badgeLabel;
   const resolvedBadgeTone = locked ? 'warning' : badgeTone;
 
@@ -63,9 +69,11 @@ export function PathCard({
 
   return (
     <AnimatedPressable
-      accessibilityRole={isPressable ? 'button' : undefined}
-      disabled={!isPressable}
+      accessibilityRole={isPressable || isLongPressable ? 'button' : undefined}
+      disabled={!isPressable && !isLongPressable}
       onPress={isPressable ? onPress : undefined}
+      onLongPress={isLongPressable ? onLongPress : undefined}
+      delayLongPress={450}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={[
@@ -126,6 +134,8 @@ export function PathCard({
           progress={progress}
         />
       ) : null}
+
+      {footer}
     </AnimatedPressable>
   );
 }
