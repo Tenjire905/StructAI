@@ -23,7 +23,11 @@ import {
   RetryPromptView,
   TrueFalseStepView,
 } from '@/components/features/lesson-steps';
-import { Button, Card, ProgressBar, Badge } from '@/components/ui';
+import {
+  LessonDepthBadgeChip,
+  LessonDepthInfoPeek,
+} from '@/components/features/lesson/LessonDepthBadgeButton';
+import { Button, Card, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import {
   getMockLesson,
@@ -119,6 +123,10 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   const [failureStats, setFailureStats] = useState({ correctCount: 0, gradedCount: 0 });
   const [stepAttempts, setStepAttempts] = useState<Record<number, number>>({});
   const [answerResults, setAnswerResults] = useState<LessonAnswerResult[]>([]);
+  const [depthInfoPeek, setDepthInfoPeek] = useState<{ visible: boolean; nonce: number }>({
+    visible: false,
+    nonce: 0,
+  });
   const openedRef = useRef(false);
 
   const lesson = useMemo(() => {
@@ -140,6 +148,10 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
     openedRef.current = true;
     recordLessonOpened(lessonId);
   }, [canPlayLesson, lessonId, recordLessonOpened]);
+
+  useEffect(() => {
+    setDepthInfoPeek((current) => ({ ...current, visible: false }));
+  }, [stepIndex]);
 
   const headerOptions = {
     headerShown: true,
@@ -581,6 +593,9 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
             paddingHorizontal: tokens.spacing.screenPadding,
             paddingTop: tokens.spacing.space5,
           }}
+          onScrollBeginDrag={() =>
+            setDepthInfoPeek((current) => (current.visible ? { ...current, visible: false } : current))
+          }
           style={{ flex: 1 }}>
           <View style={{ gap: tokens.spacing.space2 }}>
             <View
@@ -603,16 +618,27 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
                 })}
               </Text>
               {lesson.depthBadge ? (
-                <Badge
-                  label={
-                    lesson.depthBadge === 'playful'
-                      ? t('lesson.depthBadgePlayful')
-                      : t('lesson.depthBadgeFocus')
+                <LessonDepthBadgeChip
+                  depthBadge={lesson.depthBadge}
+                  onPress={() =>
+                    setDepthInfoPeek((current) => ({
+                      visible: true,
+                      nonce: current.visible ? current.nonce + 1 : 0,
+                    }))
                   }
-                  tone={lesson.depthBadge === 'playful' ? 'structure' : 'primary'}
                 />
               ) : null}
             </View>
+            {lesson.depthBadge ? (
+              <LessonDepthInfoPeek
+                depthBadge={lesson.depthBadge}
+                onDismiss={() =>
+                  setDepthInfoPeek((current) => ({ ...current, visible: false }))
+                }
+                revealNonce={depthInfoPeek.nonce}
+                visible={depthInfoPeek.visible}
+              />
+            ) : null}
             <ProgressBar
               color="primary"
               progress={(stepIndex + 1) / lesson.steps.length}

@@ -145,6 +145,36 @@ export const copyEn: CopyCatalog = {
     playful: 'Deeper · More questions',
     focus: 'Deeper · More questions',
   },
+  'lesson.depthInfoTitle': {
+    playful: 'Your learning mode',
+    focus: 'Learning mode',
+  },
+  'lesson.depthInfoBodyPlayful': {
+    playful:
+      'Playful mode keeps lessons shorter and simpler — same learning goal, fewer steps and easier language.',
+    focus:
+      'Playful mode keeps lessons shorter and simpler — same learning goal, fewer steps and easier language.',
+  },
+  'lesson.depthInfoBodyFocus': {
+    playful:
+      'Focus mode adds depth: longer copy, more questions, and more challenging tasks.',
+    focus:
+      'Focus mode adds depth: longer copy, more questions, and more challenging tasks.',
+  },
+  'lesson.depthInfoAgeRecommended': {
+    playful:
+      'Under 15, Playful is strongly recommended — you can change the mode anytime in Profile.',
+    focus:
+      'Under 15, Playful is strongly recommended — set in Profile or during onboarding.',
+  },
+  'lesson.depthInfoSettingsHint': {
+    playful: 'Your mode comes from Profile or onboarding — switch anytime there.',
+    focus: 'Mode is set in Profile or onboarding and can be changed there anytime.',
+  },
+  'lesson.depthInfoAccessibilityHint': {
+    playful: 'Tap for a short explanation of the learning mode.',
+    focus: 'Tap for learning mode explanation.',
+  },
   'lesson.typeChoice': {
     playful: 'Choice question',
     focus: 'Choice',

@@ -145,6 +145,38 @@ export const copyFr: CopyCatalog = {
     playful: 'Approfondi · Plus de questions',
     focus: 'Approfondi · Plus de questions',
   },
+  'lesson.depthInfoTitle': {
+    playful: 'Ton mode d\'apprentissage',
+    focus: 'Mode d\'apprentissage',
+  },
+  'lesson.depthInfoBodyPlayful': {
+    playful:
+      'En mode Ludique, les lecons sont plus courtes et plus simples — meme objectif, moins d\'etapes et un langage plus leger.',
+    focus:
+      'En mode Ludique, les lecons sont plus courtes et plus simples — meme objectif, moins d\'etapes et un langage plus leger.',
+  },
+  'lesson.depthInfoBodyFocus': {
+    playful:
+      'En mode Concentre, tu as plus de profondeur : textes plus longs, plus de questions et des taches plus exigeantes.',
+    focus:
+      'En mode Concentre, tu as plus de profondeur : textes plus longs, plus de questions et des taches plus exigeantes.',
+  },
+  'lesson.depthInfoAgeRecommended': {
+    playful:
+      'Avant 15 ans, le mode Ludique est fortement recommande — modifiable a tout moment dans le Profil.',
+    focus:
+      'Avant 15 ans, le mode Ludique est fortement recommande — reglage dans le Profil ou a l\'onboarding.',
+  },
+  'lesson.depthInfoSettingsHint': {
+    playful:
+      'Le mode vient de ton Profil ou de l\'onboarding — tu peux le changer la a tout moment.',
+    focus:
+      'Le mode est defini dans le Profil ou a l\'onboarding et peut y etre modifie a tout moment.',
+  },
+  'lesson.depthInfoAccessibilityHint': {
+    playful: 'Appuie pour une breve explication du mode.',
+    focus: 'Appuyer pour l\'explication du mode.',
+  },
   'lesson.typeChoice': {
     playful: 'Question a choix',
     focus: 'Choix',

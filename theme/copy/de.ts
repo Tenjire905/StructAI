@@ -145,6 +145,38 @@ export const copyDe: CopyCatalog = {
     playful: 'Vertiefung · Mehr Fragen',
     focus: 'Vertiefung · Mehr Fragen',
   },
+  'lesson.depthInfoTitle': {
+    playful: 'Dein Lernmodus',
+    focus: 'Lernmodus',
+  },
+  'lesson.depthInfoBodyPlayful': {
+    playful:
+      'Im Verspielt-Modus sind Lektionen kürzer und einfacher — gleiches Lernziel, weniger Schritte und leichtere Sprache.',
+    focus:
+      'Im Verspielt-Modus sind Lektionen kürzer und einfacher — gleiches Lernziel, weniger Schritte und leichtere Sprache.',
+  },
+  'lesson.depthInfoBodyFocus': {
+    playful:
+      'Im Fokussiert-Modus gibt es mehr Vertiefung: längere Texte, mehr Fragen und anspruchsvollere Aufgaben.',
+    focus:
+      'Im Fokussiert-Modus gibt es mehr Vertiefung: längere Texte, mehr Fragen und anspruchsvollere Aufgaben.',
+  },
+  'lesson.depthInfoAgeRecommended': {
+    playful:
+      'Unter 15 Jahren empfehlen wir Verspielt besonders — du kannst den Modus jederzeit im Profil ändern.',
+    focus:
+      'Unter 15 Jahren wird Verspielt besonders empfohlen — einstellbar im Profil oder beim Onboarding.',
+  },
+  'lesson.depthInfoSettingsHint': {
+    playful:
+      'Der Modus kommt aus deinem Profil oder dem Onboarding — dort kannst du jederzeit wechseln.',
+    focus:
+      'Der Modus wird im Profil oder beim Onboarding festgelegt und ist dort jederzeit änderbar.',
+  },
+  'lesson.depthInfoAccessibilityHint': {
+    playful: 'Tippe für eine kurze Erklärung zum Lernmodus.',
+    focus: 'Tippen für Erklärung zum Lernmodus.',
+  },
   'lesson.typeChoice': {
     playful: 'Auswahlfrage',
     focus: 'Auswahl',
