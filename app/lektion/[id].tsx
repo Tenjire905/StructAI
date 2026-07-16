@@ -113,6 +113,15 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
     runAfterUISettles(navigateAway);
   };
 
+  const continueToLesson = (nextLessonId: string) => {
+    dismissCelebration();
+    suppressHomeCelebrations();
+
+    runAfterUISettles(() => {
+      router.replace(`/lektion/${nextLessonId}`);
+    });
+  };
+
   const [sessionNonce, setSessionNonce] = useState(0);
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -509,7 +518,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
                   const firstLessonId = getFirstLessonIdForPath(nextPathId);
 
                   if (firstLessonId) {
-                    router.replace(`/lektion/${firstLessonId}`);
+                    continueToLesson(firstLessonId);
                     return;
                   }
 
@@ -547,7 +556,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
         <SectionMilestoneView
           nextLessonId={nextLessonId}
           onBackToPath={goBackToPath}
-          onContinueNext={(nextId) => router.replace(`/lektion/${nextId}`)}
+          onContinueNext={continueToLesson}
           orbsReward={earnedOrbs}
         />
       </>
@@ -560,7 +569,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
         <Stack.Screen options={headerOptions} />
         <CompletionView
           lessonId={lesson.id}
-          onContinueNext={(nextLessonId) => router.replace(`/lektion/${nextLessonId}`)}
+          onContinueNext={continueToLesson}
           onFinish={goBackToPath}
           orbsReward={earnedOrbs}
           pathId={pathId}
@@ -581,7 +590,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
             const nextLessonId = pathId ? getNextLessonId(pathId, lesson.id) : undefined;
 
             if (nextLessonId) {
-              router.replace(`/lektion/${nextLessonId}`);
+              continueToLesson(nextLessonId);
               return;
             }
 
@@ -1052,6 +1061,7 @@ function LockedLessonView({ onBack }: LockedLessonViewProps) {
 
 export default function LektionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const lessonId = id ?? '';
 
-  return <LessonSessionScreen lessonId={id ?? ''} />;
+  return <LessonSessionScreen key={lessonId} lessonId={lessonId} />;
 }
