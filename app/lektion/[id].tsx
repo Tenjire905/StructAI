@@ -42,6 +42,7 @@ import {
 import { trackEvent } from '@/lib/analytics';
 import { isProfileOnboardingCompleted } from '@/lib/appStorage';
 import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
+import { leaveLesson, openLesson } from '@/lib/lessonNavigation';
 import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
 import { getPathIdForLesson, getFirstLessonIdForPath, getNextLessonId } from '@/lib/pathLessonUtils';
@@ -115,11 +116,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
 
   const continueToLesson = (nextLessonId: string) => {
     dismissCelebration();
-    suppressHomeCelebrations();
-
-    runAfterUISettles(() => {
-      router.replace(`/lektion/${nextLessonId}`);
-    });
+    openLesson(router, nextLessonId);
   };
 
   const [sessionNonce, setSessionNonce] = useState(0);
@@ -404,7 +401,8 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
         useProgressStore.getState().completedLessons === 1 &&
         !isProfileOnboardingCompleted()
       ) {
-        router.replace('/onboarding/profil');
+        dismissCelebration();
+        leaveLesson(router, '/onboarding/profil');
         return;
       }
 
