@@ -1,4 +1,5 @@
 import { getLocalizedLessonText } from '@/data/lessonContent/index';
+import { simplifyForPlayful } from '@/lib/simplifyPlayfulCopy';
 import type {
   LessonCatalogStep,
   LessonCategorizeCatalogStep,
@@ -50,7 +51,13 @@ export function resolveLessonText(
     return getLocalizedLessonText(modeSuffixKey, locale);
   }
 
-  return getLocalizedLessonText(baseKey, locale);
+  const baseText = getLocalizedLessonText(baseKey, locale);
+
+  if (mode === 'playful' && baseText !== baseKey) {
+    return simplifyForPlayful(baseText, locale, baseKey);
+  }
+
+  return baseText;
 }
 
 function resolveReorderHints(

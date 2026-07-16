@@ -23,6 +23,7 @@ import {
   resolveMatchingStep,
   resolveStepCopy,
 } from '@/lib/resolveLessonContent';
+import { derivePlayfulSteps } from '@/lib/derivePlayfulSteps';
 import type { Locale } from '@/theme/locale';
 import type { ThemeMode } from '@/theme/theme';
 
@@ -40,11 +41,15 @@ export type {
 } from '@/data/mockLessons.resolved.types';
 
 function pickCatalogSteps(catalog: MockLessonCatalog, mode: ThemeMode) {
-  if (mode === 'playful' && catalog.playfulSteps && catalog.playfulSteps.length > 0) {
+  if (mode !== 'playful') {
+    return catalog.steps;
+  }
+
+  if (catalog.playfulSteps && catalog.playfulSteps.length > 0) {
     return catalog.playfulSteps;
   }
 
-  return catalog.steps;
+  return derivePlayfulSteps(catalog.steps);
 }
 
 export function resolveCatalogLesson(
@@ -52,15 +57,19 @@ export function resolveCatalogLesson(
   locale: Locale,
   mode: ThemeMode,
 ): ResolvedLesson {
-  const hasPlayfulDepth = Boolean(catalog.playfulSteps && catalog.playfulSteps.length > 0);
-  const catalogSteps = pickCatalogSteps(catalog, mode);
+  const focusSteps = catalog.steps;
+  const playfulSteps =
+    catalog.playfulSteps && catalog.playfulSteps.length > 0
+      ? catalog.playfulSteps
+      : derivePlayfulSteps(focusSteps);
+  const catalogSteps = mode === 'playful' ? playfulSteps : focusSteps;
 
   return {
     id: catalog.id,
     title: resolveCatalogTitle(catalog, locale, mode),
     orbsReward: catalog.orbsReward,
     steps: catalogSteps.map((step) => resolveStepCopy(step, locale, mode)),
-    depthBadge: hasPlayfulDepth ? mode : undefined,
+    depthBadge: mode,
   };
 }
 
