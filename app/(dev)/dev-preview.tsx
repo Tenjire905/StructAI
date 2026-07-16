@@ -343,7 +343,7 @@ function FeaturesPreview() {
 
   return (
     <View style={{ gap: tokens.spacing.space4 }}>
-      <OrbCounter count={128} max={200} />
+      <OrbCounter count={128} dailyOrbGoal={50} orbsEarnedToday={12} />
       <StreakTracker completedDays={[true, true, true, false, false, false, false]} />
       <PathCard
         currentChapter={3}

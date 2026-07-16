@@ -9,8 +9,8 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import Svg, { Circle, G } from 'react-native-svg';
 
+import { PressableScale } from '@/components/ui/PressableScale';
 import { getShadow, useCelebration, useThemeMode } from '@/theme';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 
@@ -18,10 +18,17 @@ import { OrbCompanion } from './OrbCompanion';
 
 type OrbCounterProps = {
   count: number;
-  max?: number;
+  orbsEarnedToday?: number;
+  dailyOrbGoal?: number;
+  onPress?: () => void;
 };
 
-export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
+export function OrbCounter({
+  count,
+  orbsEarnedToday = 0,
+  dailyOrbGoal = 0,
+  onPress,
+}: OrbCounterProps) {
   const { tokens, t } = useThemeMode();
   const { celebrate } = useCelebration();
   const companionState = useOrbCompanionState();
@@ -30,7 +37,7 @@ export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
   const previousCountRef = useRef(count);
   const [displayCount, setDisplayCount] = useState(count);
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
-  const energyRatio = Math.min(1, Math.max(0, count / max));
+  const hasDailyGoal = dailyOrbGoal > 0;
 
   useEffect(() => {
     animatedCount.value = withTiming(count, {
@@ -75,14 +82,7 @@ export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
     transform: [{ scale: orbScale.value }],
   }));
 
-  const ringSize = tokens.spacing.space7;
-  const strokeWidth = tokens.spacing.space1;
-  const ringRadius = (ringSize - strokeWidth) / 2;
-  const center = ringSize / 2;
-  const circumference = 2 * Math.PI * ringRadius;
-  const strokeDashoffset = circumference * (1 - energyRatio);
-
-  return (
+  const content = (
     <View style={{ gap: tokens.spacing.space2 }}>
       <Text
         style={{
@@ -94,77 +94,60 @@ export function OrbCounter({ count, max = 999 }: OrbCounterProps) {
       </Text>
 
       <View style={{ alignItems: 'center', flexDirection: 'row', gap: tokens.spacing.space3 }}>
-        {isPlayful ? (
-          <Animated.View
-            style={[
-              orbAnimatedStyle,
-              getShadow('glow'),
-              {
-                alignItems: 'center',
-                backgroundColor: tokens.colors.surface.card,
-                borderRadius: tokens.radius.pill,
-                height: tokens.spacing.space7,
-                justifyContent: 'center',
-                width: tokens.spacing.space7,
-              },
-            ]}>
-            <OrbCompanion size={tokens.icons.sizes.lg} state={companionState} />
-          </Animated.View>
-        ) : (
-          <View style={{ alignItems: 'center', flexDirection: 'row', gap: tokens.spacing.space2 }}>
-            <View
-              style={{
-                alignItems: 'center',
-                height: ringSize,
-                justifyContent: 'center',
-                width: ringSize,
-              }}>
-              <Svg height={ringSize} width={ringSize}>
-                <Circle
-                  cx={center}
-                  cy={center}
-                  fill="none"
-                  r={ringRadius}
-                  stroke={tokens.colors.border.subtle}
-                  strokeWidth={strokeWidth}
-                />
-                <G transform={`rotate(-90 ${center} ${center})`}>
-                  <Circle
-                    cx={center}
-                    cy={center}
-                    fill="none"
-                    r={ringRadius}
-                    stroke={tokens.colors.accent.primary}
-                    strokeDasharray={`${circumference} ${circumference}`}
-                    strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
-                    strokeWidth={strokeWidth}
-                  />
-                </G>
-              </Svg>
-              <Text
-                style={{
-                  color: tokens.colors.text.primary,
-                  fontFamily: tokens.typography.fontFamily.mono,
-                  fontSize: tokens.typography.fontSize.bodySm,
-                  position: 'absolute',
-                }}>
-                {Math.round(energyRatio * 100)}
-              </Text>
-            </View>
-            <OrbCompanion size={tokens.icons.sizes.lg} state={companionState} />
-          </View>
-        )}
+        <Animated.View
+          style={[
+            orbAnimatedStyle,
+            isPlayful ? getShadow('glow') : undefined,
+            {
+              alignItems: 'center',
+              backgroundColor: tokens.colors.surface.card,
+              borderRadius: tokens.radius.pill,
+              height: tokens.spacing.space7,
+              justifyContent: 'center',
+              width: tokens.spacing.space7,
+            },
+          ]}>
+          <OrbCompanion size={tokens.icons.sizes.lg} state={companionState} />
+        </Animated.View>
 
-        <Text
-          style={{
-            color: tokens.colors.text.primary,
-            fontFamily: tokens.typography.fontFamily.display,
-            fontSize: tokens.typography.fontSize.displayLg,
-          }}>
-          {displayCount}
-        </Text>
+        <View style={{ gap: tokens.spacing.space1 }}>
+          <Text
+            style={{
+              color: tokens.colors.text.primary,
+              fontFamily: tokens.typography.fontFamily.display,
+              fontSize: tokens.typography.fontSize.displayLg,
+            }}>
+            {displayCount}
+          </Text>
+          {hasDailyGoal ? (
+            <Text
+              style={{
+                color: tokens.colors.text.tertiary,
+                fontFamily: tokens.typography.fontFamily.mono,
+                fontSize: tokens.typography.fontSize.bodySm,
+              }}>
+              {t('orbCounter.dailyProgress', {
+                current: orbsEarnedToday,
+                goal: dailyOrbGoal,
+              })}
+            </Text>
+          ) : null}
+        </View>
       </View>
     </View>
+  );
+
+  if (!onPress) {
+    return content;
+  }
+
+  return (
+    <PressableScale
+      accessibilityHint={t('orbCounter.openDailyGoalHint')}
+      accessibilityLabel={t('orbCounter.label')}
+      accessibilityRole="button"
+      onPress={onPress}>
+      {content}
+    </PressableScale>
   );
 }

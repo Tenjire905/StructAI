@@ -16,6 +16,7 @@ import {
   pathTitleKey,
 } from '@/lib/pathProgress';
 import { DEFAULT_START_PATH_ID } from '@/lib/pathLessonUtils';
+import { isDailyGoalSetupCompleted } from '@/lib/appStorage';
 import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
@@ -30,7 +31,9 @@ export default function HomeScreen() {
     ? resolveProfileDisplayName(user)
     : resolveGuestDisplayName(t('profile.guestDisplayName'));
   const orbCount = useProgressStore((state) => state.orbCount);
-  const orbMax = useProgressStore((state) => state.orbMax);
+  const orbsEarnedToday = useProgressStore((state) => state.orbsEarnedToday);
+  const dailyOrbGoal = useProgressStore((state) => state.dailyOrbGoal);
+  const dailyGoalConfigured = isDailyGoalSetupCompleted() && dailyOrbGoal > 0;
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const currentStreak = useProgressStore((state) => state.currentStreak);
   const streakDays = useProgressStore((state) => state.streakDays);
@@ -68,7 +71,12 @@ export default function HomeScreen() {
           </Text>
           <Avatar name={displayName} size="md" />
         </View>
-        <OrbCounter count={orbCount} max={orbMax} />
+        <OrbCounter
+          count={orbCount}
+          dailyOrbGoal={dailyGoalConfigured ? dailyOrbGoal : 0}
+          onPress={() => router.push('/tagesziel')}
+          orbsEarnedToday={orbsEarnedToday}
+        />
       </View>
 
       <StreakTracker completedDays={streakDays} />

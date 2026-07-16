@@ -267,3 +267,13 @@ export async function setProfileAge(age: number): Promise<void> {
 export function isExpoGoMemoryStorage(): boolean {
   return appStorage.isMemoryOnly;
 }
+
+const DAILY_GOAL_SETUP_COMPLETED_KEY = 'structai.daily-goal-setup-completed';
+
+export function isDailyGoalSetupCompleted(): boolean {
+  return appStorage.getString(DAILY_GOAL_SETUP_COMPLETED_KEY) === 'true';
+}
+
+export async function setDailyGoalSetupCompleted(): Promise<void> {
+  await persistAppStorageValue(DAILY_GOAL_SETUP_COMPLETED_KEY, 'true');
+}

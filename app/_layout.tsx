@@ -58,6 +58,7 @@ export default function RootLayout() {
             <Stack.Screen name="auth/index" />
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="onboarding" />
+            <Stack.Screen name="tagesziel" />
             {__DEV__ ? <Stack.Screen name="(dev)" options={{ headerShown: false }} /> : null}
           </Stack>
           <AuthNavigationController />

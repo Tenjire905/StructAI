@@ -45,6 +45,68 @@ export const copyDe: CopyCatalog = {
     playful: 'Energie-Orbs',
     focus: 'Orbs',
   },
+  'orbCounter.dailyProgress': {
+    playful: 'Heute {{current}}/{{goal}} Orbs',
+    focus: 'Heute {{current}}/{{goal}}',
+  },
+  'orbCounter.openDailyGoalHint': {
+    playful: 'Tippe, um dein Tagesziel anzupassen',
+    focus: 'Tagesziel bearbeiten',
+  },
+  'dailyGoal.title': {
+    playful: 'Wie viele Orbs willst du heute sammeln?',
+    focus: 'Tagesziel festlegen',
+  },
+  'dailyGoal.subtitle': {
+    playful:
+      'Du bekommst Orbs als Belohnung für jede abgeschlossene Lektion. Wähle, wie viel du heute lernen möchtest — so passt du dein Tempo an deinen Tag an.',
+    focus:
+      'Orbs werden pro abgeschlossener Lektion vergeben. Legen Sie fest, wie viele Orbs Sie heute erreichen möchten und wie viel Zeit Sie investieren wollen.',
+  },
+  'dailyGoal.explanationTitle': {
+    playful: 'Orbs = Lernfortschritt',
+    focus: 'Orbs als Lernfortschritt',
+  },
+  'dailyGoal.explanationBody': {
+    playful:
+      'Jede Lektion bringt dir Orbs. Mehr Orbs bedeuten mehr Übung — aber du bestimmst das Tempo. Ein niedriges Tagesziel ist völlig okay.',
+    focus:
+      'Pro abgeschlossener Lektion erhalten Sie Orbs. Das Tagesziel steuert Ihr Lerntempo und Ihren Zeitaufwand — unabhängig vom Gesamtfortschritt.',
+  },
+  'dailyGoal.targetLabel': {
+    playful: 'Dein Tagesziel',
+    focus: 'Tagesziel in Orbs',
+  },
+  'dailyGoal.presetOrbs': {
+    playful: '{{count}} Orbs',
+    focus: '{{count}}',
+  },
+  'dailyGoal.notificationsTitle': {
+    playful: 'Erinnerung am Abend',
+    focus: 'Lern-Erinnerung',
+  },
+  'dailyGoal.notificationsBody': {
+    playful:
+      'Wir erinnern dich abends, falls du dein Tagesziel noch nicht erreicht hast — nur wenn du das erlaubst.',
+    focus:
+      'Optional: Benachrichtigung am Abend, wenn das Tagesziel noch nicht erreicht wurde.',
+  },
+  'dailyGoal.cta': {
+    playful: 'Tagesziel speichern',
+    focus: 'Tagesziel speichern',
+  },
+  'dailyGoal.saving': {
+    playful: 'Wird gespeichert…',
+    focus: 'Speichern…',
+  },
+  'dailyGoal.notificationTitle': {
+    playful: 'StructAI',
+    focus: 'StructAI',
+  },
+  'dailyGoal.notificationBody': {
+    playful: 'Dein Tagesziel wartet — hast du heute schon gelernt?',
+    focus: 'Tagesziel noch offen — heute schon gelernt?',
+  },
   'pathCard.chapters': {
     playful: 'Kapitel {{current}} von {{total}}',
     focus: 'Kap. {{current}}/{{total}}',

@@ -45,6 +45,68 @@ export const copyFr: CopyCatalog = {
     playful: "Orbs d'energie",
     focus: 'Orbs',
   },
+  'orbCounter.dailyProgress': {
+    playful: "Aujourd'hui {{current}}/{{goal}} orbs",
+    focus: "Aujourd'hui {{current}}/{{goal}}",
+  },
+  'orbCounter.openDailyGoalHint': {
+    playful: 'Appuyer pour ajuster ton objectif du jour',
+    focus: "Modifier l'objectif du jour",
+  },
+  'dailyGoal.title': {
+    playful: "Combien d'orbs veux-tu aujourd'hui ?",
+    focus: 'Definir un objectif du jour',
+  },
+  'dailyGoal.subtitle': {
+    playful:
+      "Tu gagnes des orbs pour chaque lecon terminee. Choisis combien tu veux apprendre aujourd'hui — adapte ton rythme a ta journee.",
+    focus:
+      "Les orbs sont attribues par lecon terminee. Definissez combien vous voulez en collecter aujourd'hui et combien de temps investir.",
+  },
+  'dailyGoal.explanationTitle': {
+    playful: 'Orbs = progression',
+    focus: 'Orbs comme progression',
+  },
+  'dailyGoal.explanationBody': {
+    playful:
+      'Chaque lecon rapporte des orbs. Plus d\'orbs, plus de pratique — mais tu choisis le rythme. Un petit objectif du jour, c\'est ok.',
+    focus:
+      'Chaque lecon terminee rapporte des orbs. L\'objectif du jour regle le rythme et le temps — independamment de la progression globale.',
+  },
+  'dailyGoal.targetLabel': {
+    playful: 'Ton objectif du jour',
+    focus: 'Objectif du jour en orbs',
+  },
+  'dailyGoal.presetOrbs': {
+    playful: '{{count}} orbs',
+    focus: '{{count}}',
+  },
+  'dailyGoal.notificationsTitle': {
+    playful: 'Rappel du soir',
+    focus: 'Rappel d\'apprentissage',
+  },
+  'dailyGoal.notificationsBody': {
+    playful:
+      "On peut te rappeler le soir si tu n'as pas encore atteint ton objectif — seulement si tu l'autorises.",
+    focus:
+      "Notification optionnelle le soir si l'objectif du jour n'est pas encore atteint.",
+  },
+  'dailyGoal.cta': {
+    playful: "Enregistrer l'objectif",
+    focus: "Enregistrer l'objectif",
+  },
+  'dailyGoal.saving': {
+    playful: 'Enregistrement…',
+    focus: 'Enregistrement…',
+  },
+  'dailyGoal.notificationTitle': {
+    playful: 'StructAI',
+    focus: 'StructAI',
+  },
+  'dailyGoal.notificationBody': {
+    playful: "Ton objectif du jour t'attend — as-tu deja appris aujourd'hui ?",
+    focus: "Objectif du jour encore ouvert — avez-vous deja appris aujourd'hui ?",
+  },
   'pathCard.chapters': {
     playful: 'Chapitre {{current}} sur {{total}}',
     focus: 'Chap. {{current}}/{{total}}',

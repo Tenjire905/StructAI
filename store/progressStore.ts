@@ -6,6 +6,8 @@ import {
   reconcileCompletedPathIds,
 } from '@/lib/pathCompletion';
 import { normalizeProgressSnapshot } from '@/lib/progressMerge';
+import { getTodayDateKey, normalizeDailyOrbProgress } from '@/lib/dailyOrbGoal';
+import { syncDailyGoalReminder } from '@/lib/dailyGoalNotifications';
 import {
   DEFAULT_PROGRESS,
   DEFAULT_STREAK_DAY_FLAGS,
@@ -38,6 +40,7 @@ type ProgressActions = {
   recordLessonOpened: (lessonId: string) => void;
   recordLessonFailed: (lessonId: string) => void;
   completeLesson: (lessonId: string, orbsEarned: number) => string | null;
+  setDailyOrbGoal: (dailyOrbGoal: number, notificationsEnabled: boolean) => void;
   addPromptScore: (score: number) => void;
   getResumeLessonId: (pathId: string) => string | undefined;
   getActivePaths: () => Array<{
@@ -87,7 +90,10 @@ function persistAndSync(snapshot: ProgressSnapshot): void {
 function toProgressSnapshot(state: ProgressStore): ProgressSnapshot {
   return {
     orbCount: state.orbCount,
-    orbMax: state.orbMax,
+    dailyOrbGoal: state.dailyOrbGoal,
+    orbsEarnedToday: state.orbsEarnedToday,
+    dailyGoalDateKey: state.dailyGoalDateKey,
+    dailyGoalNotificationsEnabled: state.dailyGoalNotificationsEnabled,
     completedLessons: state.completedLessons,
     currentStreak: state.currentStreak,
     streakDays: state.streakDays,
@@ -96,6 +102,17 @@ function toProgressSnapshot(state: ProgressStore): ProgressSnapshot {
     pathCompletedAt: state.pathCompletedAt,
     promptScoreHistory: state.promptScoreHistory,
   };
+}
+
+function withFreshDailyProgress(state: ProgressStore): Pick<
+  ProgressSnapshot,
+  'orbsEarnedToday' | 'dailyGoalDateKey'
+> {
+  return normalizeDailyOrbProgress(
+    state.orbsEarnedToday,
+    state.dailyGoalDateKey,
+    getTodayDateKey(),
+  );
 }
 
 function pathTitleKey(pathId: string): string {
@@ -144,7 +161,16 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
 
   hydrate: () => {
     const snapshot = readProgressSnapshot();
-    set(snapshot);
+    const dailyProgress = normalizeDailyOrbProgress(
+      snapshot.orbsEarnedToday,
+      snapshot.dailyGoalDateKey,
+      getTodayDateKey(),
+    );
+
+    set({
+      ...snapshot,
+      ...dailyProgress,
+    });
   },
 
   reset: () => {
@@ -192,15 +218,8 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       };
 
       const snapshot: ProgressSnapshot = {
-        orbCount: state.orbCount,
-        orbMax: state.orbMax,
-        completedLessons: state.completedLessons,
-        currentStreak: state.currentStreak,
-        streakDays: state.streakDays,
+        ...toProgressSnapshot(state),
         pathProgress: nextPathProgress,
-        completedPathIds: state.completedPathIds,
-        pathCompletedAt: state.pathCompletedAt,
-        promptScoreHistory: state.promptScoreHistory,
       };
 
       persistAndSync(snapshot);
@@ -228,15 +247,8 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       };
 
       const snapshot: ProgressSnapshot = {
-        orbCount: state.orbCount,
-        orbMax: state.orbMax,
-        completedLessons: state.completedLessons,
-        currentStreak: state.currentStreak,
-        streakDays: state.streakDays,
+        ...toProgressSnapshot(state),
         pathProgress: nextPathProgress,
-        completedPathIds: state.completedPathIds,
-        pathCompletedAt: state.pathCompletedAt,
-        promptScoreHistory: state.promptScoreHistory,
       };
 
       writeProgressSnapshot(snapshot);
@@ -304,9 +316,15 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         { isNewCompletion: !wasAlreadyCompleted },
       );
 
+      const dailyProgress = withFreshDailyProgress(state);
+      const orbsEarnedToday =
+        awardedOrbs > 0 ? dailyProgress.orbsEarnedToday + awardedOrbs : dailyProgress.orbsEarnedToday;
+
       const snapshot: ProgressSnapshot = {
+        ...toProgressSnapshot(state),
         orbCount: state.orbCount + awardedOrbs,
-        orbMax: state.orbMax,
+        orbsEarnedToday,
+        dailyGoalDateKey: dailyProgress.dailyGoalDateKey,
         completedLessons: wasAlreadyCompleted
           ? state.completedLessons
           : state.completedLessons + 1,
@@ -318,7 +336,6 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         },
         completedPathIds,
         pathCompletedAt,
-        promptScoreHistory: state.promptScoreHistory,
       };
 
       persistAndSync(snapshot);
@@ -327,6 +344,24 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     });
 
     return newlyCompletedPathId;
+  },
+
+  setDailyOrbGoal: (dailyOrbGoal, notificationsEnabled) => {
+    set((state) => {
+      const dailyProgress = withFreshDailyProgress(state);
+      const snapshot: ProgressSnapshot = {
+        ...toProgressSnapshot(state),
+        dailyOrbGoal,
+        orbsEarnedToday: dailyProgress.orbsEarnedToday,
+        dailyGoalDateKey: dailyProgress.dailyGoalDateKey,
+        dailyGoalNotificationsEnabled: notificationsEnabled,
+      };
+
+      persistAndSync(snapshot);
+      void syncDailyGoalReminder(notificationsEnabled);
+
+      return snapshot;
+    });
   },
 
   addPromptScore: (score) => {

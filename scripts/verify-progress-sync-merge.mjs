@@ -215,7 +215,14 @@ function mergeProgressSnapshots(local, remote) {
 
   return {
     orbCount: Math.max(local.orbCount, remote.orbCount),
-    orbMax: Math.max(local.orbMax, remote.orbMax),
+    dailyOrbGoal: Math.max(local.dailyOrbGoal ?? 0, remote.dailyOrbGoal ?? 0),
+    orbsEarnedToday: Math.max(local.orbsEarnedToday ?? 0, remote.orbsEarnedToday ?? 0),
+    dailyGoalDateKey:
+      (local.dailyGoalDateKey ?? '') >= (remote.dailyGoalDateKey ?? '')
+        ? (local.dailyGoalDateKey ?? '')
+        : (remote.dailyGoalDateKey ?? ''),
+    dailyGoalNotificationsEnabled:
+      local.dailyGoalNotificationsEnabled || remote.dailyGoalNotificationsEnabled,
     completedLessons: Math.max(local.completedLessons, remote.completedLessons),
     currentStreak: Math.max(local.currentStreak, remote.currentStreak),
     streakDays: mergeStreakDays(local.streakDays, remote.streakDays),
@@ -232,7 +239,10 @@ function mergeProgressSnapshots(local, remote) {
 function snapshot(overrides = {}) {
   return {
     orbCount: 0,
-    orbMax: 200,
+    dailyOrbGoal: 0,
+    orbsEarnedToday: 0,
+    dailyGoalDateKey: '2026-01-01',
+    dailyGoalNotificationsEnabled: false,
     completedLessons: 0,
     currentStreak: 0,
     streakDays: [...DEFAULT_STREAK_DAYS],

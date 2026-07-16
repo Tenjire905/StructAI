@@ -6,6 +6,11 @@ import {
   type ProgressSnapshot,
   type PromptScoreHistoryEntry,
 } from '@/lib/progressTypes';
+import {
+  DEFAULT_DAILY_ORB_GOAL,
+  getTodayDateKey,
+  normalizeDailyOrbProgress,
+} from '@/lib/dailyOrbGoal';
 
 /** Proposed conflict strategy – active on login when local and remote both exist. */
 export const PROGRESS_MERGE_STRATEGY = 'max-union-per-field' as const;
@@ -219,7 +224,14 @@ export function mergeProgressSnapshots(
 
   return {
     orbCount: Math.max(local.orbCount, remote.orbCount),
-    orbMax: Math.max(local.orbMax, remote.orbMax),
+    dailyOrbGoal: Math.max(local.dailyOrbGoal, remote.dailyOrbGoal),
+    orbsEarnedToday: Math.max(local.orbsEarnedToday, remote.orbsEarnedToday),
+    dailyGoalDateKey:
+      local.dailyGoalDateKey >= remote.dailyGoalDateKey
+        ? local.dailyGoalDateKey
+        : remote.dailyGoalDateKey,
+    dailyGoalNotificationsEnabled:
+      local.dailyGoalNotificationsEnabled || remote.dailyGoalNotificationsEnabled,
     completedLessons,
     currentStreak: Math.max(local.currentStreak, remote.currentStreak),
     streakDays: mergeStreakDays(local.streakDays, remote.streakDays),
@@ -240,9 +252,25 @@ export function normalizeProgressSnapshot(
     return { ...DEFAULT_PROGRESS, streakDays: [...DEFAULT_PROGRESS.streakDays] };
   }
 
+  const todayKey = getTodayDateKey();
+  const dailyOrbGoal =
+    partial.dailyOrbGoal ??
+    (typeof partial.orbMax === 'number' && partial.orbMax > 0 && partial.orbMax <= 500
+      ? partial.orbMax
+      : DEFAULT_DAILY_ORB_GOAL);
+  const dailyProgress = normalizeDailyOrbProgress(
+    partial.orbsEarnedToday ?? 0,
+    partial.dailyGoalDateKey,
+    todayKey,
+  );
+
   return {
     ...DEFAULT_PROGRESS,
     ...partial,
+    dailyOrbGoal,
+    orbsEarnedToday: dailyProgress.orbsEarnedToday,
+    dailyGoalDateKey: dailyProgress.dailyGoalDateKey,
+    dailyGoalNotificationsEnabled: partial.dailyGoalNotificationsEnabled ?? false,
     streakDays: partial.streakDays ?? [...DEFAULT_PROGRESS.streakDays],
     pathProgress: partial.pathProgress ?? {},
     completedPathIds: partial.completedPathIds ?? [],

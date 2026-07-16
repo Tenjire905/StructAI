@@ -8,6 +8,7 @@ import {
   setOnboardingCompleted,
   setProfileOnboardingCompleted,
 } from '@/lib/appStorage';
+import { resolveHomeRoute } from '@/lib/homeNavigation';
 import { isProgressSnapshotEmpty } from '@/lib/progressMerge';
 import { fetchProgressSnapshotForUser } from '@/lib/progressSync';
 import { useAuth } from '@/providers/AuthProvider';
@@ -29,12 +30,20 @@ function isOnProfileOnboardingRoute(segments: readonly string[]): boolean {
   return segments[0] === 'onboarding' && segments[1] === 'profil';
 }
 
+function isOnDailyGoalSetupRoute(segments: readonly string[]): boolean {
+  return segments[0] === 'onboarding' && segments[1] === 'tagesziel';
+}
+
 function resolveAppEntryRoute(completedLessons: number): Href {
   if (isProfileOnboardingPending(completedLessons)) {
     return PROFILE_ONBOARDING_ROUTE;
   }
 
-  return isOnboardingCompleted() ? '/(tabs)' : '/onboarding';
+  if (!isOnboardingCompleted()) {
+    return '/onboarding';
+  }
+
+  return resolveHomeRoute(completedLessons);
 }
 
 /**
@@ -53,6 +62,7 @@ export function AuthNavigationController() {
 
   const profilePending = isProfileOnboardingPending(completedLessons);
   const onProfileRoute = isOnProfileOnboardingRoute(segments);
+  const onDailyGoalRoute = isOnDailyGoalSetupRoute(segments);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -152,8 +162,8 @@ export function AuthNavigationController() {
         }
       } else if (!isOnboardingCompleted() && !inOnboarding) {
         target = '/onboarding';
-      } else if (isOnboardingCompleted() && inOnboarding && !onProfileRoute) {
-        target = '/(tabs)';
+      } else if (isOnboardingCompleted() && inOnboarding && !onProfileRoute && !onDailyGoalRoute) {
+        target = resolveHomeRoute(completedLessons);
       } else if (!rootSegment) {
         target = resolveAppEntryRoute(completedLessons);
       }
@@ -180,7 +190,7 @@ export function AuthNavigationController() {
         clearTimeout(navigationTimer);
       }
     };
-  }, [completedLessons, isLoading, onProfileRoute, profilePending, returningUserCheck, router, segments, session]);
+  }, [completedLessons, isLoading, onDailyGoalRoute, onProfileRoute, profilePending, returningUserCheck, router, segments, session]);
 
   useEffect(() => {
     if (!session) {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
 import { useProgressStore } from '@/store/progressStore';
+import { dailyGoalProgressRatio } from '@/lib/dailyOrbGoal';
 import { useCelebration, useThemeMode } from '@/theme';
 
 export type OrbCompanionState =
@@ -14,8 +15,8 @@ export type OrbCompanionState =
 
 const BACKGROUND_SLEEPY_MS = 60_000;
 
-function isLowEnergy(orbCount: number, orbMax: number): boolean {
-  return orbMax > 0 && orbCount / orbMax < 0.15;
+function isLowDailyProgress(orbsEarnedToday: number, dailyOrbGoal: number): boolean {
+  return dailyOrbGoal > 0 && dailyGoalProgressRatio(orbsEarnedToday, dailyOrbGoal) < 0.15;
 }
 
 /**
@@ -39,8 +40,8 @@ function isLowEnergy(orbCount: number, orbMax: number): boolean {
 export function useOrbCompanionState(
   companionOverride?: OrbCompanionState,
 ): OrbCompanionState {
-  const orbCount = useProgressStore((state) => state.orbCount);
-  const orbMax = useProgressStore((state) => state.orbMax);
+  const orbsEarnedToday = useProgressStore((state) => state.orbsEarnedToday);
+  const dailyOrbGoal = useProgressStore((state) => state.dailyOrbGoal);
   const { lastEvent } = useCelebration();
   const { mode } = useThemeMode();
   const [isBackgroundSleepy, setIsBackgroundSleepy] = useState(false);
@@ -89,7 +90,7 @@ export function useOrbCompanionState(
     return companionOverride;
   }
 
-  if (isLowEnergy(orbCount, orbMax)) {
+  if (isLowDailyProgress(orbsEarnedToday, dailyOrbGoal)) {
     return 'low_energy';
   }
 

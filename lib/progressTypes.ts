@@ -1,3 +1,5 @@
+import { getTodayDateKey } from '@/lib/dailyOrbGoal';
+
 export type PathProgressRecord = {
   completedLessonIds: string[];
   failedLessonIds: string[];
@@ -13,7 +15,12 @@ export type PromptScoreHistoryEntry = {
 
 export type ProgressSnapshot = {
   orbCount: number;
-  orbMax: number;
+  /** @deprecated Legacy cap for removed focus ring — migrated to dailyOrbGoal. */
+  orbMax?: number;
+  dailyOrbGoal: number;
+  orbsEarnedToday: number;
+  dailyGoalDateKey: string;
+  dailyGoalNotificationsEnabled: boolean;
   completedLessons: number;
   currentStreak: number;
   streakDays: boolean[];
@@ -27,7 +34,10 @@ const DEFAULT_STREAK_DAYS: boolean[] = [false, false, false, false, false, false
 
 export const DEFAULT_PROGRESS: ProgressSnapshot = {
   orbCount: 0,
-  orbMax: 200,
+  dailyOrbGoal: 0,
+  orbsEarnedToday: 0,
+  dailyGoalDateKey: getTodayDateKey(),
+  dailyGoalNotificationsEnabled: false,
   completedLessons: 0,
   currentStreak: 0,
   streakDays: [...DEFAULT_STREAK_DAYS],

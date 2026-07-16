@@ -4,10 +4,12 @@ import { ScrollView, Text, View } from 'react-native';
 import { Button } from '@/components/ui';
 import { trackEvent } from '@/lib/analytics';
 import { setOnboardingCompleted } from '@/lib/appStorage';
+import { resolveHomeRoute } from '@/lib/homeNavigation';
 import {
   DEFAULT_START_PATH_ID,
   getFirstLessonIdForPath,
 } from '@/lib/pathLessonUtils';
+import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
 const LOOP_STEP_KEYS = [
@@ -19,6 +21,7 @@ const LOOP_STEP_KEYS = [
 export default function OnboardingLoopScreen() {
   const { tokens, t } = useThemeMode();
   const router = useRouter();
+  const completedLessons = useProgressStore((state) => state.completedLessons);
   const firstLessonId = getFirstLessonIdForPath(DEFAULT_START_PATH_ID);
 
   const finishOnboarding = async () => {
@@ -94,7 +97,7 @@ export default function OnboardingLoopScreen() {
           label={t('onboarding.loopHomeCta')}
           onPress={() => {
             void finishOnboarding().then(() => {
-              router.replace('/');
+              router.replace(resolveHomeRoute(completedLessons));
             });
           }}
           variant="ghost"

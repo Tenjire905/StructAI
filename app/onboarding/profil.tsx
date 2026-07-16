@@ -19,6 +19,7 @@ import {
   setProfileAge,
   setProfileOnboardingCompleted,
 } from '@/lib/appStorage';
+import { resolveHomeRoute } from '@/lib/homeNavigation';
 import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import {
   isPlayfulModeRecommended,
@@ -27,12 +28,14 @@ import {
   updateAuthenticatedUserDisplayName,
 } from '@/lib/userProfile';
 import { useAuth } from '@/providers/AuthProvider';
+import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode, type ThemeMode } from '@/theme';
 
 export default function OnboardingProfileScreen() {
   const { tokens, t, setMode } = useThemeMode();
   const router = useRouter();
   const { session, user } = useAuth();
+  const completedLessons = useProgressStore((state) => state.completedLessons);
   const [displayName, setDisplayName] = useState('');
   const [ageInput, setAgeInput] = useState('');
   const [selectedMode, setSelectedMode] = useState<ThemeMode | null>(null);
@@ -95,7 +98,7 @@ export default function OnboardingProfileScreen() {
       await setProfileAge(parsedAge);
       setMode(selectedMode);
       await setProfileOnboardingCompleted();
-      router.replace('/(tabs)');
+      router.replace(resolveHomeRoute(completedLessons));
     } catch {
       setValidationError(t('onboarding.profileSaveError'));
     } finally {

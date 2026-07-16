@@ -45,6 +45,68 @@ export const copyEn: CopyCatalog = {
     playful: 'Energy Orbs',
     focus: 'Orbs',
   },
+  'orbCounter.dailyProgress': {
+    playful: 'Today {{current}}/{{goal}} orbs',
+    focus: 'Today {{current}}/{{goal}}',
+  },
+  'orbCounter.openDailyGoalHint': {
+    playful: 'Tap to adjust your daily goal',
+    focus: 'Edit daily goal',
+  },
+  'dailyGoal.title': {
+    playful: 'How many orbs do you want today?',
+    focus: 'Set your daily goal',
+  },
+  'dailyGoal.subtitle': {
+    playful:
+      'You earn orbs for every completed lesson. Choose how much you want to learn today — match your pace to your day.',
+    focus:
+      'Orbs are awarded per completed lesson. Set how many orbs you want to reach today and how much time you want to invest.',
+  },
+  'dailyGoal.explanationTitle': {
+    playful: 'Orbs = learning progress',
+    focus: 'Orbs as learning progress',
+  },
+  'dailyGoal.explanationBody': {
+    playful:
+      'Every lesson earns orbs. More orbs mean more practice — but you set the pace. A low daily goal is perfectly fine.',
+    focus:
+      'Each completed lesson awards orbs. Your daily goal controls learning pace and time investment — separate from overall progress.',
+  },
+  'dailyGoal.targetLabel': {
+    playful: 'Your daily goal',
+    focus: 'Daily goal in orbs',
+  },
+  'dailyGoal.presetOrbs': {
+    playful: '{{count}} orbs',
+    focus: '{{count}}',
+  },
+  'dailyGoal.notificationsTitle': {
+    playful: 'Evening reminder',
+    focus: 'Learning reminder',
+  },
+  'dailyGoal.notificationsBody': {
+    playful:
+      'We can remind you in the evening if you have not reached your daily goal yet — only if you allow it.',
+    focus:
+      'Optional evening notification when your daily goal has not been reached yet.',
+  },
+  'dailyGoal.cta': {
+    playful: 'Save daily goal',
+    focus: 'Save daily goal',
+  },
+  'dailyGoal.saving': {
+    playful: 'Saving…',
+    focus: 'Saving…',
+  },
+  'dailyGoal.notificationTitle': {
+    playful: 'StructAI',
+    focus: 'StructAI',
+  },
+  'dailyGoal.notificationBody': {
+    playful: 'Your daily goal is waiting — have you learned today?',
+    focus: 'Daily goal still open — have you learned today?',
+  },
   'pathCard.chapters': {
     playful: 'Chapter {{current}} of {{total}}',
     focus: 'Ch. {{current}}/{{total}}',

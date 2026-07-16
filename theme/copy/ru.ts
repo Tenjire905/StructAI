@@ -45,6 +45,68 @@ export const copyRu: CopyCatalog = {
     playful: 'Энерго-орбы',
     focus: 'Орбы',
   },
+  'orbCounter.dailyProgress': {
+    playful: 'Сегодня {{current}}/{{goal}} орбов',
+    focus: 'Сегодня {{current}}/{{goal}}',
+  },
+  'orbCounter.openDailyGoalHint': {
+    playful: 'Нажми, чтобы изменить дневную цель',
+    focus: 'Изменить дневную цель',
+  },
+  'dailyGoal.title': {
+    playful: 'Сколько орбов хочешь собрать сегодня?',
+    focus: 'Задать дневную цель',
+  },
+  'dailyGoal.subtitle': {
+    playful:
+      'За каждый завершённый урок ты получаешь орбы. Выбери, сколько хочешь учиться сегодня — подстрой темп под свой день.',
+    focus:
+      'Орбы начисляются за каждый завершённый урок. Укажите, сколько орбов хотите получить сегодня и сколько времени готовы потратить.',
+  },
+  'dailyGoal.explanationTitle': {
+    playful: 'Орбы = прогресс',
+    focus: 'Орбы как прогресс обучения',
+  },
+  'dailyGoal.explanationBody': {
+    playful:
+      'Каждый урок приносит орбы. Больше орбов — больше практики, но темп выбираешь ты. Низкая дневная цель — это нормально.',
+    focus:
+      'За каждый завершённый урок начисляются орбы. Дневная цель задаёт темп и время — отдельно от общего прогресса.',
+  },
+  'dailyGoal.targetLabel': {
+    playful: 'Твоя дневная цель',
+    focus: 'Дневная цель в орбах',
+  },
+  'dailyGoal.presetOrbs': {
+    playful: '{{count}} орбов',
+    focus: '{{count}}',
+  },
+  'dailyGoal.notificationsTitle': {
+    playful: 'Напоминание вечером',
+    focus: 'Напоминание об обучении',
+  },
+  'dailyGoal.notificationsBody': {
+    playful:
+      'Можем напомнить вечером, если дневная цель ещё не достигнута — только с твоего разрешения.',
+    focus:
+      'Необязательное вечернее уведомление, если дневная цель ещё не достигнута.',
+  },
+  'dailyGoal.cta': {
+    playful: 'Сохранить цель',
+    focus: 'Сохранить цель',
+  },
+  'dailyGoal.saving': {
+    playful: 'Сохранение…',
+    focus: 'Сохранение…',
+  },
+  'dailyGoal.notificationTitle': {
+    playful: 'StructAI',
+    focus: 'StructAI',
+  },
+  'dailyGoal.notificationBody': {
+    playful: 'Дневная цель ждёт — ты уже учился сегодня?',
+    focus: 'Дневная цель ещё не выполнена — вы уже учились сегодня?',
+  },
   'pathCard.chapters': {
     playful: 'Глава {{current}} из {{total}}',
     focus: 'Гл. {{current}}/{{total}}',
