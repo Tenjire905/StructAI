@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { InteractionManager, ScrollView, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -41,6 +41,7 @@ import {
 } from '@/lib/lessonRewards';
 import { trackEvent } from '@/lib/analytics';
 import { isProfileOnboardingCompleted } from '@/lib/appStorage';
+import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
 import { getPathIdForLesson, getFirstLessonIdForPath, getNextLessonId } from '@/lib/pathLessonUtils';
 import { isPathFinalCapstone, isPathMidCapstone } from '@/lib/pathCapstone';
@@ -94,17 +95,21 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   const goBackToPath = () => {
     dismissCelebration();
 
-    if (pathId) {
-      router.replace(`/lernpfad/${pathId}`);
-      return;
-    }
+    const navigateAway = () => {
+      if (pathId) {
+        router.replace(`/lernpfad/${pathId}`);
+        return;
+      }
 
-    if (router.canGoBack()) {
-      router.back();
-      return;
-    }
+      if (router.canGoBack()) {
+        router.back();
+        return;
+      }
 
-    router.replace(resolveHomeRoute(useProgressStore.getState().completedLessons));
+      router.replace(resolveHomeRoute(useProgressStore.getState().completedLessons));
+    };
+
+    InteractionManager.runAfterInteractions(navigateAway);
   };
 
   const [sessionNonce, setSessionNonce] = useState(0);
@@ -377,6 +382,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
         useProgressStore.getState().completedLessons === 0;
 
       setEarnedOrbs(reward);
+      suppressHomeCelebrations();
       const newlyCompletedPathId = completeLesson(lesson.id, reward);
 
       if (isFirstLessonCompletion && useProgressStore.getState().completedLessons === 1) {

@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 
+import { shouldSuppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
 import { streakWeekdayCopyKeys, useCelebration, useThemeMode } from '@/theme';
 
 import { OrbIcon } from './OrbIcon';
@@ -32,6 +33,7 @@ export function StreakTracker({ completedDays }: StreakTrackerProps) {
 
   useEffect(() => {
     if (
+      !shouldSuppressHomeCelebrations() &&
       completedCount === STREAK_MILESTONE_DAYS &&
       previousCountRef.current < STREAK_MILESTONE_DAYS
     ) {

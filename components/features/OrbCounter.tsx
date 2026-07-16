@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { shouldSuppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { getShadow, useCelebration, useThemeMode } from '@/theme';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
@@ -45,7 +46,7 @@ export function OrbCounter({
     });
 
     const previousCount = previousCountRef.current;
-    if (count > previousCount) {
+    if (count > previousCount && !shouldSuppressHomeCelebrations()) {
       const gained = count - previousCount;
       celebrate('orb_gain', { orbCount: gained });
 

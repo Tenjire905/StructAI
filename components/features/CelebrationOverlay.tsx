@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { Modal, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import Animated, {
+  cancelAnimation,
   Easing,
   runOnJS,
   useAnimatedStyle,
@@ -275,6 +276,8 @@ export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps
 
     return () => {
       clearTimeout(dismissTimer);
+      cancelAnimation(contentOpacity);
+      cancelAnimation(contentScale);
     };
   }, [
     contentOpacity,

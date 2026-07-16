@@ -1,5 +1,6 @@
 import { useRouter, useSegments, type Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { InteractionManager } from 'react-native';
 
 import {
   hydrateAppStorage,
@@ -37,6 +38,22 @@ function isOnDailyGoalSetupRoute(segments: readonly string[]): boolean {
 function isInLessonFlowRoute(segments: readonly string[]): boolean {
   const root = segments[0];
   return root === 'lektion' || root === 'lernpfad';
+}
+
+function isOnTargetRoute(segments: readonly string[], target: Href): boolean {
+  if (target === '/(tabs)') {
+    return segments[0] === '(tabs)';
+  }
+
+  if (typeof target === 'string') {
+    const parts = target.split('/').filter(Boolean);
+
+    if (parts[0] === 'onboarding') {
+      return segments[0] === 'onboarding' && segments[1] === parts[1];
+    }
+  }
+
+  return false;
 }
 
 function resolveAppEntryRoute(completedLessons: number): Href {
@@ -173,7 +190,7 @@ export function AuthNavigationController() {
         target = resolveAppEntryRoute(completedLessons);
       }
 
-      if (!target || lastTargetRef.current === target) {
+      if (!target || lastTargetRef.current === target || isOnTargetRoute(segments, target)) {
         return;
       }
 
@@ -184,7 +201,13 @@ export function AuthNavigationController() {
           return;
         }
 
-        router.replace(target);
+        InteractionManager.runAfterInteractions(() => {
+          if (!isMountedRef.current) {
+            return;
+          }
+
+          router.replace(target);
+        });
       }, 0);
     });
 
@@ -202,6 +225,12 @@ export function AuthNavigationController() {
       lastTargetRef.current = null;
     }
   }, [session]);
+
+  useEffect(() => {
+    if (lastTargetRef.current && isOnTargetRoute(segments, lastTargetRef.current)) {
+      lastTargetRef.current = null;
+    }
+  }, [segments]);
 
   return null;
 }
