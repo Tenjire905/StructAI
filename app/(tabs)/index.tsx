@@ -5,6 +5,7 @@ import { ScrollView, Text, View } from 'react-native';
 import {
   OrbCounter,
   PathCard,
+  PathCardRetryPeek,
   StatBlock,
   StreakTracker,
 } from '@/components/features';
@@ -23,7 +24,7 @@ import { useThemeMode } from '@/theme';
 export default function HomeScreen() {
   const { tokens, t } = useThemeMode();
   const router = useRouter();
-  const [retryMenuPathId, setRetryMenuPathId] = useState<string | null>(null);
+  const [retryPeek, setRetryPeek] = useState<{ pathId: string; nonce: number } | null>(null);
   const { user, session } = useAuth();
   const displayName = session
     ? resolveProfileDisplayName(user)
@@ -47,6 +48,7 @@ export default function HomeScreen() {
         paddingHorizontal: tokens.spacing.screenPadding,
         paddingTop: tokens.spacing.space5,
       }}
+      onScrollBeginDrag={() => setRetryPeek(null)}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <View
         style={{
@@ -118,41 +120,44 @@ export default function HomeScreen() {
             const pathRecord = pathProgress[path.id];
             const progressBar = computePathProgressBarModel(path.id, pathRecord);
             const firstFailedLessonId = getFirstFailedLessonIdInOrder(path.id, pathRecord);
-            const showRetryMenu = retryMenuPathId === path.id;
+            const isRetryPeekVisible = retryPeek?.pathId === path.id;
 
             return (
             <PathCard
               currentChapter={path.currentChapter}
               key={path.id}
               onLongPress={() =>
-                setRetryMenuPathId((current) => (current === path.id ? null : path.id))
+                setRetryPeek((current) =>
+                  current?.pathId === path.id
+                    ? { pathId: path.id, nonce: current.nonce + 1 }
+                    : { pathId: path.id, nonce: 0 },
+                )
               }
               onPress={() => {
-                setRetryMenuPathId(null);
+                setRetryPeek(null);
                 router.push(`/lernpfad/${path.id}`);
               }}
               completedSegments={progressBar.completedSegments}
               failedSegments={progressBar.failedSegments}
               footer={
-                showRetryMenu ? (
-                  <Button
-                    disabled={!firstFailedLessonId}
-                    label={
-                      firstFailedLessonId
-                        ? t('home.retryFailedCta')
-                        : t('home.retryFailedNone')
+                <PathCardRetryPeek
+                  emptyLabel={t('home.retryFailedNone')}
+                  hasFailedLesson={Boolean(firstFailedLessonId)}
+                  onDismiss={() =>
+                    setRetryPeek((current) => (current?.pathId === path.id ? null : current))
+                  }
+                  onRetry={() => {
+                    if (!firstFailedLessonId) {
+                      return;
                     }
-                    onPress={() => {
-                      if (!firstFailedLessonId) {
-                        return;
-                      }
 
-                      setRetryMenuPathId(null);
-                      router.push(`/lektion/${firstFailedLessonId}`);
-                    }}
-                    variant={firstFailedLessonId ? 'primary' : 'ghost'}
-                  />
-                ) : null
+                    setRetryPeek(null);
+                    router.push(`/lektion/${firstFailedLessonId}`);
+                  }}
+                  revealNonce={retryPeek?.pathId === path.id ? retryPeek.nonce : 0}
+                  retryLabel={t('home.retryFailedCta')}
+                  visible={isRetryPeekVisible}
+                />
               }
               progress={progressBar.completedRatio}
               title={t(path.titleKey)}
