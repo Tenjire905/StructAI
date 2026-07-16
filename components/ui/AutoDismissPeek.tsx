@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import Animated from 'react-native-reanimated';
 
+import { PressableScale } from '@/components/ui/PressableScale';
 import { useAutoDismissPeek } from '@/hooks/useAutoDismissPeek';
 
 type AutoDismissPeekProps = {
@@ -8,6 +9,8 @@ type AutoDismissPeekProps = {
   revealNonce?: number;
   onDismiss: () => void;
   maxHeight?: number;
+  /** When true, tapping the peek content dismisses it early. Default: true. */
+  dismissOnPress?: boolean;
   children: ReactNode;
 };
 
@@ -16,9 +19,10 @@ export function AutoDismissPeek({
   revealNonce = 0,
   onDismiss,
   maxHeight,
+  dismissOnPress = true,
   children,
 }: AutoDismissPeekProps) {
-  const { mounted, peekStyle } = useAutoDismissPeek({
+  const { mounted, peekStyle, dismissWithAnimation } = useAutoDismissPeek({
     visible,
     revealNonce,
     onDismiss,
@@ -29,5 +33,11 @@ export function AutoDismissPeek({
     return null;
   }
 
-  return <Animated.View style={peekStyle}>{children}</Animated.View>;
+  const content = dismissOnPress ? (
+    <PressableScale onPress={dismissWithAnimation}>{children}</PressableScale>
+  ) : (
+    children
+  );
+
+  return <Animated.View style={peekStyle}>{content}</Animated.View>;
 }

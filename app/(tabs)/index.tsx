@@ -134,6 +134,11 @@ export default function HomeScreen() {
                 )
               }
               onPress={() => {
+                if (isRetryPeekVisible) {
+                  setRetryPeek(null);
+                  return;
+                }
+
                 setRetryPeek(null);
                 router.push(`/lernpfad/${path.id}`);
               }}

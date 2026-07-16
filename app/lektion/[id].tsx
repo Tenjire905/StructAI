@@ -621,10 +621,11 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
                 <LessonDepthBadgeChip
                   depthBadge={lesson.depthBadge}
                   onPress={() =>
-                    setDepthInfoPeek((current) => ({
-                      visible: true,
-                      nonce: current.visible ? current.nonce + 1 : 0,
-                    }))
+                    setDepthInfoPeek((current) =>
+                      current.visible
+                        ? { visible: false, nonce: current.nonce }
+                        : { visible: true, nonce: 0 },
+                    )
                   }
                 />
               ) : null}

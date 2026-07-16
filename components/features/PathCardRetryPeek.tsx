@@ -23,13 +23,19 @@ export function PathCardRetryPeek({
   emptyLabel,
 }: PathCardRetryPeekProps) {
   return (
-    <AutoDismissPeek maxHeight={72} onDismiss={onDismiss} revealNonce={revealNonce} visible={visible}>
+    <AutoDismissPeek
+      dismissOnPress={false}
+      maxHeight={72}
+      onDismiss={onDismiss}
+      revealNonce={revealNonce}
+      visible={visible}>
       <View>
         <Button
           disabled={!hasFailedLesson}
           label={hasFailedLesson ? retryLabel : emptyLabel}
           onPress={() => {
             if (!hasFailedLesson) {
+              onDismiss();
               return;
             }
 

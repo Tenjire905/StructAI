@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   cancelAnimation,
   runOnJS,
@@ -10,8 +10,8 @@ import {
 
 import { useThemeMode } from '@/theme';
 
-/** Dwell time before the peek auto-dismisses (SwiftUI-style acceptance window). */
-export const AUTO_DISMISS_PEEK_MS = 3_400;
+/** Dwell time before the peek auto-dismisses (~7–8 s reading window). */
+export const AUTO_DISMISS_PEEK_MS = 7_500;
 
 type UseAutoDismissPeekOptions = {
   visible: boolean;
@@ -29,6 +29,29 @@ export function useAutoDismissPeek({
   const { tokens } = useThemeMode();
   const visibility = useSharedValue(0);
   const [mounted, setMounted] = useState(visible);
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  const clearDismissTimer = useCallback(() => {
+    if (dismissTimerRef.current) {
+      clearTimeout(dismissTimerRef.current);
+      dismissTimerRef.current = undefined;
+    }
+  }, []);
+
+  const finishDismiss = useCallback(() => {
+    setMounted(false);
+    onDismiss();
+  }, [onDismiss]);
+
+  const dismissWithAnimation = useCallback(() => {
+    clearDismissTimer();
+    cancelAnimation(visibility);
+    visibility.value = withTiming(0, { duration: tokens.motion.duration.fast }, (finished) => {
+      if (finished) {
+        runOnJS(finishDismiss)();
+      }
+    });
+  }, [clearDismissTimer, finishDismiss, tokens.motion.duration.fast, visibility]);
 
   useEffect(() => {
     if (visible) {
@@ -37,40 +60,21 @@ export function useAutoDismissPeek({
   }, [visible]);
 
   useEffect(() => {
-    let dismissTimer: ReturnType<typeof setTimeout> | undefined;
-
-    const finishDismiss = () => {
-      setMounted(false);
-      onDismiss();
-    };
-
-    const dismissWithAnimation = () => {
-      cancelAnimation(visibility);
-      visibility.value = withTiming(0, { duration: tokens.motion.duration.fast }, (finished) => {
-        if (finished) {
-          runOnJS(finishDismiss)();
-        }
-      });
-    };
-
     if (visible && mounted) {
       cancelAnimation(visibility);
       visibility.value = withSpring(1, tokens.motion.spring.default);
-      dismissTimer = setTimeout(dismissWithAnimation, AUTO_DISMISS_PEEK_MS);
+      clearDismissTimer();
+      dismissTimerRef.current = setTimeout(dismissWithAnimation, AUTO_DISMISS_PEEK_MS);
     } else if (!visible && mounted) {
       dismissWithAnimation();
     }
 
-    return () => {
-      if (dismissTimer) {
-        clearTimeout(dismissTimer);
-      }
-    };
+    return clearDismissTimer;
   }, [
+    clearDismissTimer,
+    dismissWithAnimation,
     mounted,
-    onDismiss,
     revealNonce,
-    tokens.motion.duration.fast,
     tokens.motion.spring.default,
     visible,
     visibility,
@@ -87,5 +91,5 @@ export function useAutoDismissPeek({
     ],
   }));
 
-  return { mounted, peekStyle };
+  return { mounted, peekStyle, dismissWithAnimation };
 }
