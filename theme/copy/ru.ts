@@ -91,6 +91,12 @@ export const copyRu: CopyCatalog = {
     focus:
       'Необязательное вечернее уведомление, если дневная цель ещё не достигнута.',
   },
+  'dailyGoal.notificationsExpoGoHint': {
+    playful:
+      'Напоминания недоступны в Expo Go. Их можно включить позже в development build.',
+    focus:
+      'Уведомления недоступны в Expo Go. Их можно включить в development build.',
+  },
   'dailyGoal.cta': {
     playful: 'Сохранить цель',
     focus: 'Сохранить цель',

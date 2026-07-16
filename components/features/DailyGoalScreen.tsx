@@ -5,7 +5,7 @@ import { ScrollView, Switch, Text, View } from 'react-native';
 import { Button } from '@/components/ui';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { setDailyGoalSetupCompleted } from '@/lib/appStorage';
-import { requestDailyGoalNotificationPermission } from '@/lib/dailyGoalNotifications';
+import { requestDailyGoalNotificationPermission, areDailyGoalNotificationsSupported } from '@/lib/dailyGoalNotifications';
 import { DAILY_ORB_GOAL_PRESETS, DEFAULT_DAILY_ORB_GOAL } from '@/lib/dailyOrbGoal';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
@@ -26,6 +26,7 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
   );
   const [notificationsEnabled, setNotificationsEnabled] = useState(storedNotifications);
   const [isSaving, setIsSaving] = useState(false);
+  const notificationsSupported = areDailyGoalNotificationsSupported();
 
   const handleToggleNotifications = async (enabled: boolean) => {
     if (enabled) {
@@ -41,7 +42,7 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
     setIsSaving(true);
 
     try {
-      setDailyOrbGoal(selectedGoal, notificationsEnabled);
+      setDailyOrbGoal(selectedGoal, notificationsSupported ? notificationsEnabled : false);
       await setDailyGoalSetupCompleted();
       router.replace(returnTo);
     } finally {
@@ -153,17 +154,56 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
         </View>
       </View>
 
-      <View
-        style={{
-          alignItems: 'center',
-          backgroundColor: tokens.colors.surface.card,
-          borderRadius: tokens.radius.lg,
-          flexDirection: 'row',
-          gap: tokens.spacing.space3,
-          justifyContent: 'space-between',
-          padding: tokens.spacing.space4,
-        }}>
-        <View style={{ flex: 1, gap: tokens.spacing.space1 }}>
+      {notificationsSupported ? (
+        <View
+          style={{
+            alignItems: 'center',
+            backgroundColor: tokens.colors.surface.card,
+            borderRadius: tokens.radius.lg,
+            flexDirection: 'row',
+            gap: tokens.spacing.space3,
+            justifyContent: 'space-between',
+            padding: tokens.spacing.space4,
+          }}>
+          <View style={{ flex: 1, gap: tokens.spacing.space1 }}>
+            <Text
+              style={{
+                color: tokens.colors.text.primary,
+                fontFamily: tokens.typography.fontFamily.heading,
+                fontSize: tokens.typography.fontSize.bodyMd,
+              }}>
+              {t('dailyGoal.notificationsTitle')}
+            </Text>
+            <Text
+              style={{
+                color: tokens.colors.text.secondary,
+                fontFamily: tokens.typography.fontFamily.body,
+                fontSize: tokens.typography.fontSize.bodySm,
+                lineHeight: tokens.typography.fontSize.bodySm * 1.45,
+              }}>
+              {t('dailyGoal.notificationsBody')}
+            </Text>
+          </View>
+          <Switch
+            onValueChange={(value) => {
+              void handleToggleNotifications(value);
+            }}
+            thumbColor={tokens.colors.text.onAccent}
+            trackColor={{
+              false: tokens.colors.border.subtle,
+              true: tokens.colors.accent.primary,
+            }}
+            value={notificationsEnabled}
+          />
+        </View>
+      ) : (
+        <View
+          style={{
+            backgroundColor: tokens.colors.surface.card,
+            borderRadius: tokens.radius.lg,
+            gap: tokens.spacing.space1,
+            padding: tokens.spacing.space4,
+          }}>
           <Text
             style={{
               color: tokens.colors.text.primary,
@@ -179,21 +219,10 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
               fontSize: tokens.typography.fontSize.bodySm,
               lineHeight: tokens.typography.fontSize.bodySm * 1.45,
             }}>
-            {t('dailyGoal.notificationsBody')}
+            {t('dailyGoal.notificationsExpoGoHint')}
           </Text>
         </View>
-        <Switch
-          onValueChange={(value) => {
-            void handleToggleNotifications(value);
-          }}
-          thumbColor={tokens.colors.text.onAccent}
-          trackColor={{
-            false: tokens.colors.border.subtle,
-            true: tokens.colors.accent.primary,
-          }}
-          value={notificationsEnabled}
-        />
-      </View>
+      )}
 
       <Button
         label={isSaving ? t('dailyGoal.saving') : t('dailyGoal.cta')}

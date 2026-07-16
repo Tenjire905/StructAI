@@ -91,6 +91,12 @@ export const copyFr: CopyCatalog = {
     focus:
       "Notification optionnelle le soir si l'objectif du jour n'est pas encore atteint.",
   },
+  'dailyGoal.notificationsExpoGoHint': {
+    playful:
+      'Les rappels ne sont pas disponibles dans Expo Go. Tu pourras les activer dans un development build.',
+    focus:
+      'Les notifications ne sont pas disponibles dans Expo Go. Elles peuvent etre activees dans un development build.',
+  },
   'dailyGoal.cta': {
     playful: "Enregistrer l'objectif",
     focus: "Enregistrer l'objectif",

@@ -1,4 +1,4 @@
-import * as Notifications from 'expo-notifications';
+import { isRunningInExpoGo } from 'expo';
 
 import { appStorage } from '@/lib/appStorage';
 import { getCatalogForLocale } from '@/theme/copy/index';
@@ -10,15 +10,44 @@ const DAILY_GOAL_REMINDER_ID = 'structai-daily-goal-reminder';
 const LOCALE_STORAGE_KEY = 'structai.locale';
 const THEME_MODE_STORAGE_KEY = 'structai.theme-mode';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+type NotificationsModule = typeof import('expo-notifications');
+
+let notificationsModulePromise: Promise<NotificationsModule | null> | null = null;
+let notificationHandlerConfigured = false;
+
+export function areDailyGoalNotificationsSupported(): boolean {
+  return !isRunningInExpoGo();
+}
+
+async function loadNotificationsModule(): Promise<NotificationsModule | null> {
+  if (!areDailyGoalNotificationsSupported()) {
+    return null;
+  }
+
+  if (!notificationsModulePromise) {
+    notificationsModulePromise = import('expo-notifications');
+  }
+
+  return notificationsModulePromise;
+}
+
+async function ensureNotificationHandler(Notifications: NotificationsModule): Promise<void> {
+  if (notificationHandlerConfigured) {
+    return;
+  }
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }),
+  });
+
+  notificationHandlerConfigured = true;
+}
 
 function readStoredLocale() {
   const stored = appStorage.getString(LOCALE_STORAGE_KEY);
@@ -42,6 +71,14 @@ function getDailyGoalNotificationCopy() {
 }
 
 export async function requestDailyGoalNotificationPermission(): Promise<boolean> {
+  const Notifications = await loadNotificationsModule();
+
+  if (!Notifications) {
+    return false;
+  }
+
+  await ensureNotificationHandler(Notifications);
+
   const current = await Notifications.getPermissionsAsync();
 
   if (current.granted) {
@@ -53,6 +90,14 @@ export async function requestDailyGoalNotificationPermission(): Promise<boolean>
 }
 
 export async function syncDailyGoalReminder(enabled: boolean): Promise<void> {
+  const Notifications = await loadNotificationsModule();
+
+  if (!Notifications) {
+    return;
+  }
+
+  await ensureNotificationHandler(Notifications);
+
   await Notifications.cancelScheduledNotificationAsync(DAILY_GOAL_REMINDER_ID).catch(() => undefined);
 
   if (!enabled) {

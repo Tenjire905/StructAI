@@ -91,6 +91,12 @@ export const copyDe: CopyCatalog = {
     focus:
       'Optional: Benachrichtigung am Abend, wenn das Tagesziel noch nicht erreicht wurde.',
   },
+  'dailyGoal.notificationsExpoGoHint': {
+    playful:
+      'Erinnerungen sind in Expo Go nicht verfügbar. In einem Development Build kannst du sie später aktivieren.',
+    focus:
+      'Benachrichtigungen sind in Expo Go nicht verfügbar. In einem Development Build können sie aktiviert werden.',
+  },
   'dailyGoal.cta': {
     playful: 'Tagesziel speichern',
     focus: 'Tagesziel speichern',
