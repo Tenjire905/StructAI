@@ -1,6 +1,5 @@
 import { useRouter, useSegments, type Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { InteractionManager } from 'react-native';
 
 import {
   hydrateAppStorage,
@@ -10,6 +9,7 @@ import {
   setProfileOnboardingCompleted,
 } from '@/lib/appStorage';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
+import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import { isProgressSnapshotEmpty } from '@/lib/progressMerge';
 import { fetchProgressSnapshotForUser } from '@/lib/progressSync';
 import { useAuth } from '@/providers/AuthProvider';
@@ -201,7 +201,7 @@ export function AuthNavigationController() {
           return;
         }
 
-        InteractionManager.runAfterInteractions(() => {
+        runAfterUISettles(() => {
           if (!isMountedRef.current) {
             return;
           }

@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { InteractionManager, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -42,6 +42,7 @@ import {
 import { trackEvent } from '@/lib/analytics';
 import { isProfileOnboardingCompleted } from '@/lib/appStorage';
 import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
+import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
 import { getPathIdForLesson, getFirstLessonIdForPath, getNextLessonId } from '@/lib/pathLessonUtils';
 import { isPathFinalCapstone, isPathMidCapstone } from '@/lib/pathCapstone';
@@ -109,7 +110,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
       router.replace(resolveHomeRoute(useProgressStore.getState().completedLessons));
     };
 
-    InteractionManager.runAfterInteractions(navigateAway);
+    runAfterUISettles(navigateAway);
   };
 
   const [sessionNonce, setSessionNonce] = useState(0);
