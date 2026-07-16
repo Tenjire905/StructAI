@@ -23,7 +23,7 @@ import {
   RetryPromptView,
   TrueFalseStepView,
 } from '@/components/features/lesson-steps';
-import { Button, Card, ProgressBar } from '@/components/ui';
+import { Button, Card, ProgressBar, Badge } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import {
   getMockLesson,
@@ -583,17 +583,36 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
           }}
           style={{ flex: 1 }}>
           <View style={{ gap: tokens.spacing.space2 }}>
-            <Text
+            <View
               style={{
-                color: tokens.colors.text.secondary,
-                fontFamily: tokens.typography.fontFamily.mono,
-                fontSize: tokens.typography.fontSize.bodySm,
+                alignItems: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: tokens.spacing.space2,
+                justifyContent: 'space-between',
               }}>
-              {t('lesson.stepLabel', {
-                current: stepIndex + 1,
-                total: lesson.steps.length,
-              })}
-            </Text>
+              <Text
+                style={{
+                  color: tokens.colors.text.secondary,
+                  fontFamily: tokens.typography.fontFamily.mono,
+                  fontSize: tokens.typography.fontSize.bodySm,
+                }}>
+                {t('lesson.stepLabel', {
+                  current: stepIndex + 1,
+                  total: lesson.steps.length,
+                })}
+              </Text>
+              {lesson.depthBadge ? (
+                <Badge
+                  label={
+                    lesson.depthBadge === 'playful'
+                      ? t('lesson.depthBadgePlayful')
+                      : t('lesson.depthBadgeFocus')
+                  }
+                  tone={lesson.depthBadge === 'playful' ? 'structure' : 'primary'}
+                />
+              ) : null}
+            </View>
             <ProgressBar
               color="primary"
               progress={(stepIndex + 1) / lesson.steps.length}

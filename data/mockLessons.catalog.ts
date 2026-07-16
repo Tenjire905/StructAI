@@ -26,6 +26,20 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         explanationKey: 'pb-1.s2.explanation',
       },
     ],
+    playfulSteps: [
+      {
+        type: 'info',
+        titleKey: 'pb-1.s0.title',
+        bodyKey: 'pb-1.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'pb-1.s1.question',
+        optionKeys: ['pb-1.s1.opt0', 'pb-1.s1.opt1', 'pb-1.s1.opt2'],
+        correctIndex: 1,
+        explanationKey: 'pb-1.s1.explanation',
+      },
+    ],
   },
   {
     id: 'pb-2',
@@ -51,6 +65,21 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         optionKeys: ['pb-2.s2.opt0', 'pb-2.s2.opt1', 'pb-2.s2.opt2'],
         correctIndex: 1,
         explanationKey: 'pb-2.s2.explanation',
+      },
+    ],
+    playfulSteps: [
+      {
+        type: 'info',
+        titleKey: 'pb-2.s0.title',
+        bodyKey: 'pb-2.s0.body',
+      },
+      {
+        type: 'fill_blank',
+        prefixKey: 'pb-2.s1.prefix',
+        suffixKey: 'pb-2.s1.suffix',
+        optionKeys: ['pb-2.s1.blank0', 'pb-2.s1.blank1', 'pb-2.s1.blank2'],
+        correctIndex: 1,
+        explanationKey: 'pb-2.s1.explanation',
       },
     ],
   },
@@ -79,6 +108,20 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         explanationKey: 'pb-3.s2.explanation',
       },
     ],
+    playfulSteps: [
+      {
+        type: 'info',
+        titleKey: 'pb-3.s0.title',
+        bodyKey: 'pb-3.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'pb-3.s1.question',
+        optionKeys: ['pb-3.s1.opt0', 'pb-3.s1.opt1', 'pb-3.s1.opt2'],
+        correctIndex: 1,
+        explanationKey: 'pb-3.s1.explanation',
+      },
+    ],
   },
   {
     id: 'pb-4',
@@ -105,6 +148,19 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         explanationKey: 'pb-4.s2.explanation',
       },
     ],
+    playfulSteps: [
+      {
+        type: 'info',
+        titleKey: 'pb-4.s0.title',
+        bodyKey: 'pb-4.s0.body',
+      },
+      {
+        type: 'true_false',
+        statementKey: 'pb-4.playful.tf.statement',
+        correct: true,
+        explanationKey: 'pb-4.playful.tf.explanation',
+      },
+    ],
   },
   {
     id: 'pb-5',
@@ -129,6 +185,20 @@ export const MOCK_LESSONS_CATALOG: MockLessonCatalog[] = [
         optionKeys: ['pb-5.s2.opt0', 'pb-5.s2.opt1', 'pb-5.s2.opt2'],
         correctIndex: 1,
         explanationKey: 'pb-5.s2.explanation',
+      },
+    ],
+    playfulSteps: [
+      {
+        type: 'info',
+        titleKey: 'pb-5.s0.title',
+        bodyKey: 'pb-5.s0.body',
+      },
+      {
+        type: 'choice',
+        questionKey: 'pb-5.s1.question',
+        optionKeys: ['pb-5.s1.opt0', 'pb-5.s1.opt1', 'pb-5.s1.opt2'],
+        correctIndex: 1,
+        explanationKey: 'pb-5.s1.explanation',
       },
     ],
   },

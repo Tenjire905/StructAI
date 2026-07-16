@@ -73,9 +73,13 @@ export type ResolvedLessonStep =
   | ResolvedErrorFindingStep
   | ResolvedCategorizeStep;
 
+export type LessonDepthBadge = 'playful' | 'focus';
+
 export type ResolvedLesson = {
   id: string;
   title: string;
   orbsReward: number;
   steps: ResolvedLessonStep[];
+  /** Set when catalog defines `playfulSteps` — signals structural depth difference. */
+  depthBadge?: LessonDepthBadge;
 };

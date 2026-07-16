@@ -1,6 +1,6 @@
 # Playful / Focus — Inhaltstiefe
 
-StructAI unterscheidet **Playful** und **Focus** nicht nur in UI-Ton und Feedback, sondern auch in der **Lerninhalt-Tiefe**. Gleiches Lernziel pro Lesson, unterschiedliche Exposition.
+StructAI unterscheidet **Playful** und **Focus** in UI-Ton, Feedback **und** in der **Lerninhalt-Tiefe**. Gleiches Lernziel pro Lesson, unterschiedliche Exposition.
 
 ## Produktregeln
 
@@ -8,12 +8,39 @@ StructAI unterscheidet **Playful** und **Focus** nicht nur in UI-Ton und Feedbac
 |--------|---------|-------|
 | Sprache | Einfacher, direkter | Präziser, fachlicher |
 | Info-Steps | Kürzere Bodies, weniger Nebenkonzepte | Dichtere Erklärungen, mehr Kontext |
-| Choice / Reorder | Einfachere Fragen, weniger komplexe Distraktoren | Tiefere Nachfragen, anspruchsvollere Optionen |
+| Bewertete Schritte | **Weniger** (kürzere Sequenz) | **Mehr** Nachfragen / Vertiefung |
+| Step-Typen | Einfachere Typen wo sinnvoll (z. B. Wahr/Falsch statt 2× Choice) | Vollständige Sequenz |
 | Lernziel | Identisch | Identisch |
 
 Modus kommt aus `useThemeMode().mode`. Lesson-Texte werden bei Session-Start bzw. Reload über `getMockLesson(id, locale, mode)` aufgelöst.
 
-## Authoring — drei Wege (abwärtskompatibel)
+## Strukturelle Tiefe — `playfulSteps`
+
+Zusätzlich zu sprachlichen Varianten kann der Catalog eine **kürzere Playful-Sequenz** definieren:
+
+```ts
+{
+  id: 'pb-1',
+  steps: [ /* Focus: info + 2 choice */ ],
+  playfulSteps: [ /* Playful: info + 1 choice */ ],
+}
+```
+
+`resolveCatalogLesson()` wählt bei `mode === 'playful'` automatisch `playfulSteps`, falls vorhanden. Die Lesson-UI zeigt ein **Tiefen-Badge** (`lesson.depthBadgePlayful` / `lesson.depthBadgeFocus`).
+
+### Pilot (pb-1 … pb-5)
+
+| Lesson | Focus | Playful |
+|--------|-------|---------|
+| pb-1 | info + 2 choice | info + 1 choice |
+| pb-2 | info + fill_blank + choice | info + fill_blank |
+| pb-3 | info + 2 choice | info + 1 choice |
+| pb-4 | info + 2 choice | info + true_false |
+| pb-5 | info + 2 choice | info + 1 choice |
+
+pb-6+ nutzen weiterhin nur sprachliche Varianten (sofern vorhanden) oder Legacy-Fallback — **keine** `playfulSteps`.
+
+## Authoring — sprachliche Varianten (abwärtskompatibel)
 
 ### 1. Key-Suffix (empfohlen für Pilot)
 
@@ -24,11 +51,9 @@ pb-1.s0.body          → Focus (oder Fallback für beide, wenn kein .playful ex
 pb-1.s0.body.playful  → Playful
 ```
 
-Keine Catalog-Änderung nötig.
-
 ### 2. Explizite Catalog-Keys
 
-Pro Step optional `*KeyPlayful` / `*KeyFocus` (z. B. `bodyKeyPlayful`, `questionKeyFocus`). Überschreiben den Basis-Key für den jeweiligen Modus.
+Pro Step optional `*KeyPlayful` / `*KeyFocus` (z. B. `bodyKeyPlayful`, `questionKeyFocus`).
 
 ### 3. Nested `content`
 
@@ -44,8 +69,6 @@ Pro Step optional `*KeyPlayful` / `*KeyFocus` (z. B. `bodyKeyPlayful`, `question
 }
 ```
 
-Teilvarianten möglich — fehlende Felder fallen auf Basis-Key + Suffix-Logik zurück.
-
 ## Auflösungsreihenfolge (`lib/resolveLessonContent.ts`)
 
 1. Nested `content[mode].*Key` (wenn gesetzt)
@@ -53,17 +76,12 @@ Teilvarianten möglich — fehlende Felder fallen auf Basis-Key + Suffix-Logik z
 3. Lesson-Map `{baseKey}.{mode}`
 4. Legacy `{baseKey}`
 
-## Pilot-Lessons (DE)
-
-Vollständig mit Playful-Varianten: **pb-1, pb-2, pb-3, pb-4, pb-5** (`prompt-basics`).
-
-## Reorder-Hints (vorbereitet)
-
-`LessonReorderCatalogStep` unterstützt `reorderHintKeyPlayful` / `reorderHintKeyFocus` — Engine folgt in Session 1B.
+Schrittliste: `playfulSteps` (Playful) oder `steps` (Focus / Fallback).
 
 ## QA
 
-1. Einstellungen → Modus wechseln
-2. Lesson neu öffnen (oder Session neu starten)
-3. pb-1: Playful spürbar kürzer/einfacher als Focus
-4. pb-6+: identischer Text in beiden Modi (Legacy-Fallback)
+1. Profil → Modus wechseln (Playful / Fokussiert)
+2. Lesson **neu öffnen** (zurück und erneut rein — Session cached nicht den Moduswechsel mid-step)
+3. **pb-1 Playful:** 2 Schritte total (1 Info + 1 Frage), Badge „Kürzer · Einfacher“
+4. **pb-1 Focus:** 3 Schritte (1 Info + 2 Fragen), Badge „Vertiefung · Mehr Fragen“
+5. pb-6+: gleiche Schrittanzahl in beiden Modi (bis Content erweitert wird)

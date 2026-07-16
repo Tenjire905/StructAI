@@ -56,6 +56,10 @@ export const lessonFrPb: Record<string, string> = {
   'pb-4.s2.opt2': 'Le JSON est toujours meilleur que le texte rédigé.',
   'pb-4.s2.question': 'Quand un format de sortie explicite comme le JSON est-il utile ?',
   'pb-4.title': 'Consignes de format',
+  'pb-4.playful.tf.statement':
+    'Si tu veux un format fixe (par ex. une liste ou un tableau), tu dois le dire à l\'IA.',
+  'pb-4.playful.tf.explanation':
+    'Les consignes de format évitent de retoucher ensuite — la réponse colle mieux tout de suite.',
   'pb-5.s0.body': 'Un ou deux exemples d\'entrée et de sortie souhaitée calibrent le modèle plus vite que de longues règles. Les exemples doivent être représentatifs et refléter le style, le ton et le format souhaités. Place-les juste avant la tâche proprement dite.',
   'pb-5.s0.title': 'Few-shot : montrer plutôt qu\'expliquer',
   'pb-5.s1.explanation': 'Les exemples montrent le résultat visé, mais ils ne remplacent pas une tâche claire ni des contraintes.',

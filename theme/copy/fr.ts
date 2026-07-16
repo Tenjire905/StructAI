@@ -129,6 +129,14 @@ export const copyFr: CopyCatalog = {
     playful: 'Etape {{current}} sur {{total}}',
     focus: '{{current}}/{{total}}',
   },
+  'lesson.depthBadgePlayful': {
+    playful: 'Plus court · Plus simple',
+    focus: 'Plus court · Plus simple',
+  },
+  'lesson.depthBadgeFocus': {
+    playful: 'Approfondi · Plus de questions',
+    focus: 'Approfondi · Plus de questions',
+  },
   'lesson.typeChoice': {
     playful: 'Question a choix',
     focus: 'Choix',
@@ -278,8 +286,10 @@ export const copyFr: CopyCatalog = {
     focus: 'Concentration',
   },
   'profile.modeDescription': {
-    playful: 'Meme contenu, memes chiffres - seul l habillage change.',
-    focus: 'Les deux modes affichent les memes donnees et fonctions ; seule la presentation varie.',
+    playful:
+      'Mode ludique : textes plus courts et moins de questions. Mode concentre : plus de profondeur — meme objectif.',
+    focus:
+      'Mode ludique : moins d etapes notees. Mode concentre : plus de profondeur — meme objectif.',
   },
   'profile.languageSection': {
     playful: 'Langue',

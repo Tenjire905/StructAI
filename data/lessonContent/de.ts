@@ -1412,6 +1412,9 @@ export const lessonDe: Record<string, string> = {
   'pb-4.s2.opt1.playful': 'Wenn ein Programm die Antwort weiterverarbeiten soll.',
   'pb-4.s2.opt2.playful': 'JSON ist immer die beste Wahl.',
   'pb-4.s2.explanation.playful': 'Strukturierte Formate lassen sich leichter automatisch verarbeiten.',
+  'pb-4.playful.tf.statement':
+    'Wenn du ein festes Format willst (z. B. Liste oder Tabelle), solltest du das der KI sagen.',
+  'pb-4.playful.tf.explanation': 'Formatvorgaben sparen dir Nacharbeit – die Antwort passt gleich besser.',
   'pb-5.title.playful': 'Beispiele nutzen',
   'pb-5.s0.title.playful': 'Zeigen statt lange erklären',
   'pb-5.s0.body.playful':

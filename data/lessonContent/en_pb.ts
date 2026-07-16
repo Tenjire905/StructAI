@@ -56,6 +56,10 @@ export const lessonEnPb: Record<string, string> = {
   'pb-4.s2.opt2': 'JSON is always better than prose.',
   'pb-4.s2.question': 'When is an explicit output format like JSON worthwhile?',
   'pb-4.title': 'Format instructions',
+  'pb-4.playful.tf.statement':
+    'If you want a fixed format (e.g. a list or table), you should tell the AI.',
+  'pb-4.playful.tf.explanation':
+    'Format instructions save rework — the answer fits your needs sooner.',
   'pb-5.s0.body': 'One or two examples of input and desired output calibrate the model faster than long rules. Examples should be representative and reflect the style, tone, and format you want. Place them directly before the actual task.',
   'pb-5.s0.title': 'Few-shot: show instead of explain',
   'pb-5.s1.explanation': 'Examples demonstrate the target pattern, but they do not replace a clear task and constraints.',

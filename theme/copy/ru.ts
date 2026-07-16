@@ -129,6 +129,14 @@ export const copyRu: CopyCatalog = {
     playful: 'Шаг {{current}} из {{total}}',
     focus: '{{current}}/{{total}}',
   },
+  'lesson.depthBadgePlayful': {
+    playful: 'Короче · Проще',
+    focus: 'Короче · Проще',
+  },
+  'lesson.depthBadgeFocus': {
+    playful: 'Глубже · Больше вопросов',
+    focus: 'Глубже · Больше вопросов',
+  },
   'lesson.typeChoice': {
     playful: 'Выбор варианта',
     focus: 'Выбор',
@@ -278,8 +286,10 @@ export const copyRu: CopyCatalog = {
     focus: 'Фокус',
   },
   'profile.modeDescription': {
-    playful: 'Контент и цифры те же - меняется только подача.',
-    focus: 'Оба режима показывают одинаковые данные и функции, различается только оформление.',
+    playful:
+      'Игривый: короче тексты и меньше вопросов. Фокус: больше глубины и уточнений — та же цель обучения.',
+    focus:
+      'Игривый: меньше оцениваемых шагов. Фокус: больше глубины — та же цель обучения.',
   },
   'profile.languageSection': {
     playful: 'Язык',

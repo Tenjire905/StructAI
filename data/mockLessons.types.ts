@@ -171,5 +171,8 @@ export type MockLessonCatalog = {
   titleKeyPlayful?: string;
   titleKeyFocus?: string;
   orbsReward: number;
+  /** Focus / default step sequence (full depth). */
   steps: LessonCatalogStep[];
+  /** Shorter Playful sequence — fewer graded steps, simpler types where noted. */
+  playfulSteps?: LessonCatalogStep[];
 };
