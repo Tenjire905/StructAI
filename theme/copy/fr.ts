@@ -41,6 +41,10 @@ export const copyFr: CopyCatalog = {
     playful: 'Toutes les lecons sont faites — pas de reprise necessaire',
     focus: 'Toutes les lecons sont terminees — aucune reprise requise',
   },
+  'home.retryFailedNoOpen': {
+    playful: 'Aucune lecon en echec — continue normalement',
+    focus: 'Aucune erreur ouverte — poursuivre normalement',
+  },
   'orbCounter.label': {
     playful: "Orbs d'energie",
     focus: 'Orbs',

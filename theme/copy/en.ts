@@ -41,6 +41,10 @@ export const copyEn: CopyCatalog = {
     playful: 'All lessons done — no retry needed',
     focus: 'All lessons completed — no retry required',
   },
+  'home.retryFailedNoOpen': {
+    playful: 'No missed lessons — keep going!',
+    focus: 'No open failures — continue as usual',
+  },
   'orbCounter.label': {
     playful: 'Energy Orbs',
     focus: 'Orbs',

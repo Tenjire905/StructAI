@@ -15,6 +15,7 @@ import {
   getFirstFailedLessonIdInOrder,
   pathTitleKey,
 } from '@/lib/pathProgress';
+import { isPathFullyCompleted } from '@/lib/pathCompletion';
 import { DEFAULT_START_PATH_ID } from '@/lib/pathLessonUtils';
 import { isDailyGoalSetupCompleted } from '@/lib/appStorage';
 import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
@@ -128,7 +129,11 @@ export default function HomeScreen() {
             const pathRecord = pathProgress[path.id];
             const progressBar = computePathProgressBarModel(path.id, pathRecord);
             const firstFailedLessonId = getFirstFailedLessonIdInOrder(path.id, pathRecord);
+            const pathIsComplete = isPathFullyCompleted(path.id, pathRecord);
             const isRetryPeekVisible = retryPeek?.pathId === path.id;
+            const retryEmptyLabel = pathIsComplete
+              ? t('home.retryFailedNone')
+              : t('home.retryFailedNoOpen');
 
             return (
             <PathCard
@@ -154,7 +159,7 @@ export default function HomeScreen() {
               failedSegments={progressBar.failedSegments}
               footer={
                 <PathCardRetryPeek
-                  emptyLabel={t('home.retryFailedNone')}
+                  emptyLabel={retryEmptyLabel}
                   hasFailedLesson={Boolean(firstFailedLessonId)}
                   onDismiss={() =>
                     setRetryPeek((current) => (current?.pathId === path.id ? null : current))

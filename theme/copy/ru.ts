@@ -41,6 +41,10 @@ export const copyRu: CopyCatalog = {
     playful: 'Все главы пройдены — повтор не нужен',
     focus: 'Все главы завершены — повтор не требуется',
   },
+  'home.retryFailedNoOpen': {
+    playful: 'Нет ошибок — продолжай как обычно',
+    focus: 'Нет открытых ошибок — продолжайте как обычно',
+  },
   'orbCounter.label': {
     playful: 'Энерго-орбы',
     focus: 'Орбы',

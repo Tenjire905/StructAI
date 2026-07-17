@@ -110,10 +110,10 @@ export function LessonSessionScreen({
     dismissCelebration();
 
     const navigateAway = () => {
-      if (pathId) {
-        returnToPath(router, pathId, { preferPop: openedFromPath });
-        return;
-      }
+    if (pathId) {
+      returnToPath(router, pathId);
+      return;
+    }
 
       if (router.canGoBack()) {
         suppressHomeCelebrations();
@@ -533,7 +533,7 @@ export function LessonSessionScreen({
                     return;
                   }
 
-                  router.replace(`/lernpfad/${nextPathId}`);
+                  returnToPath(router, nextPathId);
                 }
               : undefined
           }
