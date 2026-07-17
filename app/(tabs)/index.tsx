@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  RefreshControl,
   ScrollView,
   Text,
   View,
@@ -9,14 +10,14 @@ import {
 } from 'react-native';
 
 import {
+  HomeActivityInsightsTile,
   OrbCounter,
   PathCard,
   PathCardRetryPeek,
   PATH_CARD_RETRY_PEEK_MAX_HEIGHT,
-  StatBlock,
-  StreakTracker,
 } from '@/components/features';
 import { Avatar, Button, Card } from '@/components/ui';
+import { hydrateAppStorage, isDailyGoalSetupCompleted } from '@/lib/appStorage';
 import {
   computePathProgressBarModel,
   getFirstFailedLessonIdInOrder,
@@ -24,7 +25,7 @@ import {
 } from '@/lib/pathProgress';
 import { isPathFullyCompleted } from '@/lib/pathCompletion';
 import { DEFAULT_START_PATH_ID } from '@/lib/pathLessonUtils';
-import { isDailyGoalSetupCompleted } from '@/lib/appStorage';
+import { hydrateProgressOnLogin } from '@/lib/progressSync';
 import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
@@ -41,6 +42,7 @@ export default function HomeScreen() {
   const scrollOffsetRef = useRef(0);
   const pathCardRefs = useRef<Record<string, RNView | null>>({});
   const [retryPeek, setRetryPeek] = useState<{ pathId: string; nonce: number } | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
   const { user, session } = useAuth();
   const displayName = session
     ? resolveProfileDisplayName(user)
@@ -52,6 +54,7 @@ export default function HomeScreen() {
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const currentStreak = useProgressStore((state) => state.currentStreak);
   const streakDays = useProgressStore((state) => state.streakDays);
+  const dailyOrbHistory = useProgressStore((state) => state.dailyOrbHistory);
   const pathProgress = useProgressStore((state) => state.pathProgress);
   const activePaths = useMemo(
     () => useProgressStore.getState().getActivePaths(),
@@ -97,6 +100,22 @@ export default function HomeScreen() {
     };
   }, [retryPeek, scrollPeekIntoView]);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setRetryPeek(null);
+
+    try {
+      await hydrateAppStorage();
+      useProgressStore.getState().hydrate();
+
+      if (session?.user.id) {
+        await hydrateProgressOnLogin(session.user.id);
+      }
+    } finally {
+      setRefreshing(false);
+    }
+  }, [session?.user.id]);
+
   return (
     <ScrollView
       ref={scrollViewRef}
@@ -109,6 +128,17 @@ export default function HomeScreen() {
       onScroll={(event) => {
         scrollOffsetRef.current = event.nativeEvent.contentOffset.y;
       }}
+      refreshControl={
+        <RefreshControl
+          colors={[tokens.colors.accent.primary]}
+          onRefresh={() => {
+            void onRefresh();
+          }}
+          progressBackgroundColor={tokens.colors.background.elevated}
+          refreshing={refreshing}
+          tintColor={tokens.colors.accent.primary}
+        />
+      }
       scrollEventThrottle={16}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <View
@@ -137,12 +167,14 @@ export default function HomeScreen() {
         />
       </View>
 
-      <StreakTracker completedDays={streakDays} />
-
-      <View style={{ flexDirection: 'row', gap: tokens.spacing.space3 }}>
-        <StatBlock copyKey="statBlock.completedLessons" value={completedLessons} />
-        <StatBlock copyKey="statBlock.currentStreak" value={currentStreak} />
-      </View>
+      <HomeActivityInsightsTile
+        completedLessons={completedLessons}
+        currentStreak={currentStreak}
+        dailyOrbGoal={dailyGoalConfigured ? dailyOrbGoal : 0}
+        dailyOrbHistory={dailyOrbHistory}
+        orbsEarnedToday={orbsEarnedToday}
+        streakDays={streakDays}
+      />
 
       <View style={{ gap: tokens.spacing.space3 }}>
         <Text

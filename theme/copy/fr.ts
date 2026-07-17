@@ -45,6 +45,42 @@ export const copyFr: CopyCatalog = {
     playful: 'Aucune lecon en echec — continue normalement',
     focus: 'Aucune erreur ouverte — poursuivre normalement',
   },
+  'home.activityInsights.title': {
+    playful: 'Ton activite',
+    focus: 'Apercu d\'activite',
+  },
+  'home.activityInsights.expandHint': {
+    playful: 'Touche pour voir ton historique d\'orbs en graphique',
+    focus: 'Toucher pour ouvrir le graphique d\'activite des orbs',
+  },
+  'home.activityInsights.collapseHint': {
+    playful: 'Touche pour revenir a la vue hebdomadaire',
+    focus: 'Toucher pour revenir a la vue hebdomadaire',
+  },
+  'home.activityInsights.chartTitle': {
+    playful: 'Journal d\'orbs',
+    focus: 'Activite quotidienne des orbs',
+  },
+  'home.activityInsights.period': {
+    playful: '{{days}} derniers jours',
+    focus: 'Periode : {{days}} jours',
+  },
+  'home.activityInsights.productivityValue': {
+    playful: '{{percent}} %',
+    focus: '{{percent}} %',
+  },
+  'home.activityInsights.productivityWithGoal': {
+    playful: 'Productivite vs objectif quotidien de {{goal}} orbs',
+    focus: 'Productivite par rapport a l\'objectif quotidien ({{goal}} orbs)',
+  },
+  'home.activityInsights.productivityNoGoal': {
+    playful: 'Jours actifs — fixe un objectif via les orbs en haut',
+    focus: 'Jours actifs — objectif quotidien via le compteur d\'orbs',
+  },
+  'home.activityInsights.orbPeekA11y': {
+    playful: '{{count}} orbs ce jour-la',
+    focus: '{{count}} orbs ce jour-la',
+  },
   'orbCounter.label': {
     playful: "Orbs d'energie",
     focus: 'Orbs',

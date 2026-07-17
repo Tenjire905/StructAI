@@ -5,18 +5,21 @@ import { getShadow, useThemeMode, type CopyKey } from '@/theme';
 type StatBlockProps = {
   copyKey: CopyKey;
   value: number | string;
+  embedded?: boolean;
 };
 
-export function StatBlock({ copyKey, value }: StatBlockProps) {
+export function StatBlock({ copyKey, value, embedded = false }: StatBlockProps) {
   const { tokens, t } = useThemeMode();
 
   return (
     <View
       style={[
-        getShadow(1),
+        embedded ? undefined : getShadow(1),
         {
-          backgroundColor: tokens.colors.surface.card,
-          borderRadius: tokens.presentation.preferredCardRadius,
+          backgroundColor: embedded
+            ? tokens.colors.background.elevated
+            : tokens.colors.surface.card,
+          borderRadius: embedded ? tokens.radius.lg : tokens.presentation.preferredCardRadius,
           flex: 1,
           gap: tokens.spacing.space1,
           minWidth: tokens.spacing.space8 * 2,

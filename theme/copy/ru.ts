@@ -45,6 +45,42 @@ export const copyRu: CopyCatalog = {
     playful: 'Нет ошибок — продолжай как обычно',
     focus: 'Нет открытых ошибок — продолжайте как обычно',
   },
+  'home.activityInsights.title': {
+    playful: 'Твоя активность',
+    focus: 'Обзор активности',
+  },
+  'home.activityInsights.expandHint': {
+    playful: 'Нажми, чтобы увидеть график орбов',
+    focus: 'Нажмите, чтобы открыть график активности орбов',
+  },
+  'home.activityInsights.collapseHint': {
+    playful: 'Нажми, чтобы вернуться к недельной сводке',
+    focus: 'Нажмите, чтобы вернуться к недельной сводке',
+  },
+  'home.activityInsights.chartTitle': {
+    playful: 'Дневник орбов',
+    focus: 'Ежедневная активность орбов',
+  },
+  'home.activityInsights.period': {
+    playful: 'Последние {{days}} дней',
+    focus: 'Период: {{days}} дней',
+  },
+  'home.activityInsights.productivityValue': {
+    playful: '{{percent}} %',
+    focus: '{{percent}} %',
+  },
+  'home.activityInsights.productivityWithGoal': {
+    playful: 'Продуктивность относительно цели {{goal}} орбов в день',
+    focus: 'Продуктивность относительно дневной цели ({{goal}} орбов)',
+  },
+  'home.activityInsights.productivityNoGoal': {
+    playful: 'Активные дни — задай цель через орбы сверху',
+    focus: 'Активные дни — задайте цель через счётчик орбов',
+  },
+  'home.activityInsights.orbPeekA11y': {
+    playful: '{{count}} орбов в этот день',
+    focus: '{{count}} орбов в этот день',
+  },
   'orbCounter.label': {
     playful: 'Энерго-орбы',
     focus: 'Орбы',
