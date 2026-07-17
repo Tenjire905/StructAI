@@ -907,6 +907,62 @@ export const copyRu: CopyCatalog = {
     playful: 'Гость',
     focus: 'Гость',
   },
+  'profile.resetSection': {
+    playful: 'Сброс и новый старт',
+    focus: 'Данные и сброс',
+  },
+  'profile.resetSectionDescription': {
+    playful: 'Нужен чистый старт? Выбери, что удалить.',
+    focus: 'Сбросить только прогресс обучения или удалить все локальные данные и снова пройти онбординг.',
+  },
+  'profile.resetProgressCta': {
+    playful: 'Сбросить весь прогресс',
+    focus: 'Сбросить весь прогресс обучения',
+  },
+  'profile.deleteAccountCta': {
+    playful: 'Удалить всё и снова онбординг',
+    focus: 'Удалить данные аккаунта и снова онбординг',
+  },
+  'profile.resetCancel': {
+    playful: 'Отмена',
+    focus: 'Отмена',
+  },
+  'profile.resetProgressConfirmTitle': {
+    playful: 'Сбросить весь прогресс?',
+    focus: 'Сбросить весь прогресс обучения?',
+  },
+  'profile.resetProgressConfirmBody': {
+    playful: 'Уроки, пути, орбы и серии будут очищены. Ты остаёшься в системе с настройками.',
+    focus: 'Очищает уроки, пути, орбы и серии. Аккаунт и настройки сохраняются.',
+  },
+  'profile.resetProgressConfirmAction': {
+    playful: 'Сбросить прогресс',
+    focus: 'Сбросить прогресс',
+  },
+  'profile.deleteAccountConfirmTitle': {
+    playful: 'Удалить всё?',
+    focus: 'Удалить данные аккаунта?',
+  },
+  'profile.deleteAccountConfirmBodyGuest': {
+    playful: 'Прогресс, имя, ключи и настройки исчезнут — затем снова онбординг.',
+    focus: 'Удаляет локальный прогресс и профиль, затем открывает онбординг.',
+  },
+  'profile.deleteAccountConfirmBodySignedIn': {
+    playful: 'Прогресс (включая облако), выход из аккаунта и снова онбординг.',
+    focus: 'Удаляет данные обучения (локально + облако), выходит из аккаунта и открывает онбординг.',
+  },
+  'profile.deleteAccountConfirmAction': {
+    playful: 'Удалить и начать заново',
+    focus: 'Удалить и начать заново',
+  },
+  'profile.deleteAccountFootnoteGuest': {
+    playful: 'Полный wipe — снова увидишь welcome-экраны.',
+    focus: 'Полный локальный wipe возвращает к онбордингу.',
+  },
+  'profile.deleteAccountFootnoteSignedIn': {
+    playful: 'Облачный прогресс удалён, выход выполнен. Удаление email auth — через поддержку.',
+    focus: 'Удаляет sync-прогресс и завершает сессию. Auth-идентичность иногда только через поддержку.',
+  },
   'profile.guestAccountDescription': {
     playful: 'Ты используешь StructAI без аккаунта. Прогресс остается на этом устройстве — войди, чтобы синхронизировать.',
     focus: 'Гостевой режим. Прогресс локально на этом устройстве; вход для синхронизации и сертификатов.',

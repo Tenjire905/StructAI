@@ -907,6 +907,62 @@ export const copyDe: CopyCatalog = {
     playful: 'Gast',
     focus: 'Gast',
   },
+  'profile.resetSection': {
+    playful: 'Zurücksetzen & neu starten',
+    focus: 'Daten & Reset',
+  },
+  'profile.resetSectionDescription': {
+    playful: 'Frisch starten oder testen? Wähle, was gelöscht werden soll.',
+    focus: 'Nur Lernfortschritt zurücksetzen oder alle lokalen Kontodaten löschen und Onboarding neu starten.',
+  },
+  'profile.resetProgressCta': {
+    playful: 'Gesamten Fortschritt zurücksetzen',
+    focus: 'Gesamten Lernfortschritt zurücksetzen',
+  },
+  'profile.deleteAccountCta': {
+    playful: 'Alles löschen & Onboarding neu',
+    focus: 'Kontodaten löschen & Onboarding neu starten',
+  },
+  'profile.resetCancel': {
+    playful: 'Abbrechen',
+    focus: 'Abbrechen',
+  },
+  'profile.resetProgressConfirmTitle': {
+    playful: 'Allen Fortschritt zurücksetzen?',
+    focus: 'Gesamten Lernfortschritt zurücksetzen?',
+  },
+  'profile.resetProgressConfirmBody': {
+    playful: 'Lektionen, Pfade, Orbs und Streaks werden gelöscht. Du bleibst angemeldet und behältst Einstellungen.',
+    focus: 'Löscht Lektionen, Pfade, Orbs und Streaks. Konto und Einstellungen bleiben.',
+  },
+  'profile.resetProgressConfirmAction': {
+    playful: 'Fortschritt zurücksetzen',
+    focus: 'Fortschritt zurücksetzen',
+  },
+  'profile.deleteAccountConfirmTitle': {
+    playful: 'Wirklich alles löschen?',
+    focus: 'Kontodaten löschen?',
+  },
+  'profile.deleteAccountConfirmBodyGuest': {
+    playful: 'Fortschritt, Name, Keys und Einstellungen weg — danach landest du im Onboarding.',
+    focus: 'Löscht allen lokalen Fortschritt und Profildaten und öffnet das Onboarding.',
+  },
+  'profile.deleteAccountConfirmBodySignedIn': {
+    playful: 'Fortschritt (inkl. Cloud), Abmeldung und Onboarding von vorn.',
+    focus: 'Löscht Lerndaten (lokal + Cloud-Fortschritt), meldet dich ab und öffnet das Onboarding.',
+  },
+  'profile.deleteAccountConfirmAction': {
+    playful: 'Löschen & neu starten',
+    focus: 'Löschen & neu starten',
+  },
+  'profile.deleteAccountFootnoteGuest': {
+    playful: 'Kompletter Wipe — du siehst wieder die Welcome-Screens.',
+    focus: 'Vollständiger lokaler Wipe führt zurück zum Onboarding.',
+  },
+  'profile.deleteAccountFootnoteSignedIn': {
+    playful: 'Cloud-Fortschritt weg und Abmeldung. Auth-E-Mail löschen ggf. über Support.',
+    focus: 'Entfernt Sync-Fortschritt und beendet die Session. Auth-Identität ggf. nur über Support löschbar.',
+  },
   'profile.guestAccountDescription': {
     playful: 'Du nutzt StructAI ohne Konto. Fortschritt bleibt auf diesem Gerät – Anmeldung sichert ihn geräteübergreifend.',
     focus: 'Gastmodus. Fortschritt lokal auf diesem Gerät; Anmeldung für Sync und Zertifikate.',

@@ -905,6 +905,62 @@ export const copyEn: CopyCatalog = {
     playful: 'Guest',
     focus: 'Guest',
   },
+  'profile.resetSection': {
+    playful: 'Reset & start over',
+    focus: 'Data & reset',
+  },
+  'profile.resetSectionDescription': {
+    playful: 'Need a clean slate for testing or a fresh start? Pick what to wipe.',
+    focus: 'Reset learning progress only, or wipe all local account data and restart onboarding.',
+  },
+  'profile.resetProgressCta': {
+    playful: 'Reset all progress',
+    focus: 'Reset all learning progress',
+  },
+  'profile.deleteAccountCta': {
+    playful: 'Delete everything & restart onboarding',
+    focus: 'Delete account data & restart onboarding',
+  },
+  'profile.resetCancel': {
+    playful: 'Cancel',
+    focus: 'Cancel',
+  },
+  'profile.resetProgressConfirmTitle': {
+    playful: 'Reset all progress?',
+    focus: 'Reset all learning progress?',
+  },
+  'profile.resetProgressConfirmBody': {
+    playful: 'Lessons, paths, orbs, and streaks will be cleared. You stay signed in and keep your settings.',
+    focus: 'Clears lessons, paths, orbs, and streaks. Account and preferences remain.',
+  },
+  'profile.resetProgressConfirmAction': {
+    playful: 'Reset progress',
+    focus: 'Reset progress',
+  },
+  'profile.deleteAccountConfirmTitle': {
+    playful: 'Delete everything?',
+    focus: 'Delete account data?',
+  },
+  'profile.deleteAccountConfirmBodyGuest': {
+    playful: 'This wipes progress, name, keys, and settings — then sends you back to onboarding.',
+    focus: 'Deletes all local progress and profile data, then opens onboarding.',
+  },
+  'profile.deleteAccountConfirmBodySignedIn': {
+    playful: 'This wipes progress (including cloud save), signs you out, and restarts onboarding.',
+    focus: 'Deletes learning data (local + cloud progress), signs you out, and opens onboarding.',
+  },
+  'profile.deleteAccountConfirmAction': {
+    playful: 'Delete & restart',
+    focus: 'Delete & restart',
+  },
+  'profile.deleteAccountFootnoteGuest': {
+    playful: 'Full wipe — you will see the welcome screens again.',
+    focus: 'Full local wipe returns you to onboarding.',
+  },
+  'profile.deleteAccountFootnoteSignedIn': {
+    playful: 'Cloud progress is removed and you are signed out. Auth email deletion may need support.',
+    focus: 'Removes synced progress and ends the session. Auth identity deletion may require support.',
+  },
   'profile.guestAccountDescription': {
     playful: 'You are using StructAI without an account. Progress stays on this device — sign in to sync across devices.',
     focus: 'Guest mode. Progress is local on this device; sign in for sync and certificates.',

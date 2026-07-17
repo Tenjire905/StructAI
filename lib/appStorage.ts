@@ -236,6 +236,18 @@ export async function setProfileOnboardingCompleted(): Promise<void> {
   await persistAppStorageValue(PROFILE_ONBOARDING_COMPLETED_KEY, 'true');
 }
 
+export async function clearProfileOnboardingCompleted(): Promise<void> {
+  await deleteAppStorageValue(PROFILE_ONBOARDING_COMPLETED_KEY);
+}
+
+export async function clearGuestDisplayName(): Promise<void> {
+  await deleteAppStorageValue(GUEST_DISPLAY_NAME_KEY);
+}
+
+export async function clearProfileAge(): Promise<void> {
+  await deleteAppStorageValue(PROFILE_AGE_KEY);
+}
+
 export function isProfileOnboardingPending(completedLessons: number): boolean {
   return completedLessons >= 1 && !isProfileOnboardingCompleted();
 }
@@ -276,4 +288,17 @@ export function isDailyGoalSetupCompleted(): boolean {
 
 export async function setDailyGoalSetupCompleted(): Promise<void> {
   await persistAppStorageValue(DAILY_GOAL_SETUP_COMPLETED_KEY, 'true');
+}
+
+export async function clearDailyGoalSetupCompleted(): Promise<void> {
+  await deleteAppStorageValue(DAILY_GOAL_SETUP_COMPLETED_KEY);
+}
+
+/** Clears onboarding + profile prefs so the next launch starts at welcome. */
+export async function clearAllOnboardingAndProfilePrefs(): Promise<void> {
+  await clearOnboardingCompleted();
+  await clearProfileOnboardingCompleted();
+  await clearGuestDisplayName();
+  await clearProfileAge();
+  await clearDailyGoalSetupCompleted();
 }

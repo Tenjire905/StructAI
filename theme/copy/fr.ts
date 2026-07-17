@@ -907,6 +907,62 @@ export const copyFr: CopyCatalog = {
     playful: 'Invite',
     focus: 'Invite',
   },
+  'profile.resetSection': {
+    playful: 'Reinitialiser et recommencer',
+    focus: 'Donnees et reset',
+  },
+  'profile.resetSectionDescription': {
+    playful: 'Besoin d un nouveau depart ? Choisis ce qu il faut effacer.',
+    focus: 'Reinitialiser seulement la progression, ou tout effacer localement et relancer l onboarding.',
+  },
+  'profile.resetProgressCta': {
+    playful: 'Reinitialiser toute la progression',
+    focus: 'Reinitialiser toute la progression',
+  },
+  'profile.deleteAccountCta': {
+    playful: 'Tout supprimer et relancer l onboarding',
+    focus: 'Supprimer les donnees et relancer l onboarding',
+  },
+  'profile.resetCancel': {
+    playful: 'Annuler',
+    focus: 'Annuler',
+  },
+  'profile.resetProgressConfirmTitle': {
+    playful: 'Reinitialiser toute la progression ?',
+    focus: 'Reinitialiser toute la progression ?',
+  },
+  'profile.resetProgressConfirmBody': {
+    playful: 'Lecons, parcours, orbs et series seront effaces. Tu restes connecte avec tes reglages.',
+    focus: 'Efface lecons, parcours, orbs et series. Compte et preferences conserves.',
+  },
+  'profile.resetProgressConfirmAction': {
+    playful: 'Reinitialiser',
+    focus: 'Reinitialiser',
+  },
+  'profile.deleteAccountConfirmTitle': {
+    playful: 'Tout supprimer ?',
+    focus: 'Supprimer les donnees du compte ?',
+  },
+  'profile.deleteAccountConfirmBodyGuest': {
+    playful: 'Progression, nom, cles et reglages partis — puis retour a l onboarding.',
+    focus: 'Supprime progression et profil locaux, puis ouvre l onboarding.',
+  },
+  'profile.deleteAccountConfirmBodySignedIn': {
+    playful: 'Progression (y compris cloud), deconnexion, puis onboarding.',
+    focus: 'Supprime les donnees d apprentissage (local + cloud), deconnecte et ouvre l onboarding.',
+  },
+  'profile.deleteAccountConfirmAction': {
+    playful: 'Supprimer et recommencer',
+    focus: 'Supprimer et recommencer',
+  },
+  'profile.deleteAccountFootnoteGuest': {
+    playful: 'Effacement complet — tu reverras les ecrans d accueil.',
+    focus: 'Effacement local complet : retour a l onboarding.',
+  },
+  'profile.deleteAccountFootnoteSignedIn': {
+    playful: 'Progression cloud retiree et deconnexion. Suppression e-mail auth via support si besoin.',
+    focus: 'Retire la progression sync et termine la session. Identite auth parfois seulement via support.',
+  },
   'profile.guestAccountDescription': {
     playful: 'Tu utilises StructAI sans compte. La progression reste sur cet appareil — connecte-toi pour synchroniser.',
     focus: 'Mode invite. Progression locale sur cet appareil ; connexion pour sync et certificats.',
