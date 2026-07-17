@@ -1,4 +1,4 @@
-const DEFAULT_SUPPRESSION_MS = 4_000;
+const DEFAULT_SUPPRESSION_MS = 8_000;
 
 let suppressHomeCelebrationsUntil = 0;
 

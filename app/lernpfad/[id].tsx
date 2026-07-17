@@ -10,6 +10,7 @@ import {
   getPathProgressBarModel,
   pathTitleKey,
 } from '@/lib/pathProgress';
+import { buildLessonHref } from '@/lib/lessonNavigation';
 import { getPathUnlockBlockReason } from '@/lib/pathUnlock';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
@@ -138,7 +139,7 @@ export default function LernpfadDetailScreen() {
         <Button
           label={isStarted ? t('pathDetail.continueCta') : t('pathDetail.startCta')}
           onPress={() => {
-            router.push(`/lektion/${getContinueLessonId(path)}`);
+            router.push(buildLessonHref(getContinueLessonId(path), true));
           }}
           variant="primary"
         />
@@ -161,7 +162,7 @@ export default function LernpfadDetailScreen() {
                   isLast={index === path.chapters.length - 1}
                   key={chapter.id}
                   number={index + 1}
-                  onPress={(lessonId) => router.push(`/lektion/${lessonId}`)}
+                  onPress={(lessonId) => router.push(buildLessonHref(lessonId, true))}
                   title={getLessonText(`${chapter.id}.title`, locale)}
                 />
               ))}
