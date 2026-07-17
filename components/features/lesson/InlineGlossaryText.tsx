@@ -54,7 +54,7 @@ export function InlineGlossaryText({ text, style, nested = false }: InlineGlossa
           fontFamily: tokens.typography.fontFamily.bodyMedium,
           textShadowColor: tokens.colors.accent.primary,
           textShadowOffset: { width: 0, height: 0 },
-          textShadowRadius: tokens.spacing.space3,
+          textShadowRadius: tokens.spacing.space1,
         }}>
         {segment.value}
       </Text>
