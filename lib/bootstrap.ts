@@ -1,5 +1,6 @@
 import { hydrateAppStorage } from '@/lib/appStorage';
 import { initializeDevSession } from '@/lib/devSession';
+import { migrateLegacyProfileOnboarding } from '@/lib/profileOnboarding';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { useProgressStore } from '@/store/progressStore';
 
@@ -29,6 +30,7 @@ export function runBootstrap(): Promise<void> {
     const hasAuthenticatedSession = await resolveHasAuthenticatedSession();
     initializeDevSession(hasAuthenticatedSession);
     useProgressStore.getState().hydrate();
+    migrateLegacyProfileOnboarding(useProgressStore.getState().getSnapshot());
   })();
 
   return bootstrapPromise;

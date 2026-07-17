@@ -1199,6 +1199,10 @@ export const copyRu: CopyCatalog = {
     playful: 'Оба режима равноправны — выбирай, что подходит.',
     focus: 'Оба режима доступны без предпочтения.',
   },
+  'onboarding.profileModeHintCarried': {
+    playful: 'Твой прошлый выбор уже выбран — при необходимости измени его здесь.',
+    focus: 'Ваш предыдущий выбор предварительно выбран — при необходимости измените его здесь.',
+  },
   'onboarding.profilePlayfulBadge': {
     playful: 'Рекомендуем',
     focus: 'Рекомендуем',

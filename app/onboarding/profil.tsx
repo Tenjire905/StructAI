@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -32,54 +32,74 @@ import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode, type ThemeMode } from '@/theme';
 
 export default function OnboardingProfileScreen() {
-  const { tokens, t, setMode } = useThemeMode();
+  const { tokens, t, mode: currentMode, setMode } = useThemeMode();
   const router = useRouter();
   const { session, user } = useAuth();
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const [displayName, setDisplayName] = useState('');
   const [ageInput, setAgeInput] = useState('');
-  const [selectedMode, setSelectedMode] = useState<ThemeMode | null>(null);
+  const [selectedMode, setSelectedMode] = useState<ThemeMode>(currentMode);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const userPickedModeRef = useRef(false);
+  const didHydrateFieldsRef = useRef(false);
 
   useEffect(() => {
+    if (didHydrateFieldsRef.current) {
+      return;
+    }
+
+    didHydrateFieldsRef.current = true;
+
     const storedName = getGuestDisplayName();
     const initialName = session ? resolveProfileDisplayName(user) : storedName ?? '';
     setDisplayName(initialName);
+    setSelectedMode(currentMode);
 
     const storedAge = getProfileAge();
     if (storedAge !== undefined) {
       setAgeInput(String(storedAge));
     }
-  }, [session, user]);
+  }, [currentMode, session, user]);
 
   const parsedAge = useMemo(() => parseProfileAgeInput(ageInput), [ageInput]);
   const recommendPlayful = isPlayfulModeRecommended(parsedAge);
 
   useEffect(() => {
-    if (recommendPlayful && selectedMode === null) {
-      setSelectedMode('playful');
+    if (userPickedModeRef.current) {
+      return;
     }
-  }, [recommendPlayful, selectedMode]);
+
+    if (recommendPlayful) {
+      setSelectedMode('playful');
+      return;
+    }
+
+    setSelectedMode(currentMode);
+  }, [currentMode, recommendPlayful]);
 
   useEffect(() => {
     if (session && user) {
       const authName = resolveProfileDisplayName(user);
-      if (authName && authName !== displayName) {
+      if (authName) {
         setDisplayName(authName);
       }
     }
   }, [session, user]);
 
+  const handleSelectMode = (mode: ThemeMode) => {
+    userPickedModeRef.current = true;
+    setSelectedMode(mode);
+  };
+
   const canSubmit =
     displayName.trim().length > 0 &&
     parsedAge !== null &&
     isValidProfileAge(parsedAge) &&
-    selectedMode !== null &&
     !isSaving;
 
   const handleConfirm = async () => {
-    if (!canSubmit || !selectedMode) {
+    if (!canSubmit) {
       return;
     }
 
@@ -105,6 +125,12 @@ export default function OnboardingProfileScreen() {
       setIsSaving(false);
     }
   };
+
+  const modeHintKey = recommendPlayful
+    ? 'onboarding.profileModeHintRecommended'
+    : selectedMode === currentMode
+      ? 'onboarding.profileModeHintCarried'
+      : 'onboarding.profileModeHintNeutral';
 
   const inputStyle = {
     backgroundColor: tokens.colors.surface.card,
@@ -242,9 +268,7 @@ export default function OnboardingProfileScreen() {
               fontSize: tokens.typography.fontSize.bodyMd,
               lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
             }}>
-            {recommendPlayful
-              ? t('onboarding.profileModeHintRecommended')
-              : t('onboarding.profileModeHintNeutral')}
+            {t(modeHintKey)}
           </Text>
 
           <View style={{ flexDirection: 'row', gap: tokens.spacing.space3 }}>
@@ -252,7 +276,7 @@ export default function OnboardingProfileScreen() {
               isSelected={selectedMode === 'playful'}
               label={t('profile.modePlayful')}
               mode="playful"
-              onSelect={() => setSelectedMode('playful')}
+              onSelect={() => handleSelectMode('playful')}
               recommendCopy={t('onboarding.profilePlayfulRecommendCopy')}
               recommended={recommendPlayful}
             />
@@ -260,7 +284,7 @@ export default function OnboardingProfileScreen() {
               isSelected={selectedMode === 'focus'}
               label={t('profile.modeFocus')}
               mode="focus"
-              onSelect={() => setSelectedMode('focus')}
+              onSelect={() => handleSelectMode('focus')}
             />
           </View>
         </View>
