@@ -4,6 +4,7 @@ import { getGlossaryTerms } from '@/data/glossary';
 import { splitTextWithGlossary } from '@/lib/glossary';
 import { useThemeMode } from '@/theme';
 
+import { getGlossaryTermHighlightStyle } from './glossaryHighlightStyle';
 import { useOptionalLessonGlossary } from './LessonGlossaryContext';
 
 type InlineGlossaryTextProps = {
@@ -49,13 +50,7 @@ export function InlineGlossaryText({ text, style, nested = false }: InlineGlossa
             definition: segment.match.definition,
           })
         }
-        style={{
-          color: tokens.colors.accent.primary,
-          fontFamily: tokens.typography.fontFamily.bodyMedium,
-          textShadowColor: tokens.colors.accent.primary,
-          textShadowOffset: { width: 0, height: 0 },
-          textShadowRadius: tokens.spacing.space1,
-        }}>
+        style={getGlossaryTermHighlightStyle(tokens)}>
         {segment.value}
       </Text>
     );

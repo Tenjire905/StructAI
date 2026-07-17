@@ -3,6 +3,8 @@ import { Text, View } from 'react-native';
 import type { LessonLearningBeat } from '@/lib/lessonLearningBeat';
 import { useThemeMode } from '@/theme';
 
+import { getGlossaryTermHighlightStyle } from './glossaryHighlightStyle';
+
 type LearningBeatStripProps = {
   beat: LessonLearningBeat;
 };
@@ -13,6 +15,7 @@ type LearningBeatStripProps = {
  */
 export function LearningBeatStrip({ beat }: LearningBeatStripProps) {
   const { tokens, t } = useThemeMode();
+  const termHighlight = getGlossaryTermHighlightStyle(tokens);
 
   return (
     <View
@@ -33,16 +36,7 @@ export function LearningBeatStrip({ beat }: LearningBeatStripProps) {
         }}>
         {t('lesson.learningBeatLabel')}
         {': '}
-        <Text
-          style={{
-            color: tokens.colors.accent.primary,
-            fontFamily: tokens.typography.fontFamily.bodyMedium,
-            textShadowColor: tokens.colors.accent.primary,
-            textShadowOffset: { width: 0, height: 0 },
-            textShadowRadius: tokens.spacing.space1,
-          }}>
-          {beat.term}
-        </Text>
+        <Text style={termHighlight}>{beat.term}</Text>
       </Text>
       <Text
         style={{
