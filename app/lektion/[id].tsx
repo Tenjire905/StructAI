@@ -30,6 +30,7 @@ import {
 import { GlossaryTermPeek } from '@/components/features/lesson/GlossaryTermPeek';
 import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
 import { LearningBeatStrip } from '@/components/features/lesson/LearningBeatStrip';
+import { LessonSkillCard } from '@/components/features/lesson/LessonSkillCard';
 import {
   LessonGlossaryProvider,
   useLessonGlossary,
@@ -47,6 +48,10 @@ import {
   type LessonAnswerResult,
 } from '@/lib/lessonRewards';
 import { resolveLessonLearningBeat } from '@/lib/lessonLearningBeat';
+import {
+  buildLessonSkillSummary,
+  type LessonSkillSummary,
+} from '@/lib/lessonSkillSummary';
 import { trackEvent } from '@/lib/analytics';
 import { isProfileOnboardingCompleted } from '@/lib/appStorage';
 import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
@@ -175,6 +180,7 @@ function LessonSessionScreenContent({
   const [failureStats, setFailureStats] = useState({ correctCount: 0, gradedCount: 0 });
   const [stepAttempts, setStepAttempts] = useState<Record<number, number>>({});
   const [answerResults, setAnswerResults] = useState<LessonAnswerResult[]>([]);
+  const [skillSummary, setSkillSummary] = useState<LessonSkillSummary | null>(null);
   const [depthInfoPeek, setDepthInfoPeek] = useState<{ visible: boolean; nonce: number }>({
     visible: false,
     nonce: 0,
@@ -403,6 +409,7 @@ function LessonSessionScreenContent({
     setStepAttempts({});
     setAnswerResults([]);
     setLessonOutcome('active');
+    setSkillSummary(null);
     setCompletedPathId(null);
   };
 
@@ -426,6 +433,7 @@ function LessonSessionScreenContent({
         useProgressStore.getState().completedLessons === 0;
 
       setEarnedOrbs(reward);
+      setSkillSummary(buildLessonSkillSummary(lesson, results, locale, mode));
       suppressHomeCelebrations();
       const newlyCompletedPathId = completeLesson(lesson.id, reward);
 
@@ -563,6 +571,7 @@ function LessonSessionScreenContent({
           }
           orbsReward={earnedOrbs}
           pathId={completedPathId}
+          skillSummary={skillSummary}
         />
       </>
     );
@@ -593,6 +602,7 @@ function LessonSessionScreenContent({
           onBackToPath={goBackToPath}
           onContinueNext={continueToLesson}
           orbsReward={earnedOrbs}
+          skillSummary={skillSummary}
         />
       </>
     );
@@ -608,6 +618,7 @@ function LessonSessionScreenContent({
           onFinish={goBackToPath}
           orbsReward={earnedOrbs}
           pathId={pathId}
+          skillSummary={skillSummary}
         />
       </>
     );
@@ -956,6 +967,7 @@ type CompletionViewProps = {
   lessonId: string;
   pathId: string | undefined;
   orbsReward: number;
+  skillSummary: LessonSkillSummary | null;
   onFinish: () => void;
   onContinueNext: (nextLessonId: string) => void;
 };
@@ -964,6 +976,7 @@ function CompletionView({
   lessonId,
   pathId,
   orbsReward,
+  skillSummary,
   onFinish,
   onContinueNext,
 }: CompletionViewProps) {
@@ -1017,6 +1030,8 @@ function CompletionView({
         }}>
         {orbsReward > 0 ? t('lesson.orbsEarned', { count: orbsReward }) : t('lesson.practiceComplete')}
       </Text>
+
+      {skillSummary ? <LessonSkillCard summary={skillSummary} /> : null}
 
       <View
         style={{

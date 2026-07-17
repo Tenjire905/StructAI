@@ -1,8 +1,10 @@
 import { Text, View } from 'react-native';
 
+import { LessonSkillCard } from '@/components/features/lesson/LessonSkillCard';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
 import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
+import type { LessonSkillSummary } from '@/lib/lessonSkillSummary';
 import { getShadow, useThemeMode } from '@/theme';
 
 type SectionMilestoneViewProps = {
@@ -10,6 +12,7 @@ type SectionMilestoneViewProps = {
   onContinueNext: (nextLessonId: string) => void;
   onBackToPath: () => void;
   nextLessonId?: string;
+  skillSummary?: LessonSkillSummary | null;
 };
 
 export function SectionMilestoneView({
@@ -17,6 +20,7 @@ export function SectionMilestoneView({
   onContinueNext,
   onBackToPath,
   nextLessonId,
+  skillSummary = null,
 }: SectionMilestoneViewProps) {
   const { tokens, t } = useThemeMode();
   const companionState = useOrbCompanionState('happy');
@@ -78,6 +82,8 @@ export function SectionMilestoneView({
           {t('lesson.orbsEarned', { count: orbsReward })}
         </Text>
       ) : null}
+
+      {skillSummary ? <LessonSkillCard summary={skillSummary} /> : null}
 
       <View style={{ alignSelf: 'stretch', gap: tokens.spacing.space3, width: '100%' }}>
         {nextLessonId ? (

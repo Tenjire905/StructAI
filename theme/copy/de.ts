@@ -377,6 +377,18 @@ export const copyDe: CopyCatalog = {
     playful: 'Merke dir',
     focus: 'Lernpunkt',
   },
+  'lesson.skillCardTitle': {
+    playful: 'Heute geübt',
+    focus: 'Geübte Skills in dieser Session',
+  },
+  'lesson.skillCardImproved': {
+    playful: 'Scharfer geworden: {{skills}}',
+    focus: 'Verbessert: {{skills}}',
+  },
+  'lesson.skillCardMissed': {
+    playful: 'Nochmal anschauen: {{skills}}',
+    focus: 'Noch unsicher: {{skills}}',
+  },
   'lesson.completeTitle': {
     playful: 'Lektion geschafft!',
     focus: 'Lektion abgeschlossen.',

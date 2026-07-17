@@ -1,91 +1,134 @@
 # StructAI — Success Priorities (Learning Feeling)
 
-**Stand:** Jul 2026 · Integrationsbranch `cursor/lesson-glossary-terms-fd20`  
-**North star:** Users should leave every session thinking *“I actually learned something”* — Mimo-level *feeling*, StructAI *category* (prompting skill).
+**Stand:** Jul 2026 · Branch `cursor/lesson-learning-beat-fd20`  
+**North star:** Users leave every session thinking *“I actually learned something”* — Mimo-level *feeling*, StructAI *category* (prompt skill).
 
-**Primary competitors for category:** Iro AI, PromptPal, AiQ-style apps (“Duolingo for AI”).  
-**Craft reference only:** Mimo (habit, clarity, session dopamine — not coding).
+**Teach-by-doing peers:** Iro AI (threat 5), AiQ (4), PromptFluent (3), PromptSpar (3).  
+**Not learning apps:** PromptPal / God of Prompt (libraries), PromptJam (collab infra), Learn Prompting (guide).  
+**Craft reference only:** Mimo (habit clarity — not coding).
 
-Perplexity research prompt: `docs/PERPLEXITY-COMPETITOR-RESEARCH-PROMPT.md`
+Research: `docs/PERPLEXITY-COMPETITOR-RESEARCH-PROMPT.md` · Category map Jul 2026.
+
+---
+
+## App Store one-liner (cold user)
+
+> **StructAI teaches you to write better prompts and judge AI answers through short lessons, live scoring, and a BYOK Prompt Lab.**
+
+Sharper than “learn AI” — names the skill and the how.
+
+---
+
+## White space we own
+
+Not another “Duolingo for AI” clone. Own:
+
+- prompt **quality** + output **critique**
+- hallucination resistance
+- model comparison
+- BYOK Prompt Lab inside a learning app
+- Focus vs Playful as dual pedagogy (density/seriousness, not only color)
 
 ---
 
 ## Honest baseline
 
-We already have the skeleton of a learning product: paths, varied exercises, Focus/Playful, orbs, streaks, daily goals, Prompt Lab, glossary, certificates, activity chart.
+Skeleton exists: paths, exercises, Focus/Playful, orbs, streaks, daily goals, Prompt Lab, glossary, certificates, activity chart, Learning Beat.
 
-What Mimo/Iro still beat us on for *feeling*:
-1. **One obvious job today** (daily challenge / “Start” that is unmistakable)
-2. **Instant judgment on freeform work** (write a prompt → graded now)
-3. **Wrong-answer coaching beat** (pattern to remember, not only explanation)
-4. **Visible rank / XP arc** beyond orbs
-5. **Shareable proof** that friends understand without installing the app
+Iro still beats us on scaffolding: duels, leagues, ranks, daily-game loop, exercise volume.  
+We do **not** need to match content volume to win — feedback loops + session closure + identity beat volume (Perplexity caveat).
 
 ---
 
-## Priority ladder (do in order)
+## Competitor snapshot (threat)
 
-### P0 — Trust & completeness (foundation)
-Without this, polish feels fake.
+| Product | Learning feel | StructAI threat |
+|---------|---------------|-----------------|
+| Iro AI | Daily lessons, AI grading, duels/leagues/streaks, deep content | **5** |
+| AiQ | Side-by-side bad/good, real AI grades, rewrites | **4** |
+| PromptFluent | Lessons + habit hybrid; drifts to templates/LL | **3** |
+| PromptSpar | Missions, AI-graded prompts, pro tracks | **3** |
+| PromptJam | Collab tool, not curriculum | **2** |
+| PromptPal / GoP | Library / manager | **1** |
 
-| # | Initiative | Why | Status |
-|---|------------|-----|--------|
-| P0.1 | Finish **prompt-mastery** lessons pm-4…pm-35 | Incomplete paths kill trust | ROADMAP #1 open |
-| P0.2 | Expo Go device retest A–H | Crashes erase learning feeling instantly | ROADMAP #2 open |
-| P0.3 | Keep crash/nav fixes merged to develop | Stability is part of pedagogy | Integration branch ready |
+---
 
-### P1 — “I learned something” every session (Mimo feeling)
-Highest ROI for the emotion you care about.
+## Priority ladder
 
-| # | Initiative | Feeling it creates | Build shape |
-|---|------------|--------------------|-------------|
-| **P1.1** | **Post-check Learning Beat** | Wrong/right → tiny “pattern to remember” line + optional glossary deep-link | Extend FeedbackBanner / explanation with `takeaway` field or heuristic from glossary terms in explanation |
-| **P1.2** | **End-of-lesson Skill Card** | “Today you practiced: Grounding, Constraints” | Derive tags from lesson id / glossary hits in session; show on completion view |
-| **P1.3** | **Home Daily Challenge CTA** | One clear 5-minute job | Card on Home: continue current lesson OR “today’s challenge” = next unfinished graded step |
-| **P1.4** | Wire Prompt Lab into the loop | Lab stops being a separate room | After N lessons or path section: “Try this in Prompt Lab” with prefilled task |
+### P0 — Trust & completeness
+| # | Initiative | Status |
+|---|------------|--------|
+| P0.1 | Finish prompt-mastery pm-4…pm-35 | ROADMAP #1 open |
+| P0.2 | Expo Go retest A–H | ROADMAP #2 open |
+| P0.3 | Crash/nav + home UX on develop | Integration branch; merge when approved |
 
-### P2 — Habit machine (Iro/PromptPal parity, selective)
-Only after P1 feels good.
+### P1 — “I learned something” every session
+| # | Initiative | Feeling | Status |
+|---|------------|---------|--------|
+| **P1.1** | Post-check **Learning Beat** | Pattern to remember under feedback | **Shipped** (this branch) |
+| **P1.2** | End-of-lesson **Skill Card** | “Today you practiced X, improved Y, missed Z” | **In progress** |
+| **P1.3** | Home **Daily Challenge** CTA | One clear job today | Next |
+| **P1.4** | Home progress = competence, not only XP/orbs | Identity of getting smarter | With P1.2/P1.3 |
+| **P1.5** | Prompt Lab feedback tightening | Concrete missing: context / format / role / constraints | After P1.2–P1.3 |
+| P1.6 | Wrong-answer coaching beat (“why + next pattern”) | Deepen beyond Learning Beat | Medium cost |
+| P1.7 | Instant settlement micro-motion on checks | Correct/incorrect dopamine | Medium |
 
+### P2 — Habit / identity (selective)
 | # | Initiative | Note |
 |---|------------|------|
-| P2.1 | Soft XP / ranks on top of orbs | Don’t replace orbs — add a readable level strip |
-| P2.2 | Hearts/lives OR energy for failed checks | Optional; can feel punishing in Focus — careful |
+| P2.1 | Certificates more identity-forward | Shareable, specific, credible |
+| P2.2 | Soft XP / ranks on top of orbs | Readable level strip |
 | P2.3 | Widgets / richer notifications | After daily goal is stable |
-| P2.4 | Shareable “before/after prompt” artifact | Stronger than certificate alone |
+| P2.4 | Selective social only if it reinforces practice | Duels later; not a core pillar |
 
-### P3 — Growth & money (later)
+### P3 — Growth
 | # | Initiative |
 |---|------------|
-| P3.1 | One-sentence App Store positioning |
-| P3.2 | Free vs Pro: Lab AI grades, certificates, duels — **not** walling lesson 1 |
-| P3.3 | Light social (optional friend streaks) — only if retention data asks for it |
+| P3.1 | Ship App Store one-liner above |
+| P3.2 | Free vs Pro: Lab AI grades, certificates — not wall lesson 1 |
+
+---
+
+## Top 10 ROI moves (impact / build cost)
+
+1. End-of-session skill summary — high / low  
+2. Visible skill win every lesson end — high / low  
+3. Prompt Lab → one clear improvement path — high / medium  
+4. Daily challenge, one clear job — high / low  
+5. Wrong-answer coaching (why + next) — high / medium  
+6. Identity-forward certificates — medium-high / low  
+7. Home progress = competence — high / medium  
+8. Instant feedback settlement + micro-motion — medium-high / medium  
+9. Focus/Playful changes density, not just color — medium / medium  
+10. Selective social — medium / high  
 
 ---
 
 ## Recommended next 30 days (only 3)
 
-1. **P1.1 Learning Beat** on check feedback (ship this week)  
-2. **P1.2 Skill Card** on lesson complete (same week / next)  
-3. **P0.1 Mastery content ingestion** in parallel (content track)
+Aligned with Perplexity Jul 2026:
 
-Everything else waits.
+1. **End-of-session skill summary + home progress recast** — Skill Card (P1.2) then competence strip on Home (P1.4)  
+2. **Prompt Lab feedback tightening** (P1.5) — freeform scoring feels concrete  
+3. **Daily challenge / one-clear-job** (P1.3) — single obvious task tied to current path  
+
+Content track (P0.1) runs in parallel; it is not the learning-feeling lever.
 
 ---
 
 ## What we will NOT chase (yet)
 
-- Coding IDE / portfolio apps (Mimo’s moat)
-- Full duel/leaderboard social (expensive, not core pedagogy)
-- Matching Iro’s 18 tool-touring paths (dilutes StructAI’s structure/eval edge)
-- Paywall before habit works
+- Matching Iro’s content volume or duel/league stack first  
+- Prompt-library breadth (PromptPal’s game)  
+- Coding IDE / portfolio (Mimo’s moat)  
+- Paywall before habit works  
 
 ---
 
 ## Director rule
 
-After each P1 ship: ask one user (or yourself cold)  
+After each P1 ship, cold ask:  
 > “What did you learn in the last 5 minutes?”  
 
-If the answer is “I earned orbs” → failed.  
-If the answer names a prompting pattern → succeeded.
+“I earned orbs” → failed.  
+Names a prompting pattern → succeeded.

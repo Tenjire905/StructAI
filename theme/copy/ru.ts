@@ -377,6 +377,18 @@ export const copyRu: CopyCatalog = {
     playful: 'Запомни',
     focus: 'Главное',
   },
+  'lesson.skillCardTitle': {
+    playful: 'Сегодня ты тренировал',
+    focus: 'Навыки в этой сессии',
+  },
+  'lesson.skillCardImproved': {
+    playful: 'Стало острее: {{skills}}',
+    focus: 'Улучшено: {{skills}}',
+  },
+  'lesson.skillCardMissed': {
+    playful: 'Стоит ещё раз: {{skills}}',
+    focus: 'Ещё неуверенно: {{skills}}',
+  },
   'lesson.completeTitle': {
     playful: 'Урок пройден!',
     focus: 'Урок завершен.',

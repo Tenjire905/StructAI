@@ -2,6 +2,7 @@ import { ScrollView, Text, View } from 'react-native';
 
 import { CertificateShareAction } from '@/components/features/CertificateShareAction';
 import { CertificateView } from '@/components/features/CertificateView';
+import { LessonSkillCard } from '@/components/features/lesson/LessonSkillCard';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
 import { StatBlock } from '@/components/features/StatBlock';
 import { Button } from '@/components/ui';
@@ -10,6 +11,7 @@ import {
   CERTIFICATE_LAYOUT_HEIGHT,
   CERTIFICATE_LAYOUT_WIDTH,
 } from '@/lib/certificateExport';
+import type { LessonSkillSummary } from '@/lib/lessonSkillSummary';
 import { getPathCompletionStats } from '@/lib/pathCapstone';
 import { pathTitleKey } from '@/lib/pathProgress';
 import { getNextPathId } from '@/lib/pathUnlock';
@@ -24,6 +26,7 @@ type PathCompletionViewProps = {
   orbsReward: number;
   onStartNextPath?: () => void;
   onFinish: () => void;
+  skillSummary?: LessonSkillSummary | null;
 };
 
 export function PathCompletionView({
@@ -31,6 +34,7 @@ export function PathCompletionView({
   orbsReward,
   onStartNextPath,
   onFinish,
+  skillSummary = null,
 }: PathCompletionViewProps) {
   const { tokens, t, locale, mode } = useThemeMode();
   const { user } = useAuth();
@@ -119,6 +123,8 @@ export function PathCompletionView({
           {t('lesson.orbsEarned', { count: orbsReward })}
         </Text>
       ) : null}
+
+      {skillSummary ? <LessonSkillCard summary={skillSummary} /> : null}
 
       <View
         style={{
