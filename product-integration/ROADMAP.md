@@ -21,7 +21,7 @@ Jeder Sprint = eine Prompt-Datei in diesem Ordner → Build-Cursor kopiert Promp
 
 | Prio | Thema |
 |------|--------|
-| 0 | **Learning feeling** — siehe `SUCCESS-PRIORITIES.md` (P1.1–P1.7 shipped; next: P0 content + Expo retest) |
+| 0 | **Learning feeling** — siehe `SUCCESS-PRIORITIES.md` (P1 Beat/Challenge/Lab/Coaching; skill-tag banners removed) |
 | 1 | Content-Ingestion pm-4…pm-35 (`content-ingestion/pm-batch-01-PROMPT.md`) |
 | 2 | Geräte-Retest Checkliste A–H auf Expo Go |
 

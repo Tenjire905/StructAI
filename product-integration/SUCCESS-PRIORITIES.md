@@ -108,9 +108,10 @@ We do **not** need to match content volume to win — feedback loops + session c
 
 Aligned with Perplexity Jul 2026:
 
-1. ~~End-of-session skill summary + home progress recast~~ **done** (P1.2 + P1.4)  
-2. ~~Daily challenge / one-clear-job~~ **done** (P1.3)  
-3. ~~Prompt Lab feedback tightening~~ **done** (P1.5)  
+1. ~~Daily challenge / one-clear-job~~ **done** (P1.3)  
+2. ~~Prompt Lab feedback tightening~~ **done** (P1.5)  
+3. ~~Wrong-answer coaching + settle pulse~~ **done** (P1.6–P1.7)  
+4. Auto skill-tag banners (P1.2/P1.4) **removed** — glossary heuristics were inaccurate  
 
 Next after this track: P0.1 mastery content (pm-4…pm-35 — needs `pm-batch-01.json`), P0.2 Expo Go retest A–H, then P2 identity/habit.
 
