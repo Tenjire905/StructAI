@@ -25,6 +25,34 @@ export const copyEn: CopyCatalog = {
     playful: 'Keep learning',
     focus: 'Current learning paths',
   },
+  'home.dailyChallenge.eyebrow': {
+    playful: 'Today’s job',
+    focus: 'Daily challenge',
+  },
+  'home.dailyChallenge.title': {
+    playful: 'One clear win today',
+    focus: 'One focused practice session',
+  },
+  'home.dailyChallenge.bodyFresh': {
+    playful: 'Start with {{path}} — one short lesson, real practice, instant feedback.',
+    focus: 'Begin {{path}}: one lesson, one practice loop, clear feedback.',
+  },
+  'home.dailyChallenge.bodyContinue': {
+    playful: 'Continue {{path}} — one lesson, one practice prompt, done.',
+    focus: 'Next step in {{path}}: one lesson with a clear checkpoint.',
+  },
+  'home.dailyChallenge.ctaFresh': {
+    playful: 'Start today’s lesson',
+    focus: 'Start today’s lesson',
+  },
+  'home.dailyChallenge.ctaContinue': {
+    playful: 'Do today’s lesson',
+    focus: 'Continue today’s lesson',
+  },
+  'home.competence.title': {
+    playful: 'Getting sharper at',
+    focus: 'Skills you’re building',
+  },
   'home.startHint': {
     playful: 'Start with Prompt Basics — your first step toward structured prompting.',
     focus: 'Start with Prompt Basics — your first step toward structured prompting.',

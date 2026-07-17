@@ -25,6 +25,34 @@ export const copyFr: CopyCatalog = {
     playful: 'Continuer a apprendre',
     focus: 'Parcours actifs',
   },
+  'home.dailyChallenge.eyebrow': {
+    playful: 'Mission du jour',
+    focus: 'Defi du jour',
+  },
+  'home.dailyChallenge.title': {
+    playful: 'Une victoire claire aujourd’hui',
+    focus: 'Une session de pratique concentree',
+  },
+  'home.dailyChallenge.bodyFresh': {
+    playful: 'Commence avec {{path}} — une lecon courte, vraie pratique, feedback immediat.',
+    focus: 'Debutez {{path}} : une lecon, une boucle de pratique, un feedback clair.',
+  },
+  'home.dailyChallenge.bodyContinue': {
+    playful: 'Continue {{path}} — une lecon, un prompt, c’est fait.',
+    focus: 'Prochaine etape dans {{path}} : une lecon avec un checkpoint clair.',
+  },
+  'home.dailyChallenge.ctaFresh': {
+    playful: 'Lancer la lecon du jour',
+    focus: 'Commencer la lecon du jour',
+  },
+  'home.dailyChallenge.ctaContinue': {
+    playful: 'Faire la lecon du jour',
+    focus: 'Continuer la lecon du jour',
+  },
+  'home.competence.title': {
+    playful: 'Tu progresses sur',
+    focus: 'Competences en construction',
+  },
   'home.startHint': {
     playful: 'Commence par les bases du prompt — ta premiere etape vers un prompting structure.',
     focus: 'Commencez par les bases du prompt — votre premiere etape vers un prompting structure.',

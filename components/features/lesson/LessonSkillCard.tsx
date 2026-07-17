@@ -5,13 +5,18 @@ import { useThemeMode } from '@/theme';
 
 type LessonSkillCardProps = {
   summary: LessonSkillSummary;
+  /** Defaults to lesson end copy; Home passes a competence-framed key. */
+  titleKey?: string;
 };
 
 /**
  * End-of-session skill closure: “Today you practiced X” — competence, not just Orbs.
  * Uses elevated surface (same family as LearningBeatStrip), cyan only for the skill list.
  */
-export function LessonSkillCard({ summary }: LessonSkillCardProps) {
+export function LessonSkillCard({
+  summary,
+  titleKey = 'lesson.skillCardTitle',
+}: LessonSkillCardProps) {
   const { tokens, t } = useThemeMode();
 
   const practicedLabel = summary.practiced.map((tag) => tag.term).join(' · ');
@@ -36,7 +41,7 @@ export function LessonSkillCard({ summary }: LessonSkillCardProps) {
           fontFamily: tokens.typography.fontFamily.bodyMedium,
           fontSize: tokens.typography.fontSize.bodySm,
         }}>
-        {t('lesson.skillCardTitle')}
+        {t(titleKey)}
       </Text>
 
       <Text

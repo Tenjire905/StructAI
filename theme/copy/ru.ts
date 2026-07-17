@@ -25,6 +25,34 @@ export const copyRu: CopyCatalog = {
     playful: 'Продолжить обучение',
     focus: 'Текущие треки',
   },
+  'home.dailyChallenge.eyebrow': {
+    playful: 'Задача на сегодня',
+    focus: 'Дневной челлендж',
+  },
+  'home.dailyChallenge.title': {
+    playful: 'Одна ясная победа сегодня',
+    focus: 'Одна сфокусированная практика',
+  },
+  'home.dailyChallenge.bodyFresh': {
+    playful: 'Начни с {{path}} — короткий урок, реальная практика, мгновенный фидбек.',
+    focus: 'Начните {{path}}: один урок, один цикл практики, ясный фидбек.',
+  },
+  'home.dailyChallenge.bodyContinue': {
+    playful: 'Продолжи {{path}} — один урок, один промпт, готово.',
+    focus: 'Следующий шаг в {{path}}: один урок с ясным чекпоинтом.',
+  },
+  'home.dailyChallenge.ctaFresh': {
+    playful: 'Начать урок дня',
+    focus: 'Начать урок дня',
+  },
+  'home.dailyChallenge.ctaContinue': {
+    playful: 'Сделать урок дня',
+    focus: 'Продолжить урок дня',
+  },
+  'home.competence.title': {
+    playful: 'Ты становишься острее в',
+    focus: 'Навыки, которые ты строишь',
+  },
   'home.startHint': {
     playful: 'Начни с основ промптов — первый шаг к структурированному prompting.',
     focus: 'Начните с основ промптов — первый шаг к структурированному prompting.',

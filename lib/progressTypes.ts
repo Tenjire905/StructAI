@@ -13,6 +13,20 @@ export type PromptScoreHistoryEntry = {
   recordedAt: string;
 };
 
+/** Last end-of-lesson skill closure — competence signal for Home. */
+export type PersistedSkillTag = {
+  id: string;
+  term: string;
+};
+
+export type PersistedSkillSummary = {
+  practiced: PersistedSkillTag[];
+  improved: PersistedSkillTag[];
+  missed: PersistedSkillTag[];
+  lessonId: string;
+  recordedAt: string;
+};
+
 export type ProgressSnapshot = {
   orbCount: number;
   /** @deprecated Legacy cap for removed focus ring — migrated to dailyOrbGoal. */
@@ -30,6 +44,8 @@ export type ProgressSnapshot = {
   completedPathIds: string[];
   pathCompletedAt: Record<string, string>;
   promptScoreHistory: PromptScoreHistoryEntry[];
+  /** Most recent session skill summary for Home competence recast. */
+  lastSkillSummary: PersistedSkillSummary | null;
 };
 
 const DEFAULT_STREAK_DAYS: boolean[] = [false, false, false, false, false, false, false];
@@ -48,6 +64,7 @@ export const DEFAULT_PROGRESS: ProgressSnapshot = {
   completedPathIds: [],
   pathCompletedAt: {},
   promptScoreHistory: [],
+  lastSkillSummary: null,
 };
 
 export const DEFAULT_STREAK_DAY_FLAGS = DEFAULT_STREAK_DAYS;

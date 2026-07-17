@@ -433,9 +433,10 @@ function LessonSessionScreenContent({
         useProgressStore.getState().completedLessons === 0;
 
       setEarnedOrbs(reward);
-      setSkillSummary(buildLessonSkillSummary(lesson, results, locale, mode));
+      const nextSkillSummary = buildLessonSkillSummary(lesson, results, locale, mode);
+      setSkillSummary(nextSkillSummary);
       suppressHomeCelebrations();
-      const newlyCompletedPathId = completeLesson(lesson.id, reward);
+      const newlyCompletedPathId = completeLesson(lesson.id, reward, nextSkillSummary);
 
       if (isFirstLessonCompletion && useProgressStore.getState().completedLessons === 1) {
         trackEvent('first_lesson_completed');

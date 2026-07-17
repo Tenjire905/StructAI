@@ -25,6 +25,34 @@ export const copyDe: CopyCatalog = {
     playful: 'Weiterlernen',
     focus: 'Aktuelle Lernpfade',
   },
+  'home.dailyChallenge.eyebrow': {
+    playful: 'Heutige Aufgabe',
+    focus: 'Tageschallenge',
+  },
+  'home.dailyChallenge.title': {
+    playful: 'Ein klarer Gewinn heute',
+    focus: 'Eine fokussierte Übungseinheit',
+  },
+  'home.dailyChallenge.bodyFresh': {
+    playful: 'Starte mit {{path}} — eine kurze Lektion, echte Praxis, sofortiges Feedback.',
+    focus: 'Beginne {{path}}: eine Lektion, eine Practice-Schleife, klares Feedback.',
+  },
+  'home.dailyChallenge.bodyContinue': {
+    playful: 'Weiter mit {{path}} — eine Lektion, ein Prompt, fertig.',
+    focus: 'Nächster Schritt in {{path}}: eine Lektion mit klarem Checkpoint.',
+  },
+  'home.dailyChallenge.ctaFresh': {
+    playful: 'Heutige Lektion starten',
+    focus: 'Heutige Lektion starten',
+  },
+  'home.dailyChallenge.ctaContinue': {
+    playful: 'Heutige Lektion machen',
+    focus: 'Heutige Lektion fortsetzen',
+  },
+  'home.competence.title': {
+    playful: 'Du wirst schärfer bei',
+    focus: 'Skills, die du aufbaust',
+  },
   'home.startHint': {
     playful: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
     focus: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',

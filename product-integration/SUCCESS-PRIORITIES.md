@@ -65,11 +65,11 @@ We do **not** need to match content volume to win — feedback loops + session c
 ### P1 — “I learned something” every session
 | # | Initiative | Feeling | Status |
 |---|------------|---------|--------|
-| **P1.1** | Post-check **Learning Beat** | Pattern to remember under feedback | **Shipped** (this branch) |
-| **P1.2** | End-of-lesson **Skill Card** | “Today you practiced X, improved Y, missed Z” | **In progress** |
-| **P1.3** | Home **Daily Challenge** CTA | One clear job today | Next |
-| **P1.4** | Home progress = competence, not only XP/orbs | Identity of getting smarter | With P1.2/P1.3 |
-| **P1.5** | Prompt Lab feedback tightening | Concrete missing: context / format / role / constraints | After P1.2–P1.3 |
+| **P1.1** | Post-check **Learning Beat** | Pattern to remember under feedback | **Shipped** |
+| **P1.2** | End-of-lesson **Skill Card** | “Today you practiced X, improved Y, missed Z” | **Shipped** |
+| **P1.3** | Home **Daily Challenge** CTA | One clear job today | **Shipped** |
+| **P1.4** | Home progress = competence, not only XP/orbs | Identity of getting smarter | **Shipped** |
+| **P1.5** | Prompt Lab feedback tightening | Concrete missing: context / format / role / constraints | **Next** |
 | P1.6 | Wrong-answer coaching beat (“why + next pattern”) | Deepen beyond Learning Beat | Medium cost |
 | P1.7 | Instant settlement micro-motion on checks | Correct/incorrect dopamine | Medium |
 
@@ -108,9 +108,9 @@ We do **not** need to match content volume to win — feedback loops + session c
 
 Aligned with Perplexity Jul 2026:
 
-1. **End-of-session skill summary + home progress recast** — Skill Card (P1.2) then competence strip on Home (P1.4)  
-2. **Prompt Lab feedback tightening** (P1.5) — freeform scoring feels concrete  
-3. **Daily challenge / one-clear-job** (P1.3) — single obvious task tied to current path  
+1. ~~End-of-session skill summary + home progress recast~~ **done** (P1.2 + P1.4)  
+2. ~~Daily challenge / one-clear-job~~ **done** (P1.3)  
+3. **Prompt Lab feedback tightening** (P1.5) — freeform scoring feels concrete ← **now**  
 
 Content track (P0.1) runs in parallel; it is not the learning-feeling lever.
 
