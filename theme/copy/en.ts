@@ -1197,6 +1197,10 @@ export const copyEn: CopyCatalog = {
     playful: 'Both modes are equal — pick what fits you.',
     focus: 'Both modes are available without preference.',
   },
+  'onboarding.profileModeHintCarried': {
+    playful: 'Your earlier choice is pre-selected — adjust it here if you like.',
+    focus: 'Your previous selection is pre-selected and can be adjusted here.',
+  },
   'onboarding.profilePlayfulBadge': {
     playful: 'Recommended',
     focus: 'Recommended',

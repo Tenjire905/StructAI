@@ -51,7 +51,7 @@ import {
 import { resolveLessonLearningBeat } from '@/lib/lessonLearningBeat';
 import { resolveWrongAnswerCoaching } from '@/lib/lessonWrongAnswerCoaching';
 import { trackEvent } from '@/lib/analytics';
-import { isProfileOnboardingCompleted } from '@/lib/appStorage';
+import { isProfileOnboardingCompleted, markProfileOnboardingRequired } from '@/lib/appStorage';
 import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
 import { leaveLesson, openLesson, returnToPath, isLessonOpenedFromPath } from '@/lib/lessonNavigation';
 import { runAfterUISettles } from '@/lib/runAfterUISettles';
@@ -442,7 +442,9 @@ function LessonSessionScreenContent({
         !isProfileOnboardingCompleted()
       ) {
         dismissCelebration();
-        leaveLesson(router, '/onboarding/profil');
+        void markProfileOnboardingRequired().then(() => {
+          leaveLesson(router, '/onboarding/profil');
+        });
         return;
       }
 
