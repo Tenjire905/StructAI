@@ -373,6 +373,10 @@ export const copyDe: CopyCatalog = {
     playful: 'Tipp:',
     focus: 'Tipp:',
   },
+  'lesson.learningBeatLabel': {
+    playful: 'Merke dir',
+    focus: 'Lernpunkt',
+  },
   'lesson.completeTitle': {
     playful: 'Lektion geschafft!',
     focus: 'Lektion abgeschlossen.',

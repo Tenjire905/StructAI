@@ -29,6 +29,7 @@ import {
 } from '@/components/features/lesson/LessonDepthBadgeButton';
 import { GlossaryTermPeek } from '@/components/features/lesson/GlossaryTermPeek';
 import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
+import { LearningBeatStrip } from '@/components/features/lesson/LearningBeatStrip';
 import {
   LessonGlossaryProvider,
   useLessonGlossary,
@@ -45,6 +46,7 @@ import {
   hasPassedLessonThreshold,
   type LessonAnswerResult,
 } from '@/lib/lessonRewards';
+import { resolveLessonLearningBeat } from '@/lib/lessonLearningBeat';
 import { trackEvent } from '@/lib/analytics';
 import { isProfileOnboardingCompleted } from '@/lib/appStorage';
 import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
@@ -871,7 +873,7 @@ type FeedbackBannerProps = {
 };
 
 function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
-  const { tokens, t } = useThemeMode();
+  const { tokens, t, locale, mode } = useThemeMode();
   const scale = useSharedValue(0.9);
   const opacity = useSharedValue(0);
 
@@ -890,6 +892,8 @@ function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
     : tokens.colors.accent.danger;
 
   const showHint = !isCorrect && hint !== undefined;
+  const feedbackText = showHint ? hint : explanation;
+  const learningBeat = resolveLessonLearningBeat(feedbackText, locale, mode);
 
   return (
     <Animated.View
@@ -943,6 +947,7 @@ function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
           text={explanation}
         />
       )}
+      {learningBeat ? <LearningBeatStrip beat={learningBeat} /> : null}
     </Animated.View>
   );
 }

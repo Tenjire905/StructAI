@@ -373,6 +373,10 @@ export const copyRu: CopyCatalog = {
     playful: 'Подсказка:',
     focus: 'Подсказка:',
   },
+  'lesson.learningBeatLabel': {
+    playful: 'Запомни',
+    focus: 'Главное',
+  },
   'lesson.completeTitle': {
     playful: 'Урок пройден!',
     focus: 'Урок завершен.',
