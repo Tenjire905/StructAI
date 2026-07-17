@@ -5,7 +5,7 @@ export { OrbCounter } from './OrbCounter';
 export { OrbIcon } from './OrbIcon';
 export { LockedPathView } from './LockedPathView';
 export { PathCard } from './PathCard';
-export { PathCardRetryPeek } from './PathCardRetryPeek';
+export { PathCardRetryPeek, PATH_CARD_RETRY_PEEK_MAX_HEIGHT } from './PathCardRetryPeek';
 export { ScoreChart } from './ScoreChart';
 export { StatBlock } from './StatBlock';
 export { StreakTracker } from './StreakTracker';
