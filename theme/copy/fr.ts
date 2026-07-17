@@ -73,6 +73,10 @@ export const copyFr: CopyCatalog = {
     playful: 'Jours actifs — fixe un objectif via les orbs en haut',
     focus: 'Jours actifs — objectif quotidien via le compteur d\'orbs',
   },
+  'home.activityInsights.orbPeekA11y': {
+    playful: '{{count}} orbs ce jour-la',
+    focus: '{{count}} orbs ce jour-la',
+  },
   'orbCounter.label': {
     playful: "Orbs d'energie",
     focus: 'Orbs',

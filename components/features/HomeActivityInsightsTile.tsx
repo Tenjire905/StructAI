@@ -1,5 +1,5 @@
 import { ChevronDown } from 'lucide-react-native';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 import Animated, {
   Easing,
@@ -55,6 +55,8 @@ export function HomeActivityInsightsTile({
 }: HomeActivityInsightsTileProps) {
   const { tokens, t, locale } = useThemeMode();
   const [expanded, setExpanded] = useState(false);
+  const [selectedPointIndex, setSelectedPointIndex] = useState<number | null>(null);
+  const suppressToggleRef = useRef(false);
   const expandProgress = useSharedValue(0);
 
   const chartEntries = useMemo(() => {
@@ -125,7 +127,23 @@ export function HomeActivityInsightsTile({
   }));
 
   const toggleExpanded = () => {
-    setExpanded((current) => !current);
+    if (suppressToggleRef.current) {
+      suppressToggleRef.current = false;
+      return;
+    }
+
+    setExpanded((current) => {
+      if (current) {
+        setSelectedPointIndex(null);
+      }
+
+      return !current;
+    });
+  };
+
+  const handlePointPress = (index: number) => {
+    suppressToggleRef.current = true;
+    setSelectedPointIndex((current) => (current === index ? null : index));
   };
 
   const productivityCopyKey =
@@ -204,7 +222,12 @@ export function HomeActivityInsightsTile({
             </Text>
           </View>
 
-          <ScoreChart scores={chartScores} />
+          <ScoreChart
+            onPointPress={handlePointPress}
+            pointValues={chartEntries.map((entry) => entry.orbs)}
+            scores={chartScores}
+            selectedIndex={selectedPointIndex}
+          />
 
           <View
             style={{

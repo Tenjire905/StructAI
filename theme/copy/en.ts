@@ -73,6 +73,10 @@ export const copyEn: CopyCatalog = {
     playful: 'Active days — set a daily goal via the orbs above',
     focus: 'Active learning days — set daily goal via orb counter',
   },
+  'home.activityInsights.orbPeekA11y': {
+    playful: '{{count}} orbs on this day',
+    focus: '{{count}} orbs on this day',
+  },
   'orbCounter.label': {
     playful: 'Energy Orbs',
     focus: 'Orbs',

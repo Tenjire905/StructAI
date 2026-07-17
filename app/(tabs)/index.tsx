@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { RefreshControl, ScrollView, Text, View } from 'react-native';
 
 import {
   HomeActivityInsightsTile,
@@ -9,13 +9,14 @@ import {
   PathCardRetryPeek,
 } from '@/components/features';
 import { Avatar, Button, Card } from '@/components/ui';
+import { hydrateAppStorage, isDailyGoalSetupCompleted } from '@/lib/appStorage';
 import {
   computePathProgressBarModel,
   getFirstFailedLessonIdInOrder,
   pathTitleKey,
 } from '@/lib/pathProgress';
 import { DEFAULT_START_PATH_ID } from '@/lib/pathLessonUtils';
-import { isDailyGoalSetupCompleted } from '@/lib/appStorage';
+import { hydrateProgressOnLogin } from '@/lib/progressSync';
 import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
@@ -25,6 +26,7 @@ export default function HomeScreen() {
   const { tokens, t } = useThemeMode();
   const router = useRouter();
   const [retryPeek, setRetryPeek] = useState<{ pathId: string; nonce: number } | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
   const { user, session } = useAuth();
   const displayName = session
     ? resolveProfileDisplayName(user)
@@ -43,6 +45,22 @@ export default function HomeScreen() {
     [pathProgress],
   );
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setRetryPeek(null);
+
+    try {
+      await hydrateAppStorage();
+      useProgressStore.getState().hydrate();
+
+      if (session?.user.id) {
+        await hydrateProgressOnLogin(session.user.id);
+      }
+    } finally {
+      setRefreshing(false);
+    }
+  }, [session?.user.id]);
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -52,6 +70,17 @@ export default function HomeScreen() {
         paddingTop: tokens.spacing.space5,
       }}
       onScrollBeginDrag={() => setRetryPeek(null)}
+      refreshControl={
+        <RefreshControl
+          colors={[tokens.colors.accent.primary]}
+          onRefresh={() => {
+            void onRefresh();
+          }}
+          progressBackgroundColor={tokens.colors.background.elevated}
+          refreshing={refreshing}
+          tintColor={tokens.colors.accent.primary}
+        />
+      }
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <View
         style={{

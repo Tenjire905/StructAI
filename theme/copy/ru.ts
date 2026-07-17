@@ -73,6 +73,10 @@ export const copyRu: CopyCatalog = {
     playful: 'Активные дни — задай цель через орбы сверху',
     focus: 'Активные дни — задайте цель через счётчик орбов',
   },
+  'home.activityInsights.orbPeekA11y': {
+    playful: '{{count}} орбов в этот день',
+    focus: '{{count}} орбов в этот день',
+  },
   'orbCounter.label': {
     playful: 'Энерго-орбы',
     focus: 'Орбы',
