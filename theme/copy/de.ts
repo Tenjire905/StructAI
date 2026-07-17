@@ -41,6 +41,38 @@ export const copyDe: CopyCatalog = {
     playful: 'Alle Lektionen geschafft — keine Wiederholung nötig',
     focus: 'Alle Lektionen abgeschlossen — keine Wiederholung erforderlich',
   },
+  'home.activityInsights.title': {
+    playful: 'Deine Aktivität',
+    focus: 'Aktivitätsübersicht',
+  },
+  'home.activityInsights.expandHint': {
+    playful: 'Tippe, um deinen Orb-Verlauf als Grafik zu sehen',
+    focus: 'Tippen, um den Orb-Verlauf als Diagramm anzuzeigen',
+  },
+  'home.activityInsights.collapseHint': {
+    playful: 'Tippe, um wieder zur Wochenübersicht zu wechseln',
+    focus: 'Tippen, um zur Wochenübersicht zurückzukehren',
+  },
+  'home.activityInsights.chartTitle': {
+    playful: 'Orb-Tagebuch',
+    focus: 'Tägliche Orb-Aktivität',
+  },
+  'home.activityInsights.period': {
+    playful: 'Letzte {{days}} Tage',
+    focus: 'Zeitraum: {{days}} Tage',
+  },
+  'home.activityInsights.productivityValue': {
+    playful: '{{percent}} %',
+    focus: '{{percent}} %',
+  },
+  'home.activityInsights.productivityWithGoal': {
+    playful: 'Produktivität — im Schnitt {{goal}}-Orb-Tagesziele der letzten Tage',
+    focus: 'Produktivität relativ zum Tagesziel ({{goal}} Orbs)',
+  },
+  'home.activityInsights.productivityNoGoal': {
+    playful: 'Aktive Tage — lege ein Tagesziel über die Orbs oben fest',
+    focus: 'Aktive Lerntage — Tagesziel über Orb-Anzeige festlegen',
+  },
   'orbCounter.label': {
     playful: 'Energie-Orbs',
     focus: 'Orbs',

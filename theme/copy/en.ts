@@ -41,6 +41,38 @@ export const copyEn: CopyCatalog = {
     playful: 'All lessons done — no retry needed',
     focus: 'All lessons completed — no retry required',
   },
+  'home.activityInsights.title': {
+    playful: 'Your activity',
+    focus: 'Activity overview',
+  },
+  'home.activityInsights.expandHint': {
+    playful: 'Tap to see your orb trend as a chart',
+    focus: 'Tap to open the orb activity chart',
+  },
+  'home.activityInsights.collapseHint': {
+    playful: 'Tap to return to the weekly summary',
+    focus: 'Tap to return to the weekly summary',
+  },
+  'home.activityInsights.chartTitle': {
+    playful: 'Orb journal',
+    focus: 'Daily orb activity',
+  },
+  'home.activityInsights.period': {
+    playful: 'Last {{days}} days',
+    focus: 'Period: {{days}} days',
+  },
+  'home.activityInsights.productivityValue': {
+    playful: '{{percent}}%',
+    focus: '{{percent}}%',
+  },
+  'home.activityInsights.productivityWithGoal': {
+    playful: 'Productivity vs your {{goal}}-orb daily goal',
+    focus: 'Productivity relative to daily goal ({{goal}} orbs)',
+  },
+  'home.activityInsights.productivityNoGoal': {
+    playful: 'Active days — set a daily goal via the orbs above',
+    focus: 'Active learning days — set daily goal via orb counter',
+  },
   'orbCounter.label': {
     playful: 'Energy Orbs',
     focus: 'Orbs',

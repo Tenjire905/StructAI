@@ -6,7 +6,8 @@ import {
   reconcileCompletedPathIds,
 } from '@/lib/pathCompletion';
 import { normalizeProgressSnapshot } from '@/lib/progressMerge';
-import { getTodayDateKey, normalizeDailyOrbProgress } from '@/lib/dailyOrbGoal';
+import { getTodayDateKey } from '@/lib/dailyOrbGoal';
+import { syncDailyOrbState } from '@/lib/dailyOrbHistory';
 import { syncDailyGoalReminder } from '@/lib/dailyGoalNotifications';
 import {
   DEFAULT_PROGRESS,
@@ -94,6 +95,7 @@ function toProgressSnapshot(state: ProgressStore): ProgressSnapshot {
     orbsEarnedToday: state.orbsEarnedToday,
     dailyGoalDateKey: state.dailyGoalDateKey,
     dailyGoalNotificationsEnabled: state.dailyGoalNotificationsEnabled,
+    dailyOrbHistory: state.dailyOrbHistory,
     completedLessons: state.completedLessons,
     currentStreak: state.currentStreak,
     streakDays: state.streakDays,
@@ -106,9 +108,10 @@ function toProgressSnapshot(state: ProgressStore): ProgressSnapshot {
 
 function withFreshDailyProgress(state: ProgressStore): Pick<
   ProgressSnapshot,
-  'orbsEarnedToday' | 'dailyGoalDateKey'
+  'dailyOrbHistory' | 'orbsEarnedToday' | 'dailyGoalDateKey'
 > {
-  return normalizeDailyOrbProgress(
+  return syncDailyOrbState(
+    state.dailyOrbHistory ?? {},
     state.orbsEarnedToday,
     state.dailyGoalDateKey,
     getTodayDateKey(),
@@ -161,7 +164,8 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
 
   hydrate: () => {
     const snapshot = readProgressSnapshot();
-    const dailyProgress = normalizeDailyOrbProgress(
+    const dailyProgress = syncDailyOrbState(
+      snapshot.dailyOrbHistory ?? {},
       snapshot.orbsEarnedToday,
       snapshot.dailyGoalDateKey,
       getTodayDateKey(),
@@ -319,12 +323,18 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       const dailyProgress = withFreshDailyProgress(state);
       const orbsEarnedToday =
         awardedOrbs > 0 ? dailyProgress.orbsEarnedToday + awardedOrbs : dailyProgress.orbsEarnedToday;
+      const syncedDaily = syncDailyOrbState(
+        dailyProgress.dailyOrbHistory,
+        orbsEarnedToday,
+        dailyProgress.dailyGoalDateKey,
+      );
 
       const snapshot: ProgressSnapshot = {
         ...toProgressSnapshot(state),
         orbCount: state.orbCount + awardedOrbs,
-        orbsEarnedToday,
-        dailyGoalDateKey: dailyProgress.dailyGoalDateKey,
+        orbsEarnedToday: syncedDaily.orbsEarnedToday,
+        dailyGoalDateKey: syncedDaily.dailyGoalDateKey,
+        dailyOrbHistory: syncedDaily.dailyOrbHistory,
         completedLessons: wasAlreadyCompleted
           ? state.completedLessons
           : state.completedLessons + 1,
@@ -354,6 +364,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         dailyOrbGoal,
         orbsEarnedToday: dailyProgress.orbsEarnedToday,
         dailyGoalDateKey: dailyProgress.dailyGoalDateKey,
+        dailyOrbHistory: dailyProgress.dailyOrbHistory,
         dailyGoalNotificationsEnabled: notificationsEnabled,
       };
 

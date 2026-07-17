@@ -3,11 +3,10 @@ import { useMemo, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import {
+  HomeActivityInsightsTile,
   OrbCounter,
   PathCard,
   PathCardRetryPeek,
-  StatBlock,
-  StreakTracker,
 } from '@/components/features';
 import { Avatar, Button, Card } from '@/components/ui';
 import {
@@ -37,6 +36,7 @@ export default function HomeScreen() {
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const currentStreak = useProgressStore((state) => state.currentStreak);
   const streakDays = useProgressStore((state) => state.streakDays);
+  const dailyOrbHistory = useProgressStore((state) => state.dailyOrbHistory);
   const pathProgress = useProgressStore((state) => state.pathProgress);
   const activePaths = useMemo(
     () => useProgressStore.getState().getActivePaths(),
@@ -79,12 +79,14 @@ export default function HomeScreen() {
         />
       </View>
 
-      <StreakTracker completedDays={streakDays} />
-
-      <View style={{ flexDirection: 'row', gap: tokens.spacing.space3 }}>
-        <StatBlock copyKey="statBlock.completedLessons" value={completedLessons} />
-        <StatBlock copyKey="statBlock.currentStreak" value={currentStreak} />
-      </View>
+      <HomeActivityInsightsTile
+        completedLessons={completedLessons}
+        currentStreak={currentStreak}
+        dailyOrbGoal={dailyGoalConfigured ? dailyOrbGoal : 0}
+        dailyOrbHistory={dailyOrbHistory}
+        orbsEarnedToday={orbsEarnedToday}
+        streakDays={streakDays}
+      />
 
       <View style={{ gap: tokens.spacing.space3 }}>
         <Text
