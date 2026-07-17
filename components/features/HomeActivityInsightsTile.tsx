@@ -2,11 +2,12 @@ import { ChevronDown } from 'lucide-react-native';
 import { useEffect, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 import Animated, {
+  Easing,
   Extrapolation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
 import { PressableScale } from '@/components/ui/PressableScale';
@@ -18,7 +19,7 @@ import {
 } from '@/lib/dailyOrbHistory';
 import { getShadow, useThemeMode, type Locale } from '@/theme';
 
-import { DailyOrbActivityChart } from './DailyOrbActivityChart';
+import { ScoreChart } from './ScoreChart';
 import { StatBlock } from './StatBlock';
 import { StreakTracker } from './StreakTracker';
 
@@ -39,7 +40,10 @@ type HomeActivityInsightsTileProps = {
 };
 
 const COLLAPSED_HEIGHT = 228;
-const EXPANDED_HEIGHT = 392;
+const EXPANDED_HEIGHT = 352;
+
+/** Apple-like ease — soft decelerate, no overshoot. */
+const MORPH_EASING = Easing.bezier(0.25, 0.1, 0.25, 1);
 
 export function HomeActivityInsightsTile({
   completedLessons,
@@ -51,7 +55,6 @@ export function HomeActivityInsightsTile({
 }: HomeActivityInsightsTileProps) {
   const { tokens, t, locale } = useThemeMode();
   const [expanded, setExpanded] = useState(false);
-  const [revealNonce, setRevealNonce] = useState(0);
   const expandProgress = useSharedValue(0);
 
   const chartEntries = useMemo(() => {
@@ -73,14 +76,27 @@ export function HomeActivityInsightsTile({
     );
   }, [dailyOrbHistory, locale, orbsEarnedToday]);
 
+  const chartScores = useMemo(() => {
+    const peak = Math.max(
+      ...chartEntries.map((entry) => entry.orbs),
+      dailyOrbGoal,
+      1,
+    );
+
+    return chartEntries.map((entry) => Math.round((entry.orbs / peak) * 100));
+  }, [chartEntries, dailyOrbGoal]);
+
   const productivityPercent = useMemo(
     () => computeProductivityPercent(chartEntries, dailyOrbGoal),
     [chartEntries, dailyOrbGoal],
   );
 
   useEffect(() => {
-    expandProgress.value = withSpring(expanded ? 1 : 0, tokens.motion.spring.default);
-  }, [expandProgress, expanded, tokens.motion.spring.default]);
+    expandProgress.value = withTiming(expanded ? 1 : 0, {
+      duration: tokens.motion.duration.medium,
+      easing: MORPH_EASING,
+    });
+  }, [expandProgress, expanded, tokens.motion.duration.medium]);
 
   const containerStyle = useAnimatedStyle(() => ({
     minHeight: interpolate(
@@ -92,25 +108,15 @@ export function HomeActivityInsightsTile({
   }));
 
   const summaryStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(expandProgress.value, [0, 0.4], [1, 0], Extrapolation.CLAMP),
-    transform: [
-      {
-        scale: interpolate(expandProgress.value, [0, 1], [1, 0.98], Extrapolation.CLAMP),
-      },
-    ],
+    opacity: interpolate(expandProgress.value, [0, 0.45], [1, 0], Extrapolation.CLAMP),
   }));
 
   const detailStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(expandProgress.value, [0.35, 1], [0, 1], Extrapolation.CLAMP),
-    transform: [
-      {
-        translateY: interpolate(expandProgress.value, [0, 1], [16, 0], Extrapolation.CLAMP),
-      },
-    ],
+    opacity: interpolate(expandProgress.value, [0.4, 1], [0, 1], Extrapolation.CLAMP),
   }));
 
   const chevronStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(expandProgress.value, [0, 1], [0.45, 0.8], Extrapolation.CLAMP),
+    opacity: interpolate(expandProgress.value, [0, 1], [0.4, 0.7], Extrapolation.CLAMP),
     transform: [
       {
         rotate: `${interpolate(expandProgress.value, [0, 1], [0, 180], Extrapolation.CLAMP)}deg`,
@@ -119,15 +125,7 @@ export function HomeActivityInsightsTile({
   }));
 
   const toggleExpanded = () => {
-    setExpanded((current) => {
-      const next = !current;
-
-      if (next) {
-        setRevealNonce((nonce) => nonce + 1);
-      }
-
-      return next;
-    });
+    setExpanded((current) => !current);
   };
 
   const productivityCopyKey =
@@ -144,7 +142,7 @@ export function HomeActivityInsightsTile({
       accessibilityRole="button"
       accessibilityState={{ expanded }}
       onPress={toggleExpanded}
-      pressFeedbackDisabled={expanded}
+      pressFeedbackDisabled
       style={[
         getShadow(1),
         {
@@ -206,11 +204,7 @@ export function HomeActivityInsightsTile({
             </Text>
           </View>
 
-          <DailyOrbActivityChart
-            dailyOrbGoal={dailyOrbGoal}
-            entries={chartEntries}
-            revealNonce={revealNonce}
-          />
+          <ScoreChart scores={chartScores} />
 
           <View
             style={{

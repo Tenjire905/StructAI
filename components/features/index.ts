@@ -1,6 +1,5 @@
 export { CelebrationOverlay } from './CelebrationOverlay';
 export { HomeActivityInsightsTile } from './HomeActivityInsightsTile';
-export { DailyOrbActivityChart } from './DailyOrbActivityChart';
 export { ChapterRow } from './ChapterRow';
 export { OrbCompanion } from './OrbCompanion';
 export { OrbCounter } from './OrbCounter';
