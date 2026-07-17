@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -31,6 +32,7 @@ import { GlossaryTermPeek } from '@/components/features/lesson/GlossaryTermPeek'
 import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
 import { LearningBeatStrip } from '@/components/features/lesson/LearningBeatStrip';
 import { LessonSkillCard } from '@/components/features/lesson/LessonSkillCard';
+import { WrongAnswerCoachingBlock } from '@/components/features/lesson/WrongAnswerCoachingBlock';
 import {
   LessonGlossaryProvider,
   useLessonGlossary,
@@ -48,6 +50,7 @@ import {
   type LessonAnswerResult,
 } from '@/lib/lessonRewards';
 import { resolveLessonLearningBeat } from '@/lib/lessonLearningBeat';
+import { resolveWrongAnswerCoaching } from '@/lib/lessonWrongAnswerCoaching';
 import {
   buildLessonSkillSummary,
   type LessonSkillSummary,
@@ -891,7 +894,11 @@ function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
 
   useEffect(() => {
     opacity.value = withTiming(1, { duration: tokens.motion.duration.fast });
-    scale.value = withSpring(1, tokens.motion.spring.default);
+    // Settlement pulse: slightly overshoot then land — correct/incorrect feels decided.
+    scale.value = withSequence(
+      withTiming(isCorrect ? 1.03 : 0.97, { duration: tokens.motion.duration.fast }),
+      withSpring(1, tokens.motion.spring.default),
+    );
   }, [isCorrect, hint, opacity, scale, tokens.motion]);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -903,9 +910,12 @@ function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
     ? tokens.colors.accent.success
     : tokens.colors.accent.danger;
 
-  const showHint = !isCorrect && hint !== undefined;
-  const feedbackText = showHint ? hint : explanation;
-  const learningBeat = resolveLessonLearningBeat(feedbackText, locale, mode);
+  const learningBeat = isCorrect
+    ? resolveLessonLearningBeat(explanation, locale, mode)
+    : null;
+  const wrongCoaching = !isCorrect
+    ? resolveWrongAnswerCoaching(explanation, hint, locale, mode)
+    : null;
 
   return (
     <Animated.View
@@ -928,16 +938,10 @@ function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
         }}>
         {isCorrect ? t('lesson.correctFeedback') : t('lesson.wrongFeedback')}
       </Text>
-      {showHint ? (
-        <View style={{ gap: tokens.spacing.space1 }}>
-          <Text
-            style={{
-              color: tokens.colors.accent.warning,
-              fontFamily: tokens.typography.fontFamily.bodyMedium,
-              fontSize: tokens.typography.fontSize.bodyMd,
-            }}>
-            {t('lesson.hintLabel')}
-          </Text>
+      {wrongCoaching ? (
+        <WrongAnswerCoachingBlock coaching={wrongCoaching} />
+      ) : (
+        <>
           <InlineGlossaryText
             style={{
               color: tokens.colors.text.secondary,
@@ -945,21 +949,11 @@ function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
               fontSize: tokens.typography.fontSize.bodyMd,
               lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
             }}
-            text={hint}
+            text={explanation}
           />
-        </View>
-      ) : (
-        <InlineGlossaryText
-          style={{
-            color: tokens.colors.text.secondary,
-            fontFamily: tokens.typography.fontFamily.body,
-            fontSize: tokens.typography.fontSize.bodyMd,
-            lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
-          }}
-          text={explanation}
-        />
+          {learningBeat ? <LearningBeatStrip beat={learningBeat} /> : null}
+        </>
       )}
-      {learningBeat ? <LearningBeatStrip beat={learningBeat} /> : null}
     </Animated.View>
   );
 }

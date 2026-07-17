@@ -394,12 +394,28 @@ export const copyRu: CopyCatalog = {
     focus: 'Верно.',
   },
   'lesson.wrongFeedback': {
-    playful: 'Почти! Посмотри объяснение.',
-    focus: 'Неверно. См. объяснение.',
+    playful: 'Ещё нет — вот как исправить.',
+    focus: 'Неверно — почему, затем следующий паттерн.',
   },
   'lesson.hintLabel': {
     playful: 'Подсказка:',
     focus: 'Подсказка:',
+  },
+  'lesson.coachingWhyLabel': {
+    playful: 'Почему это не сработало',
+    focus: 'Почему это не сработало',
+  },
+  'lesson.coachingNextLabel': {
+    playful: 'Что делать дальше',
+    focus: 'Следующий паттерн',
+  },
+  'lesson.coachingNextFromBeat': {
+    playful: 'В следующей попытке сознательно примени {{term}}.',
+    focus: 'Дальше: осознанно примените {{term}} при повторе.',
+  },
+  'lesson.coachingNextFallback': {
+    playful: 'Перечитай «почему» — выбери вариант, который закрывает пробел.',
+    focus: 'Перечитайте причину, затем выберите вариант, который её закрывает.',
   },
   'lesson.learningBeatLabel': {
     playful: 'Запомни',

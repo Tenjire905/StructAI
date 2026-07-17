@@ -394,12 +394,28 @@ export const copyFr: CopyCatalog = {
     focus: 'Correct.',
   },
   'lesson.wrongFeedback': {
-    playful: 'Presque ! Regarde l explication.',
-    focus: 'Incorrect. Voir explication.',
+    playful: 'Pas encore — voici comment corriger.',
+    focus: 'Incorrect — pourquoi, puis le prochain schema.',
   },
   'lesson.hintLabel': {
     playful: 'Conseil :',
     focus: 'Conseil :',
+  },
+  'lesson.coachingWhyLabel': {
+    playful: 'Pourquoi ca echoue',
+    focus: 'Pourquoi ca echoue',
+  },
+  'lesson.coachingNextLabel': {
+    playful: 'Que faire ensuite',
+    focus: 'Prochain schema',
+  },
+  'lesson.coachingNextFromBeat': {
+    playful: 'Au prochain essai, applique {{term}} volontairement.',
+    focus: 'Ensuite : appliquez {{term}} consciemment au retry.',
+  },
+  'lesson.coachingNextFallback': {
+    playful: 'Relis le pourquoi, puis choisis l option qui ferme l ecart.',
+    focus: 'Relisez la cause, puis choisissez l option qui la corrige.',
   },
   'lesson.learningBeatLabel': {
     playful: 'Retiens',

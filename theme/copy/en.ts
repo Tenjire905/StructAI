@@ -392,12 +392,28 @@ export const copyEn: CopyCatalog = {
     focus: 'Correct.',
   },
   'lesson.wrongFeedback': {
-    playful: 'Close! Check the explanation.',
-    focus: 'Incorrect. See explanation.',
+    playful: 'Not quite — here’s how to fix it.',
+    focus: 'Incorrect — review why, then the next pattern.',
   },
   'lesson.hintLabel': {
     playful: 'Hint:',
     focus: 'Hint:',
+  },
+  'lesson.coachingWhyLabel': {
+    playful: 'Why this fails',
+    focus: 'Why this fails',
+  },
+  'lesson.coachingNextLabel': {
+    playful: 'What to do next',
+    focus: 'Next pattern',
+  },
+  'lesson.coachingNextFromBeat': {
+    playful: 'On the next try, apply {{term}} deliberately.',
+    focus: 'Next: apply {{term}} consciously on the retry.',
+  },
+  'lesson.coachingNextFallback': {
+    playful: 'Re-read the why, then pick the option that closes that gap.',
+    focus: 'Re-read the failure reason, then choose the option that fixes it.',
   },
   'lesson.learningBeatLabel': {
     playful: 'Remember',

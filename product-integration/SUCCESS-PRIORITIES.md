@@ -70,8 +70,8 @@ We do **not** need to match content volume to win — feedback loops + session c
 | **P1.3** | Home **Daily Challenge** CTA | One clear job today | **Shipped** |
 | **P1.4** | Home progress = competence, not only XP/orbs | Identity of getting smarter | **Shipped** |
 | **P1.5** | Prompt Lab feedback tightening | Concrete missing: context / format / role / constraints | **Shipped** |
-| P1.6 | Wrong-answer coaching beat (“why + next pattern”) | Deepen beyond Learning Beat | Medium cost |
-| P1.7 | Instant settlement micro-motion on checks | Correct/incorrect dopamine | Medium |
+| **P1.6** | Wrong-answer coaching beat (“why + next pattern”) | Deepen beyond Learning Beat | **Shipped** |
+| **P1.7** | Instant settlement micro-motion on checks | Correct/incorrect dopamine | **Shipped** (feedback settle pulse) |
 
 ### P2 — Habit / identity (selective)
 | # | Initiative | Note |
@@ -112,7 +112,7 @@ Aligned with Perplexity Jul 2026:
 2. ~~Daily challenge / one-clear-job~~ **done** (P1.3)  
 3. ~~Prompt Lab feedback tightening~~ **done** (P1.5)  
 
-Next after this track: P1.6 wrong-answer coaching deepen, P0.1 mastery content, Expo Go retest.
+Next after this track: P0.1 mastery content (pm-4…pm-35 — needs `pm-batch-01.json`), P0.2 Expo Go retest A–H, then P2 identity/habit.
 
 ---
 
