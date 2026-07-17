@@ -50,11 +50,11 @@ export function InlineGlossaryText({ text, style, nested = false }: InlineGlossa
           })
         }
         style={{
-          backgroundColor: tokens.colors.surface.glass,
-          borderRadius: tokens.radius.sm,
           color: tokens.colors.accent.primary,
           fontFamily: tokens.typography.fontFamily.bodyMedium,
-          overflow: 'hidden',
+          textShadowColor: tokens.colors.accent.primary,
+          textShadowOffset: { width: 0, height: 0 },
+          textShadowRadius: tokens.spacing.space3,
         }}>
         {segment.value}
       </Text>
