@@ -245,6 +245,10 @@ export const copyFr: CopyCatalog = {
     playful: 'Appuie pour une breve explication du mode.',
     focus: 'Appuyer pour l\'explication du mode.',
   },
+  'lesson.glossaryTapHint': {
+    playful: 'Appuie pour une breve explication de ce terme.',
+    focus: 'Appuyer pour une breve explication de ce terme.',
+  },
   'lesson.typeChoice': {
     playful: 'Question a choix',
     focus: 'Choix',

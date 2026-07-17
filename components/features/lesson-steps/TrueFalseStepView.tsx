@@ -1,5 +1,6 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
+import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
 import type { ResolvedLessonStep } from '@/data/mockLessons';
 import { useThemeMode } from '@/theme';
 
@@ -17,14 +18,14 @@ export function TrueFalseStepView({ step, selected, isChecked, onSelect }: TrueF
 
   return (
     <View style={{ gap: tokens.spacing.space3 }}>
-      <Text
+      <InlineGlossaryText
         style={{
           color: tokens.colors.text.primary,
           fontFamily: tokens.typography.fontFamily.heading,
           fontSize: tokens.typography.fontSize.headingMd,
-        }}>
-        {step.statement}
-      </Text>
+        }}
+        text={step.statement}
+      />
       <View style={{ flexDirection: 'row', gap: tokens.spacing.space3 }}>
         {[true, false].map((value) => {
           const isSelected = selected === value;

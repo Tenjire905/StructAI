@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 
+import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
 import { Card, PressableScale } from '@/components/ui';
 import type { ResolvedLessonStep } from '@/data/mockLessons';
 import { useThemeMode } from '@/theme';
@@ -23,14 +24,14 @@ export function ErrorFindingStepView({
 
   return (
     <View style={{ gap: tokens.spacing.space3 }}>
-      <Text
+      <InlineGlossaryText
         style={{
           color: tokens.colors.text.primary,
           fontFamily: tokens.typography.fontFamily.heading,
           fontSize: tokens.typography.fontSize.headingMd,
-        }}>
-        {step.instruction}
-      </Text>
+        }}
+        text={step.instruction}
+      />
       <Text
         style={{
           color: tokens.colors.text.secondary,

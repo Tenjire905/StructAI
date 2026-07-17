@@ -245,6 +245,10 @@ export const copyRu: CopyCatalog = {
     playful: 'Нажми для краткого объяснения режима обучения.',
     focus: 'Нажать для объяснения режима обучения.',
   },
+  'lesson.glossaryTapHint': {
+    playful: 'Нажми для краткого объяснения этого термина.',
+    focus: 'Нажать для краткого объяснения этого термина.',
+  },
   'lesson.typeChoice': {
     playful: 'Выбор варианта',
     focus: 'Выбор',

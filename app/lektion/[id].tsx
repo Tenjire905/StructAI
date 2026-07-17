@@ -27,6 +27,12 @@ import {
   LessonDepthBadgeChip,
   LessonDepthInfoPeek,
 } from '@/components/features/lesson/LessonDepthBadgeButton';
+import { GlossaryTermPeek } from '@/components/features/lesson/GlossaryTermPeek';
+import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
+import {
+  LessonGlossaryProvider,
+  useLessonGlossary,
+} from '@/components/features/lesson/LessonGlossaryContext';
 import { Button, Card, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import {
@@ -73,9 +79,18 @@ type LessonOutcome =
   | 'failed';
 
 export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
+  return (
+    <LessonGlossaryProvider>
+      <LessonSessionScreenContent lessonId={lessonId} />
+    </LessonGlossaryProvider>
+  );
+}
+
+function LessonSessionScreenContent({ lessonId }: { lessonId: string }) {
   const { tokens, t, locale, mode } = useThemeMode();
   const router = useRouter();
   const { dismissCelebration } = useCelebration();
+  const { activeTerm, dismissTerm } = useLessonGlossary();
   const pathProgress = useProgressStore((state) => state.pathProgress);
   const recordLessonOpened = useProgressStore((state) => state.recordLessonOpened);
   const recordLessonFailed = useProgressStore((state) => state.recordLessonFailed);
@@ -170,7 +185,8 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
 
   useEffect(() => {
     setDepthInfoPeek((current) => ({ ...current, visible: false }));
-  }, [stepIndex]);
+    dismissTerm();
+  }, [dismissTerm, stepIndex]);
 
   const headerOptions = {
     headerShown: true,
@@ -660,6 +676,13 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
                 visible={depthInfoPeek.visible}
               />
             ) : null}
+            <GlossaryTermPeek
+              definition={activeTerm?.definition ?? ''}
+              onDismiss={dismissTerm}
+              revealNonce={activeTerm?.nonce ?? 0}
+              termLabel={activeTerm?.label ?? ''}
+              visible={activeTerm !== null}
+            />
             <ProgressBar
               color="primary"
               progress={(stepIndex + 1) / lesson.steps.length}
@@ -671,23 +694,23 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
           {step.type === 'info' ? (
             <Card variant="solid">
               <View style={{ gap: tokens.spacing.space3 }}>
-                <Text
+                <InlineGlossaryText
                   style={{
                     color: tokens.colors.text.primary,
                     fontFamily: tokens.typography.fontFamily.heading,
                     fontSize: tokens.typography.fontSize.headingLg,
-                  }}>
-                  {step.title}
-                </Text>
-                <Text
+                  }}
+                  text={step.title}
+                />
+                <InlineGlossaryText
                   style={{
                     color: tokens.colors.text.secondary,
                     fontFamily: tokens.typography.fontFamily.body,
                     fontSize: tokens.typography.fontSize.bodyLg,
                     lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
-                  }}>
-                  {step.body}
-                </Text>
+                  }}
+                  text={step.body}
+                />
               </View>
             </Card>
           ) : null}
@@ -882,26 +905,26 @@ function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
             }}>
             {t('lesson.hintLabel')}
           </Text>
-          <Text
+          <InlineGlossaryText
             style={{
               color: tokens.colors.text.secondary,
               fontFamily: tokens.typography.fontFamily.body,
               fontSize: tokens.typography.fontSize.bodyMd,
               lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
-            }}>
-            {hint}
-          </Text>
+            }}
+            text={hint}
+          />
         </View>
       ) : (
-        <Text
+        <InlineGlossaryText
           style={{
             color: tokens.colors.text.secondary,
             fontFamily: tokens.typography.fontFamily.body,
             fontSize: tokens.typography.fontSize.bodyMd,
             lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
-          }}>
-          {explanation}
-        </Text>
+          }}
+          text={explanation}
+        />
       )}
     </Animated.View>
   );

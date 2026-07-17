@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 
+import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
 import { Card, PressableScale } from '@/components/ui';
 import type { ResolvedLessonStep } from '@/data/mockLessons';
 import { useThemeMode } from '@/theme';
@@ -37,7 +38,7 @@ export function FillBlankStepView({
             fontSize: tokens.typography.fontSize.bodyLg,
             lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
           }}>
-          {step.prefix}
+          <InlineGlossaryText nested text={step.prefix} />
           <Text
             style={{
               color:
@@ -48,7 +49,7 @@ export function FillBlankStepView({
             }}>
             {selectedOption !== null ? step.options[selectedOption] : '___'}
           </Text>
-          {step.suffix}
+          <InlineGlossaryText nested text={step.suffix} />
         </Text>
       </Card>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.space2 }}>
