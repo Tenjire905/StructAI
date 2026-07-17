@@ -42,7 +42,7 @@ import {
 import { trackEvent } from '@/lib/analytics';
 import { isProfileOnboardingCompleted } from '@/lib/appStorage';
 import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
-import { leaveLesson, openLesson } from '@/lib/lessonNavigation';
+import { leaveLesson, openLesson, returnToPath, isLessonOpenedFromPath } from '@/lib/lessonNavigation';
 import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
 import { getPathIdForLesson, getFirstLessonIdForPath, getNextLessonId } from '@/lib/pathLessonUtils';
@@ -73,7 +73,13 @@ type LessonOutcome =
   | 'section_milestone'
   | 'failed';
 
-export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
+export function LessonSessionScreen({
+  lessonId,
+  openedFromPath = false,
+}: {
+  lessonId: string;
+  openedFromPath?: boolean;
+}) {
   const { tokens, t, locale, mode } = useThemeMode();
   const router = useRouter();
   const { dismissCelebration } = useCelebration();
@@ -93,22 +99,29 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   );
   const canPlayLesson = isLessonPlayable(lessonChapterStatus);
   const pathBlockReason = pathId ? getPathUnlockBlockReason(pathId, pathProgress) : null;
+  const navigationInFlightRef = useRef(false);
 
   const goBackToPath = () => {
+    if (navigationInFlightRef.current) {
+      return;
+    }
+
+    navigationInFlightRef.current = true;
     dismissCelebration();
 
     const navigateAway = () => {
       if (pathId) {
-        router.replace(`/lernpfad/${pathId}`);
+        returnToPath(router, pathId, { preferPop: openedFromPath });
         return;
       }
 
       if (router.canGoBack()) {
+        suppressHomeCelebrations();
         router.back();
         return;
       }
 
-      router.replace(resolveHomeRoute(useProgressStore.getState().completedLessons));
+      leaveLesson(router, resolveHomeRoute(useProgressStore.getState().completedLessons));
     };
 
     runAfterUISettles(navigateAway);
@@ -116,7 +129,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
 
   const continueToLesson = (nextLessonId: string) => {
     dismissCelebration();
-    openLesson(router, nextLessonId);
+    openLesson(router, nextLessonId, { fromPath: openedFromPath });
   };
 
   const [sessionNonce, setSessionNonce] = useState(0);
@@ -1058,8 +1071,15 @@ function LockedLessonView({ onBack }: LockedLessonViewProps) {
 }
 
 export default function LektionScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { from, id } = useLocalSearchParams<{ from?: string; id: string }>();
   const lessonId = id ?? '';
+  const openedFromPath = isLessonOpenedFromPath(from);
 
-  return <LessonSessionScreen key={lessonId} lessonId={lessonId} />;
+  return (
+    <LessonSessionScreen
+      key={lessonId}
+      lessonId={lessonId}
+      openedFromPath={openedFromPath}
+    />
+  );
 }
