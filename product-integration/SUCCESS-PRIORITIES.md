@@ -66,9 +66,9 @@ We do **not** need to match content volume to win — feedback loops + session c
 | # | Initiative | Feeling | Status |
 |---|------------|---------|--------|
 | **P1.1** | Post-check **Learning Beat** | Pattern to remember under feedback | **Shipped** |
-| **P1.2** | End-of-lesson **Skill Card** | “Today you practiced X, improved Y, missed Z” | **Shipped** |
+| **P1.2** | End-of-lesson **Skill Card** | Glossary-heuristic skill tags | **Removed** (noisy / inaccurate) |
 | **P1.3** | Home **Daily Challenge** CTA | One clear job today | **Shipped** |
-| **P1.4** | Home progress = competence, not only XP/orbs | Identity of getting smarter | **Shipped** |
+| **P1.4** | Home progress = competence strip | Auto skill tags from lessons | **Removed** (same heuristic) |
 | **P1.5** | Prompt Lab feedback tightening | Concrete missing: context / format / role / constraints | **Shipped** |
 | **P1.6** | Wrong-answer coaching beat (“why + next pattern”) | Deepen beyond Learning Beat | **Shipped** |
 | **P1.7** | Instant settlement micro-motion on checks | Correct/incorrect dopamine | **Shipped** (feedback settle pulse) |

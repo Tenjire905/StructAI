@@ -49,10 +49,6 @@ export const copyDe: CopyCatalog = {
     playful: 'Heutige Lektion machen',
     focus: 'Heutige Lektion fortsetzen',
   },
-  'home.competence.title': {
-    playful: 'Du wirst schärfer bei',
-    focus: 'Skills, die du aufbaust',
-  },
   'home.startHint': {
     playful: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
     focus: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
@@ -420,18 +416,6 @@ export const copyDe: CopyCatalog = {
   'lesson.learningBeatLabel': {
     playful: 'Merke dir',
     focus: 'Lernpunkt',
-  },
-  'lesson.skillCardTitle': {
-    playful: 'Heute geübt',
-    focus: 'Geübte Skills in dieser Session',
-  },
-  'lesson.skillCardImproved': {
-    playful: 'Scharfer geworden: {{skills}}',
-    focus: 'Verbessert: {{skills}}',
-  },
-  'lesson.skillCardMissed': {
-    playful: 'Nochmal anschauen: {{skills}}',
-    focus: 'Noch unsicher: {{skills}}',
   },
   'lesson.completeTitle': {
     playful: 'Lektion geschafft!',

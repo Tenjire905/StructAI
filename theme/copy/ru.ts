@@ -49,10 +49,6 @@ export const copyRu: CopyCatalog = {
     playful: 'Сделать урок дня',
     focus: 'Продолжить урок дня',
   },
-  'home.competence.title': {
-    playful: 'Ты становишься острее в',
-    focus: 'Навыки, которые ты строишь',
-  },
   'home.startHint': {
     playful: 'Начни с основ промптов — первый шаг к структурированному prompting.',
     focus: 'Начните с основ промптов — первый шаг к структурированному prompting.',
@@ -420,18 +416,6 @@ export const copyRu: CopyCatalog = {
   'lesson.learningBeatLabel': {
     playful: 'Запомни',
     focus: 'Главное',
-  },
-  'lesson.skillCardTitle': {
-    playful: 'Сегодня ты тренировал',
-    focus: 'Навыки в этой сессии',
-  },
-  'lesson.skillCardImproved': {
-    playful: 'Стало острее: {{skills}}',
-    focus: 'Улучшено: {{skills}}',
-  },
-  'lesson.skillCardMissed': {
-    playful: 'Стоит ещё раз: {{skills}}',
-    focus: 'Ещё неуверенно: {{skills}}',
   },
   'lesson.completeTitle': {
     playful: 'Урок пройден!',

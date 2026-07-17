@@ -13,11 +13,9 @@ import {
   DEFAULT_PROGRESS,
   DEFAULT_STREAK_DAY_FLAGS,
   type PathProgressRecord,
-  type PersistedSkillSummary,
   type ProgressSnapshot,
   type PromptScoreHistoryEntry,
 } from '@/lib/progressTypes';
-import type { LessonSkillSummary } from '@/lib/lessonSkillSummary';
 import { applyLessonCompletionStreak } from '@/lib/streak';
 import {
   getFirstLessonIdForPath,
@@ -30,7 +28,6 @@ export const PROGRESS_STORAGE_KEY = 'structai.progress.v1';
 
 export type {
   PathProgressRecord,
-  PersistedSkillSummary,
   ProgressSnapshot,
   PromptScoreHistoryEntry,
 } from '@/lib/progressTypes';
@@ -43,11 +40,7 @@ type ProgressActions = {
   getSnapshot: () => ProgressSnapshot;
   recordLessonOpened: (lessonId: string) => void;
   recordLessonFailed: (lessonId: string) => void;
-  completeLesson: (
-    lessonId: string,
-    orbsEarned: number,
-    skillSummary?: LessonSkillSummary | null,
-  ) => string | null;
+  completeLesson: (lessonId: string, orbsEarned: number) => string | null;
   setDailyOrbGoal: (dailyOrbGoal: number, notificationsEnabled: boolean) => void;
   addPromptScore: (score: number) => void;
   getResumeLessonId: (pathId: string) => string | undefined;
@@ -110,24 +103,6 @@ function toProgressSnapshot(state: ProgressStore): ProgressSnapshot {
     completedPathIds: state.completedPathIds,
     pathCompletedAt: state.pathCompletedAt,
     promptScoreHistory: state.promptScoreHistory,
-    lastSkillSummary: state.lastSkillSummary,
-  };
-}
-
-function toPersistedSkillSummary(
-  lessonId: string,
-  skillSummary: LessonSkillSummary | null | undefined,
-): PersistedSkillSummary | null {
-  if (!skillSummary || skillSummary.practiced.length === 0) {
-    return null;
-  }
-
-  return {
-    practiced: skillSummary.practiced,
-    improved: skillSummary.improved,
-    missed: skillSummary.missed,
-    lessonId,
-    recordedAt: new Date().toISOString(),
   };
 }
 
@@ -286,7 +261,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     });
   },
 
-  completeLesson: (lessonId, orbsEarned, skillSummary) => {
+  completeLesson: (lessonId, orbsEarned) => {
     const pathId = getPathIdForLesson(lessonId);
 
     if (!pathId) {
@@ -309,7 +284,6 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       const progress = computePathProgressRatio(pathId, completedLessonIds);
       const wasAlreadyCompleted = pathRecord.completedLessonIds.includes(lessonId);
       const awardedOrbs = wasAlreadyCompleted ? 0 : orbsEarned;
-      const persistedSkills = toPersistedSkillSummary(lessonId, skillSummary);
 
       const nextPathRecord: PathProgressRecord = {
         completedLessonIds,
@@ -372,7 +346,6 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         },
         completedPathIds,
         pathCompletedAt,
-        lastSkillSummary: persistedSkills ?? state.lastSkillSummary,
       };
 
       persistAndSync(snapshot);

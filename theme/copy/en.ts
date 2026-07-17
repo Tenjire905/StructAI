@@ -49,10 +49,6 @@ export const copyEn: CopyCatalog = {
     playful: 'Do today’s lesson',
     focus: 'Continue today’s lesson',
   },
-  'home.competence.title': {
-    playful: 'Getting sharper at',
-    focus: 'Skills you’re building',
-  },
   'home.startHint': {
     playful: 'Start with Prompt Basics — your first step toward structured prompting.',
     focus: 'Start with Prompt Basics — your first step toward structured prompting.',
@@ -418,18 +414,6 @@ export const copyEn: CopyCatalog = {
   'lesson.learningBeatLabel': {
     playful: 'Remember',
     focus: 'Key takeaway',
-  },
-  'lesson.skillCardTitle': {
-    playful: 'Today you practiced',
-    focus: 'Skills practiced this session',
-  },
-  'lesson.skillCardImproved': {
-    playful: 'Getting sharper: {{skills}}',
-    focus: 'Improved: {{skills}}',
-  },
-  'lesson.skillCardMissed': {
-    playful: 'Worth another look: {{skills}}',
-    focus: 'Still shaky: {{skills}}',
   },
   'lesson.completeTitle': {
     playful: 'Lesson complete!',

@@ -11,7 +11,6 @@ import {
 
 import {
   HomeActivityInsightsTile,
-  HomeCompetenceStrip,
   HomeDailyChallengeCard,
   OrbCounter,
   PathCard,
@@ -21,7 +20,6 @@ import {
 import { Avatar, Button, Card } from '@/components/ui';
 import { hydrateAppStorage, isDailyGoalSetupCompleted } from '@/lib/appStorage';
 import { resolveDailyChallenge } from '@/lib/dailyChallenge';
-import { resolveHomeCompetence } from '@/lib/homeCompetence';
 import { buildLessonHref } from '@/lib/lessonNavigation';
 import {
   computePathProgressBarModel,
@@ -40,7 +38,7 @@ import { useThemeMode } from '@/theme';
 const SCROLL_BOTTOM_INSET = 120;
 
 export default function HomeScreen() {
-  const { tokens, t, locale, mode } = useThemeMode();
+  const { tokens, t } = useThemeMode();
   const router = useRouter();
   const { height: windowHeight } = useWindowDimensions();
   const scrollViewRef = useRef<ScrollView>(null);
@@ -61,16 +59,11 @@ export default function HomeScreen() {
   const streakDays = useProgressStore((state) => state.streakDays);
   const dailyOrbHistory = useProgressStore((state) => state.dailyOrbHistory);
   const pathProgress = useProgressStore((state) => state.pathProgress);
-  const lastSkillSummary = useProgressStore((state) => state.lastSkillSummary);
   const activePaths = useMemo(
     () => useProgressStore.getState().getActivePaths(),
     [pathProgress],
   );
   const dailyChallenge = useMemo(() => resolveDailyChallenge(pathProgress), [pathProgress]);
-  const competenceSummary = useMemo(
-    () => resolveHomeCompetence(lastSkillSummary, pathProgress, locale, mode),
-    [lastSkillSummary, locale, mode, pathProgress],
-  );
 
   const scrollPeekIntoView = useCallback(
     (pathId: string) => {
@@ -186,8 +179,6 @@ export default function HomeScreen() {
         orbsEarnedToday={orbsEarnedToday}
         streakDays={streakDays}
       />
-
-      {competenceSummary ? <HomeCompetenceStrip summary={competenceSummary} /> : null}
 
       {dailyChallenge ? (
         <HomeDailyChallengeCard

@@ -3,8 +3,6 @@ import { reconcileCompletedPathIds } from '@/lib/pathCompletion';
 import {
   DEFAULT_PROGRESS,
   type PathProgressRecord,
-  type PersistedSkillSummary,
-  type PersistedSkillTag,
   type ProgressSnapshot,
   type PromptScoreHistoryEntry,
 } from '@/lib/progressTypes';
@@ -185,74 +183,6 @@ export function mergePromptScoreHistory(
     .slice(-10);
 }
 
-function normalizeSkillTags(raw: unknown): PersistedSkillTag[] {
-  if (!Array.isArray(raw)) {
-    return [];
-  }
-
-  return raw
-    .map((entry) => {
-      if (!entry || typeof entry !== 'object') {
-        return null;
-      }
-
-      const id = (entry as PersistedSkillTag).id;
-      const term = (entry as PersistedSkillTag).term;
-
-      if (typeof id !== 'string' || typeof term !== 'string' || !id || !term) {
-        return null;
-      }
-
-      return { id, term };
-    })
-    .filter((entry): entry is PersistedSkillTag => entry !== null);
-}
-
-export function normalizeLastSkillSummary(raw: unknown): PersistedSkillSummary | null {
-  if (!raw || typeof raw !== 'object') {
-    return null;
-  }
-
-  const record = raw as PersistedSkillSummary;
-  const practiced = normalizeSkillTags(record.practiced);
-
-  if (practiced.length === 0) {
-    return null;
-  }
-
-  return {
-    practiced,
-    improved: normalizeSkillTags(record.improved),
-    missed: normalizeSkillTags(record.missed),
-    lessonId: typeof record.lessonId === 'string' ? record.lessonId : '',
-    recordedAt:
-      typeof record.recordedAt === 'string' && record.recordedAt.length > 0
-        ? record.recordedAt
-        : new Date().toISOString(),
-  };
-}
-
-export function mergeLastSkillSummary(
-  local: PersistedSkillSummary | null | undefined,
-  remote: PersistedSkillSummary | null | undefined,
-): PersistedSkillSummary | null {
-  const normalizedLocal = normalizeLastSkillSummary(local);
-  const normalizedRemote = normalizeLastSkillSummary(remote);
-
-  if (!normalizedLocal) {
-    return normalizedRemote;
-  }
-
-  if (!normalizedRemote) {
-    return normalizedLocal;
-  }
-
-  return new Date(normalizedLocal.recordedAt).getTime() >=
-    new Date(normalizedRemote.recordedAt).getTime()
-    ? normalizedLocal
-    : normalizedRemote;
-}
-
 export function isProgressSnapshotEmpty(snapshot: ProgressSnapshot): boolean {
   return (
     snapshot.completedLessons === 0 &&
@@ -313,7 +243,6 @@ export function mergeProgressSnapshots(
       normalizePromptScoreHistory(local.promptScoreHistory),
       normalizePromptScoreHistory(remote.promptScoreHistory),
     ),
-    lastSkillSummary: mergeLastSkillSummary(local.lastSkillSummary, remote.lastSkillSummary),
   };
 }
 
@@ -350,6 +279,5 @@ export function normalizeProgressSnapshot(
     completedPathIds: partial.completedPathIds ?? [],
     pathCompletedAt: partial.pathCompletedAt ?? {},
     promptScoreHistory: normalizePromptScoreHistory(partial.promptScoreHistory),
-    lastSkillSummary: normalizeLastSkillSummary(partial.lastSkillSummary),
   };
 }
