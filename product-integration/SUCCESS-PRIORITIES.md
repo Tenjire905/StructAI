@@ -69,7 +69,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 | **P1.2** | End-of-lesson **Skill Card** | “Today you practiced X, improved Y, missed Z” | **Shipped** |
 | **P1.3** | Home **Daily Challenge** CTA | One clear job today | **Shipped** |
 | **P1.4** | Home progress = competence, not only XP/orbs | Identity of getting smarter | **Shipped** |
-| **P1.5** | Prompt Lab feedback tightening | Concrete missing: context / format / role / constraints | **Next** |
+| **P1.5** | Prompt Lab feedback tightening | Concrete missing: context / format / role / constraints | **Shipped** |
 | P1.6 | Wrong-answer coaching beat (“why + next pattern”) | Deepen beyond Learning Beat | Medium cost |
 | P1.7 | Instant settlement micro-motion on checks | Correct/incorrect dopamine | Medium |
 
@@ -110,9 +110,9 @@ Aligned with Perplexity Jul 2026:
 
 1. ~~End-of-session skill summary + home progress recast~~ **done** (P1.2 + P1.4)  
 2. ~~Daily challenge / one-clear-job~~ **done** (P1.3)  
-3. **Prompt Lab feedback tightening** (P1.5) — freeform scoring feels concrete ← **now**  
+3. ~~Prompt Lab feedback tightening~~ **done** (P1.5)  
 
-Content track (P0.1) runs in parallel; it is not the learning-feeling lever.
+Next after this track: P1.6 wrong-answer coaching deepen, P0.1 mastery content, Expo Go retest.
 
 ---
 

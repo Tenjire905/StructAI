@@ -492,6 +492,91 @@ export function getMissingHints(score: PromptScore, limit = 4): string[] {
   return [...weakestMissing, ...otherMissing].slice(0, limit);
 }
 
+/** Pedagogy pillars for one clear improvement path (not score categories). */
+export type PromptImprovementPillar = 'context' | 'role' | 'format' | 'constraints';
+
+export type PromptImprovementPath = {
+  primary: PromptImprovementPillar;
+  secondary?: PromptImprovementPillar;
+};
+
+const PILLAR_PRIORITY: PromptImprovementPillar[] = [
+  'role',
+  'context',
+  'constraints',
+  'format',
+];
+
+const ROLE_PATTERN = new RegExp(
+  `(?:^|\\n)\\s*(?:role|rolle|роль)\\s*:|${WORD_START}(?:you are|du bist|tu es|acting as|agiere als|выступай как)${WORD_END}`,
+  'iu',
+);
+
+const CONTEXT_PATTERN = new RegExp(
+  `(?:^|\\n)\\s*(?:context|kontext|contexte|контекст)\\s*:|${WORD_START}(?:background|hintergrund|given that|angenommen|suppose)${WORD_END}`,
+  'iu',
+);
+
+const FORMAT_PATTERN = new RegExp(
+  `(?:^|\\n)\\s*(?:format|формат)\\s*:|${WORD_START}(?:stichpunkte|bullet|liste|list|absätze|paragraphs|tableau|puces|список|абзац|json|markdown)${WORD_END}`,
+  'iu',
+);
+
+const CONSTRAINTS_PATTERN = new RegExp(
+  `(?:^|\\n)\\s*(?:constraints?|vorgaben|contraintes|ограничен)\\s*:|${WORD_START}(?:maximal|mindestens|max\\.|min\\.|wörter|words|zeichen|characters|zielgruppe|audience|ton|tone|style|stil|максимум|слов|аудитория|тон)${WORD_END}`,
+  'iu',
+);
+
+export function detectPromptPillars(prompt: string): Record<PromptImprovementPillar, boolean> {
+  const trimmed = prompt.trim();
+
+  return {
+    role: ROLE_PATTERN.test(trimmed),
+    context: CONTEXT_PATTERN.test(trimmed),
+    format: FORMAT_PATTERN.test(trimmed),
+    constraints: CONSTRAINTS_PATTERN.test(trimmed),
+  };
+}
+
+/**
+ * One clear improvement path: primary missing pillar + optional secondary.
+ * Returns null when all pedagogical pillars are present.
+ */
+export function getPrimaryImprovementPath(prompt: string): PromptImprovementPath | null {
+  const pillars = detectPromptPillars(prompt);
+  const missing = PILLAR_PRIORITY.filter((pillar) => !pillars[pillar]);
+
+  if (missing.length === 0) {
+    return null;
+  }
+
+  return {
+    primary: missing[0],
+    secondary: missing[1],
+  };
+}
+
+/**
+ * Remote BYOK scores often omit signals — attach local heuristic signals for coaching.
+ */
+export function attachLocalFeedbackSignals(
+  score: PromptScore,
+  prompt: string,
+  locale: Locale = DEFAULT_LOCALE,
+): PromptScore {
+  if (score.signals.length > 0) {
+    return score;
+  }
+
+  const local = scorePrompt(prompt, locale);
+
+  return {
+    ...score,
+    signals: local.signals,
+    gamingPenalty: local.gamingPenalty,
+  };
+}
+
 export function comparePromptScores(
   before: PromptScore,
   after: PromptScore,
@@ -539,6 +624,7 @@ export const DEMO_WEAK_PROMPT = 'Schreibe etwas über KI.';
 export function buildDemoImprovedPrompt(locale: Locale = DEFAULT_LOCALE): string {
   if (locale === 'en') {
     return [
+      'Role: You are a clear teaching assistant.',
       'Context: Beginner audience, no jargon.',
       'Task: Write a short intro to prompt engineering.',
       'Format: 3 bullet points, max 80 words, friendly tone.',
@@ -547,6 +633,7 @@ export function buildDemoImprovedPrompt(locale: Locale = DEFAULT_LOCALE): string
 
   if (locale === 'fr') {
     return [
+      'Role : Tu es un assistant pedagogique clair.',
       'Contexte : public debutant, sans jargon.',
       'Tache : Ecris une courte intro au prompt engineering.',
       'Format : 3 puces, max 80 mots, ton amical.',
@@ -555,6 +642,7 @@ export function buildDemoImprovedPrompt(locale: Locale = DEFAULT_LOCALE): string
 
   if (locale === 'ru') {
     return [
+      'Роль: Ты — понятный преподаватель-помощник.',
       'Контекст: аудитория новичков, без жаргона.',
       'Задача: Напиши короткое введение в prompt engineering.',
       'Формат: 3 пункта, максимум 80 слов, дружелюбный тон.',
@@ -562,6 +650,7 @@ export function buildDemoImprovedPrompt(locale: Locale = DEFAULT_LOCALE): string
   }
 
   return [
+    'Rolle: Du bist ein klarer Lern-Coach.',
     'Kontext: Zielgruppe Einsteiger, kein Fachjargon.',
     'Aufgabe: Schreibe eine kurze Einführung in Prompt Engineering.',
     'Format: 3 Stichpunkte, maximal 80 Wörter, freundlicher Ton.',

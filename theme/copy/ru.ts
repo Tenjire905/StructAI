@@ -637,6 +637,34 @@ export const copyRu: CopyCatalog = {
     playful: 'Конкретные идеи для улучшения',
     focus: 'Конкретные подсказки',
   },
+  'promptLab.improvementPathTitle': {
+    playful: 'Самый ясный следующий шаг',
+    focus: 'Главный путь улучшения',
+  },
+  'promptLab.improvementPathSecondary': {
+    playful: 'Потом: {{tip}}',
+    focus: 'Далее: {{tip}}',
+  },
+  'promptLab.improvementPathComplete': {
+    playful: 'Отлично — роль, контекст, формат и ограничения на месте.',
+    focus: 'Все ключевые столпы есть: роль, контекст, формат, ограничения.',
+  },
+  'promptLab.missing.context': {
+    playful: 'В промпте нет контекста — какой фон должна учесть ИИ?',
+    focus: 'Нет контекста: добавьте фон или исходные данные для ответа.',
+  },
+  'promptLab.missing.role': {
+    playful: 'В промпте нет роли — скажи ИИ, кем ей быть.',
+    focus: 'Нет роли: задайте чёткую персону или позицию модели.',
+  },
+  'promptLab.missing.format': {
+    playful: 'В промпте нет формата — пункты, абзацы, таблица…?',
+    focus: 'Нет формата: укажите форму вывода (список, абзацы, JSON, …).',
+  },
+  'promptLab.missing.constraints': {
+    playful: 'В промпте нет ограничений — длина, аудитория или тон.',
+    focus: 'Нет ограничений: задайте жёсткие рамки (длина, аудитория, тон).',
+  },
   'promptLab.comparisonTitle': {
     playful: '+{{delta}} баллов — вот что улучшилось',
     focus: '+{{delta}} баллов по сравнению с предыдущим черновиком',

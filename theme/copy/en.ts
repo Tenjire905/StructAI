@@ -635,6 +635,34 @@ export const copyEn: CopyCatalog = {
     playful: 'Specific ways to improve',
     focus: 'Specific hints',
   },
+  'promptLab.improvementPathTitle': {
+    playful: 'Your clearest next move',
+    focus: 'Primary improvement path',
+  },
+  'promptLab.improvementPathSecondary': {
+    playful: 'Then: {{tip}}',
+    focus: 'Next: {{tip}}',
+  },
+  'promptLab.improvementPathComplete': {
+    playful: 'Nice — role, context, format, and constraints are all covered.',
+    focus: 'All core pillars present: role, context, format, constraints.',
+  },
+  'promptLab.missing.context': {
+    playful: 'Your prompt is missing context — what background should the AI use?',
+    focus: 'Missing context: add background facts or source material the answer must use.',
+  },
+  'promptLab.missing.role': {
+    playful: 'Your prompt is missing a role — tell the AI who it should be.',
+    focus: 'Missing role: assign a clear persona or stance for the model.',
+  },
+  'promptLab.missing.format': {
+    playful: 'Your prompt is missing a format — bullets, paragraphs, table…?',
+    focus: 'Missing format: specify the output shape (list, paragraphs, JSON, …).',
+  },
+  'promptLab.missing.constraints': {
+    playful: 'Your prompt is missing constraints — length, audience, or tone.',
+    focus: 'Missing constraints: add hard limits (length, audience, tone, bans).',
+  },
   'promptLab.comparisonTitle': {
     playful: '+{{delta}} points — here is what improved',
     focus: '+{{delta}} points vs. the previous draft',

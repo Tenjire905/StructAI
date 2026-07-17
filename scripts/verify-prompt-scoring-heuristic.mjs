@@ -39,6 +39,7 @@ const {
   buildDemoImprovedPrompt,
   comparePromptScores,
   DEMO_WEAK_PROMPT,
+  getPrimaryImprovementPath,
   scorePrompt,
 } = scoringModule;
 
@@ -136,6 +137,19 @@ const passedPairs = results.filter((entry) => entry.pass).length;
 
 if (passedPairs < MIN_IMPROVEMENTS) {
   violations.push(`only ${passedPairs}/${results.length} pairs improved by >= ${MIN_TOTAL_DELTA}`);
+}
+
+const weakPath = getPrimaryImprovementPath(DEMO_WEAK_PROMPT);
+const improvedPath = getPrimaryImprovementPath(buildDemoImprovedPrompt('en'));
+
+if (!weakPath?.primary) {
+  violations.push('weak demo prompt should yield a primary improvement pillar');
+}
+
+if (improvedPath !== null) {
+  violations.push(
+    `improved demo prompt should cover all pillars, got ${JSON.stringify(improvedPath)}`,
+  );
 }
 
 console.log(

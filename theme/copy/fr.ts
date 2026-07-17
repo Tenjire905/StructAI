@@ -637,6 +637,34 @@ export const copyFr: CopyCatalog = {
     playful: 'Pistes concretes d amelioration',
     focus: 'Conseils precis',
   },
+  'promptLab.improvementPathTitle': {
+    playful: 'Ton prochain geste le plus clair',
+    focus: 'Chemin d amelioration principal',
+  },
+  'promptLab.improvementPathSecondary': {
+    playful: 'Ensuite : {{tip}}',
+    focus: 'Ensuite : {{tip}}',
+  },
+  'promptLab.improvementPathComplete': {
+    playful: 'Bien — role, contexte, format et contraintes sont couverts.',
+    focus: 'Tous les piliers presents : role, contexte, format, contraintes.',
+  },
+  'promptLab.missing.context': {
+    playful: 'Il manque du contexte — quel arriere-plan l IA doit-elle utiliser ?',
+    focus: 'Contexte manquant : ajoutez des faits ou sources a utiliser.',
+  },
+  'promptLab.missing.role': {
+    playful: 'Il manque un role — dis a l IA qui elle doit etre.',
+    focus: 'Role manquant : assignez une persona ou une posture claire.',
+  },
+  'promptLab.missing.format': {
+    playful: 'Il manque un format — puces, paragraphes, tableau… ?',
+    focus: 'Format manquant : precisez la forme de sortie (liste, JSON, …).',
+  },
+  'promptLab.missing.constraints': {
+    playful: 'Il manque des contraintes — longueur, public ou ton.',
+    focus: 'Contraintes manquantes : limites dures (longueur, public, ton).',
+  },
   'promptLab.comparisonTitle': {
     playful: '+{{delta}} points — voici ce qui s est ameliore',
     focus: '+{{delta}} points par rapport au brouillon precedent',

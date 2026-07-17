@@ -637,6 +637,34 @@ export const copyDe: CopyCatalog = {
     playful: 'Konkrete Verbesserungsideen',
     focus: 'Konkrete Hinweise',
   },
+  'promptLab.improvementPathTitle': {
+    playful: 'Dein klarster nächster Schritt',
+    focus: 'Primärer Verbesserungspfad',
+  },
+  'promptLab.improvementPathSecondary': {
+    playful: 'Danach: {{tip}}',
+    focus: 'Als Nächstes: {{tip}}',
+  },
+  'promptLab.improvementPathComplete': {
+    playful: 'Stark — Rolle, Kontext, Format und Constraints sind drin.',
+    focus: 'Alle Kern-Säulen vorhanden: Rolle, Kontext, Format, Constraints.',
+  },
+  'promptLab.missing.context': {
+    playful: 'Deinem Prompt fehlt Kontext — welchen Hintergrund soll die KI nutzen?',
+    focus: 'Fehlender Kontext: Hintergrund oder Quellenmaterial ergänzen.',
+  },
+  'promptLab.missing.role': {
+    playful: 'Deinem Prompt fehlt eine Rolle — sag der KI, wer sie sein soll.',
+    focus: 'Fehlende Rolle: klare Persona oder Haltung zuweisen.',
+  },
+  'promptLab.missing.format': {
+    playful: 'Deinem Prompt fehlt ein Format — Stichpunkte, Absätze, Tabelle…?',
+    focus: 'Fehlendes Format: Ausgabeform festlegen (Liste, Absätze, JSON, …).',
+  },
+  'promptLab.missing.constraints': {
+    playful: 'Deinem Prompt fehlen Constraints — Länge, Zielgruppe oder Ton.',
+    focus: 'Fehlende Constraints: harte Grenzen setzen (Länge, Zielgruppe, Ton).',
+  },
   'promptLab.comparisonTitle': {
     playful: '+{{delta}} Punkte – das hat sich verbessert',
     focus: '+{{delta}} Punkte gegenüber dem vorherigen Entwurf',
