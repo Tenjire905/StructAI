@@ -1153,11 +1153,11 @@ export const copyDe: CopyCatalog = {
   },
   'profile.guestAccountDescription': {
     playful: 'Du nutzt StructAI ohne Konto. Fortschritt bleibt auf diesem Gerät – Anmeldung sichert ihn geräteübergreifend.',
-    focus: 'Gastmodus. Fortschritt lokal auf diesem Gerät; Anmeldung für Sync und Zertifikate.',
+    focus: 'Gastmodus. Fortschritt lokal auf diesem Gerät; Anmeldung für Sync über Geräte.',
   },
   'guest.saveProgressHint': {
     playful: 'Dein Fortschritt liegt nur auf diesem Gerät. Mit Konto sicherst du ihn und kannst später synchronisieren.',
-    focus: 'Fortschritt ist nur lokal gespeichert. Anmeldung ermöglicht Sync und Zertifikate.',
+    focus: 'Fortschritt ist nur lokal gespeichert. Anmeldung ermöglicht Sync über Geräte.',
   },
   'guest.saveProgressCta': {
     playful: 'Fortschritt sichern – jetzt anmelden',
@@ -1636,7 +1636,61 @@ export const copyDe: CopyCatalog = {
     focus: 'Abschlusszertifikate',
   },
   'profile.certificatesDescription': {
-    playful: 'Für jeden abgeschlossenen Lernpfad kannst du dein Zertifikat als Bild teilen.',
-    focus: 'Abgeschlossene Lernpfade mit Export als Bild.',
+    playful: 'Skill-Wins hier ansehen. Export und Teilen sind Pro.',
+    focus: 'Abgeschlossene Pfade — Vorschau frei; Export ist Pro.',
+  },
+  'pro.planSection': {
+    playful: 'Dein Plan',
+    focus: 'Plan',
+  },
+  'pro.planEyebrow': {
+    playful: 'Zugang',
+    focus: 'Zugang',
+  },
+  'pro.planFree': {
+    playful: 'Free',
+    focus: 'Free',
+  },
+  'pro.planPro': {
+    playful: 'Pro',
+    focus: 'Pro',
+  },
+  'pro.planBodyFree': {
+    playful:
+      'Für immer Free: alle Lektionen und der lokale Prompt-Lab-Coach. Pro ergänzt Live-KI-Bewertung (mit deinem Key) und Zertifikat-Export — Zahlungen kommen später; Preview-Unlock nur zum Testen.',
+    focus:
+      'Free: alle Lektionen + lokaler Lab-Coach. Pro: Live-KI-Bewertung (BYOK) und Zertifikat-Export. Noch keine Zahlungen — Preview nur lokal.',
+  },
+  'pro.planBodyPro': {
+    playful: 'Pro-Preview an: Live-Lab-Bewertung und Zertifikat-Export sind auf diesem Gerät freigeschaltet.',
+    focus: 'Pro-Preview aktiv. Live-Lab-Bewertung und Zertifikat-Export lokal freigeschaltet.',
+  },
+  'pro.previewUnlockCta': {
+    playful: 'Pro-Preview testen',
+    focus: 'Pro-Preview aktivieren',
+  },
+  'pro.previewLockCta': {
+    playful: 'Zurück zu Free',
+    focus: 'Zurück zu Free',
+  },
+  'pro.gateTitle': {
+    playful: 'Pro-Feature',
+    focus: 'Pro',
+  },
+  'pro.gateCertificateBody': {
+    playful: 'Zertifikat-Export ist Pro. Pro-Preview im Profil aktivieren — Zahlungen sind noch nicht live.',
+    focus: 'Zertifikat-Export erfordert Pro. Bis Zahlungen da sind: Profil → Pro-Preview.',
+  },
+  'pro.gateLabBody': {
+    playful: 'Live-KI-Bewertung ist Pro. Dein lokaler Coach bleibt — Pro-Preview im Profil freischalten.',
+    focus: 'Live-KI-Bewertung ist Pro. Lokaler Coach bleibt frei. Pro-Preview im Profil.',
+  },
+  'pro.certificateCta': {
+    playful: 'Mit Pro exportieren',
+    focus: 'Export (Pro)',
+  },
+  'pro.openPlanCta': {
+    playful: 'Plan im Profil öffnen',
+    focus: 'Plan öffnen',
   },
 };

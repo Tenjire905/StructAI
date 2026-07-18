@@ -5,6 +5,7 @@ import { CertificateView } from '@/components/features/CertificateView';
 import { Button } from '@/components/ui';
 import { buildCertificateViewModel } from '@/lib/buildCertificateViewModel';
 import { exportCertificateImage } from '@/lib/certificateExport';
+import { canUseProFeature } from '@/lib/entitlements';
 import { getPathCompletionStats } from '@/lib/pathCapstone';
 import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
@@ -42,6 +43,11 @@ export function CertificateShareAction({
   });
 
   const handleShare = async () => {
+    if (!canUseProFeature('certificateExport')) {
+      Alert.alert(t('pro.gateTitle'), t('pro.gateCertificateBody'));
+      return;
+    }
+
     setIsSharing(true);
 
     try {
@@ -65,11 +71,14 @@ export function CertificateShareAction({
     }
   };
 
+  const proLocked = !canUseProFeature('certificateExport');
   const actionLabel = isSharing
     ? t('certificate.sharing')
-    : isWeb
-      ? t('certificate.download')
-      : t('certificate.share');
+    : proLocked
+      ? t('pro.certificateCta')
+      : isWeb
+        ? t('certificate.download')
+        : t('certificate.share');
 
   return (
     <>

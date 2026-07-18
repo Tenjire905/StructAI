@@ -1153,11 +1153,11 @@ export const copyRu: CopyCatalog = {
   },
   'profile.guestAccountDescription': {
     playful: 'Ты используешь StructAI без аккаунта. Прогресс остается на этом устройстве — войди, чтобы синхронизировать.',
-    focus: 'Гостевой режим. Прогресс локально на этом устройстве; вход для синхронизации и сертификатов.',
+    focus: 'Гостевой режим. Прогресс локально на этом устройстве; вход для синхронизации между устройствами.',
   },
   'guest.saveProgressHint': {
     playful: 'Прогресс только на этом устройстве. Аккаунт позволит синхронизировать и сохранить его.',
-    focus: 'Прогресс хранится только локально. Вход для синхронизации и сертификатов.',
+    focus: 'Прогресс хранится только локально. Вход для синхронизации между устройствами.',
   },
   'guest.saveProgressCta': {
     playful: 'Сохранить прогресс – войти сейчас',
@@ -1636,7 +1636,61 @@ export const copyRu: CopyCatalog = {
     focus: 'Сертификаты об окончании',
   },
   'profile.certificatesDescription': {
-    playful: 'Делись изображением сертификата за каждый завершённый путь.',
-    focus: 'Завершённые пути с экспортом изображения.',
+    playful: 'Смотри skill wins здесь. Экспорт и шаринг — Pro.',
+    focus: 'Завершённые пути — превью бесплатно; экспорт Pro.',
+  },
+  'pro.planSection': {
+    playful: 'Твой план',
+    focus: 'План',
+  },
+  'pro.planEyebrow': {
+    playful: 'Доступ',
+    focus: 'Доступ',
+  },
+  'pro.planFree': {
+    playful: 'Free',
+    focus: 'Free',
+  },
+  'pro.planPro': {
+    playful: 'Pro',
+    focus: 'Pro',
+  },
+  'pro.planBodyFree': {
+    playful:
+      'Навсегда Free: все уроки и локальный coach Prompt Lab. Pro добавляет live AI-оценки (со своим ключом) и экспорт сертификатов — оплаты позже; preview unlock только для теста.',
+    focus:
+      'Free: все уроки + локальный Lab coach. Pro: live AI-оценки (BYOK) и экспорт сертификатов. Оплат ещё нет — preview только локально.',
+  },
+  'pro.planBodyPro': {
+    playful: 'Pro preview включён: live Lab-оценки и экспорт сертификатов разблокированы на этом устройстве.',
+    focus: 'Pro preview активен. Live Lab-оценки и экспорт сертификатов разблокированы локально.',
+  },
+  'pro.previewUnlockCta': {
+    playful: 'Попробовать Pro preview',
+    focus: 'Включить Pro preview',
+  },
+  'pro.previewLockCta': {
+    playful: 'Вернуться к Free',
+    focus: 'Вернуться к Free',
+  },
+  'pro.gateTitle': {
+    playful: 'Функция Pro',
+    focus: 'Pro',
+  },
+  'pro.gateCertificateBody': {
+    playful: 'Экспорт сертификата — Pro. Включи Pro preview в Профиле — оплаты ещё нет.',
+    focus: 'Экспорт сертификата требует Pro. Пока нет оплат: Профиль → Pro preview.',
+  },
+  'pro.gateLabBody': {
+    playful: 'Live AI-оценки — Pro. Локальный coach работает — включи Pro preview в Профиле.',
+    focus: 'Live AI-оценки — Pro. Локальный coach остаётся бесплатным. Pro preview в Профиле.',
+  },
+  'pro.certificateCta': {
+    playful: 'Экспорт с Pro',
+    focus: 'Экспорт (Pro)',
+  },
+  'pro.openPlanCta': {
+    playful: 'Открыть план в Профиле',
+    focus: 'Открыть план',
   },
 };

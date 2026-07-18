@@ -1,6 +1,6 @@
 # StructAI — Success Priorities (Learning Feeling)
 
-**Stand:** Jul 2026 · after soft XP/ranks; P3.1 store-line + Focus density in flight  
+**Stand:** Jul 2026 · P3.1 on develop; P3.2 Free vs Pro framing in flight  
 **North star:** Users leave every session thinking *“I actually learned something”* — Mimo-level *feeling*, StructAI *category* (prompt skill).
 
 **Teach-by-doing peers:** Iro AI (threat 5), AiQ (4), PromptFluent (3), PromptSpar (3).  
@@ -89,8 +89,8 @@ We do **not** need to match content volume to win — feedback loops + session c
 ### P3 — Growth
 | # | Initiative | Status |
 |---|------------|--------|
-| **P3.1** | App Store one-liner on welcome + Focus density (ROI #9) | **In PR** (`preferredCardPadding` / `preferredSectionGap`, brand hero) |
-| P3.2 | Free vs Pro: Lab AI grades, certificates — not wall lesson 1 | Open |
+| **P3.1** | App Store one-liner on welcome + Focus density (ROI #9) | **Shipped** |
+| **P3.2** | Free vs Pro: Lab AI grades, certificates — not wall lesson 1 | **In PR** (soft gates + Profile plan strip; no IAP) |
 
 ---
 
@@ -118,9 +118,9 @@ Aligned with Perplexity Jul 2026:
 3. ~~Wrong-answer coaching + settle pulse~~ **done** (P1.6–P1.7)  
 4. Auto skill-tag banners (P1.2/P1.4) **removed** — glossary heuristics were inaccurate  
 
-Shipped recently: Orb Language (P1.8), identity certificates (P2.1), soft XP/ranks (P2.2).  
-In flight: P3.1 App Store one-liner + Focus density tokens.  
-Next: P0.1 mastery content when `pm-batch-01.json` exists, P0.2 Expo Go retest A–H, P3.2 Free vs Pro framing.
+Shipped recently: Orb Language (P1.8), identity certificates (P2.1), soft XP/ranks (P2.2), P3.1 store-line + Focus density.  
+In flight: P3.2 Free vs Pro framing (soft gates; Block H payments still deferred).  
+Next: P0.1 mastery content when `pm-batch-01.json` exists, P0.2 Expo Go retest A–H, P2.3 widgets/notifications.
 
 ---
 

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
-import { SkillRankStrip, StatBlock } from '@/components/features';
+import { ProPlanStrip, SkillRankStrip, StatBlock } from '@/components/features';
 import { GuestSaveProgressHint } from '@/components/features/GuestSaveProgressHint';
 import { ByokKeysManager } from '@/components/features/profile/ByokKeysManager';
 import { ProfileCertificatesSection } from '@/components/features/profile/ProfileCertificatesSection';
@@ -101,6 +101,18 @@ export default function ProfilScreen() {
           <StatBlock copyKey="statBlock.completedLessons" value={completedLessons} />
           <StatBlock copyKey="statBlock.currentStreak" value={currentStreak} />
         </View>
+      </View>
+
+      <View style={{ gap: tokens.spacing.space3 }}>
+        <Text
+          style={{
+            color: tokens.colors.text.primary,
+            fontFamily: tokens.typography.fontFamily.heading,
+            fontSize: tokens.typography.fontSize.headingMd,
+          }}>
+          {t('pro.planSection')}
+        </Text>
+        <ProPlanStrip />
       </View>
 
       <ProfileCertificatesSection />
