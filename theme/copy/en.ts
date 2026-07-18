@@ -375,6 +375,130 @@ export const copyEn: CopyCatalog = {
     playful: 'Perfect! Bonus Orbs unlocked.',
     focus: 'Perfect. Bonus granted.',
   },
+  'orb.speech.readingStart.a': {
+    playful: 'Okay — I’m with you. Read this bit.',
+    focus: '',
+  },
+  'orb.speech.readingStart.b': {
+    playful: 'New page! Let’s soak this in.',
+    focus: '',
+  },
+  'orb.speech.readingStart.c': {
+    playful: 'Eyes on this — it matters.',
+    focus: '',
+  },
+  'orb.speech.reading.a': {
+    playful: 'Hmm… notice the structure here.',
+    focus: '',
+  },
+  'orb.speech.reading.b': {
+    playful: 'Interesting. What’s the real job of this prompt?',
+    focus: '',
+  },
+  'orb.speech.reading.c': {
+    playful: 'Keep going — the clue is in the wording.',
+    focus: '',
+  },
+  'orb.speech.practicing.a': {
+    playful: 'Your move. Make the choice feel deliberate.',
+    focus: '',
+  },
+  'orb.speech.practicing.b': {
+    playful: 'Don’t rush — pick the sharpest option.',
+    focus: '',
+  },
+  'orb.speech.practicing.c': {
+    playful: 'I believe in a clean answer. Go.',
+    focus: '',
+  },
+  'orb.speech.correct.a': {
+    playful: 'Yes! That thinking tracks.',
+    focus: '',
+  },
+  'orb.speech.correct.b': {
+    playful: 'Nailed it — that’s the pattern.',
+    focus: '',
+  },
+  'orb.speech.correct.c': {
+    playful: 'Clean hit. Lock that in.',
+    focus: '',
+  },
+  'orb.speech.wrong.a': {
+    playful: 'Almost. Flip the angle once.',
+    focus: '',
+  },
+  'orb.speech.wrong.b': {
+    playful: 'Not quite — read the constraint again.',
+    focus: '',
+  },
+  'orb.speech.wrong.c': {
+    playful: 'Close! The trick was hiding in the details.',
+    focus: '',
+  },
+  'orb.speech.celebrating.a': {
+    playful: 'You did it! That lesson’s ours.',
+    focus: '',
+  },
+  'orb.speech.celebrating.b': {
+    playful: 'Boom — progress unlocked.',
+    focus: '',
+  },
+  'orb.speech.celebrating.c': {
+    playful: 'Proud of that run. Onward!',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.a': {
+    playful: 'Hey — a few more Orbs and today’s goal smiles.',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.b': {
+    playful: 'I’m a bit dim. One short lesson helps.',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.c': {
+    playful: 'Fuel check: we could use a practice win.',
+    focus: '',
+  },
+  'orb.speech.focus.correctTip.a': {
+    playful: '',
+    focus: 'Keep that pattern — name the job before you write.',
+  },
+  'orb.speech.focus.correctTip.b': {
+    playful: '',
+    focus: 'Good. On the next step, tighten one constraint.',
+  },
+  'orb.speech.focus.correctTip.c': {
+    playful: '',
+    focus: 'Solid. Reuse this structure on the next prompt.',
+  },
+  'orb.speech.focus.wrongTip.a': {
+    playful: '',
+    focus: 'Tip: separate role, task, and format before choosing.',
+  },
+  'orb.speech.focus.wrongTip.b': {
+    playful: '',
+    focus: 'Re-check the constraint that limited the answer.',
+  },
+  'orb.speech.focus.wrongTip.c': {
+    playful: '',
+    focus: 'Next try: ask what output shape was required.',
+  },
+  'orb.speech.focus.celebrating.a': {
+    playful: '',
+    focus: 'Lesson complete. Carry one clear rule forward.',
+  },
+  'orb.speech.focus.celebrating.b': {
+    playful: '',
+    focus: 'Done. Note the pattern that earned this pass.',
+  },
+  'orb.speech.focus.lowEnergy.a': {
+    playful: '',
+    focus: 'Daily goal is low — one focused lesson closes the gap.',
+  },
+  'orb.speech.focus.lowEnergy.b': {
+    playful: '',
+    focus: 'Progress tip: finish one short practice block today.',
+  },
   'lesson.check': {
     playful: 'Check answer!',
     focus: 'Check',

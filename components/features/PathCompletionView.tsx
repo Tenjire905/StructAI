@@ -2,7 +2,7 @@ import { ScrollView, Text, View } from 'react-native';
 
 import { CertificateShareAction } from '@/components/features/CertificateShareAction';
 import { CertificateView } from '@/components/features/CertificateView';
-import { OrbCompanion } from '@/components/features/OrbCompanion';
+import { OrbPresence } from '@/components/features/OrbPresence';
 import { StatBlock } from '@/components/features/StatBlock';
 import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
@@ -63,13 +63,17 @@ export function PathCompletionView({
           {
             alignItems: 'center',
             backgroundColor: tokens.colors.surface.card,
-            borderRadius: tokens.radius.pill,
-            height: tokens.spacing.space8 * 1.15,
+            borderRadius: tokens.radius.lg,
             justifyContent: 'center',
-            width: tokens.spacing.space8 * 1.15,
+            paddingHorizontal: tokens.spacing.space4,
+            paddingVertical: tokens.spacing.space3,
           },
         ]}>
-        <OrbCompanion size={tokens.spacing.space8 * 0.85} state={companionState} />
+        <OrbPresence
+          showSpeech
+          size={tokens.spacing.space8 * 0.85}
+          state={companionState}
+        />
       </View>
 
       <Text

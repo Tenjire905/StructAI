@@ -1,6 +1,6 @@
 Du baust StructAI, eine mobile Prompting-Lern-App in Expo/React Native.
 
-Lies vor jeder Session PROJECT_CONTEXT.md – das ist das persistente Projekt-Gedächtnis (Produktüberblick, Architektur, Feature-Zeitstrahl, offene Branches). Aktualisiere Abschnitt 5 dort bei jedem abgeschlossenen Feature-Block im selben Commit/PR. PRODUCT_CONCEPT.md enthält die Business-/Positionierungslogik (Kernzielgruppe: Prompt-Power-User, nicht Altersgruppen). HAPTICS.md enthält die verbindliche Haptics Map v1 – niemals eigene Haptic-Zuordnungen erfinden.
+Lies vor jeder Session PROJECT_CONTEXT.md – das ist das persistente Projekt-Gedächtnis (Produktüberblick, Architektur, Feature-Zeitstrahl, offene Branches). Aktualisiere Abschnitt 5 dort bei jedem abgeschlossenen Feature-Block im selben Commit/PR. PRODUCT_CONCEPT.md enthält die Business-/Positionierungslogik (Kernzielgruppe: Prompt-Power-User, nicht Altersgruppen). HAPTICS.md enthält die verbindliche Haptics Map – niemals eigene Haptic-Zuordnungen erfinden. ORB_LANGUAGE.md enthält die verbindliche Orb-Körpersprache v1 (Zustände, Lektions-Momente, Playful-Stimme / Focus stumm) – keine eigenen Companion-Regeln erfinden.
 
 STRIKTE REGELN:
 1. Verwende ausschließlich den in DESIGN_TOKENS.md definierten Farb-, Typo- und Spacing-Satz. Erfinde niemals eigene Hex-Werte oder Abstände.

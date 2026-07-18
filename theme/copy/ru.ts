@@ -377,6 +377,130 @@ export const copyRu: CopyCatalog = {
     playful: 'Идеально! Бонус-орбы твои.',
     focus: 'Идеально. Бонус получен.',
   },
+  'orb.speech.readingStart.a': {
+    playful: 'Ок — я с тобой. Читай этот кусок.',
+    focus: '',
+  },
+  'orb.speech.readingStart.b': {
+    playful: 'Новая страница! Впитываем.',
+    focus: '',
+  },
+  'orb.speech.readingStart.c': {
+    playful: 'Глаза сюда — это важно.',
+    focus: '',
+  },
+  'orb.speech.reading.a': {
+    playful: 'Хм… смотри на структуру.',
+    focus: '',
+  },
+  'orb.speech.reading.b': {
+    playful: 'Интересно. В чём настоящая задача промпта?',
+    focus: '',
+  },
+  'orb.speech.reading.c': {
+    playful: 'Дальше — подсказка в формулировке.',
+    focus: '',
+  },
+  'orb.speech.practicing.a': {
+    playful: 'Твой ход. Выбирай осознанно.',
+    focus: '',
+  },
+  'orb.speech.practicing.b': {
+    playful: 'Не торопись — бери самый точный вариант.',
+    focus: '',
+  },
+  'orb.speech.practicing.c': {
+    playful: 'Хочу чёткий ответ. Давай.',
+    focus: '',
+  },
+  'orb.speech.correct.a': {
+    playful: 'Да! Мышление верное.',
+    focus: '',
+  },
+  'orb.speech.correct.b': {
+    playful: 'В точку — вот паттерн.',
+    focus: '',
+  },
+  'orb.speech.correct.c': {
+    playful: 'Чисто. Запомни это.',
+    focus: '',
+  },
+  'orb.speech.wrong.a': {
+    playful: 'Почти. Смени угол один раз.',
+    focus: '',
+  },
+  'orb.speech.wrong.b': {
+    playful: 'Не совсем — перечитай ограничение.',
+    focus: '',
+  },
+  'orb.speech.wrong.c': {
+    playful: 'Близко! Трюк был в деталях.',
+    focus: '',
+  },
+  'orb.speech.celebrating.a': {
+    playful: 'Получилось! Урок наш.',
+    focus: '',
+  },
+  'orb.speech.celebrating.b': {
+    playful: 'Бум — прогресс открыт.',
+    focus: '',
+  },
+  'orb.speech.celebrating.c': {
+    playful: 'Сильный заход. Дальше!',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.a': {
+    playful: 'Эй — ещё пару Орбов, и дневная цель оживает.',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.b': {
+    playful: 'Я чуть тусклый. Короткий урок поможет.',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.c': {
+    playful: 'Проверка энергии: нужен маленький вин.',
+    focus: '',
+  },
+  'orb.speech.focus.correctTip.a': {
+    playful: '',
+    focus: 'Держи этот паттерн — назови задачу до письма.',
+  },
+  'orb.speech.focus.correctTip.b': {
+    playful: '',
+    focus: 'Хорошо. Дальше ужесточи одно ограничение.',
+  },
+  'orb.speech.focus.correctTip.c': {
+    playful: '',
+    focus: 'Сильно. Повтори эту структуру в следующем промпте.',
+  },
+  'orb.speech.focus.wrongTip.a': {
+    playful: '',
+    focus: 'Совет: раздели роль, задачу и формат.',
+  },
+  'orb.speech.focus.wrongTip.b': {
+    playful: '',
+    focus: 'Проверь ограничение, которое сузило ответ.',
+  },
+  'orb.speech.focus.wrongTip.c': {
+    playful: '',
+    focus: 'Следующая попытка: какой формат вывода требовался?',
+  },
+  'orb.speech.focus.celebrating.a': {
+    playful: '',
+    focus: 'Урок завершён. Возьми одно ясное правило дальше.',
+  },
+  'orb.speech.focus.celebrating.b': {
+    playful: '',
+    focus: 'Готово. Зафиксируй паттерн, который дал проход.',
+  },
+  'orb.speech.focus.lowEnergy.a': {
+    playful: '',
+    focus: 'Дневная цель низкая — один фокусный урок закрывает разрыв.',
+  },
+  'orb.speech.focus.lowEnergy.b': {
+    playful: '',
+    focus: 'Совет: сегодня заверши короткий блок практики.',
+  },
   'lesson.check': {
     playful: 'Проверить ответ!',
     focus: 'Проверить',

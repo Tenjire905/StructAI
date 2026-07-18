@@ -1,0 +1,92 @@
+/**
+ * Static checks for Orb Language v1 (ORB_LANGUAGE.md).
+ */
+
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+const root = new URL('..', import.meta.url).pathname;
+
+function read(relativePath) {
+  return readFileSync(join(root, relativePath), 'utf8');
+}
+
+const violations = [];
+
+const orbLanguage = read('lib/orbLanguage.ts');
+const orbCompanion = read('components/features/OrbCompanion.tsx');
+const orbPresence = read('components/features/OrbPresence.tsx');
+const lesson = read('app/lektion/[id].tsx');
+const hook = read('hooks/useOrbCompanionState.ts');
+const doc = read('ORB_LANGUAGE.md');
+const copyEn = read('theme/copy/en.ts');
+
+for (const state of ['think', 'worry']) {
+  if (!hook.includes(`'${state}'`)) {
+    violations.push(`useOrbCompanionState must include '${state}'`);
+  }
+}
+
+if (!orbLanguage.includes('resolveLessonSpeechCopyKey')) {
+  violations.push('lib/orbLanguage.ts must export resolveLessonSpeechCopyKey');
+}
+
+if (!orbLanguage.includes("mode === 'focus'")) {
+  violations.push('Focus speech must be gated to post-check tips');
+}
+
+if (!orbLanguage.includes('FOCUS_FEEDBACK_SPEECH') && !orbLanguage.includes('focus.correctTip')) {
+  violations.push('Focus tip speech variants are missing');
+}
+
+if (!orbCompanion.includes('showFace')) {
+  violations.push('OrbCompanion must show a face in Focus as well as Playful');
+}
+
+if (!orbCompanion.includes('blink')) {
+  violations.push('OrbCompanion must implement a blink loop');
+}
+
+if (!orbPresence.includes('speechKey')) {
+  violations.push('OrbPresence must accept explicit speechKey for lesson voice');
+}
+
+if (!lesson.includes('resolveLessonSpeechCopyKey') || !lesson.includes('OrbPresence')) {
+  violations.push('Lesson screen must drive OrbPresence speech from lesson moments');
+}
+
+if (!doc.includes('Focus-Stimme') && !doc.includes('Focus')) {
+  violations.push('ORB_LANGUAGE.md must document Focus tip voice');
+}
+
+const requiredKeys = [
+  'orb.speech.readingStart.a',
+  'orb.speech.reading.a',
+  'orb.speech.practicing.a',
+  'orb.speech.correct.a',
+  'orb.speech.wrong.a',
+  'orb.speech.focus.correctTip.a',
+  'orb.speech.focus.wrongTip.a',
+];
+
+for (const key of requiredKeys) {
+  if (!copyEn.includes(`'${key}'`)) {
+    violations.push(`en copy missing ${key}`);
+  }
+}
+
+console.log(
+  JSON.stringify(
+    {
+      scope: 'orb-language-v1',
+      violations,
+      pass: violations.length === 0,
+    },
+    null,
+    2,
+  ),
+);
+
+if (violations.length > 0) {
+  process.exitCode = 1;
+}

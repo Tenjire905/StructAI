@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 
-import { OrbCompanion } from '@/components/features/OrbCompanion';
+import { OrbPresence } from '@/components/features/OrbPresence';
 import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { getShadow, useThemeMode } from '@/theme';
@@ -37,14 +37,19 @@ export function SectionMilestoneView({
           isPlayful ? getShadow('glow') : undefined,
           {
             alignItems: 'center',
+            alignSelf: 'stretch',
             backgroundColor: tokens.colors.surface.card,
-            borderRadius: tokens.radius.pill,
-            height: tokens.spacing.space8,
+            borderRadius: tokens.radius.lg,
             justifyContent: 'center',
-            width: tokens.spacing.space8,
+            paddingHorizontal: tokens.spacing.space4,
+            paddingVertical: tokens.spacing.space3,
           },
         ]}>
-        <OrbCompanion size={tokens.spacing.space8 * 0.75} state={companionState} />
+        <OrbPresence
+          showSpeech
+          size={tokens.spacing.space8 * 0.75}
+          state={companionState}
+        />
       </View>
 
       <Text

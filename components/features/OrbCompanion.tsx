@@ -8,6 +8,7 @@ import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withRepeat,
   withSequence,
   withSpring,
@@ -42,11 +43,14 @@ function stopScaleAnimation(scale: SharedValue<number>) {
 function stopEyeAnimations(
   eyeRadius: SharedValue<number>,
   eyeHeight: SharedValue<number>,
+  blink: SharedValue<number>,
 ) {
   cancelAnimation(eyeRadius);
   cancelAnimation(eyeHeight);
+  cancelAnimation(blink);
   eyeRadius.value = 1.1;
   eyeHeight.value = 1.1;
+  blink.value = 1;
 }
 
 function stopGradientIntensity(intensity: SharedValue<number>, value = 1) {
@@ -60,6 +64,10 @@ function getOrbBodyOpacity(state: OrbCompanionState): number {
       return 0.8;
     case 'sleepy':
       return 0.85;
+    case 'worry':
+      return 0.92;
+    case 'think':
+      return 0.96;
     case 'happy':
     case 'celebrating':
     case 'attentive':
@@ -79,7 +87,10 @@ function getHighlightOpacity(state: OrbCompanionState, isPlayfulPresentation: bo
       case 'celebrating':
       case 'happy':
       case 'attentive':
+      case 'think':
         return 0.3;
+      case 'worry':
+        return 0.22;
       default:
         return 0.25;
     }
@@ -105,21 +116,53 @@ function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
   const { tokens } = useThemeMode();
   const eyeRadius = useSharedValue(1.1);
   const eyeHeight = useSharedValue(1.1);
+  const blink = useSharedValue(1);
+  // Think glance uses static eye centers (animated SVG cx crashed on Expo Go).
+  const thinkGlance = state === 'think';
+  const leftEyeCx = thinkGlance ? 9.6 : 8.5;
+  const rightEyeCx = thinkGlance ? 16.6 : 15.5;
 
   useEffect(() => {
     if (!isFocused || reduceMotion) {
-      stopEyeAnimations(eyeRadius, eyeHeight);
+      stopEyeAnimations(eyeRadius, eyeHeight, blink);
       return () => {
-        stopEyeAnimations(eyeRadius, eyeHeight);
+        stopEyeAnimations(eyeRadius, eyeHeight, blink);
       };
     }
 
-    stopEyeAnimations(eyeRadius, eyeHeight);
+    stopEyeAnimations(eyeRadius, eyeHeight, blink);
+
+    const canBlink =
+      state === 'idle' ||
+      state === 'attentive' ||
+      state === 'think' ||
+      state === 'worry';
+
+    if (canBlink) {
+      blink.value = withRepeat(
+        withSequence(
+          withDelay(2200, withTiming(0.12, { duration: 70 })),
+          withTiming(1, { duration: 90 }),
+          withDelay(1600, withTiming(0.12, { duration: 70 })),
+          withTiming(1, { duration: 90 }),
+        ),
+        -1,
+        false,
+      );
+    }
 
     switch (state) {
       case 'attentive':
         eyeRadius.value = withTiming(1.35, { duration: tokens.motion.duration.fast });
         eyeHeight.value = withTiming(1.35, { duration: tokens.motion.duration.fast });
+        break;
+      case 'think':
+        eyeRadius.value = withTiming(1.15, { duration: tokens.motion.duration.fast });
+        eyeHeight.value = withTiming(1.05, { duration: tokens.motion.duration.fast });
+        break;
+      case 'worry':
+        eyeRadius.value = withTiming(1.05, { duration: tokens.motion.duration.fast });
+        eyeHeight.value = withTiming(0.85, { duration: tokens.motion.duration.fast });
         break;
       case 'low_energy':
         eyeRadius.value = withTiming(1.1, { duration: tokens.motion.duration.fast });
@@ -135,18 +178,26 @@ function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
     }
 
     return () => {
-      stopEyeAnimations(eyeRadius, eyeHeight);
+      stopEyeAnimations(eyeRadius, eyeHeight, blink);
     };
-  }, [eyeHeight, eyeRadius, isFocused, reduceMotion, state, tokens.motion.duration.fast]);
+  }, [
+    blink,
+    eyeHeight,
+    eyeRadius,
+    isFocused,
+    reduceMotion,
+    state,
+    tokens.motion.duration.fast,
+  ]);
 
   const leftEyeProps = useAnimatedProps(() => ({
     rx: eyeRadius.value,
-    ry: eyeHeight.value,
+    ry: eyeHeight.value * blink.value,
   }));
 
   const rightEyeProps = useAnimatedProps(() => ({
     rx: eyeRadius.value,
-    ry: eyeHeight.value,
+    ry: eyeHeight.value * blink.value,
   }));
 
   const eyeColor = tokens.colors.text.onAccent;
@@ -197,22 +248,60 @@ function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
     );
   }
 
+  if (state === 'worry') {
+    return (
+      <>
+        <Path
+          d="M 6.8 9.2 Q 8.5 10.4 10.2 9.2"
+          fill="none"
+          stroke={eyeColor}
+          strokeLinecap="round"
+          strokeWidth={1.1}
+        />
+        <Path
+          d="M 13.8 9.2 Q 15.5 10.4 17.2 9.2"
+          fill="none"
+          stroke={eyeColor}
+          strokeLinecap="round"
+          strokeWidth={1.1}
+        />
+        <AnimatedEllipse
+          animatedProps={leftEyeProps}
+          cx={leftEyeCx}
+          cy={11.2}
+          fill={eyeColor}
+          opacity={0.9}
+        />
+        <AnimatedEllipse
+          animatedProps={rightEyeProps}
+          cx={rightEyeCx}
+          cy={11.2}
+          fill={eyeColor}
+          opacity={0.9}
+        />
+      </>
+    );
+  }
+
   return (
     <>
       <AnimatedEllipse
         animatedProps={leftEyeProps}
-        cx={8.5}
+        cx={leftEyeCx}
         cy={10.5}
         fill={eyeColor}
         opacity={0.9}
       />
       <AnimatedEllipse
         animatedProps={rightEyeProps}
-        cx={15.5}
+        cx={rightEyeCx}
         cy={10.5}
         fill={eyeColor}
         opacity={0.9}
       />
+      {state === 'think' ? (
+        <Circle cx={18.5} cy={7.5} fill={eyeColor} opacity={0.55} r={0.7} />
+      ) : null}
     </>
   );
 }
@@ -227,6 +316,8 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
 
   const isPlayfulPresentation =
     !reduceMotion && tokens.presentation.orbStyle === 'illustrated';
+  // Faces run in both modes; Playful only increases motion amplitude.
+  const showFace = !reduceMotion;
 
   const highlightRatio = useMemo(() => {
     const bodyOpacity = getOrbBodyOpacity(state);
@@ -259,9 +350,13 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
 
     stopScaleAnimation(orbScale);
 
-    if (state === 'idle') {
+    if (state === 'idle' || state === 'think') {
       const duration = isPlayfulPresentation ? 1200 : 1500;
-      const peak = isPlayfulPresentation ? 1.03 : 1.01;
+      const peak = isPlayfulPresentation
+        ? state === 'think'
+          ? 1.025
+          : 1.03
+        : 1.01;
       orbScale.value = withRepeat(
         withSequence(
           withTiming(peak, { duration, easing: Easing.inOut(Easing.sin) }),
@@ -309,9 +404,10 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
       };
     }
 
-    if (isPlayfulPresentation && state === 'happy') {
+    if (state === 'happy') {
+      const peak = isPlayfulPresentation ? 1.08 : 1.04;
       orbScale.value = withSequence(
-        withSpring(1.08, tokens.motion.spring.bouncy),
+        withSpring(peak, tokens.motion.spring.default),
         withSpring(1, tokens.motion.spring.default),
       );
 
@@ -320,9 +416,28 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
       };
     }
 
-    if (isPlayfulPresentation && state === 'celebrating') {
+    if (state === 'worry') {
       orbScale.value = withSequence(
-        withSpring(1.12, tokens.motion.spring.bouncy),
+        withTiming(isPlayfulPresentation ? 0.97 : 0.985, {
+          duration: tokens.motion.duration.fast,
+        }),
+        withSpring(1, tokens.motion.spring.default),
+      );
+
+      return () => {
+        stopScaleAnimation(orbScale);
+      };
+    }
+
+    if (state === 'celebrating') {
+      const peak = isPlayfulPresentation ? 1.12 : 1.06;
+      orbScale.value = withSequence(
+        withSpring(
+          peak,
+          isPlayfulPresentation
+            ? tokens.motion.spring.bouncy
+            : tokens.motion.spring.default,
+        ),
         withSpring(1, tokens.motion.spring.default),
       );
 
@@ -381,7 +496,7 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
           fill={tokens.colors.text.onAccent}
           r="3"
         />
-        {isPlayfulPresentation ? (
+        {showFace ? (
           <PlayfulEyes isFocused={isFocused} reduceMotion={reduceMotion} state={state} />
         ) : null}
       </Svg>

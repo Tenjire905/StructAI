@@ -377,6 +377,130 @@ export const copyDe: CopyCatalog = {
     playful: 'Perfekt! Bonus-Orbs eingesammelt.',
     focus: 'Perfekt. Bonus erhalten.',
   },
+  'orb.speech.readingStart.a': {
+    playful: 'Okay — ich bin dabei. Lies das hier.',
+    focus: '',
+  },
+  'orb.speech.readingStart.b': {
+    playful: 'Neue Seite! Lass uns das aufsaugen.',
+    focus: '',
+  },
+  'orb.speech.readingStart.c': {
+    playful: 'Augen hierauf — das zählt.',
+    focus: '',
+  },
+  'orb.speech.reading.a': {
+    playful: 'Hmm… sieh dir die Struktur an.',
+    focus: '',
+  },
+  'orb.speech.reading.b': {
+    playful: 'Interessant. Was ist der echte Job dieses Prompts?',
+    focus: '',
+  },
+  'orb.speech.reading.c': {
+    playful: 'Weiter — der Hinweis steckt in der Formulierung.',
+    focus: '',
+  },
+  'orb.speech.practicing.a': {
+    playful: 'Dein Zug. Wähl bewusst.',
+    focus: '',
+  },
+  'orb.speech.practicing.b': {
+    playful: 'Nicht hetzen — nimm die schärfste Option.',
+    focus: '',
+  },
+  'orb.speech.practicing.c': {
+    playful: 'Ich will eine klare Antwort. Los.',
+    focus: '',
+  },
+  'orb.speech.correct.a': {
+    playful: 'Ja! Das Denken sitzt.',
+    focus: '',
+  },
+  'orb.speech.correct.b': {
+    playful: 'Sauber — das ist das Muster.',
+    focus: '',
+  },
+  'orb.speech.correct.c': {
+    playful: 'Treffer. Merk dir das.',
+    focus: '',
+  },
+  'orb.speech.wrong.a': {
+    playful: 'Fast. Dreh den Winkel einmal.',
+    focus: '',
+  },
+  'orb.speech.wrong.b': {
+    playful: 'Nicht ganz — lies die Constraint nochmal.',
+    focus: '',
+  },
+  'orb.speech.wrong.c': {
+    playful: 'Knapp! Der Trick steckte in den Details.',
+    focus: '',
+  },
+  'orb.speech.celebrating.a': {
+    playful: 'Geschafft! Die Lektion gehört uns.',
+    focus: '',
+  },
+  'orb.speech.celebrating.b': {
+    playful: 'Boom — Fortschritt freigeschaltet.',
+    focus: '',
+  },
+  'orb.speech.celebrating.c': {
+    playful: 'Starke Runde. Weiter!',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.a': {
+    playful: 'Hey — noch ein paar Orbs, dann lächelt das Tagesziel.',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.b': {
+    playful: 'Ich bin etwas matt. Eine kurze Lektion hilft.',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.c': {
+    playful: 'Energie-Check: uns fehlt noch ein Übungssieg.',
+    focus: '',
+  },
+  'orb.speech.focus.correctTip.a': {
+    playful: '',
+    focus: 'Behalte das Muster — benenne den Job, bevor du schreibst.',
+  },
+  'orb.speech.focus.correctTip.b': {
+    playful: '',
+    focus: 'Gut. Als Nächstes eine Constraint schärfer setzen.',
+  },
+  'orb.speech.focus.correctTip.c': {
+    playful: '',
+    focus: 'Stark. Nutze diese Struktur beim nächsten Prompt.',
+  },
+  'orb.speech.focus.wrongTip.a': {
+    playful: '',
+    focus: 'Tipp: Rolle, Aufgabe und Format klar trennen.',
+  },
+  'orb.speech.focus.wrongTip.b': {
+    playful: '',
+    focus: 'Prüfe die Constraint, die die Antwort begrenzt hat.',
+  },
+  'orb.speech.focus.wrongTip.c': {
+    playful: '',
+    focus: 'Nächster Versuch: Welche Ausgabeform war gefordert?',
+  },
+  'orb.speech.focus.celebrating.a': {
+    playful: '',
+    focus: 'Lektion fertig. Nimm eine klare Regel mit.',
+  },
+  'orb.speech.focus.celebrating.b': {
+    playful: '',
+    focus: 'Erledigt. Notiere das Muster, das den Pass gebracht hat.',
+  },
+  'orb.speech.focus.lowEnergy.a': {
+    playful: '',
+    focus: 'Tagesziel niedrig — eine fokussierte Lektion schließt die Lücke.',
+  },
+  'orb.speech.focus.lowEnergy.b': {
+    playful: '',
+    focus: 'Tipp: Heute einen kurzen Übungsblock abschließen.',
+  },
   'lesson.check': {
     playful: 'Antwort prüfen!',
     focus: 'Prüfen',

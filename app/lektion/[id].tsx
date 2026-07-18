@@ -9,7 +9,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { OrbCompanion, LockedPathView } from '@/components/features';
+import { LockedPathView, OrbPresence } from '@/components/features';
 import { CapstoneIncompleteView } from '@/components/features/CapstoneIncompleteView';
 import { GuestSaveProgressHint } from '@/components/features/GuestSaveProgressHint';
 import { PathCompletionView } from '@/components/features/PathCompletionView';
@@ -42,6 +42,12 @@ import {
   getMockLesson,
   type ResolvedLessonStep,
 } from '@/data/mockLessons';
+import {
+  ORB_READING_THINK_DELAY_MS,
+  resolveLessonMoment,
+  resolveLessonOrbState,
+  resolveLessonSpeechCopyKey,
+} from '@/lib/orbLanguage';
 import {
   computeLessonOrbReward,
   computeLessonPassRatio,
@@ -80,6 +86,52 @@ function isGradedStep(step: ResolvedLessonStep): step is GradedStep {
 
 function stepKind(step: GradedStep): LessonAnswerResult['kind'] {
   return step.type;
+}
+
+type GradedAnswerInput = {
+  selectedOption: number | null;
+  selectedTrueFalse: boolean | null;
+  reorderIndices: number[];
+  matchingPairs: Record<number, number>;
+  errorFindingSelectedIndex: number | null;
+  categorizeAssignments: Record<number, number>;
+};
+
+function evaluateGradedStepAnswers(
+  candidate: GradedStep | null,
+  input: GradedAnswerInput,
+): boolean {
+  if (!candidate) {
+    return false;
+  }
+
+  switch (candidate.type) {
+    case 'choice':
+    case 'fill_blank':
+      return input.selectedOption === candidate.correctIndex;
+    case 'true_false':
+      return input.selectedTrueFalse === candidate.correct;
+    case 'reorder':
+      return input.reorderIndices.every(
+        (value, index) => value === candidate.correctOrder[index],
+      );
+    case 'matching':
+      return candidate.pairs.every(
+        (_, termIndex) =>
+          input.matchingPairs[termIndex] !== undefined &&
+          candidate.definitionOrder[input.matchingPairs[termIndex]] === termIndex,
+      );
+    case 'error_finding':
+      return (
+        input.errorFindingSelectedIndex !== null &&
+        candidate.textSegments[input.errorFindingSelectedIndex]?.isError === true
+      );
+    case 'categorize':
+      return candidate.items.every(
+        (item, itemIndex) =>
+          input.categorizeAssignments[itemIndex] === item.correctCategoryIndex,
+      );
+  }
 }
 
 type LessonOutcome =
@@ -188,6 +240,7 @@ function LessonSessionScreenContent({
     visible: false,
     nonce: 0,
   });
+  const [readingSettled, setReadingSettled] = useState(false);
   const openedRef = useRef(false);
 
   const lesson = useMemo(() => {
@@ -214,6 +267,52 @@ function LessonSessionScreenContent({
     setDepthInfoPeek((current) => ({ ...current, visible: false }));
     dismissTerm();
   }, [dismissTerm, stepIndex]);
+
+  useEffect(() => {
+    setReadingSettled(false);
+    const current = lesson?.steps[stepIndex];
+
+    if (!current || current.type !== 'info') {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setReadingSettled(true);
+    }, ORB_READING_THINK_DELAY_MS);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [lesson, sessionNonce, stepIndex]);
+
+  const previewStep = lesson?.steps[stepIndex];
+  const previewGraded = previewStep && isGradedStep(previewStep) ? previewStep : null;
+  const gradedAnswerInput: GradedAnswerInput = {
+    categorizeAssignments,
+    errorFindingSelectedIndex,
+    matchingPairs,
+    reorderIndices,
+    selectedOption,
+    selectedTrueFalse,
+  };
+  const previewAnswerCorrect =
+    isChecked && evaluateGradedStepAnswers(previewGraded, gradedAnswerInput);
+  const lessonMoment =
+    lessonOutcome === 'active' && previewStep
+      ? resolveLessonMoment({
+          isAnswerCorrect: previewAnswerCorrect,
+          isChecked,
+          isInfoStep: previewStep.type === 'info',
+          readingSettled,
+        })
+      : null;
+  const lessonOrbOverride =
+    lessonMoment !== null ? resolveLessonOrbState(lessonMoment) : undefined;
+  const companionState = useOrbCompanionState(lessonOrbOverride);
+  const lessonSpeechKey =
+    lessonMoment !== null
+      ? resolveLessonSpeechCopyKey(lessonMoment, mode, stepIndex)
+      : null;
 
   const headerOptions = {
     headerShown: true,
@@ -272,38 +371,8 @@ function LessonSessionScreenContent({
   const isLastStep = stepIndex === lesson.steps.length - 1;
   const gradedStep = isGradedStep(step) ? step : null;
 
-  const evaluateGradedStep = (candidate: GradedStep | null): boolean => {
-    if (!candidate) {
-      return false;
-    }
-
-    switch (candidate.type) {
-      case 'choice':
-      case 'fill_blank':
-        return selectedOption === candidate.correctIndex;
-      case 'true_false':
-        return selectedTrueFalse === candidate.correct;
-      case 'reorder':
-        return reorderIndices.every(
-          (value, index) => value === candidate.correctOrder[index],
-        );
-      case 'matching':
-        return candidate.pairs.every(
-          (_, termIndex) =>
-            matchingPairs[termIndex] !== undefined &&
-            candidate.definitionOrder[matchingPairs[termIndex]] === termIndex,
-        );
-      case 'error_finding':
-        return (
-          errorFindingSelectedIndex !== null &&
-          candidate.textSegments[errorFindingSelectedIndex]?.isError === true
-        );
-      case 'categorize':
-        return candidate.items.every(
-          (item, itemIndex) => categorizeAssignments[itemIndex] === item.correctCategoryIndex,
-        );
-    }
-  };
+  const evaluateGradedStep = (candidate: GradedStep | null): boolean =>
+    evaluateGradedStepAnswers(candidate, gradedAnswerInput);
 
   const isAnswerCorrect = isChecked && evaluateGradedStep(gradedStep);
 
@@ -733,7 +802,15 @@ function LessonSessionScreenContent({
             />
           </View>
 
-          <StepTypeBadge step={step} />
+          <View style={{ gap: tokens.spacing.space3 }}>
+            <StepTypeBadge step={step} />
+            <OrbPresence
+              showSpeech
+              speechKey={lessonSpeechKey}
+              speechSeed={stepIndex}
+              state={companionState}
+            />
+          </View>
 
           {step.type === 'info' ? (
             <Card variant="solid">
@@ -1012,7 +1089,12 @@ function CompletionView({
             width: tokens.spacing.space8,
           },
         ]}>
-        <OrbCompanion size={tokens.spacing.space8 * 0.75} state={companionState} />
+        <OrbPresence
+          showSpeech
+          size={tokens.spacing.space8 * 0.75}
+          speechSeed={lessonId.length}
+          state={companionState}
+        />
       </View>
 
       <Text

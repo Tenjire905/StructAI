@@ -3,7 +3,7 @@
  * Mirrors animation decisions in components/features/OrbCompanion.tsx.
  */
 
-const LOOP_STATES = new Set(['idle', 'sleepy', 'low_energy']);
+const LOOP_STATES = new Set(['idle', 'think', 'sleepy', 'low_energy']);
 
 const MOTION_FAST_MS = 200;
 const IDLE_SCALE_PEAK = 1.03;
@@ -48,7 +48,7 @@ function resolveScaleDriver(state, isFocused, reduceMotion, isPlayfulPresentatio
     return { kind: 'stopped', loop: false };
   }
 
-  if (state === 'idle') {
+  if (state === 'idle' || state === 'think') {
     return { kind: 'breathing', loop: true };
   }
 
@@ -60,7 +60,7 @@ function resolveScaleDriver(state, isFocused, reduceMotion, isPlayfulPresentatio
     return { kind: 'low-energy-pulse', loop: true };
   }
 
-  if (isPlayfulPresentation && (state === 'happy' || state === 'celebrating')) {
+  if (state === 'happy' || state === 'celebrating' || state === 'worry') {
     return { kind: `${state}-pulse`, loop: false };
   }
 
