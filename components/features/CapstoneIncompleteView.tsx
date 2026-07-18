@@ -48,11 +48,12 @@ export function CapstoneIncompleteView({
           isPlayful ? getShadow('glow') : undefined,
           {
             alignItems: 'center',
+            alignSelf: 'stretch',
             backgroundColor: tokens.colors.surface.card,
-            borderRadius: tokens.radius.pill,
-            height: tokens.spacing.space8,
+            borderRadius: tokens.radius.lg,
             justifyContent: 'center',
-            width: tokens.spacing.space8,
+            paddingHorizontal: tokens.spacing.space4,
+            paddingVertical: tokens.spacing.space3,
           },
         ]}>
         <OrbPresence
