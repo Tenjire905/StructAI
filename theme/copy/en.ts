@@ -713,6 +713,14 @@ export const copyEn: CopyCatalog = {
     playful: 'Answers compared',
     focus: 'Results',
   },
+  'modelComparer.copyA11y': {
+    playful: 'Copy this answer',
+    focus: 'Copy answer to clipboard',
+  },
+  'modelComparer.copiedA11y': {
+    playful: 'Copied',
+    focus: 'Answer copied',
+  },
   'modelComparer.latencyBadge': {
     playful: '{{seconds}} s',
     focus: '{{seconds}} s',

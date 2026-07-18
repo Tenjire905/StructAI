@@ -715,6 +715,14 @@ export const copyFr: CopyCatalog = {
     playful: 'Reponses comparees',
     focus: 'Resultats',
   },
+  'modelComparer.copyA11y': {
+    playful: 'Copier cette reponse',
+    focus: 'Copier la reponse dans le presse-papiers',
+  },
+  'modelComparer.copiedA11y': {
+    playful: 'Copie',
+    focus: 'Reponse copiee',
+  },
   'modelComparer.latencyBadge': {
     playful: '{{seconds}} s',
     focus: '{{seconds}} s',

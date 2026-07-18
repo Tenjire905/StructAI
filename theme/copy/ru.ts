@@ -715,6 +715,14 @@ export const copyRu: CopyCatalog = {
     playful: 'Ответы в сравнении',
     focus: 'Результаты',
   },
+  'modelComparer.copyA11y': {
+    playful: 'Скопировать ответ',
+    focus: 'Скопировать ответ в буфер обмена',
+  },
+  'modelComparer.copiedA11y': {
+    playful: 'Скопировано',
+    focus: 'Ответ скопирован',
+  },
   'modelComparer.latencyBadge': {
     playful: '{{seconds}} с',
     focus: '{{seconds}} с',

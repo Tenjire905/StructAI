@@ -715,6 +715,14 @@ export const copyDe: CopyCatalog = {
     playful: 'Antworten im Vergleich',
     focus: 'Ergebnisse',
   },
+  'modelComparer.copyA11y': {
+    playful: 'Antwort kopieren',
+    focus: 'Antwort in die Zwischenablage kopieren',
+  },
+  'modelComparer.copiedA11y': {
+    playful: 'Kopiert',
+    focus: 'Antwort kopiert',
+  },
   'modelComparer.latencyBadge': {
     playful: '{{seconds}} s',
     focus: '{{seconds}} s',
