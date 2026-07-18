@@ -1199,6 +1199,10 @@ export const copyDe: CopyCatalog = {
     playful: 'Beide Modi sind gleichwertig — wähle, was zu dir passt.',
     focus: 'Beide Modi stehen gleichberechtigt zur Verfügung.',
   },
+  'onboarding.profileModeHintCarried': {
+    playful: 'Deine frühere Wahl ist vorausgewählt — passe sie hier bei Bedarf an.',
+    focus: 'Ihre zuvor gewählte Einstellung ist vorausgewählt und kann hier angepasst werden.',
+  },
   'onboarding.profilePlayfulBadge': {
     playful: 'Empfohlen',
     focus: 'Empfohlen',

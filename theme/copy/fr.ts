@@ -1199,6 +1199,10 @@ export const copyFr: CopyCatalog = {
     playful: 'Les deux modes sont equivalents — choisis celui qui te convient.',
     focus: 'Les deux modes sont disponibles sans preference.',
   },
+  'onboarding.profileModeHintCarried': {
+    playful: 'Ton choix precedant est preselectionne — ajuste-le ici si besoin.',
+    focus: 'Votre choix precedent est preselectionne et peut etre ajuste ici.',
+  },
   'onboarding.profilePlayfulBadge': {
     playful: 'Recommande',
     focus: 'Recommande',

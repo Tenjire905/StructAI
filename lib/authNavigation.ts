@@ -7,7 +7,7 @@ import { useProgressStore } from '@/store/progressStore';
 export function getPostAuthRoute(): Href {
   const completedLessons = useProgressStore.getState().completedLessons;
 
-  if (isProfileOnboardingPending(completedLessons)) {
+  if (isProfileOnboardingPending()) {
     return '/onboarding/profil';
   }
 
