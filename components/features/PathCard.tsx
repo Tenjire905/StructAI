@@ -68,74 +68,88 @@ export function PathCard({
   };
 
   return (
-    <AnimatedPressable
-      accessibilityRole={isPressable || isLongPressable ? 'button' : undefined}
-      disabled={!isPressable && !isLongPressable}
-      onPress={isPressable ? onPress : undefined}
-      onLongPress={isLongPressable ? onLongPress : undefined}
-      delayLongPress={450}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
+    <View
       style={[
-        animatedStyle,
         getShadow(1),
         {
           backgroundColor: tokens.colors.surface.card,
           borderRadius: tokens.presentation.preferredCardRadius,
-          gap: tokens.spacing.space3,
-          padding: tokens.spacing.space4,
         },
       ]}>
-      <View
-        style={{
-          alignItems: 'center',
-          flexDirection: 'row',
-          gap: tokens.spacing.space2,
-          justifyContent: 'space-between',
-        }}>
+      <AnimatedPressable
+        accessibilityRole={isPressable || isLongPressable ? 'button' : undefined}
+        disabled={!isPressable && !isLongPressable}
+        onPress={isPressable ? onPress : undefined}
+        onLongPress={isLongPressable ? onLongPress : undefined}
+        delayLongPress={450}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={[
+          animatedStyle,
+          {
+            gap: tokens.spacing.space3,
+            padding: tokens.spacing.space4,
+          },
+        ]}>
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            gap: tokens.spacing.space2,
+            justifyContent: 'space-between',
+          }}>
+          <Text
+            style={{
+              color: locked ? tokens.colors.text.tertiary : tokens.colors.text.primary,
+              flex: 1,
+              flexShrink: 1,
+              fontFamily: tokens.typography.fontFamily.heading,
+              fontSize: tokens.typography.fontSize.headingLg,
+            }}>
+            {title}
+          </Text>
+          {locked ? (
+            <Lock
+              color={tokens.colors.text.tertiary}
+              size={tokens.icons.sizes.md}
+              strokeWidth={tokens.icons.strokeWidth}
+            />
+          ) : null}
+          {resolvedBadgeLabel ? (
+            <Badge label={resolvedBadgeLabel} tone={resolvedBadgeTone} />
+          ) : null}
+        </View>
+
         <Text
           style={{
-            color: locked ? tokens.colors.text.tertiary : tokens.colors.text.primary,
-            flex: 1,
-            flexShrink: 1,
-            fontFamily: tokens.typography.fontFamily.heading,
-            fontSize: tokens.typography.fontSize.headingLg,
+            color: locked ? tokens.colors.text.tertiary : tokens.colors.text.secondary,
+            fontFamily: tokens.typography.fontFamily.body,
+            fontSize: tokens.typography.fontSize.bodyMd,
           }}>
-          {title}
+          {isStarted
+            ? t('pathCard.chapters', { current: currentChapter, total: totalChapters })
+            : t('pathCard.chaptersTotal', { total: totalChapters })}
         </Text>
-        {locked ? (
-          <Lock
-            color={tokens.colors.text.tertiary}
-            size={tokens.icons.sizes.md}
-            strokeWidth={tokens.icons.strokeWidth}
+
+        {isStarted ? (
+          <ProgressBar
+            color="structure"
+            completedSegments={completedSegments}
+            failedSegments={failedSegments}
+            progress={progress}
           />
         ) : null}
-        {resolvedBadgeLabel ? (
-          <Badge label={resolvedBadgeLabel} tone={resolvedBadgeTone} />
-        ) : null}
-      </View>
+      </AnimatedPressable>
 
-      <Text
-        style={{
-          color: locked ? tokens.colors.text.tertiary : tokens.colors.text.secondary,
-          fontFamily: tokens.typography.fontFamily.body,
-          fontSize: tokens.typography.fontSize.bodyMd,
-        }}>
-        {isStarted
-          ? t('pathCard.chapters', { current: currentChapter, total: totalChapters })
-          : t('pathCard.chaptersTotal', { total: totalChapters })}
-      </Text>
-
-      {isStarted ? (
-        <ProgressBar
-          color="structure"
-          completedSegments={completedSegments}
-          failedSegments={failedSegments}
-          progress={progress}
-        />
+      {footer ? (
+        <View
+          style={{
+            paddingBottom: tokens.spacing.space4,
+            paddingHorizontal: tokens.spacing.space4,
+          }}>
+          {footer}
+        </View>
       ) : null}
-
-      {footer}
-    </AnimatedPressable>
+    </View>
   );
 }

@@ -25,6 +25,30 @@ export const copyRu: CopyCatalog = {
     playful: 'Продолжить обучение',
     focus: 'Текущие треки',
   },
+  'home.dailyChallenge.eyebrow': {
+    playful: 'Задача на сегодня',
+    focus: 'Дневной челлендж',
+  },
+  'home.dailyChallenge.title': {
+    playful: 'Одна ясная победа сегодня',
+    focus: 'Одна сфокусированная практика',
+  },
+  'home.dailyChallenge.bodyFresh': {
+    playful: 'Начни с {{path}} — короткий урок, реальная практика, мгновенный фидбек.',
+    focus: 'Начните {{path}}: один урок, один цикл практики, ясный фидбек.',
+  },
+  'home.dailyChallenge.bodyContinue': {
+    playful: 'Продолжи {{path}} — один урок, один промпт, готово.',
+    focus: 'Следующий шаг в {{path}}: один урок с ясным чекпоинтом.',
+  },
+  'home.dailyChallenge.ctaFresh': {
+    playful: 'Начать урок дня',
+    focus: 'Начать урок дня',
+  },
+  'home.dailyChallenge.ctaContinue': {
+    playful: 'Сделать урок дня',
+    focus: 'Продолжить урок дня',
+  },
   'home.startHint': {
     playful: 'Начни с основ промптов — первый шаг к структурированному prompting.',
     focus: 'Начните с основ промптов — первый шаг к структурированному prompting.',
@@ -40,6 +64,46 @@ export const copyRu: CopyCatalog = {
   'home.retryFailedNone': {
     playful: 'Все главы пройдены — повтор не нужен',
     focus: 'Все главы завершены — повтор не требуется',
+  },
+  'home.retryFailedNoOpen': {
+    playful: 'Нет ошибок — продолжай как обычно',
+    focus: 'Нет открытых ошибок — продолжайте как обычно',
+  },
+  'home.activityInsights.title': {
+    playful: 'Твоя активность',
+    focus: 'Обзор активности',
+  },
+  'home.activityInsights.expandHint': {
+    playful: 'Нажми, чтобы увидеть график орбов',
+    focus: 'Нажмите, чтобы открыть график активности орбов',
+  },
+  'home.activityInsights.collapseHint': {
+    playful: 'Нажми, чтобы вернуться к недельной сводке',
+    focus: 'Нажмите, чтобы вернуться к недельной сводке',
+  },
+  'home.activityInsights.chartTitle': {
+    playful: 'Дневник орбов',
+    focus: 'Ежедневная активность орбов',
+  },
+  'home.activityInsights.period': {
+    playful: 'Последние {{days}} дней',
+    focus: 'Период: {{days}} дней',
+  },
+  'home.activityInsights.productivityValue': {
+    playful: '{{percent}} %',
+    focus: '{{percent}} %',
+  },
+  'home.activityInsights.productivityWithGoal': {
+    playful: 'Продуктивность относительно цели {{goal}} орбов в день',
+    focus: 'Продуктивность относительно дневной цели ({{goal}} орбов)',
+  },
+  'home.activityInsights.productivityNoGoal': {
+    playful: 'Активные дни — задай цель через орбы сверху',
+    focus: 'Активные дни — задайте цель через счётчик орбов',
+  },
+  'home.activityInsights.orbPeekA11y': {
+    playful: '{{count}} орбов в этот день',
+    focus: '{{count}} орбов в этот день',
   },
   'orbCounter.label': {
     playful: 'Энерго-орбы',
@@ -245,6 +309,10 @@ export const copyRu: CopyCatalog = {
     playful: 'Нажми для краткого объяснения режима обучения.',
     focus: 'Нажать для объяснения режима обучения.',
   },
+  'lesson.glossaryTapHint': {
+    playful: 'Нажми для краткого объяснения этого термина.',
+    focus: 'Нажать для краткого объяснения этого термина.',
+  },
   'lesson.typeChoice': {
     playful: 'Выбор варианта',
     focus: 'Выбор',
@@ -322,12 +390,32 @@ export const copyRu: CopyCatalog = {
     focus: 'Верно.',
   },
   'lesson.wrongFeedback': {
-    playful: 'Почти! Посмотри объяснение.',
-    focus: 'Неверно. См. объяснение.',
+    playful: 'Ещё нет — вот как исправить.',
+    focus: 'Неверно — почему, затем следующий паттерн.',
   },
   'lesson.hintLabel': {
     playful: 'Подсказка:',
     focus: 'Подсказка:',
+  },
+  'lesson.coachingWhyLabel': {
+    playful: 'Почему это не сработало',
+    focus: 'Почему это не сработало',
+  },
+  'lesson.coachingNextLabel': {
+    playful: 'Что делать дальше',
+    focus: 'Следующий паттерн',
+  },
+  'lesson.coachingNextFromBeat': {
+    playful: 'В следующей попытке сознательно примени {{term}}.',
+    focus: 'Дальше: осознанно примените {{term}} при повторе.',
+  },
+  'lesson.coachingNextFallback': {
+    playful: 'Перечитай «почему» — выбери вариант, который закрывает пробел.',
+    focus: 'Перечитайте причину, затем выберите вариант, который её закрывает.',
+  },
+  'lesson.learningBeatLabel': {
+    playful: 'Запомни',
+    focus: 'Главное',
   },
   'lesson.completeTitle': {
     playful: 'Урок пройден!',
@@ -513,6 +601,38 @@ export const copyRu: CopyCatalog = {
     playful: 'История твоих баллов',
     focus: 'История баллов',
   },
+  'promptLab.promptHistoryTitle': {
+    playful: 'Твои оценённые промпты',
+    focus: 'Недавно оценённые промпты',
+  },
+  'promptLab.promptHistoryDescription': {
+    playful: 'Нажми на промпт, чтобы снова загрузить его в редактор.',
+    focus: 'Выберите запись, чтобы снова использовать этот промпт.',
+  },
+  'promptLab.promptHistoryEmpty': {
+    playful: 'Пока нет оценённых промптов — оцени один, чтобы начать след.',
+    focus: 'Оценённые промпты ещё не сохранены.',
+  },
+  'promptLab.promptHistoryMissing': {
+    playful: 'Старая запись — текст промпта тогда ещё не сохранялся.',
+    focus: 'Старая запись без сохранённого текста промпта.',
+  },
+  'promptLab.promptHistoryScore': {
+    playful: 'Балл {{score}}',
+    focus: '{{score}} / 100',
+  },
+  'promptLab.promptHistoryTapReuse': {
+    playful: 'Нажми, чтобы использовать снова',
+    focus: 'Использовать снова',
+  },
+  'promptLab.promptHistoryReuseHint': {
+    playful: 'Загружает этот промпт в поле ввода',
+    focus: 'Загружает этот промпт в поле ввода',
+  },
+  'promptLab.promptHistoryItemA11y': {
+    playful: 'Оценённый промпт, балл {{score}}',
+    focus: 'Оценённый промпт, балл {{score}}',
+  },
   'promptLab.scoringInProgress': {
     playful: 'Идет оценка...',
     focus: 'Оценка...',
@@ -548,6 +668,34 @@ export const copyRu: CopyCatalog = {
   'promptLab.detailHintsTitle': {
     playful: 'Конкретные идеи для улучшения',
     focus: 'Конкретные подсказки',
+  },
+  'promptLab.improvementPathTitle': {
+    playful: 'Самый ясный следующий шаг',
+    focus: 'Главный путь улучшения',
+  },
+  'promptLab.improvementPathSecondary': {
+    playful: 'Потом: {{tip}}',
+    focus: 'Далее: {{tip}}',
+  },
+  'promptLab.improvementPathComplete': {
+    playful: 'Отлично — роль, контекст, формат и ограничения на месте.',
+    focus: 'Все ключевые столпы есть: роль, контекст, формат, ограничения.',
+  },
+  'promptLab.missing.context': {
+    playful: 'В промпте нет контекста — какой фон должна учесть ИИ?',
+    focus: 'Нет контекста: добавьте фон или исходные данные для ответа.',
+  },
+  'promptLab.missing.role': {
+    playful: 'В промпте нет роли — скажи ИИ, кем ей быть.',
+    focus: 'Нет роли: задайте чёткую персону или позицию модели.',
+  },
+  'promptLab.missing.format': {
+    playful: 'В промпте нет формата — пункты, абзацы, таблица…?',
+    focus: 'Нет формата: укажите форму вывода (список, абзацы, JSON, …).',
+  },
+  'promptLab.missing.constraints': {
+    playful: 'В промпте нет ограничений — длина, аудитория или тон.',
+    focus: 'Нет ограничений: задайте жёсткие рамки (длина, аудитория, тон).',
   },
   'promptLab.comparisonTitle': {
     playful: '+{{delta}} баллов — вот что улучшилось',
@@ -598,6 +746,14 @@ export const copyRu: CopyCatalog = {
   'modelComparer.resultsTitle': {
     playful: 'Ответы в сравнении',
     focus: 'Результаты',
+  },
+  'modelComparer.copyA11y': {
+    playful: 'Скопировать ответ',
+    focus: 'Скопировать ответ в буфер обмена',
+  },
+  'modelComparer.copiedA11y': {
+    playful: 'Скопировано',
+    focus: 'Ответ скопирован',
   },
   'modelComparer.latencyBadge': {
     playful: '{{seconds}} с',
@@ -774,6 +930,62 @@ export const copyRu: CopyCatalog = {
   'profile.guestDisplayName': {
     playful: 'Гость',
     focus: 'Гость',
+  },
+  'profile.resetSection': {
+    playful: 'Сброс и новый старт',
+    focus: 'Данные и сброс',
+  },
+  'profile.resetSectionDescription': {
+    playful: 'Нужен чистый старт? Выбери, что удалить.',
+    focus: 'Сбросить только прогресс обучения или удалить все локальные данные и снова пройти онбординг.',
+  },
+  'profile.resetProgressCta': {
+    playful: 'Сбросить весь прогресс',
+    focus: 'Сбросить весь прогресс обучения',
+  },
+  'profile.deleteAccountCta': {
+    playful: 'Удалить всё и снова онбординг',
+    focus: 'Удалить данные аккаунта и снова онбординг',
+  },
+  'profile.resetCancel': {
+    playful: 'Отмена',
+    focus: 'Отмена',
+  },
+  'profile.resetProgressConfirmTitle': {
+    playful: 'Сбросить весь прогресс?',
+    focus: 'Сбросить весь прогресс обучения?',
+  },
+  'profile.resetProgressConfirmBody': {
+    playful: 'Уроки, пути, орбы и серии будут очищены. Ты остаёшься в системе с настройками.',
+    focus: 'Очищает уроки, пути, орбы и серии. Аккаунт и настройки сохраняются.',
+  },
+  'profile.resetProgressConfirmAction': {
+    playful: 'Сбросить прогресс',
+    focus: 'Сбросить прогресс',
+  },
+  'profile.deleteAccountConfirmTitle': {
+    playful: 'Удалить всё?',
+    focus: 'Удалить данные аккаунта?',
+  },
+  'profile.deleteAccountConfirmBodyGuest': {
+    playful: 'Прогресс, имя, ключи и настройки исчезнут — затем снова онбординг.',
+    focus: 'Удаляет локальный прогресс и профиль, затем открывает онбординг.',
+  },
+  'profile.deleteAccountConfirmBodySignedIn': {
+    playful: 'Прогресс (включая облако), выход из аккаунта и снова онбординг.',
+    focus: 'Удаляет данные обучения (локально + облако), выходит из аккаунта и открывает онбординг.',
+  },
+  'profile.deleteAccountConfirmAction': {
+    playful: 'Удалить и начать заново',
+    focus: 'Удалить и начать заново',
+  },
+  'profile.deleteAccountFootnoteGuest': {
+    playful: 'Полный wipe — снова увидишь welcome-экраны.',
+    focus: 'Полный локальный wipe возвращает к онбордингу.',
+  },
+  'profile.deleteAccountFootnoteSignedIn': {
+    playful: 'Облачный прогресс удалён, выход выполнен. Удаление email auth — через поддержку.',
+    focus: 'Удаляет sync-прогресс и завершает сессию. Auth-идентичность иногда только через поддержку.',
   },
   'profile.guestAccountDescription': {
     playful: 'Ты используешь StructAI без аккаунта. Прогресс остается на этом устройстве — войди, чтобы синхронизировать.',

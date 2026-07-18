@@ -9,8 +9,8 @@ import {
 import {
   DEFAULT_DAILY_ORB_GOAL,
   getTodayDateKey,
-  normalizeDailyOrbProgress,
 } from '@/lib/dailyOrbGoal';
+import { mergeDailyOrbHistory, syncDailyOrbState } from '@/lib/dailyOrbHistory';
 
 /** Proposed conflict strategy – active on login when local and remote both exist. */
 export const PROGRESS_MERGE_STRATEGY = 'max-union-per-field' as const;
@@ -133,6 +133,7 @@ function normalizePromptScoreEntry(
   if (entry && typeof entry === 'object' && 'score' in entry) {
     const score = Number((entry as PromptScoreHistoryEntry).score);
     const recordedAt = (entry as PromptScoreHistoryEntry).recordedAt;
+    const prompt = (entry as PromptScoreHistoryEntry).prompt;
 
     if (!Number.isFinite(score)) {
       return null;
@@ -144,6 +145,9 @@ function normalizePromptScoreEntry(
         typeof recordedAt === 'string' && recordedAt.length > 0
           ? recordedAt
           : new Date(Date.now() - (total - index) * 60_000).toISOString(),
+      ...(typeof prompt === 'string' && prompt.trim().length > 0
+        ? { prompt: prompt.trim() }
+        : {}),
     };
   }
 
@@ -168,7 +172,7 @@ export function mergePromptScoreHistory(
 
   return [...local, ...remote]
     .filter((entry) => {
-      const key = `${entry.recordedAt}|${entry.score}`;
+      const key = `${entry.recordedAt}|${entry.score}|${entry.prompt ?? ''}`;
       if (seen.has(key)) {
         return false;
       }
@@ -232,6 +236,7 @@ export function mergeProgressSnapshots(
         : remote.dailyGoalDateKey,
     dailyGoalNotificationsEnabled:
       local.dailyGoalNotificationsEnabled || remote.dailyGoalNotificationsEnabled,
+    dailyOrbHistory: mergeDailyOrbHistory(local.dailyOrbHistory, remote.dailyOrbHistory),
     completedLessons,
     currentStreak: Math.max(local.currentStreak, remote.currentStreak),
     streakDays: mergeStreakDays(local.streakDays, remote.streakDays),
@@ -258,7 +263,8 @@ export function normalizeProgressSnapshot(
     (typeof partial.orbMax === 'number' && partial.orbMax > 0 && partial.orbMax <= 500
       ? partial.orbMax
       : DEFAULT_DAILY_ORB_GOAL);
-  const dailyProgress = normalizeDailyOrbProgress(
+  const dailyProgress = syncDailyOrbState(
+    partial.dailyOrbHistory ?? {},
     partial.orbsEarnedToday ?? 0,
     partial.dailyGoalDateKey,
     todayKey,
@@ -270,6 +276,7 @@ export function normalizeProgressSnapshot(
     dailyOrbGoal,
     orbsEarnedToday: dailyProgress.orbsEarnedToday,
     dailyGoalDateKey: dailyProgress.dailyGoalDateKey,
+    dailyOrbHistory: dailyProgress.dailyOrbHistory,
     dailyGoalNotificationsEnabled: partial.dailyGoalNotificationsEnabled ?? false,
     streakDays: partial.streakDays ?? [...DEFAULT_PROGRESS.streakDays],
     pathProgress: partial.pathProgress ?? {},

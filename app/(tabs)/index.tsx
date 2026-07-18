@@ -1,31 +1,51 @@
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+  useWindowDimensions,
+  type View as RNView,
+} from 'react-native';
 
 import {
+  HomeActivityInsightsTile,
+  HomeDailyChallengeCard,
   OrbCounter,
   PathCard,
   PathCardRetryPeek,
-  StatBlock,
-  StreakTracker,
+  PATH_CARD_RETRY_PEEK_MAX_HEIGHT,
 } from '@/components/features';
 import { Avatar, Button, Card } from '@/components/ui';
+import { hydrateAppStorage, isDailyGoalSetupCompleted } from '@/lib/appStorage';
+import { resolveDailyChallenge } from '@/lib/dailyChallenge';
+import { buildLessonHref } from '@/lib/lessonNavigation';
 import {
   computePathProgressBarModel,
   getFirstFailedLessonIdInOrder,
   pathTitleKey,
 } from '@/lib/pathProgress';
+import { isPathFullyCompleted } from '@/lib/pathCompletion';
 import { DEFAULT_START_PATH_ID } from '@/lib/pathLessonUtils';
-import { isDailyGoalSetupCompleted } from '@/lib/appStorage';
+import { hydrateProgressOnLogin } from '@/lib/progressSync';
 import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
+/** Space reserved for tab bar + safe inset when scrolling peek into view. */
+const SCROLL_BOTTOM_INSET = 120;
+
 export default function HomeScreen() {
   const { tokens, t } = useThemeMode();
   const router = useRouter();
+  const { height: windowHeight } = useWindowDimensions();
+  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollOffsetRef = useRef(0);
+  const pathCardRefs = useRef<Record<string, RNView | null>>({});
   const [retryPeek, setRetryPeek] = useState<{ pathId: string; nonce: number } | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
   const { user, session } = useAuth();
   const displayName = session
     ? resolveProfileDisplayName(user)
@@ -37,21 +57,93 @@ export default function HomeScreen() {
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const currentStreak = useProgressStore((state) => state.currentStreak);
   const streakDays = useProgressStore((state) => state.streakDays);
+  const dailyOrbHistory = useProgressStore((state) => state.dailyOrbHistory);
   const pathProgress = useProgressStore((state) => state.pathProgress);
   const activePaths = useMemo(
     () => useProgressStore.getState().getActivePaths(),
     [pathProgress],
   );
+  const dailyChallenge = useMemo(() => resolveDailyChallenge(pathProgress), [pathProgress]);
+
+  const scrollPeekIntoView = useCallback(
+    (pathId: string) => {
+      const cardRef = pathCardRefs.current[pathId];
+
+      if (!cardRef) {
+        return;
+      }
+
+      cardRef.measureInWindow((_x, cardY, _width, cardHeight) => {
+        const peekBottom = cardY + cardHeight + PATH_CARD_RETRY_PEEK_MAX_HEIGHT;
+        const visibleBottom = windowHeight - SCROLL_BOTTOM_INSET;
+
+        if (peekBottom <= visibleBottom) {
+          return;
+        }
+
+        scrollViewRef.current?.scrollTo({
+          y: scrollOffsetRef.current + (peekBottom - visibleBottom),
+          animated: true,
+        });
+      });
+    },
+    [windowHeight],
+  );
+
+  useEffect(() => {
+    if (!retryPeek) {
+      return;
+    }
+
+    const scrollTimer = setTimeout(() => {
+      scrollPeekIntoView(retryPeek.pathId);
+    }, 320);
+
+    return () => {
+      clearTimeout(scrollTimer);
+    };
+  }, [retryPeek, scrollPeekIntoView]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setRetryPeek(null);
+
+    try {
+      await hydrateAppStorage();
+      useProgressStore.getState().hydrate();
+
+      if (session?.user.id) {
+        await hydrateProgressOnLogin(session.user.id);
+      }
+    } finally {
+      setRefreshing(false);
+    }
+  }, [session?.user.id]);
 
   return (
     <ScrollView
+      ref={scrollViewRef}
       contentContainerStyle={{
         gap: tokens.spacing.space5,
         paddingBottom: tokens.spacing.space7,
         paddingHorizontal: tokens.spacing.screenPadding,
         paddingTop: tokens.spacing.space5,
       }}
-      onScrollBeginDrag={() => setRetryPeek(null)}
+      onScroll={(event) => {
+        scrollOffsetRef.current = event.nativeEvent.contentOffset.y;
+      }}
+      refreshControl={
+        <RefreshControl
+          colors={[tokens.colors.accent.primary]}
+          onRefresh={() => {
+            void onRefresh();
+          }}
+          progressBackgroundColor={tokens.colors.background.elevated}
+          refreshing={refreshing}
+          tintColor={tokens.colors.accent.primary}
+        />
+      }
+      scrollEventThrottle={16}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <View
         style={{
@@ -79,12 +171,21 @@ export default function HomeScreen() {
         />
       </View>
 
-      <StreakTracker completedDays={streakDays} />
+      <HomeActivityInsightsTile
+        completedLessons={completedLessons}
+        currentStreak={currentStreak}
+        dailyOrbGoal={dailyGoalConfigured ? dailyOrbGoal : 0}
+        dailyOrbHistory={dailyOrbHistory}
+        orbsEarnedToday={orbsEarnedToday}
+        streakDays={streakDays}
+      />
 
-      <View style={{ flexDirection: 'row', gap: tokens.spacing.space3 }}>
-        <StatBlock copyKey="statBlock.completedLessons" value={completedLessons} />
-        <StatBlock copyKey="statBlock.currentStreak" value={currentStreak} />
-      </View>
+      {dailyChallenge ? (
+        <HomeDailyChallengeCard
+          challenge={dailyChallenge}
+          onStart={() => router.push(buildLessonHref(dailyChallenge.lessonId))}
+        />
+      ) : null}
 
       <View style={{ gap: tokens.spacing.space3 }}>
         <Text
@@ -128,54 +229,63 @@ export default function HomeScreen() {
             const pathRecord = pathProgress[path.id];
             const progressBar = computePathProgressBarModel(path.id, pathRecord);
             const firstFailedLessonId = getFirstFailedLessonIdInOrder(path.id, pathRecord);
+            const pathIsComplete = isPathFullyCompleted(path.id, pathRecord);
             const isRetryPeekVisible = retryPeek?.pathId === path.id;
+            const retryEmptyLabel = pathIsComplete
+              ? t('home.retryFailedNone')
+              : t('home.retryFailedNoOpen');
 
             return (
-            <PathCard
-              currentChapter={path.currentChapter}
-              key={path.id}
-              onLongPress={() =>
-                setRetryPeek((current) =>
-                  current?.pathId === path.id
-                    ? { pathId: path.id, nonce: current.nonce + 1 }
-                    : { pathId: path.id, nonce: 0 },
-                )
-              }
-              onPress={() => {
-                if (isRetryPeekVisible) {
-                  setRetryPeek(null);
-                  return;
-                }
-
-                setRetryPeek(null);
-                router.push(`/lernpfad/${path.id}`);
-              }}
-              completedSegments={progressBar.completedSegments}
-              failedSegments={progressBar.failedSegments}
-              footer={
-                <PathCardRetryPeek
-                  emptyLabel={t('home.retryFailedNone')}
-                  hasFailedLesson={Boolean(firstFailedLessonId)}
-                  onDismiss={() =>
-                    setRetryPeek((current) => (current?.pathId === path.id ? null : current))
+              <View
+                key={path.id}
+                ref={(node) => {
+                  pathCardRefs.current[path.id] = node;
+                }}>
+                <PathCard
+                  currentChapter={path.currentChapter}
+                  onLongPress={() =>
+                    setRetryPeek((current) =>
+                      current?.pathId === path.id
+                        ? { pathId: path.id, nonce: current.nonce + 1 }
+                        : { pathId: path.id, nonce: 0 },
+                    )
                   }
-                  onRetry={() => {
-                    if (!firstFailedLessonId) {
+                  onPress={() => {
+                    if (isRetryPeekVisible) {
+                      setRetryPeek(null);
                       return;
                     }
 
                     setRetryPeek(null);
-                    router.push(`/lektion/${firstFailedLessonId}`);
+                    router.push(`/lernpfad/${path.id}`);
                   }}
-                  revealNonce={retryPeek?.pathId === path.id ? retryPeek.nonce : 0}
-                  retryLabel={t('home.retryFailedCta')}
-                  visible={isRetryPeekVisible}
+                  completedSegments={progressBar.completedSegments}
+                  failedSegments={progressBar.failedSegments}
+                  footer={
+                    <PathCardRetryPeek
+                      emptyLabel={retryEmptyLabel}
+                      hasFailedLesson={Boolean(firstFailedLessonId)}
+                      onDismiss={() =>
+                        setRetryPeek((current) => (current?.pathId === path.id ? null : current))
+                      }
+                      onRetry={() => {
+                        if (!firstFailedLessonId) {
+                          return;
+                        }
+
+                        setRetryPeek(null);
+                        router.push(`/lektion/${firstFailedLessonId}`);
+                      }}
+                      revealNonce={retryPeek?.pathId === path.id ? retryPeek.nonce : 0}
+                      retryLabel={t('home.retryFailedCta')}
+                      visible={isRetryPeekVisible}
+                    />
+                  }
+                  progress={progressBar.completedRatio}
+                  title={t(path.titleKey)}
+                  totalChapters={path.totalChapters}
                 />
-              }
-              progress={progressBar.completedRatio}
-              title={t(path.titleKey)}
-              totalChapters={path.totalChapters}
-            />
+              </View>
             );
           })
         )}

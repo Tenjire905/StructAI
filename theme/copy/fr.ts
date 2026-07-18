@@ -25,6 +25,30 @@ export const copyFr: CopyCatalog = {
     playful: 'Continuer a apprendre',
     focus: 'Parcours actifs',
   },
+  'home.dailyChallenge.eyebrow': {
+    playful: 'Mission du jour',
+    focus: 'Defi du jour',
+  },
+  'home.dailyChallenge.title': {
+    playful: 'Une victoire claire aujourd’hui',
+    focus: 'Une session de pratique concentree',
+  },
+  'home.dailyChallenge.bodyFresh': {
+    playful: 'Commence avec {{path}} — une lecon courte, vraie pratique, feedback immediat.',
+    focus: 'Debutez {{path}} : une lecon, une boucle de pratique, un feedback clair.',
+  },
+  'home.dailyChallenge.bodyContinue': {
+    playful: 'Continue {{path}} — une lecon, un prompt, c’est fait.',
+    focus: 'Prochaine etape dans {{path}} : une lecon avec un checkpoint clair.',
+  },
+  'home.dailyChallenge.ctaFresh': {
+    playful: 'Lancer la lecon du jour',
+    focus: 'Commencer la lecon du jour',
+  },
+  'home.dailyChallenge.ctaContinue': {
+    playful: 'Faire la lecon du jour',
+    focus: 'Continuer la lecon du jour',
+  },
   'home.startHint': {
     playful: 'Commence par les bases du prompt — ta premiere etape vers un prompting structure.',
     focus: 'Commencez par les bases du prompt — votre premiere etape vers un prompting structure.',
@@ -40,6 +64,46 @@ export const copyFr: CopyCatalog = {
   'home.retryFailedNone': {
     playful: 'Toutes les lecons sont faites — pas de reprise necessaire',
     focus: 'Toutes les lecons sont terminees — aucune reprise requise',
+  },
+  'home.retryFailedNoOpen': {
+    playful: 'Aucune lecon en echec — continue normalement',
+    focus: 'Aucune erreur ouverte — poursuivre normalement',
+  },
+  'home.activityInsights.title': {
+    playful: 'Ton activite',
+    focus: 'Apercu d\'activite',
+  },
+  'home.activityInsights.expandHint': {
+    playful: 'Touche pour voir ton historique d\'orbs en graphique',
+    focus: 'Toucher pour ouvrir le graphique d\'activite des orbs',
+  },
+  'home.activityInsights.collapseHint': {
+    playful: 'Touche pour revenir a la vue hebdomadaire',
+    focus: 'Toucher pour revenir a la vue hebdomadaire',
+  },
+  'home.activityInsights.chartTitle': {
+    playful: 'Journal d\'orbs',
+    focus: 'Activite quotidienne des orbs',
+  },
+  'home.activityInsights.period': {
+    playful: '{{days}} derniers jours',
+    focus: 'Periode : {{days}} jours',
+  },
+  'home.activityInsights.productivityValue': {
+    playful: '{{percent}} %',
+    focus: '{{percent}} %',
+  },
+  'home.activityInsights.productivityWithGoal': {
+    playful: 'Productivite vs objectif quotidien de {{goal}} orbs',
+    focus: 'Productivite par rapport a l\'objectif quotidien ({{goal}} orbs)',
+  },
+  'home.activityInsights.productivityNoGoal': {
+    playful: 'Jours actifs — fixe un objectif via les orbs en haut',
+    focus: 'Jours actifs — objectif quotidien via le compteur d\'orbs',
+  },
+  'home.activityInsights.orbPeekA11y': {
+    playful: '{{count}} orbs ce jour-la',
+    focus: '{{count}} orbs ce jour-la',
   },
   'orbCounter.label': {
     playful: "Orbs d'energie",
@@ -245,6 +309,10 @@ export const copyFr: CopyCatalog = {
     playful: 'Appuie pour une breve explication du mode.',
     focus: 'Appuyer pour l\'explication du mode.',
   },
+  'lesson.glossaryTapHint': {
+    playful: 'Appuie pour une breve explication de ce terme.',
+    focus: 'Appuyer pour une breve explication de ce terme.',
+  },
   'lesson.typeChoice': {
     playful: 'Question a choix',
     focus: 'Choix',
@@ -322,12 +390,32 @@ export const copyFr: CopyCatalog = {
     focus: 'Correct.',
   },
   'lesson.wrongFeedback': {
-    playful: 'Presque ! Regarde l explication.',
-    focus: 'Incorrect. Voir explication.',
+    playful: 'Pas encore — voici comment corriger.',
+    focus: 'Incorrect — pourquoi, puis le prochain schema.',
   },
   'lesson.hintLabel': {
     playful: 'Conseil :',
     focus: 'Conseil :',
+  },
+  'lesson.coachingWhyLabel': {
+    playful: 'Pourquoi ca echoue',
+    focus: 'Pourquoi ca echoue',
+  },
+  'lesson.coachingNextLabel': {
+    playful: 'Que faire ensuite',
+    focus: 'Prochain schema',
+  },
+  'lesson.coachingNextFromBeat': {
+    playful: 'Au prochain essai, applique {{term}} volontairement.',
+    focus: 'Ensuite : appliquez {{term}} consciemment au retry.',
+  },
+  'lesson.coachingNextFallback': {
+    playful: 'Relis le pourquoi, puis choisis l option qui ferme l ecart.',
+    focus: 'Relisez la cause, puis choisissez l option qui la corrige.',
+  },
+  'lesson.learningBeatLabel': {
+    playful: 'Retiens',
+    focus: 'Point cle',
   },
   'lesson.completeTitle': {
     playful: 'Lecon terminee !',
@@ -513,6 +601,38 @@ export const copyFr: CopyCatalog = {
     playful: 'Ton historique de scores',
     focus: 'Historique des scores',
   },
+  'promptLab.promptHistoryTitle': {
+    playful: 'Tes prompts evalues',
+    focus: 'Prompts evalues recents',
+  },
+  'promptLab.promptHistoryDescription': {
+    playful: 'Touche un prompt pour le recharger dans l editeur.',
+    focus: 'Selectionnez une entree pour reutiliser ce prompt.',
+  },
+  'promptLab.promptHistoryEmpty': {
+    playful: 'Aucun prompt evalue pour l instant — evalue-en un pour commencer.',
+    focus: 'Aucun prompt evalue enregistre.',
+  },
+  'promptLab.promptHistoryMissing': {
+    playful: 'Ancienne entree — le texte du prompt n etait pas encore enregistre.',
+    focus: 'Entree legacy sans texte de prompt enregistre.',
+  },
+  'promptLab.promptHistoryScore': {
+    playful: 'Score {{score}}',
+    focus: '{{score}} / 100',
+  },
+  'promptLab.promptHistoryTapReuse': {
+    playful: 'Toucher pour reutiliser',
+    focus: 'Reutiliser',
+  },
+  'promptLab.promptHistoryReuseHint': {
+    playful: 'Charge ce prompt dans le champ de saisie',
+    focus: 'Charge ce prompt dans le champ de saisie',
+  },
+  'promptLab.promptHistoryItemA11y': {
+    playful: 'Prompt evalue, score {{score}}',
+    focus: 'Prompt evalue, score {{score}}',
+  },
   'promptLab.scoringInProgress': {
     playful: 'Evaluation en cours...',
     focus: 'Evaluation...',
@@ -548,6 +668,34 @@ export const copyFr: CopyCatalog = {
   'promptLab.detailHintsTitle': {
     playful: 'Pistes concretes d amelioration',
     focus: 'Conseils precis',
+  },
+  'promptLab.improvementPathTitle': {
+    playful: 'Ton prochain geste le plus clair',
+    focus: 'Chemin d amelioration principal',
+  },
+  'promptLab.improvementPathSecondary': {
+    playful: 'Ensuite : {{tip}}',
+    focus: 'Ensuite : {{tip}}',
+  },
+  'promptLab.improvementPathComplete': {
+    playful: 'Bien — role, contexte, format et contraintes sont couverts.',
+    focus: 'Tous les piliers presents : role, contexte, format, contraintes.',
+  },
+  'promptLab.missing.context': {
+    playful: 'Il manque du contexte — quel arriere-plan l IA doit-elle utiliser ?',
+    focus: 'Contexte manquant : ajoutez des faits ou sources a utiliser.',
+  },
+  'promptLab.missing.role': {
+    playful: 'Il manque un role — dis a l IA qui elle doit etre.',
+    focus: 'Role manquant : assignez une persona ou une posture claire.',
+  },
+  'promptLab.missing.format': {
+    playful: 'Il manque un format — puces, paragraphes, tableau… ?',
+    focus: 'Format manquant : precisez la forme de sortie (liste, JSON, …).',
+  },
+  'promptLab.missing.constraints': {
+    playful: 'Il manque des contraintes — longueur, public ou ton.',
+    focus: 'Contraintes manquantes : limites dures (longueur, public, ton).',
   },
   'promptLab.comparisonTitle': {
     playful: '+{{delta}} points — voici ce qui s est ameliore',
@@ -598,6 +746,14 @@ export const copyFr: CopyCatalog = {
   'modelComparer.resultsTitle': {
     playful: 'Reponses comparees',
     focus: 'Resultats',
+  },
+  'modelComparer.copyA11y': {
+    playful: 'Copier cette reponse',
+    focus: 'Copier la reponse dans le presse-papiers',
+  },
+  'modelComparer.copiedA11y': {
+    playful: 'Copie',
+    focus: 'Reponse copiee',
   },
   'modelComparer.latencyBadge': {
     playful: '{{seconds}} s',
@@ -774,6 +930,62 @@ export const copyFr: CopyCatalog = {
   'profile.guestDisplayName': {
     playful: 'Invite',
     focus: 'Invite',
+  },
+  'profile.resetSection': {
+    playful: 'Reinitialiser et recommencer',
+    focus: 'Donnees et reset',
+  },
+  'profile.resetSectionDescription': {
+    playful: 'Besoin d un nouveau depart ? Choisis ce qu il faut effacer.',
+    focus: 'Reinitialiser seulement la progression, ou tout effacer localement et relancer l onboarding.',
+  },
+  'profile.resetProgressCta': {
+    playful: 'Reinitialiser toute la progression',
+    focus: 'Reinitialiser toute la progression',
+  },
+  'profile.deleteAccountCta': {
+    playful: 'Tout supprimer et relancer l onboarding',
+    focus: 'Supprimer les donnees et relancer l onboarding',
+  },
+  'profile.resetCancel': {
+    playful: 'Annuler',
+    focus: 'Annuler',
+  },
+  'profile.resetProgressConfirmTitle': {
+    playful: 'Reinitialiser toute la progression ?',
+    focus: 'Reinitialiser toute la progression ?',
+  },
+  'profile.resetProgressConfirmBody': {
+    playful: 'Lecons, parcours, orbs et series seront effaces. Tu restes connecte avec tes reglages.',
+    focus: 'Efface lecons, parcours, orbs et series. Compte et preferences conserves.',
+  },
+  'profile.resetProgressConfirmAction': {
+    playful: 'Reinitialiser',
+    focus: 'Reinitialiser',
+  },
+  'profile.deleteAccountConfirmTitle': {
+    playful: 'Tout supprimer ?',
+    focus: 'Supprimer les donnees du compte ?',
+  },
+  'profile.deleteAccountConfirmBodyGuest': {
+    playful: 'Progression, nom, cles et reglages partis — puis retour a l onboarding.',
+    focus: 'Supprime progression et profil locaux, puis ouvre l onboarding.',
+  },
+  'profile.deleteAccountConfirmBodySignedIn': {
+    playful: 'Progression (y compris cloud), deconnexion, puis onboarding.',
+    focus: 'Supprime les donnees d apprentissage (local + cloud), deconnecte et ouvre l onboarding.',
+  },
+  'profile.deleteAccountConfirmAction': {
+    playful: 'Supprimer et recommencer',
+    focus: 'Supprimer et recommencer',
+  },
+  'profile.deleteAccountFootnoteGuest': {
+    playful: 'Effacement complet — tu reverras les ecrans d accueil.',
+    focus: 'Effacement local complet : retour a l onboarding.',
+  },
+  'profile.deleteAccountFootnoteSignedIn': {
+    playful: 'Progression cloud retiree et deconnexion. Suppression e-mail auth via support si besoin.',
+    focus: 'Retire la progression sync et termine la session. Identite auth parfois seulement via support.',
   },
   'profile.guestAccountDescription': {
     playful: 'Tu utilises StructAI sans compte. La progression reste sur cet appareil — connecte-toi pour synchroniser.',

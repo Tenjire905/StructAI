@@ -25,6 +25,30 @@ export const copyDe: CopyCatalog = {
     playful: 'Weiterlernen',
     focus: 'Aktuelle Lernpfade',
   },
+  'home.dailyChallenge.eyebrow': {
+    playful: 'Heutige Aufgabe',
+    focus: 'Tageschallenge',
+  },
+  'home.dailyChallenge.title': {
+    playful: 'Ein klarer Gewinn heute',
+    focus: 'Eine fokussierte Übungseinheit',
+  },
+  'home.dailyChallenge.bodyFresh': {
+    playful: 'Starte mit {{path}} — eine kurze Lektion, echte Praxis, sofortiges Feedback.',
+    focus: 'Beginne {{path}}: eine Lektion, eine Practice-Schleife, klares Feedback.',
+  },
+  'home.dailyChallenge.bodyContinue': {
+    playful: 'Weiter mit {{path}} — eine Lektion, ein Prompt, fertig.',
+    focus: 'Nächster Schritt in {{path}}: eine Lektion mit klarem Checkpoint.',
+  },
+  'home.dailyChallenge.ctaFresh': {
+    playful: 'Heutige Lektion starten',
+    focus: 'Heutige Lektion starten',
+  },
+  'home.dailyChallenge.ctaContinue': {
+    playful: 'Heutige Lektion machen',
+    focus: 'Heutige Lektion fortsetzen',
+  },
   'home.startHint': {
     playful: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
     focus: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
@@ -40,6 +64,46 @@ export const copyDe: CopyCatalog = {
   'home.retryFailedNone': {
     playful: 'Alle Lektionen geschafft — keine Wiederholung nötig',
     focus: 'Alle Lektionen abgeschlossen — keine Wiederholung erforderlich',
+  },
+  'home.retryFailedNoOpen': {
+    playful: 'Keine falschen Lektionen — einfach weitermachen',
+    focus: 'Keine offenen Fehler — normal fortsetzen',
+  },
+  'home.activityInsights.title': {
+    playful: 'Deine Aktivität',
+    focus: 'Aktivitätsübersicht',
+  },
+  'home.activityInsights.expandHint': {
+    playful: 'Tippe, um deinen Orb-Verlauf als Grafik zu sehen',
+    focus: 'Tippen, um den Orb-Verlauf als Diagramm anzuzeigen',
+  },
+  'home.activityInsights.collapseHint': {
+    playful: 'Tippe, um wieder zur Wochenübersicht zu wechseln',
+    focus: 'Tippen, um zur Wochenübersicht zurückzukehren',
+  },
+  'home.activityInsights.chartTitle': {
+    playful: 'Orb-Tagebuch',
+    focus: 'Tägliche Orb-Aktivität',
+  },
+  'home.activityInsights.period': {
+    playful: 'Letzte {{days}} Tage',
+    focus: 'Zeitraum: {{days}} Tage',
+  },
+  'home.activityInsights.productivityValue': {
+    playful: '{{percent}} %',
+    focus: '{{percent}} %',
+  },
+  'home.activityInsights.productivityWithGoal': {
+    playful: 'Produktivität — im Schnitt {{goal}}-Orb-Tagesziele der letzten Tage',
+    focus: 'Produktivität relativ zum Tagesziel ({{goal}} Orbs)',
+  },
+  'home.activityInsights.productivityNoGoal': {
+    playful: 'Aktive Tage — lege ein Tagesziel über die Orbs oben fest',
+    focus: 'Aktive Lerntage — Tagesziel über Orb-Anzeige festlegen',
+  },
+  'home.activityInsights.orbPeekA11y': {
+    playful: '{{count}} Orbs an diesem Tag',
+    focus: '{{count}} Orbs an diesem Tag',
   },
   'orbCounter.label': {
     playful: 'Energie-Orbs',
@@ -245,6 +309,10 @@ export const copyDe: CopyCatalog = {
     playful: 'Tippe für eine kurze Erklärung zum Lernmodus.',
     focus: 'Tippen für Erklärung zum Lernmodus.',
   },
+  'lesson.glossaryTapHint': {
+    playful: 'Tippe für eine kurze Erklärung zu diesem Begriff.',
+    focus: 'Tippen für eine kurze Erklärung zu diesem Begriff.',
+  },
   'lesson.typeChoice': {
     playful: 'Auswahlfrage',
     focus: 'Auswahl',
@@ -322,12 +390,32 @@ export const copyDe: CopyCatalog = {
     focus: 'Korrekt.',
   },
   'lesson.wrongFeedback': {
-    playful: 'Fast! Schau dir die Erklärung an.',
-    focus: 'Nicht korrekt. Siehe Erklärung.',
+    playful: 'Noch nicht — so wirst du schärfer.',
+    focus: 'Falsch — warum, dann nächstes Pattern.',
   },
   'lesson.hintLabel': {
     playful: 'Tipp:',
     focus: 'Tipp:',
+  },
+  'lesson.coachingWhyLabel': {
+    playful: 'Warum das scheitert',
+    focus: 'Warum das scheitert',
+  },
+  'lesson.coachingNextLabel': {
+    playful: 'Was du als Nächstes tust',
+    focus: 'Nächstes Pattern',
+  },
+  'lesson.coachingNextFromBeat': {
+    playful: 'Beim nächsten Versuch bewusst {{term}} anwenden.',
+    focus: 'Als Nächstes: {{term}} gezielt beim Retry anwenden.',
+  },
+  'lesson.coachingNextFallback': {
+    playful: 'Lies nochmal das Warum — wähle dann die Option, die die Lücke schließt.',
+    focus: 'Lies den Fehlergrund erneut, dann die Option, die ihn behebt.',
+  },
+  'lesson.learningBeatLabel': {
+    playful: 'Merke dir',
+    focus: 'Lernpunkt',
   },
   'lesson.completeTitle': {
     playful: 'Lektion geschafft!',
@@ -513,6 +601,38 @@ export const copyDe: CopyCatalog = {
     playful: 'Dein Bewertungsverlauf',
     focus: 'Bewertungsverlauf',
   },
+  'promptLab.promptHistoryTitle': {
+    playful: 'Deine bewerteten Prompts',
+    focus: 'Zuletzt bewertete Prompts',
+  },
+  'promptLab.promptHistoryDescription': {
+    playful: 'Tippe einen Prompt an, um ihn wieder in den Editor zu laden.',
+    focus: 'Eintrag wählen, um den Prompt im Eingabefeld wiederzuverwenden.',
+  },
+  'promptLab.promptHistoryEmpty': {
+    playful: 'Noch keine bewerteten Prompts — bewerte einen, um deine Spur zu starten.',
+    focus: 'Noch keine bewerteten Prompts gespeichert.',
+  },
+  'promptLab.promptHistoryMissing': {
+    playful: 'Älterer Eintrag — Prompt-Text wurde damals noch nicht gespeichert.',
+    focus: 'Älterer Eintrag ohne gespeicherten Prompt-Text.',
+  },
+  'promptLab.promptHistoryScore': {
+    playful: 'Score {{score}}',
+    focus: '{{score}} / 100',
+  },
+  'promptLab.promptHistoryTapReuse': {
+    playful: 'Tippen zum Wiederverwenden',
+    focus: 'Wiederverwenden',
+  },
+  'promptLab.promptHistoryReuseHint': {
+    playful: 'Lädt diesen Prompt in das Eingabefeld',
+    focus: 'Lädt diesen Prompt in das Eingabefeld',
+  },
+  'promptLab.promptHistoryItemA11y': {
+    playful: 'Bewerteter Prompt, Score {{score}}',
+    focus: 'Bewerteter Prompt, Score {{score}}',
+  },
   'promptLab.scoringInProgress': {
     playful: 'Wird bewertet...',
     focus: 'Bewertung läuft...',
@@ -548,6 +668,34 @@ export const copyDe: CopyCatalog = {
   'promptLab.detailHintsTitle': {
     playful: 'Konkrete Verbesserungsideen',
     focus: 'Konkrete Hinweise',
+  },
+  'promptLab.improvementPathTitle': {
+    playful: 'Dein klarster nächster Schritt',
+    focus: 'Primärer Verbesserungspfad',
+  },
+  'promptLab.improvementPathSecondary': {
+    playful: 'Danach: {{tip}}',
+    focus: 'Als Nächstes: {{tip}}',
+  },
+  'promptLab.improvementPathComplete': {
+    playful: 'Stark — Rolle, Kontext, Format und Constraints sind drin.',
+    focus: 'Alle Kern-Säulen vorhanden: Rolle, Kontext, Format, Constraints.',
+  },
+  'promptLab.missing.context': {
+    playful: 'Deinem Prompt fehlt Kontext — welchen Hintergrund soll die KI nutzen?',
+    focus: 'Fehlender Kontext: Hintergrund oder Quellenmaterial ergänzen.',
+  },
+  'promptLab.missing.role': {
+    playful: 'Deinem Prompt fehlt eine Rolle — sag der KI, wer sie sein soll.',
+    focus: 'Fehlende Rolle: klare Persona oder Haltung zuweisen.',
+  },
+  'promptLab.missing.format': {
+    playful: 'Deinem Prompt fehlt ein Format — Stichpunkte, Absätze, Tabelle…?',
+    focus: 'Fehlendes Format: Ausgabeform festlegen (Liste, Absätze, JSON, …).',
+  },
+  'promptLab.missing.constraints': {
+    playful: 'Deinem Prompt fehlen Constraints — Länge, Zielgruppe oder Ton.',
+    focus: 'Fehlende Constraints: harte Grenzen setzen (Länge, Zielgruppe, Ton).',
   },
   'promptLab.comparisonTitle': {
     playful: '+{{delta}} Punkte – das hat sich verbessert',
@@ -598,6 +746,14 @@ export const copyDe: CopyCatalog = {
   'modelComparer.resultsTitle': {
     playful: 'Antworten im Vergleich',
     focus: 'Ergebnisse',
+  },
+  'modelComparer.copyA11y': {
+    playful: 'Antwort kopieren',
+    focus: 'Antwort in die Zwischenablage kopieren',
+  },
+  'modelComparer.copiedA11y': {
+    playful: 'Kopiert',
+    focus: 'Antwort kopiert',
   },
   'modelComparer.latencyBadge': {
     playful: '{{seconds}} s',
@@ -774,6 +930,62 @@ export const copyDe: CopyCatalog = {
   'profile.guestDisplayName': {
     playful: 'Gast',
     focus: 'Gast',
+  },
+  'profile.resetSection': {
+    playful: 'Zurücksetzen & neu starten',
+    focus: 'Daten & Reset',
+  },
+  'profile.resetSectionDescription': {
+    playful: 'Frisch starten oder testen? Wähle, was gelöscht werden soll.',
+    focus: 'Nur Lernfortschritt zurücksetzen oder alle lokalen Kontodaten löschen und Onboarding neu starten.',
+  },
+  'profile.resetProgressCta': {
+    playful: 'Gesamten Fortschritt zurücksetzen',
+    focus: 'Gesamten Lernfortschritt zurücksetzen',
+  },
+  'profile.deleteAccountCta': {
+    playful: 'Alles löschen & Onboarding neu',
+    focus: 'Kontodaten löschen & Onboarding neu starten',
+  },
+  'profile.resetCancel': {
+    playful: 'Abbrechen',
+    focus: 'Abbrechen',
+  },
+  'profile.resetProgressConfirmTitle': {
+    playful: 'Allen Fortschritt zurücksetzen?',
+    focus: 'Gesamten Lernfortschritt zurücksetzen?',
+  },
+  'profile.resetProgressConfirmBody': {
+    playful: 'Lektionen, Pfade, Orbs und Streaks werden gelöscht. Du bleibst angemeldet und behältst Einstellungen.',
+    focus: 'Löscht Lektionen, Pfade, Orbs und Streaks. Konto und Einstellungen bleiben.',
+  },
+  'profile.resetProgressConfirmAction': {
+    playful: 'Fortschritt zurücksetzen',
+    focus: 'Fortschritt zurücksetzen',
+  },
+  'profile.deleteAccountConfirmTitle': {
+    playful: 'Wirklich alles löschen?',
+    focus: 'Kontodaten löschen?',
+  },
+  'profile.deleteAccountConfirmBodyGuest': {
+    playful: 'Fortschritt, Name, Keys und Einstellungen weg — danach landest du im Onboarding.',
+    focus: 'Löscht allen lokalen Fortschritt und Profildaten und öffnet das Onboarding.',
+  },
+  'profile.deleteAccountConfirmBodySignedIn': {
+    playful: 'Fortschritt (inkl. Cloud), Abmeldung und Onboarding von vorn.',
+    focus: 'Löscht Lerndaten (lokal + Cloud-Fortschritt), meldet dich ab und öffnet das Onboarding.',
+  },
+  'profile.deleteAccountConfirmAction': {
+    playful: 'Löschen & neu starten',
+    focus: 'Löschen & neu starten',
+  },
+  'profile.deleteAccountFootnoteGuest': {
+    playful: 'Kompletter Wipe — du siehst wieder die Welcome-Screens.',
+    focus: 'Vollständiger lokaler Wipe führt zurück zum Onboarding.',
+  },
+  'profile.deleteAccountFootnoteSignedIn': {
+    playful: 'Cloud-Fortschritt weg und Abmeldung. Auth-E-Mail löschen ggf. über Support.',
+    focus: 'Entfernt Sync-Fortschritt und beendet die Session. Auth-Identität ggf. nur über Support löschbar.',
   },
   'profile.guestAccountDescription': {
     playful: 'Du nutzt StructAI ohne Konto. Fortschritt bleibt auf diesem Gerät – Anmeldung sichert ihn geräteübergreifend.',

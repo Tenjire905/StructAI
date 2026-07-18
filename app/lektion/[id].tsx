@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -27,6 +28,14 @@ import {
   LessonDepthBadgeChip,
   LessonDepthInfoPeek,
 } from '@/components/features/lesson/LessonDepthBadgeButton';
+import { GlossaryTermPeek } from '@/components/features/lesson/GlossaryTermPeek';
+import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
+import { LearningBeatStrip } from '@/components/features/lesson/LearningBeatStrip';
+import { WrongAnswerCoachingBlock } from '@/components/features/lesson/WrongAnswerCoachingBlock';
+import {
+  LessonGlossaryProvider,
+  useLessonGlossary,
+} from '@/components/features/lesson/LessonGlossaryContext';
 import { Button, Card, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import {
@@ -39,9 +48,12 @@ import {
   hasPassedLessonThreshold,
   type LessonAnswerResult,
 } from '@/lib/lessonRewards';
+import { resolveLessonLearningBeat } from '@/lib/lessonLearningBeat';
+import { resolveWrongAnswerCoaching } from '@/lib/lessonWrongAnswerCoaching';
 import { trackEvent } from '@/lib/analytics';
 import { isProfileOnboardingCompleted } from '@/lib/appStorage';
 import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
+import { leaveLesson, openLesson, returnToPath, isLessonOpenedFromPath } from '@/lib/lessonNavigation';
 import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
 import { getPathIdForLesson, getFirstLessonIdForPath, getNextLessonId } from '@/lib/pathLessonUtils';
@@ -72,10 +84,31 @@ type LessonOutcome =
   | 'section_milestone'
   | 'failed';
 
-export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
+export function LessonSessionScreen({
+  lessonId,
+  openedFromPath = false,
+}: {
+  lessonId: string;
+  openedFromPath?: boolean;
+}) {
+  return (
+    <LessonGlossaryProvider>
+      <LessonSessionScreenContent lessonId={lessonId} openedFromPath={openedFromPath} />
+    </LessonGlossaryProvider>
+  );
+}
+
+function LessonSessionScreenContent({
+  lessonId,
+  openedFromPath = false,
+}: {
+  lessonId: string;
+  openedFromPath?: boolean;
+}) {
   const { tokens, t, locale, mode } = useThemeMode();
   const router = useRouter();
   const { dismissCelebration } = useCelebration();
+  const { activeTerm, dismissTerm } = useLessonGlossary();
   const pathProgress = useProgressStore((state) => state.pathProgress);
   const recordLessonOpened = useProgressStore((state) => state.recordLessonOpened);
   const recordLessonFailed = useProgressStore((state) => state.recordLessonFailed);
@@ -92,22 +125,29 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
   );
   const canPlayLesson = isLessonPlayable(lessonChapterStatus);
   const pathBlockReason = pathId ? getPathUnlockBlockReason(pathId, pathProgress) : null;
+  const navigationInFlightRef = useRef(false);
 
   const goBackToPath = () => {
+    if (navigationInFlightRef.current) {
+      return;
+    }
+
+    navigationInFlightRef.current = true;
     dismissCelebration();
 
     const navigateAway = () => {
-      if (pathId) {
-        router.replace(`/lernpfad/${pathId}`);
-        return;
-      }
+    if (pathId) {
+      returnToPath(router, pathId);
+      return;
+    }
 
       if (router.canGoBack()) {
+        suppressHomeCelebrations();
         router.back();
         return;
       }
 
-      router.replace(resolveHomeRoute(useProgressStore.getState().completedLessons));
+      leaveLesson(router, resolveHomeRoute(useProgressStore.getState().completedLessons));
     };
 
     runAfterUISettles(navigateAway);
@@ -115,11 +155,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
 
   const continueToLesson = (nextLessonId: string) => {
     dismissCelebration();
-    suppressHomeCelebrations();
-
-    runAfterUISettles(() => {
-      router.replace(`/lektion/${nextLessonId}`);
-    });
+    openLesson(router, nextLessonId, { fromPath: openedFromPath });
   };
 
   const [sessionNonce, setSessionNonce] = useState(0);
@@ -170,7 +206,8 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
 
   useEffect(() => {
     setDepthInfoPeek((current) => ({ ...current, visible: false }));
-  }, [stepIndex]);
+    dismissTerm();
+  }, [dismissTerm, stepIndex]);
 
   const headerOptions = {
     headerShown: true,
@@ -404,7 +441,8 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
         useProgressStore.getState().completedLessons === 1 &&
         !isProfileOnboardingCompleted()
       ) {
-        router.replace('/onboarding/profil');
+        dismissCelebration();
+        leaveLesson(router, '/onboarding/profil');
         return;
       }
 
@@ -522,7 +560,7 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
                     return;
                   }
 
-                  router.replace(`/lernpfad/${nextPathId}`);
+                  returnToPath(router, nextPathId);
                 }
               : undefined
           }
@@ -660,6 +698,13 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
                 visible={depthInfoPeek.visible}
               />
             ) : null}
+            <GlossaryTermPeek
+              definition={activeTerm?.definition ?? ''}
+              onDismiss={dismissTerm}
+              revealNonce={activeTerm?.nonce ?? 0}
+              termLabel={activeTerm?.label ?? ''}
+              visible={activeTerm !== null}
+            />
             <ProgressBar
               color="primary"
               progress={(stepIndex + 1) / lesson.steps.length}
@@ -671,23 +716,23 @@ export function LessonSessionScreen({ lessonId }: { lessonId: string }) {
           {step.type === 'info' ? (
             <Card variant="solid">
               <View style={{ gap: tokens.spacing.space3 }}>
-                <Text
+                <InlineGlossaryText
                   style={{
                     color: tokens.colors.text.primary,
                     fontFamily: tokens.typography.fontFamily.heading,
                     fontSize: tokens.typography.fontSize.headingLg,
-                  }}>
-                  {step.title}
-                </Text>
-                <Text
+                  }}
+                  text={step.title}
+                />
+                <InlineGlossaryText
                   style={{
                     color: tokens.colors.text.secondary,
                     fontFamily: tokens.typography.fontFamily.body,
                     fontSize: tokens.typography.fontSize.bodyLg,
                     lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
-                  }}>
-                  {step.body}
-                </Text>
+                  }}
+                  text={step.body}
+                />
               </View>
             </Card>
           ) : null}
@@ -831,13 +876,17 @@ type FeedbackBannerProps = {
 };
 
 function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
-  const { tokens, t } = useThemeMode();
+  const { tokens, t, locale, mode } = useThemeMode();
   const scale = useSharedValue(0.9);
   const opacity = useSharedValue(0);
 
   useEffect(() => {
     opacity.value = withTiming(1, { duration: tokens.motion.duration.fast });
-    scale.value = withSpring(1, tokens.motion.spring.default);
+    // Settlement pulse: slightly overshoot then land — correct/incorrect feels decided.
+    scale.value = withSequence(
+      withTiming(isCorrect ? 1.03 : 0.97, { duration: tokens.motion.duration.fast }),
+      withSpring(1, tokens.motion.spring.default),
+    );
   }, [isCorrect, hint, opacity, scale, tokens.motion]);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -849,7 +898,12 @@ function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
     ? tokens.colors.accent.success
     : tokens.colors.accent.danger;
 
-  const showHint = !isCorrect && hint !== undefined;
+  const learningBeat = isCorrect
+    ? resolveLessonLearningBeat(explanation, locale, mode)
+    : null;
+  const wrongCoaching = !isCorrect
+    ? resolveWrongAnswerCoaching(explanation, hint, locale, mode)
+    : null;
 
   return (
     <Animated.View
@@ -872,36 +926,21 @@ function FeedbackBanner({ isCorrect, explanation, hint }: FeedbackBannerProps) {
         }}>
         {isCorrect ? t('lesson.correctFeedback') : t('lesson.wrongFeedback')}
       </Text>
-      {showHint ? (
-        <View style={{ gap: tokens.spacing.space1 }}>
-          <Text
-            style={{
-              color: tokens.colors.accent.warning,
-              fontFamily: tokens.typography.fontFamily.bodyMedium,
-              fontSize: tokens.typography.fontSize.bodyMd,
-            }}>
-            {t('lesson.hintLabel')}
-          </Text>
-          <Text
+      {wrongCoaching ? (
+        <WrongAnswerCoachingBlock coaching={wrongCoaching} />
+      ) : (
+        <>
+          <InlineGlossaryText
             style={{
               color: tokens.colors.text.secondary,
               fontFamily: tokens.typography.fontFamily.body,
               fontSize: tokens.typography.fontSize.bodyMd,
               lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
-            }}>
-            {hint}
-          </Text>
-        </View>
-      ) : (
-        <Text
-          style={{
-            color: tokens.colors.text.secondary,
-            fontFamily: tokens.typography.fontFamily.body,
-            fontSize: tokens.typography.fontSize.bodyMd,
-            lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
-          }}>
-          {explanation}
-        </Text>
+            }}
+            text={explanation}
+          />
+          {learningBeat ? <LearningBeatStrip beat={learningBeat} /> : null}
+        </>
       )}
     </Animated.View>
   );
@@ -1060,8 +1099,15 @@ function LockedLessonView({ onBack }: LockedLessonViewProps) {
 }
 
 export default function LektionScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { from, id } = useLocalSearchParams<{ from?: string; id: string }>();
   const lessonId = id ?? '';
+  const openedFromPath = isLessonOpenedFromPath(from);
 
-  return <LessonSessionScreen key={lessonId} lessonId={lessonId} />;
+  return (
+    <LessonSessionScreen
+      key={lessonId}
+      lessonId={lessonId}
+      openedFromPath={openedFromPath}
+    />
+  );
 }

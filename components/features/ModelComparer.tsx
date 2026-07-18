@@ -1,14 +1,16 @@
+import * as Clipboard from 'expo-clipboard';
+import { Check, Copy } from 'lucide-react-native';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
   Text,
-  TextInput,
   useWindowDimensions,
   View,
 } from 'react-native';
 
-import { Badge, Button, Card } from '@/components/ui';
+import { PromptLabTextInput } from '@/components/features/PromptLabTextInput';
+import { Badge, Button, Card, PressableScale } from '@/components/ui';
 import {
   getSpendingWarning,
   readSpendingSettings,
@@ -296,24 +298,9 @@ export function ModelComparer({
           }}>
           {t('modelComparer.promptLabel')}
         </Text>
-        <TextInput
-          multiline
+        <PromptLabTextInput
           onChangeText={setPromptInput}
           placeholder={t('modelComparer.promptPlaceholder')}
-          placeholderTextColor={tokens.colors.text.tertiary}
-          style={{
-            backgroundColor: tokens.colors.surface.card,
-            borderColor: tokens.colors.border.strong,
-            borderRadius: tokens.radius.md,
-            borderWidth: 1,
-            color: tokens.colors.text.primary,
-            fontFamily: tokens.typography.fontFamily.body,
-            fontSize: tokens.typography.fontSize.bodyLg,
-            lineHeight: tokens.typography.fontSize.bodyLg * 1.4,
-            minHeight: 140,
-            padding: tokens.spacing.space4,
-            textAlignVertical: 'top',
-          }}
           value={promptInput}
         />
         <Button
@@ -403,19 +390,80 @@ type CompareResultCardProps = {
 
 function CompareResultCard({ result, cardWidth, insight }: CompareResultCardProps) {
   const { tokens, t } = useThemeMode();
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) {
+      return;
+    }
+
+    const timer = setTimeout(() => setCopied(false), 1600);
+    return () => clearTimeout(timer);
+  }, [copied]);
+
+  const handleCopy = async () => {
+    if (result.status !== 'success' || !result.responseText.trim()) {
+      return;
+    }
+
+    await Clipboard.setStringAsync(result.responseText);
+    setCopied(true);
+  };
 
   return (
     <View style={{ width: cardWidth }}>
       <Card variant="solid">
         <View style={{ gap: tokens.spacing.space3 }}>
-          <Text
+          <View
             style={{
-              color: tokens.colors.text.primary,
-              fontFamily: tokens.typography.fontFamily.heading,
-              fontSize: tokens.typography.fontSize.bodyLg,
+              alignItems: 'center',
+              flexDirection: 'row',
+              gap: tokens.spacing.space2,
+              justifyContent: 'space-between',
             }}>
-            {result.modelLabel}
-          </Text>
+            <Text
+              style={{
+                color: tokens.colors.text.primary,
+                flex: 1,
+                fontFamily: tokens.typography.fontFamily.heading,
+                fontSize: tokens.typography.fontSize.bodyLg,
+              }}>
+              {result.modelLabel}
+            </Text>
+
+            {result.status === 'success' ? (
+              <PressableScale
+                accessibilityLabel={
+                  copied ? t('modelComparer.copiedA11y') : t('modelComparer.copyA11y')
+                }
+                accessibilityRole="button"
+                hitSlop={tokens.spacing.space2}
+                onPress={() => {
+                  void handleCopy();
+                }}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: tokens.icons.sizes.lg,
+                  minWidth: tokens.icons.sizes.lg,
+                  padding: tokens.spacing.space1,
+                }}>
+                {copied ? (
+                  <Check
+                    color={tokens.colors.accent.success}
+                    size={tokens.icons.sizes.md}
+                    strokeWidth={tokens.icons.strokeWidth}
+                  />
+                ) : (
+                  <Copy
+                    color={tokens.colors.text.secondary}
+                    size={tokens.icons.sizes.md}
+                    strokeWidth={tokens.icons.strokeWidth}
+                  />
+                )}
+              </PressableScale>
+            ) : null}
+          </View>
 
           {result.status === 'success' ? (
             <>

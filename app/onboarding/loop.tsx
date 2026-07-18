@@ -5,6 +5,7 @@ import { Button } from '@/components/ui';
 import { trackEvent } from '@/lib/analytics';
 import { setOnboardingCompleted } from '@/lib/appStorage';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
+import { openLesson } from '@/lib/lessonNavigation';
 import {
   DEFAULT_START_PATH_ID,
   getFirstLessonIdForPath,
@@ -87,7 +88,7 @@ export default function OnboardingLoopScreen() {
           onPress={() => {
             void finishOnboarding().then(() => {
               if (firstLessonId) {
-                router.replace(`/lektion/${firstLessonId}`);
+                openLesson(router, firstLessonId);
               }
             });
           }}

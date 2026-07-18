@@ -1,6 +1,6 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { KeyRound } from 'lucide-react-native';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, Text, TextInput, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -12,6 +12,8 @@ import Animated, {
 import { ScoreChart } from '@/components/features';
 import { ModelComparer } from '@/components/features/ModelComparer';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
+import { PromptLabTextInput } from '@/components/features/PromptLabTextInput';
+import { PromptScoreHistoryList } from '@/components/features/PromptScoreHistoryList';
 import { Badge, Button, Card, PressableScale, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { trackEvent } from '@/lib/analytics';
@@ -23,22 +25,25 @@ import {
 } from '@/lib/aiScoring';
 import { listApiKeys, type ByokKeyEntry } from '@/lib/secureKeyStore';
 import {
+  attachLocalFeedbackSignals,
   buildDemoImprovedPrompt,
   comparePromptScores,
   DEMO_WEAK_PROMPT,
-  getMissingHints,
+  getPrimaryImprovementPath,
   scorePrompt,
+  type PromptImprovementPillar,
   type PromptScore,
   type PromptScoreComparison,
 } from '@/lib/promptScoring';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
-const HINT_COPY_KEY = {
-  structure: 'promptLab.hintStructure',
-  goal: 'promptLab.hintGoal',
-  constraints: 'promptLab.hintConstraints',
-} as const;
+const PILLAR_COPY_KEY: Record<PromptImprovementPillar, string> = {
+  context: 'promptLab.missing.context',
+  role: 'promptLab.missing.role',
+  format: 'promptLab.missing.format',
+  constraints: 'promptLab.missing.constraints',
+};
 
 const FALLBACK_COPY_KEY: Record<ScoringError['reason'], string> = {
   invalidKey: 'promptLab.fallbackInvalidKey',
@@ -56,6 +61,7 @@ export default function PromptLabScreen() {
   const history = useProgressStore((state) => state.promptScoreHistory);
   const addPromptScore = useProgressStore((state) => state.addPromptScore);
   const [promptInput, setPromptInput] = useState('');
+  const promptInputRef = useRef<TextInput>(null);
   const [score, setScore] = useState<PromptScore | null>(null);
   const [comparison, setComparison] = useState<PromptScoreComparison | null>(null);
   const [baselineScore, setBaselineScore] = useState<PromptScore | null>(null);
@@ -121,7 +127,11 @@ export default function PromptLabScreen() {
     // niemals crashen – der Nutzer bekommt immer ein Ergebnis plus Hinweis.
     if (primaryKey) {
       try {
-        result = await scorePromptRemote(promptInput, primaryKey);
+        result = attachLocalFeedbackSignals(
+          await scorePromptRemote(promptInput, primaryKey),
+          promptInput,
+          locale,
+        );
       } catch (error) {
         const reason =
           error instanceof ScoringError ? error.reason : ('generic' as const);
@@ -142,7 +152,7 @@ export default function PromptLabScreen() {
       setBaselinePrompt(promptInput.trim());
     }
 
-    addPromptScore(result.total);
+    addPromptScore(result.total, promptInput.trim());
     setIsScoring(false);
   };
 
@@ -163,6 +173,7 @@ export default function PromptLabScreen() {
         paddingHorizontal: tokens.spacing.screenPadding,
         paddingTop: tokens.spacing.space5,
       }}
+      keyboardShouldPersistTaps="handled"
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <View style={{ flexDirection: 'row', gap: tokens.spacing.space2 }}>
         <View style={{ flex: 1 }}>
@@ -252,26 +263,12 @@ export default function PromptLabScreen() {
       </View>
 
       <View style={{ gap: tokens.spacing.space3 }}>
-        <TextInput
-          multiline
+        <PromptLabTextInput
           onBlur={() => setInputFocused(false)}
           onChangeText={setPromptInput}
           onFocus={() => setInputFocused(true)}
           placeholder={t('promptLab.inputPlaceholder')}
-          placeholderTextColor={tokens.colors.text.tertiary}
-          style={{
-            backgroundColor: tokens.colors.surface.card,
-            borderColor: tokens.colors.border.strong,
-            borderRadius: tokens.radius.md,
-            borderWidth: 1,
-            color: tokens.colors.text.primary,
-            fontFamily: tokens.typography.fontFamily.body,
-            fontSize: tokens.typography.fontSize.bodyLg,
-            lineHeight: tokens.typography.fontSize.bodyLg * 1.4,
-            minHeight: 140,
-            padding: tokens.spacing.space4,
-            textAlignVertical: 'top',
-          }}
+          ref={promptInputRef}
           value={promptInput}
         />
 
@@ -322,7 +319,12 @@ export default function PromptLabScreen() {
       ) : null}
 
       {score !== null && feedbackKey !== null ? (
-        <ScoreResult comparison={comparison} feedbackKey={feedbackKey} score={score} />
+        <ScoreResult
+          comparison={comparison}
+          feedbackKey={feedbackKey}
+          promptText={promptInput}
+          score={score}
+        />
       ) : null}
 
       <View style={{ gap: tokens.spacing.space3 }}>
@@ -338,6 +340,34 @@ export default function PromptLabScreen() {
         <Card variant="solid">
           <ScoreChart scores={history.map((entry) => entry.score)} />
         </Card>
+
+        <Text
+          style={{
+            color: tokens.colors.text.primary,
+            fontFamily: tokens.typography.fontFamily.heading,
+            fontSize: tokens.typography.fontSize.headingMd,
+          }}>
+          {t('promptLab.promptHistoryTitle')}
+        </Text>
+
+        <Text
+          style={{
+            color: tokens.colors.text.secondary,
+            fontFamily: tokens.typography.fontFamily.body,
+            fontSize: tokens.typography.fontSize.bodySm,
+            lineHeight: tokens.typography.fontSize.bodySm * 1.45,
+          }}>
+          {t('promptLab.promptHistoryDescription')}
+        </Text>
+
+        <PromptScoreHistoryList
+          entries={history}
+          onSelectPrompt={(prompt) => {
+            setPromptInput(prompt);
+            setInputFocused(true);
+            promptInputRef.current?.focus();
+          }}
+        />
       </View>
         </>
       )}
@@ -349,12 +379,14 @@ type ScoreResultProps = {
   score: PromptScore;
   feedbackKey: string;
   comparison: PromptScoreComparison | null;
+  promptText: string;
 };
 
-function ScoreResult({ score, feedbackKey, comparison }: ScoreResultProps) {
+function ScoreResult({ score, feedbackKey, comparison, promptText }: ScoreResultProps) {
   const { tokens, t } = useThemeMode();
   const scale = useSharedValue(0.97);
   const opacity = useSharedValue(0);
+  const improvementPath = getPrimaryImprovementPath(promptText);
 
   useEffect(() => {
     opacity.value = withTiming(1, { duration: tokens.motion.duration.fast });
@@ -448,30 +480,59 @@ function ScoreResult({ score, feedbackKey, comparison }: ScoreResultProps) {
             ))}
           </View>
 
-          {getMissingHints(score).length > 0 ? (
-            <View style={{ gap: tokens.spacing.space2 }}>
+          {improvementPath ? (
+            <View
+              style={{
+                backgroundColor: tokens.colors.background.elevated,
+                borderColor: tokens.colors.border.subtle,
+                borderRadius: tokens.radius.md,
+                borderWidth: 1,
+                gap: tokens.spacing.space2,
+                paddingHorizontal: tokens.spacing.space3,
+                paddingVertical: tokens.spacing.space3,
+              }}>
               <Text
                 style={{
-                  color: tokens.colors.text.primary,
+                  color: tokens.colors.text.secondary,
                   fontFamily: tokens.typography.fontFamily.bodyMedium,
-                  fontSize: tokens.typography.fontSize.bodyMd,
+                  fontSize: tokens.typography.fontSize.bodySm,
                 }}>
-                {t('promptLab.detailHintsTitle')}
+                {t('promptLab.improvementPathTitle')}
               </Text>
-              {getMissingHints(score).map((hint) => (
+              <Text
+                style={{
+                  color: tokens.colors.accent.structure,
+                  fontFamily: tokens.typography.fontFamily.bodyMedium,
+                  fontSize: tokens.typography.fontSize.bodyLg,
+                  lineHeight: tokens.typography.fontSize.bodyLg * 1.4,
+                }}>
+                {t(PILLAR_COPY_KEY[improvementPath.primary])}
+              </Text>
+              {improvementPath.secondary ? (
                 <Text
-                  key={hint}
                   style={{
                     color: tokens.colors.text.secondary,
                     fontFamily: tokens.typography.fontFamily.body,
                     fontSize: tokens.typography.fontSize.bodySm,
-                    lineHeight: tokens.typography.fontSize.bodySm * 1.5,
+                    lineHeight: tokens.typography.fontSize.bodySm * 1.45,
                   }}>
-                  • {hint}
+                  {t('promptLab.improvementPathSecondary', {
+                    tip: t(PILLAR_COPY_KEY[improvementPath.secondary]),
+                  })}
                 </Text>
-              ))}
+              ) : null}
             </View>
-          ) : null}
+          ) : (
+            <Text
+              style={{
+                color: tokens.colors.accent.success,
+                fontFamily: tokens.typography.fontFamily.bodyMedium,
+                fontSize: tokens.typography.fontSize.bodyMd,
+                lineHeight: tokens.typography.fontSize.bodyMd * 1.45,
+              }}>
+              {t('promptLab.improvementPathComplete')}
+            </Text>
+          )}
 
           {comparison !== null && comparison.totalDelta > 0 ? (
             <View
@@ -505,16 +566,6 @@ function ScoreResult({ score, feedbackKey, comparison }: ScoreResultProps) {
               ))}
             </View>
           ) : null}
-
-          <Text
-            style={{
-              color: tokens.colors.text.secondary,
-              fontFamily: tokens.typography.fontFamily.body,
-              fontSize: tokens.typography.fontSize.bodyMd,
-              lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
-            }}>
-            {t(HINT_COPY_KEY[score.weakestCategory])}
-          </Text>
         </View>
       </Card>
     </Animated.View>

@@ -5,6 +5,7 @@ import { StatBlock } from '@/components/features';
 import { GuestSaveProgressHint } from '@/components/features/GuestSaveProgressHint';
 import { ByokKeysManager } from '@/components/features/profile/ByokKeysManager';
 import { ProfileCertificatesSection } from '@/components/features/profile/ProfileCertificatesSection';
+import { ProfileResetSection } from '@/components/features/profile/ProfileResetSection';
 import { SpendingLimitSettings } from '@/components/features/profile/SpendingLimitSettings';
 import { Avatar, Button, Card } from '@/components/ui';
 import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
@@ -222,6 +223,7 @@ export default function ProfilScreen() {
 
       <ByokKeysManager />
       <SpendingLimitSettings />
+      <ProfileResetSection />
     </ScrollView>
   );
 }

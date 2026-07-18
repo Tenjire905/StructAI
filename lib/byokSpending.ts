@@ -1,4 +1,4 @@
-import { appStorage } from '@/lib/appStorage';
+import { appStorage, deleteAppStorageValue } from '@/lib/appStorage';
 
 const SETTINGS_KEY = 'structai.byok.spending.settings.v1';
 const TOTALS_KEY = 'structai.byok.spending.totals.v1';
@@ -106,6 +106,11 @@ export function readSpendingSettings(): SpendingLimitSettings {
 
 export function saveSpendingSettings(settings: SpendingLimitSettings): void {
   appStorage.set(SETTINGS_KEY, JSON.stringify(normalizeSettings(settings)));
+}
+
+export async function clearSpendingData(): Promise<void> {
+  await deleteAppStorageValue(SETTINGS_KEY);
+  await deleteAppStorageValue(TOTALS_KEY);
 }
 
 export function readSpendingTotals(): SpendingTotals {

@@ -11,6 +11,8 @@ export type PathProgressRecord = {
 export type PromptScoreHistoryEntry = {
   score: number;
   recordedAt: string;
+  /** Prompt text that produced this score (optional for legacy entries). */
+  prompt?: string;
 };
 
 export type ProgressSnapshot = {
@@ -21,6 +23,8 @@ export type ProgressSnapshot = {
   orbsEarnedToday: number;
   dailyGoalDateKey: string;
   dailyGoalNotificationsEnabled: boolean;
+  /** Orbs earned per calendar day (`YYYY-MM-DD`). */
+  dailyOrbHistory: Record<string, number>;
   completedLessons: number;
   currentStreak: number;
   streakDays: boolean[];
@@ -38,6 +42,7 @@ export const DEFAULT_PROGRESS: ProgressSnapshot = {
   orbsEarnedToday: 0,
   dailyGoalDateKey: getTodayDateKey(),
   dailyGoalNotificationsEnabled: false,
+  dailyOrbHistory: {},
   completedLessons: 0,
   currentStreak: 0,
   streakDays: [...DEFAULT_STREAK_DAYS],

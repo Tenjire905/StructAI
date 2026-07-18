@@ -25,6 +25,30 @@ export const copyEn: CopyCatalog = {
     playful: 'Keep learning',
     focus: 'Current learning paths',
   },
+  'home.dailyChallenge.eyebrow': {
+    playful: 'Today’s job',
+    focus: 'Daily challenge',
+  },
+  'home.dailyChallenge.title': {
+    playful: 'One clear win today',
+    focus: 'One focused practice session',
+  },
+  'home.dailyChallenge.bodyFresh': {
+    playful: 'Start with {{path}} — one short lesson, real practice, instant feedback.',
+    focus: 'Begin {{path}}: one lesson, one practice loop, clear feedback.',
+  },
+  'home.dailyChallenge.bodyContinue': {
+    playful: 'Continue {{path}} — one lesson, one practice prompt, done.',
+    focus: 'Next step in {{path}}: one lesson with a clear checkpoint.',
+  },
+  'home.dailyChallenge.ctaFresh': {
+    playful: 'Start today’s lesson',
+    focus: 'Start today’s lesson',
+  },
+  'home.dailyChallenge.ctaContinue': {
+    playful: 'Do today’s lesson',
+    focus: 'Continue today’s lesson',
+  },
   'home.startHint': {
     playful: 'Start with Prompt Basics — your first step toward structured prompting.',
     focus: 'Start with Prompt Basics — your first step toward structured prompting.',
@@ -40,6 +64,46 @@ export const copyEn: CopyCatalog = {
   'home.retryFailedNone': {
     playful: 'All lessons done — no retry needed',
     focus: 'All lessons completed — no retry required',
+  },
+  'home.retryFailedNoOpen': {
+    playful: 'No missed lessons — keep going!',
+    focus: 'No open failures — continue as usual',
+  },
+  'home.activityInsights.title': {
+    playful: 'Your activity',
+    focus: 'Activity overview',
+  },
+  'home.activityInsights.expandHint': {
+    playful: 'Tap to see your orb trend as a chart',
+    focus: 'Tap to open the orb activity chart',
+  },
+  'home.activityInsights.collapseHint': {
+    playful: 'Tap to return to the weekly summary',
+    focus: 'Tap to return to the weekly summary',
+  },
+  'home.activityInsights.chartTitle': {
+    playful: 'Orb journal',
+    focus: 'Daily orb activity',
+  },
+  'home.activityInsights.period': {
+    playful: 'Last {{days}} days',
+    focus: 'Period: {{days}} days',
+  },
+  'home.activityInsights.productivityValue': {
+    playful: '{{percent}}%',
+    focus: '{{percent}}%',
+  },
+  'home.activityInsights.productivityWithGoal': {
+    playful: 'Productivity vs your {{goal}}-orb daily goal',
+    focus: 'Productivity relative to daily goal ({{goal}} orbs)',
+  },
+  'home.activityInsights.productivityNoGoal': {
+    playful: 'Active days — set a daily goal via the orbs above',
+    focus: 'Active learning days — set daily goal via orb counter',
+  },
+  'home.activityInsights.orbPeekA11y': {
+    playful: '{{count}} orbs on this day',
+    focus: '{{count}} orbs on this day',
   },
   'orbCounter.label': {
     playful: 'Energy Orbs',
@@ -243,6 +307,10 @@ export const copyEn: CopyCatalog = {
     playful: 'Tap for a short explanation of the learning mode.',
     focus: 'Tap for learning mode explanation.',
   },
+  'lesson.glossaryTapHint': {
+    playful: 'Tap for a short explanation of this term.',
+    focus: 'Tap for a short explanation of this term.',
+  },
   'lesson.typeChoice': {
     playful: 'Choice question',
     focus: 'Choice',
@@ -320,12 +388,32 @@ export const copyEn: CopyCatalog = {
     focus: 'Correct.',
   },
   'lesson.wrongFeedback': {
-    playful: 'Close! Check the explanation.',
-    focus: 'Incorrect. See explanation.',
+    playful: 'Not quite — here’s how to fix it.',
+    focus: 'Incorrect — review why, then the next pattern.',
   },
   'lesson.hintLabel': {
     playful: 'Hint:',
     focus: 'Hint:',
+  },
+  'lesson.coachingWhyLabel': {
+    playful: 'Why this fails',
+    focus: 'Why this fails',
+  },
+  'lesson.coachingNextLabel': {
+    playful: 'What to do next',
+    focus: 'Next pattern',
+  },
+  'lesson.coachingNextFromBeat': {
+    playful: 'On the next try, apply {{term}} deliberately.',
+    focus: 'Next: apply {{term}} consciously on the retry.',
+  },
+  'lesson.coachingNextFallback': {
+    playful: 'Re-read the why, then pick the option that closes that gap.',
+    focus: 'Re-read the failure reason, then choose the option that fixes it.',
+  },
+  'lesson.learningBeatLabel': {
+    playful: 'Remember',
+    focus: 'Key takeaway',
   },
   'lesson.completeTitle': {
     playful: 'Lesson complete!',
@@ -511,6 +599,38 @@ export const copyEn: CopyCatalog = {
     playful: 'Your score history',
     focus: 'Score history',
   },
+  'promptLab.promptHistoryTitle': {
+    playful: 'Prompts you scored',
+    focus: 'Recent scored prompts',
+  },
+  'promptLab.promptHistoryDescription': {
+    playful: 'Tap a prompt to load it back into the editor.',
+    focus: 'Select an entry to reuse that prompt in the input field.',
+  },
+  'promptLab.promptHistoryEmpty': {
+    playful: 'No scored prompts yet — score one to build your trail.',
+    focus: 'No scored prompts stored yet.',
+  },
+  'promptLab.promptHistoryMissing': {
+    playful: 'Older entry — prompt text was not saved yet.',
+    focus: 'Legacy entry without stored prompt text.',
+  },
+  'promptLab.promptHistoryScore': {
+    playful: 'Score {{score}}',
+    focus: '{{score}} / 100',
+  },
+  'promptLab.promptHistoryTapReuse': {
+    playful: 'Tap to reuse',
+    focus: 'Reuse',
+  },
+  'promptLab.promptHistoryReuseHint': {
+    playful: 'Loads this prompt into the input field',
+    focus: 'Loads this prompt into the input field',
+  },
+  'promptLab.promptHistoryItemA11y': {
+    playful: 'Scored prompt, score {{score}}',
+    focus: 'Scored prompt, score {{score}}',
+  },
   'promptLab.scoringInProgress': {
     playful: 'Scoring in progress...',
     focus: 'Scoring...',
@@ -546,6 +666,34 @@ export const copyEn: CopyCatalog = {
   'promptLab.detailHintsTitle': {
     playful: 'Specific ways to improve',
     focus: 'Specific hints',
+  },
+  'promptLab.improvementPathTitle': {
+    playful: 'Your clearest next move',
+    focus: 'Primary improvement path',
+  },
+  'promptLab.improvementPathSecondary': {
+    playful: 'Then: {{tip}}',
+    focus: 'Next: {{tip}}',
+  },
+  'promptLab.improvementPathComplete': {
+    playful: 'Nice — role, context, format, and constraints are all covered.',
+    focus: 'All core pillars present: role, context, format, constraints.',
+  },
+  'promptLab.missing.context': {
+    playful: 'Your prompt is missing context — what background should the AI use?',
+    focus: 'Missing context: add background facts or source material the answer must use.',
+  },
+  'promptLab.missing.role': {
+    playful: 'Your prompt is missing a role — tell the AI who it should be.',
+    focus: 'Missing role: assign a clear persona or stance for the model.',
+  },
+  'promptLab.missing.format': {
+    playful: 'Your prompt is missing a format — bullets, paragraphs, table…?',
+    focus: 'Missing format: specify the output shape (list, paragraphs, JSON, …).',
+  },
+  'promptLab.missing.constraints': {
+    playful: 'Your prompt is missing constraints — length, audience, or tone.',
+    focus: 'Missing constraints: add hard limits (length, audience, tone, bans).',
   },
   'promptLab.comparisonTitle': {
     playful: '+{{delta}} points — here is what improved',
@@ -596,6 +744,14 @@ export const copyEn: CopyCatalog = {
   'modelComparer.resultsTitle': {
     playful: 'Answers compared',
     focus: 'Results',
+  },
+  'modelComparer.copyA11y': {
+    playful: 'Copy this answer',
+    focus: 'Copy answer to clipboard',
+  },
+  'modelComparer.copiedA11y': {
+    playful: 'Copied',
+    focus: 'Answer copied',
   },
   'modelComparer.latencyBadge': {
     playful: '{{seconds}} s',
@@ -772,6 +928,62 @@ export const copyEn: CopyCatalog = {
   'profile.guestDisplayName': {
     playful: 'Guest',
     focus: 'Guest',
+  },
+  'profile.resetSection': {
+    playful: 'Reset & start over',
+    focus: 'Data & reset',
+  },
+  'profile.resetSectionDescription': {
+    playful: 'Need a clean slate for testing or a fresh start? Pick what to wipe.',
+    focus: 'Reset learning progress only, or wipe all local account data and restart onboarding.',
+  },
+  'profile.resetProgressCta': {
+    playful: 'Reset all progress',
+    focus: 'Reset all learning progress',
+  },
+  'profile.deleteAccountCta': {
+    playful: 'Delete everything & restart onboarding',
+    focus: 'Delete account data & restart onboarding',
+  },
+  'profile.resetCancel': {
+    playful: 'Cancel',
+    focus: 'Cancel',
+  },
+  'profile.resetProgressConfirmTitle': {
+    playful: 'Reset all progress?',
+    focus: 'Reset all learning progress?',
+  },
+  'profile.resetProgressConfirmBody': {
+    playful: 'Lessons, paths, orbs, and streaks will be cleared. You stay signed in and keep your settings.',
+    focus: 'Clears lessons, paths, orbs, and streaks. Account and preferences remain.',
+  },
+  'profile.resetProgressConfirmAction': {
+    playful: 'Reset progress',
+    focus: 'Reset progress',
+  },
+  'profile.deleteAccountConfirmTitle': {
+    playful: 'Delete everything?',
+    focus: 'Delete account data?',
+  },
+  'profile.deleteAccountConfirmBodyGuest': {
+    playful: 'This wipes progress, name, keys, and settings — then sends you back to onboarding.',
+    focus: 'Deletes all local progress and profile data, then opens onboarding.',
+  },
+  'profile.deleteAccountConfirmBodySignedIn': {
+    playful: 'This wipes progress (including cloud save), signs you out, and restarts onboarding.',
+    focus: 'Deletes learning data (local + cloud progress), signs you out, and opens onboarding.',
+  },
+  'profile.deleteAccountConfirmAction': {
+    playful: 'Delete & restart',
+    focus: 'Delete & restart',
+  },
+  'profile.deleteAccountFootnoteGuest': {
+    playful: 'Full wipe — you will see the welcome screens again.',
+    focus: 'Full local wipe returns you to onboarding.',
+  },
+  'profile.deleteAccountFootnoteSignedIn': {
+    playful: 'Cloud progress is removed and you are signed out. Auth email deletion may need support.',
+    focus: 'Removes synced progress and ends the session. Auth identity deletion may require support.',
   },
   'profile.guestAccountDescription': {
     playful: 'You are using StructAI without an account. Progress stays on this device — sign in to sync across devices.',

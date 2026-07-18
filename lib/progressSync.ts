@@ -186,6 +186,33 @@ export function readLastSyncedUserId(): string | undefined {
   return appStorage.getString(PROGRESS_SYNC_USER_KEY);
 }
 
+export function cancelQueuedProgressSync(): void {
+  pendingSnapshot = null;
+
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+    debounceTimer = null;
+  }
+}
+
+export async function clearProgressSyncUserId(): Promise<void> {
+  appStorage.delete(PROGRESS_SYNC_USER_KEY);
+}
+
+/** Deletes the remote progress row for the signed-in user (best-effort). */
+export async function deleteRemoteProgressForCurrentUser(): Promise<void> {
+  cancelQueuedProgressSync();
+
+  const userId = await resolveAuthenticatedUserId();
+
+  if (!userId || !isSupabaseConfigured) {
+    return;
+  }
+
+  await supabase.from('user_progress').delete().eq('user_id', userId);
+  await clearProgressSyncUserId();
+}
+
 /** Test hook – bypass auth/debounce and push immediately. */
 export async function pushProgressSnapshotNow(snapshot: ProgressSnapshot): Promise<void> {
   const userId = await resolveAuthenticatedUserId();
