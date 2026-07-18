@@ -4,15 +4,13 @@ import { Platform } from 'react-native';
 import type { ThemeMode } from '@/theme';
 
 /**
- * Semantic haptics per HAPTICS.md ("Haptics Map v1"). Components must call
- * ONLY these named functions, never `Haptics.*` directly — that keeps the
- * Focus/Playful intensity mapping in one place and prevents haptic overuse
- * from spreading ad hoc across screens.
+ * Semantic haptics per HAPTICS.md ("Haptics Map v1.1" — device-calibrated).
+ * Components must call ONLY these named functions, never `Haptics.*` directly.
  *
- * Every function is fire-and-forget: it never returns a promise callers
- * should await, so a failing/unsupported haptic can never block or delay a
- * UI interaction. expo-haptics resolves to a no-op on web; the try/catch is
- * an extra safety net for unexpected native failures.
+ * Intensity ladder (device-tested): Selection was too weak on Expo Go phones.
+ * Everyday moments use Light/Medium Impact; path complete stays the peak.
+ *
+ * Fire-and-forget only — never await from UI handlers.
  */
 
 type PromptLabFailureCause = 'user' | 'network';
@@ -29,85 +27,106 @@ function fire(action: () => Promise<void> | void): void {
   }
 }
 
+async function impact(style: Haptics.ImpactFeedbackStyle): Promise<void> {
+  await Haptics.impactAsync(style);
+}
+
+async function notify(
+  type: Haptics.NotificationFeedbackType,
+): Promise<void> {
+  await Haptics.notificationAsync(type);
+}
+
+/** Success notification followed by a body impact so the moment is clearly felt. */
+function fireSuccessWithImpact(style: Haptics.ImpactFeedbackStyle): void {
+  fire(async () => {
+    await notify(Haptics.NotificationFeedbackType.Success);
+    await impact(style);
+  });
+}
+
 /** Richtige Antwort in einer Lektion. */
 export function hapticCorrectAnswer(mode: ThemeMode): void {
   if (mode === 'focus') {
-    fire(() => Haptics.selectionAsync());
+    fire(() => impact(Haptics.ImpactFeedbackStyle.Light));
     return;
   }
 
-  fire(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
+  fire(() => impact(Haptics.ImpactFeedbackStyle.Medium));
 }
 
 /** Falsche Antwort – nur aufrufen, wenn der Fehler wirklich vom Nutzer verursacht wurde. */
 export function hapticWrongAnswer(_mode: ThemeMode): void {
-  fire(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning));
+  fire(async () => {
+    await notify(Haptics.NotificationFeedbackType.Warning);
+    await impact(Haptics.ImpactFeedbackStyle.Light);
+  });
 }
 
 /** Lektion abgeschlossen (bestanden). */
 export function hapticLessonComplete(): void {
-  fire(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
 }
 
 /** Pfad abgeschlossen, Zertifikat erzeugt — der stärkste Erfolgs-Moment der App. */
 export function hapticPathComplete(mode: ThemeMode): void {
-  fire(async () => {
-    await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-
-    if (mode === 'playful') {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    } else {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
-  });
+  fireSuccessWithImpact(
+    mode === 'playful'
+      ? Haptics.ImpactFeedbackStyle.Heavy
+      : Haptics.ImpactFeedbackStyle.Medium,
+  );
 }
 
-/** Orb-Gewinn. Focus bleibt bewusst zurückhaltend/stumm, das ist kein Bug. */
+/** Orb-Gewinn. Focus bleibt etwas zurückhaltender als Playful. */
 export function hapticOrbGained(mode: ThemeMode): void {
   if (mode === 'focus') {
-    fire(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
+    fire(() => impact(Haptics.ImpactFeedbackStyle.Light));
     return;
   }
 
-  fire(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
 }
 
-/** BYOK-Key erfolgreich validiert — identisch in beiden Modi, kritischer Vertrauensmoment. */
+/** BYOK-Key erfolgreich validiert — identisch in beiden Modi. */
 export function hapticByokValidated(): void {
-  fire(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
 }
 
-/** Matching: nur beim finalen, erfolgreichen Zuordnen eines Paares aufrufen, nicht pro Zwischenschritt. */
+/** Matching: nur beim finalen, erfolgreichen Zuordnen eines Paares. */
 export function hapticMatchSuccess(_mode: ThemeMode): void {
-  fire(() => Haptics.selectionAsync());
+  fire(() => impact(Haptics.ImpactFeedbackStyle.Light));
 }
 
 /** Categorize: pro korrekt zugeordnetem Item. */
 export function hapticCategorizeItemCorrect(_mode: ThemeMode): void {
-  fire(() => Haptics.selectionAsync());
+  fire(() => impact(Haptics.ImpactFeedbackStyle.Light));
 }
 
 /** Categorize: einmalig beim Abschluss des gesamten Sets. */
 export function hapticCategorizeSetComplete(): void {
-  fire(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
 }
 
-/** Prompt-Lab-Demo-Vergleich beendet — Erfolg oder Fehler, je nach Ursache. */
+/** Prompt-Lab-Vergleich beendet — Erfolg oder Fehler, je nach Ursache. */
 export function hapticPromptLabResult(
   outcome: 'success' | 'failure',
   cause?: PromptLabFailureCause,
 ): void {
   if (outcome === 'success') {
-    fire(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
+    fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
     return;
   }
 
   if (cause === 'network') {
-    // Netzwerk-/Providerfehler sind nicht der Nutzer-Fehler des Nutzers — laut
-    // Haptics Map v1 hier höchstens ein sehr leichtes Warning, keine Eskalation.
-    fire(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning));
+    fire(async () => {
+      await notify(Haptics.NotificationFeedbackType.Warning);
+      await impact(Haptics.ImpactFeedbackStyle.Light);
+    });
     return;
   }
 
-  fire(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error));
+  fire(async () => {
+    await notify(Haptics.NotificationFeedbackType.Error);
+    await impact(Haptics.ImpactFeedbackStyle.Medium);
+  });
 }
