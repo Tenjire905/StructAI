@@ -225,6 +225,7 @@ export async function clearOnboardingCompleted(): Promise<void> {
 }
 
 const PROFILE_ONBOARDING_COMPLETED_KEY = 'structai.profile-onboarding-completed';
+const PROFILE_ONBOARDING_REQUIRED_KEY = 'structai.profile-onboarding-required';
 const GUEST_DISPLAY_NAME_KEY = 'structai.guest-display-name';
 const PROFILE_AGE_KEY = 'structai.profile-age';
 
@@ -232,12 +233,22 @@ export function isProfileOnboardingCompleted(): boolean {
   return appStorage.getString(PROFILE_ONBOARDING_COMPLETED_KEY) === 'true';
 }
 
+export function isProfileOnboardingRequired(): boolean {
+  return appStorage.getString(PROFILE_ONBOARDING_REQUIRED_KEY) === 'true';
+}
+
+export async function markProfileOnboardingRequired(): Promise<void> {
+  await persistAppStorageValue(PROFILE_ONBOARDING_REQUIRED_KEY, 'true');
+}
+
 export async function setProfileOnboardingCompleted(): Promise<void> {
   await persistAppStorageValue(PROFILE_ONBOARDING_COMPLETED_KEY, 'true');
+  await deleteAppStorageValue(PROFILE_ONBOARDING_REQUIRED_KEY);
 }
 
 export async function clearProfileOnboardingCompleted(): Promise<void> {
   await deleteAppStorageValue(PROFILE_ONBOARDING_COMPLETED_KEY);
+  await deleteAppStorageValue(PROFILE_ONBOARDING_REQUIRED_KEY);
 }
 
 export async function clearGuestDisplayName(): Promise<void> {
@@ -248,8 +259,9 @@ export async function clearProfileAge(): Promise<void> {
   await deleteAppStorageValue(PROFILE_AGE_KEY);
 }
 
-export function isProfileOnboardingPending(completedLessons: number): boolean {
-  return completedLessons >= 1 && !isProfileOnboardingCompleted();
+/** Profile onboarding is pending only after an explicit first-lesson handoff — not for legacy progress. */
+export function isProfileOnboardingPending(): boolean {
+  return isProfileOnboardingRequired() && !isProfileOnboardingCompleted();
 }
 
 export function getGuestDisplayName(): string | undefined {

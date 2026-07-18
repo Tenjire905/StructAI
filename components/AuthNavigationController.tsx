@@ -5,6 +5,7 @@ import {
   hydrateAppStorage,
   isOnboardingCompleted,
   isProfileOnboardingPending,
+  isProfileOnboardingRequired,
   setOnboardingCompleted,
   setProfileOnboardingCompleted,
 } from '@/lib/appStorage';
@@ -57,7 +58,7 @@ function isOnTargetRoute(segments: readonly string[], target: Href): boolean {
 }
 
 function resolveAppEntryRoute(completedLessons: number): Href {
-  if (isProfileOnboardingPending(completedLessons)) {
+  if (isProfileOnboardingPending()) {
     return PROFILE_ONBOARDING_ROUTE;
   }
 
@@ -66,6 +67,10 @@ function resolveAppEntryRoute(completedLessons: number): Href {
   }
 
   return resolveHomeRoute(completedLessons);
+}
+
+function completeProfileOnboardingFromRemote(): void {
+  void setProfileOnboardingCompleted();
 }
 
 /**
@@ -82,7 +87,7 @@ export function AuthNavigationController() {
   const isMountedRef = useRef(false);
   const [returningUserCheck, setReturningUserCheck] = useState<ReturningUserCheck | null>(null);
 
-  const profilePending = isProfileOnboardingPending(completedLessons);
+  const profilePending = isProfileOnboardingPending();
   const onProfileRoute = isOnProfileOnboardingRoute(segments);
   const onDailyGoalRoute = isOnDailyGoalSetupRoute(segments);
 
@@ -121,7 +126,7 @@ export function AuthNavigationController() {
           void setOnboardingCompleted();
 
           if ((snapshot?.completedLessons ?? 0) >= 1) {
-            void setProfileOnboardingCompleted();
+            completeProfileOnboardingFromRemote();
           }
         }
 
@@ -135,6 +140,32 @@ export function AuthNavigationController() {
           setReturningUserCheck({ userId, status: 'new' });
         }
       });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoading, session]);
+
+  useEffect(() => {
+    if (isLoading || !session || !isProfileOnboardingRequired()) {
+      return;
+    }
+
+    let cancelled = false;
+
+    void fetchProgressSnapshotForUser(session.user.id)
+      .then((snapshot) => {
+        if (cancelled || !isMountedRef.current) {
+          return;
+        }
+
+        const hasRemoteActivity = snapshot !== null && !isProgressSnapshotEmpty(snapshot);
+
+        if (hasRemoteActivity && (snapshot?.completedLessons ?? 0) >= 1) {
+          completeProfileOnboardingFromRemote();
+        }
+      })
+      .catch(() => undefined);
 
     return () => {
       cancelled = true;
@@ -179,6 +210,7 @@ export function AuthNavigationController() {
           target = resolveAppEntryRoute(completedLessons);
         }
       } else if (profilePending) {
+        // Allow finishing the active lesson/path transition before forcing the profile screen.
         if (!onProfileRoute && !isInLessonFlowRoute(segments)) {
           target = PROFILE_ONBOARDING_ROUTE;
         }
@@ -218,7 +250,17 @@ export function AuthNavigationController() {
         clearTimeout(navigationTimer);
       }
     };
-  }, [completedLessons, isLoading, onDailyGoalRoute, onProfileRoute, profilePending, returningUserCheck, router, segments, session]);
+  }, [
+    completedLessons,
+    isLoading,
+    onDailyGoalRoute,
+    onProfileRoute,
+    profilePending,
+    returningUserCheck,
+    router,
+    segments,
+    session,
+  ]);
 
   useEffect(() => {
     if (!session) {
