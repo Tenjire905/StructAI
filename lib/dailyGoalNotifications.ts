@@ -1,8 +1,9 @@
 import { isRunningInExpoGo } from 'expo';
 
 import { appStorage } from '@/lib/appStorage';
+import { isBelowDailyGoal } from '@/lib/dailyOrbGoal';
 import { getCatalogForLocale } from '@/theme/copy/index';
-import { getCopyText } from '@/theme/copy/types';
+import { formatCopyText, getCopyText } from '@/theme/copy/types';
 import { DEFAULT_LOCALE, isLocale } from '@/theme/locale';
 import type { ThemeMode } from '@/theme/theme';
 
@@ -12,11 +13,26 @@ const THEME_MODE_STORAGE_KEY = 'structai.theme-mode';
 
 type NotificationsModule = typeof import('expo-notifications');
 
+export type DailyGoalReminderContext = {
+  enabled: boolean;
+  dailyOrbGoal: number;
+  orbsEarnedToday: number;
+};
+
 let notificationsModulePromise: Promise<NotificationsModule | null> | null = null;
 let notificationHandlerConfigured = false;
 
 export function areDailyGoalNotificationsSupported(): boolean {
   return !isRunningInExpoGo();
+}
+
+/** True when a reminder should exist: opted in, goal set, and still short today. */
+export function shouldScheduleDailyGoalReminder(context: DailyGoalReminderContext): boolean {
+  return (
+    context.enabled &&
+    areDailyGoalNotificationsSupported() &&
+    isBelowDailyGoal(context.orbsEarnedToday, context.dailyOrbGoal)
+  );
 }
 
 async function loadNotificationsModule(): Promise<NotificationsModule | null> {
@@ -59,14 +75,16 @@ function readStoredMode(): ThemeMode {
   return stored === 'playful' || stored === 'focus' ? stored : 'focus';
 }
 
-function getDailyGoalNotificationCopy() {
+function getDailyGoalNotificationCopy(remainingOrbs: number) {
   const locale = readStoredLocale();
   const mode = readStoredMode();
   const catalog = getCatalogForLocale(locale);
 
   return {
     title: getCopyText('dailyGoal.notificationTitle', mode, catalog),
-    body: getCopyText('dailyGoal.notificationBody', mode, catalog),
+    body: formatCopyText('dailyGoal.notificationBody', mode, catalog, {
+      remaining: remainingOrbs,
+    }),
   };
 }
 
@@ -89,7 +107,11 @@ export async function requestDailyGoalNotificationPermission(): Promise<boolean>
   return requested.granted;
 }
 
-export async function syncDailyGoalReminder(enabled: boolean): Promise<void> {
+/**
+ * Keep the evening reminder in sync with today's goal progress.
+ * Cancels when disabled, unsupported, or the daily goal is already met.
+ */
+export async function syncDailyGoalReminder(context: DailyGoalReminderContext): Promise<void> {
   const Notifications = await loadNotificationsModule();
 
   if (!Notifications) {
@@ -100,7 +122,7 @@ export async function syncDailyGoalReminder(enabled: boolean): Promise<void> {
 
   await Notifications.cancelScheduledNotificationAsync(DAILY_GOAL_REMINDER_ID).catch(() => undefined);
 
-  if (!enabled) {
+  if (!shouldScheduleDailyGoalReminder(context)) {
     return;
   }
 
@@ -110,7 +132,8 @@ export async function syncDailyGoalReminder(enabled: boolean): Promise<void> {
     return;
   }
 
-  const { title, body } = getDailyGoalNotificationCopy();
+  const remaining = Math.max(0, context.dailyOrbGoal - context.orbsEarnedToday);
+  const { title, body } = getDailyGoalNotificationCopy(remaining);
 
   await Notifications.scheduleNotificationAsync({
     identifier: DAILY_GOAL_REMINDER_ID,

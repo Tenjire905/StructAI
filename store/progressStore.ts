@@ -171,9 +171,16 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       getTodayDateKey(),
     );
 
-    set({
+    const next = {
       ...snapshot,
       ...dailyProgress,
+    };
+
+    set(next);
+    void syncDailyGoalReminder({
+      enabled: next.dailyGoalNotificationsEnabled,
+      dailyOrbGoal: next.dailyOrbGoal,
+      orbsEarnedToday: next.orbsEarnedToday,
     });
   },
 
@@ -184,6 +191,11 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     };
     writeProgressSnapshot(fresh);
     set(fresh);
+    void syncDailyGoalReminder({
+      enabled: false,
+      dailyOrbGoal: fresh.dailyOrbGoal,
+      orbsEarnedToday: fresh.orbsEarnedToday,
+    });
   },
 
   persistSnapshot: (snapshot) => {
@@ -349,6 +361,11 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       };
 
       persistAndSync(snapshot);
+      void syncDailyGoalReminder({
+        enabled: snapshot.dailyGoalNotificationsEnabled,
+        dailyOrbGoal: snapshot.dailyOrbGoal,
+        orbsEarnedToday: snapshot.orbsEarnedToday,
+      });
 
       return snapshot;
     });
@@ -369,7 +386,11 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       };
 
       persistAndSync(snapshot);
-      void syncDailyGoalReminder(notificationsEnabled);
+      void syncDailyGoalReminder({
+        enabled: notificationsEnabled,
+        dailyOrbGoal,
+        orbsEarnedToday: dailyProgress.orbsEarnedToday,
+      });
 
       return snapshot;
     });
