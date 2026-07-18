@@ -1,7 +1,9 @@
 # HAPTICS.md
-### StructAI – Haptics Map v1 (verbindlich). Cursor MUSS diese Zuordnung nutzen, keine eigene Erfindung.
+### StructAI – Haptics Map v1.1 (verbindlich). Cursor MUSS diese Zuordnung nutzen, keine eigene Erfindung.
 
 Herkunft: Perplexity-Recherche zu Haptic-Feedback-Praxis in Pro-Tools vs. gamifizierten Consumer-Apps, an StructAIs Interaktionsmomente angepasst. Grundregel: **Haptics sind ein Präzisionsinstrument, kein Belohnungs-Dauerfeuer.** Wenn alles vibriert, verliert alles Bedeutung.
+
+**Kalibrierung v1.1 (Expo Go, physisches Gerät):** Reines `Selection` / alleiniges `Success Notification` war auf dem Zielgerät kaum spürbar; der `Medium Impact`-Anteil beim Pfadabschluss war der erste klar fühlbare Moment. v1.1 hebt Alltagsmomente auf Light/Medium Impact (oft kombiniert mit Notification) und hält den Pfadabschluss als Peak.
 
 **Aktueller Stand: Implementiert** (`lib/haptics.ts`, `expo-haptics`). Verdrahtet an: Lektions-Antwort richtig/falsch (`app/lektion/[id].tsx`, zentral über `evaluateGradedStep` für alle Step-Typen inkl. matching/categorize/error_finding), Lektion abgeschlossen, Pfad abgeschlossen, BYOK-Key hinzugefügt/getestet (`components/features/profile/ByokKeysManager.tsx`), Prompt-Lab-Vergleich erfolgreich/fehlgeschlagen (`components/features/ModelComparer.tsx`).
 
@@ -25,17 +27,17 @@ Selection
 
 | Moment | Focus | Playful |
 |---|---|---|
-| Richtige Antwort (Lektion) | `Selection` oder sehr leichtes `Light Impact` | `Light Impact`, etwas wärmeres Belohnungsgefühl |
-| Falsche Antwort | Nur bei echter Nutzerursache: `Warning Notification`, zurückhaltend. Sonst keine Haptik. | Wie Focus, maximal leicht verständnisvoll – nie strafend |
-| Lektion abgeschlossen | `Success Notification` oder kurzes `Medium Impact` | gleich |
-| Pfad abgeschlossen + Zertifikat | `Success Notification` + `Medium Impact` | `Success Notification` + optional `Medium`–`Heavy Impact` |
-| Orb-Gewinn | `Light Impact` oder **gar keine** Haptik (stilles Fortschrittssignal) | `Success Notification` oder `Medium Impact` |
-| BYOK-Key erfolgreich validiert | `Success Notification` | `Success Notification` (identisch – kritischer Vertrauensmoment, kein Modus-Unterschied) |
-| Matching – Paar final korrekt verbunden | `Selection` oder `Light Impact` – **nur beim finalen Match, nicht bei jedem Zwischenschritt/Drag** | gleich |
-| Categorize – Item korrekt zugeordnet | `Selection` pro Item; einmalig `Success Notification` bei Abschluss des gesamten Sets | gleich |
-| Prompt-Lab-Demo-Vergleich: Fehler durch Nutzerursache/Validierungsfehler | `Error Notification` | gleich |
-| Prompt-Lab-Demo-Vergleich: Fehler durch Netzwerk/Provider | **Keine Haptik**, höchstens sehr leichtes `Warning Notification` | gleich |
-| Prompt-Lab-Demo-Vergleich: erfolgreich beendet | `Success Notification` | gleich |
+| Richtige Antwort (Lektion) | `Light Impact` | `Medium Impact` |
+| Falsche Antwort | `Warning Notification` + `Light Impact` (nur bei Nutzerursache) | gleich – nie strafend stärker als Medium |
+| Lektion abgeschlossen | `Success Notification` + `Medium Impact` | gleich |
+| Pfad abgeschlossen + Zertifikat | `Success Notification` + `Medium Impact` | `Success Notification` + `Heavy Impact` (Peak) |
+| Orb-Gewinn | `Light Impact` | `Success Notification` + `Medium Impact` |
+| BYOK-Key erfolgreich validiert | `Success Notification` + `Medium Impact` | gleich |
+| Matching – Paar final korrekt verbunden | `Light Impact` – **nur beim finalen Match** | gleich |
+| Categorize – Item korrekt zugeordnet | `Light Impact` pro Item; Set-Abschluss: `Success` + `Medium Impact` | gleich |
+| Prompt-Lab-Vergleich: Nutzer-/Validierungsfehler | `Error Notification` + `Medium Impact` | gleich |
+| Prompt-Lab-Vergleich: Netzwerk/Provider | `Warning Notification` + `Light Impact` | gleich |
+| Prompt-Lab-Vergleich: erfolgreich | `Success Notification` + `Medium Impact` | gleich |
 
 ## 3. Explizite Verbote (Overuse vermeiden)
 
