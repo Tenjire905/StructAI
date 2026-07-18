@@ -92,3 +92,26 @@ Modus ist jederzeit in den Einstellungen wechselbar, nicht nur beim Onboarding.
 3. `copy.ts`: zentrale Copy-Objekte pro Screen/Komponente
 4. `useThemeMode()`-Hook, der resolved tokens + copy zurückgibt
 5. Erst danach: bestehende Komponenten aus Abschnitt "Basis-Komponenten" (siehe Cursor-Direktionsguide) auf den Hook umstellen, statt hardcodierte Werte
+
+---
+
+## 7. Focus-Mode Rules v1 (Perplexity-Recherche, Stand: noch NICHT implementiert)
+
+**Kontext:** Marktanalyse (Vergleich mit Notion/Linear/Arc/SAP-Fiori-Density-Konzepten sowie BYOK-Workspace-Tools wie NovaKit) ergab: Ein Pro-/Fokus-Modus wirkt nur dann glaubwürdig "ernst", wenn er sich auf **mehreren Ebenen gleichzeitig** unterscheidet – nicht nur Farbe/Sättigung. Reine Farbschema-Dimmung wird als kosmetisch wahrgenommen, nicht als echter Werkzeug-Modus. Das ist eine **Erweiterung** der bestehenden Regeln in Abschnitt 2, nicht deren Ersetzung – die Grundregel "nur Stil, nie Funktion/Daten" (Abschnitt 5) bleibt unverändert gültig.
+
+Die folgenden 12 Regeln sind bereits gegen das bestehende Token-System aus `DESIGN_TOKENS.md` formuliert (keine neue Design-Sprache):
+
+1. Focus nutzt systematisch kompaktere Dichte als Playful: gleiche Typografie-Skala, aber Spacing in den meisten Containern einen Schritt enger auf der Spacing-Skala (z. B. `space-4` statt `space-5`, `space-5` statt `space-6`). Ziel: höhere Informationsdichte, nicht kleinere Touch-Ziele.
+2. Touch-Targets bleiben unverändert groß genug – Kompaktheit kommt über Außenabstände/Card-Padding/vertikale Zwischenräume, nie über schrumpfende Klickflächen.
+3. Focus reduziert Radius im Kernlayout auf `radius-sm`/`radius-md`; `radius-lg`/`radius-xl` bleiben Playful vorbehalten, außer bei großen, bewusst ruhigen Flächen (z. B. Zertifikatskarten).
+4. Focus bevorzugt klarere, härtere Flächen-/Sektionstrennung statt weicher, dekorativer Panels – mehr sichtbare Struktur, weniger "floating" UI.
+5. Focus senkt Animationsfrequenz deutlich: nur `duration-instant`/`duration-fast` für Standardfeedback, `duration-medium` nur für echte Übergänge, `duration-celebration` nur für Pfadabschluss/Zertifikat. Playful darf mehr `medium`/`celebration` einsetzen.
+6. Focus reduziert Sichtbarkeit des Orb-Companions auf die wirklich nötigen Stellen (Home-Header, Lektionsabschluss, Prompt Lab) – kein permanentes Präsenzsignal auf jedem Screen.
+7. Focus nutzt stärkeres Textgewicht für Überschriften/Statuszeilen, aber insgesamt weniger Schriftstile – Hierarchie über Gewicht/Abstände, nicht über mehr Farbe/Deko.
+8. Focus zeigt Rohdaten früher/sichtbarer: Scores, Fehlertypen, Modellnamen, Kostenhinweise, Fortschrittswerte gehören in die Primäransicht, nicht in versteckte Detailflächen.
+9. Focus reduziert Sättigung der Akzentfarben (siehe Abschnitt 2 bestehende Tabelle), behält aber `accent-structure` (Cyan) exklusiv für echte Erfolgs-/Scoring-Momente.
+10. Focus vermeidet Illustrationen, Konfetti und spielerische Mikro-Assets in Kernflächen – solche Elemente dürfen höchstens in klar begrenzten Abschlussmomenten auftreten, nie als dauerhafte Oberflächenlogik.
+11. Focus darf dieselbe Struktur wie Playful behalten, aber die Wahrnehmung muss sich bei einem Wechsel SOFORT ändern: dichter, ruhiger, nüchterner, weniger emotional. Ist der Unterschied nicht auf den ersten Blick lesbar, ist er zu klein.
+12. **Regel für neue Komponenten:** Erfüllt eine Komponente in Playful eine emotionale/dekorative Funktion, braucht die Focus-Version eine **neutrale, funktionsorientierte Entsprechung** – nicht nur eine gedämpfte Kopie. Das ist ein dauerhafter Mehraufwand für jede zukünftige Komponente, keine Einmal-Aktion.
+
+**Umsetzungsstatus:** Bewusst zurückgestellt ("erst validieren, dann investieren") bis 5–8 qualitative Power-User-Interviews bestätigen, dass der aktuelle Zustand ("Playful, nur gedimmt") tatsächlich als unglaubwürdig wahrgenommen wird – das ist eine teure, schwer rückgängig zu machende Änderung über viele Screens hinweg. Nicht blockierend für andere Arbeit.

@@ -9,6 +9,7 @@ import {
   type AiProvider,
 } from '@/lib/aiScoring';
 import { trackEvent } from '@/lib/analytics';
+import { hapticByokValidated } from '@/lib/haptics';
 import {
   BYOK_PROVIDERS,
   listApiKeys,
@@ -136,6 +137,7 @@ export function ByokKeysManager() {
 
       await upsertApiKey({ provider, key: trimmedKey });
       trackEvent('byok_key_added_success');
+      hapticByokValidated();
       setInputByProvider((current) => ({ ...current, [provider]: '' }));
       await refreshEntries();
     } catch (error) {
@@ -169,6 +171,11 @@ export function ByokKeysManager() {
     }));
 
     const status = await validateStoredKey(entry.key);
+
+    if (status.state === 'valid') {
+      hapticByokValidated();
+    }
+
     setStatusByProvider((current) => ({
       ...current,
       [provider]: status,

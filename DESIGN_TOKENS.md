@@ -136,7 +136,7 @@ spring-bouncy:   { damping: 10, stiffness: 120 }   // NUR für Celebration-Momen
 
 - Ausschließlich Lucide oder Phosphor Icons, Stroke-Width einheitlich 1.75
 - Icon-Größen-Skala: 16 / 20 / 24 / 32 (keine Zwischengrößen)
-- Keine Emoji im UI, auch nicht als "verspielte" Auflockerung – untergräbt Seriosität bei 35+ Zielgruppe
+- Keine Emoji im UI, auch nicht als "verspielte" Auflockerung – untergräbt Seriosität gegenüber der Kernzielgruppe Prompt-Power-User (siehe `PRODUCT_CONCEPT.md` Abschnitt 1; frühere Begründung über Altersgruppen ist überholt, die Regel selbst bleibt unverändert gültig)
 - Orb-Icon ist die EINZIGE Ausnahme mit custom SVG-Illustration (eigenes Asset, kein Icon-Font)
 
 ---
