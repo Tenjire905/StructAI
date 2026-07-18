@@ -23,6 +23,7 @@ import {
   getProviderLabel,
   scorePromptRemote,
 } from '@/lib/aiScoring';
+import { canUseProFeature } from '@/lib/entitlements';
 import { listApiKeys, type ByokKeyEntry } from '@/lib/secureKeyStore';
 import {
   attachLocalFeedbackSignals,
@@ -122,10 +123,11 @@ export default function PromptLabScreen() {
 
     let result: PromptScore;
 
-    // Fallback-Kette: Remote-Bewertung, bei jedem Fehler lokale Heuristik.
-    // Ein API-Problem (ungültiger Key, kein Guthaben, offline) darf die App
-    // niemals crashen – der Nutzer bekommt immer ein Ergebnis plus Hinweis.
-    if (primaryKey) {
+    // Free: local coach only. Pro + BYOK: remote AI grade with local fallback.
+    // API failures must never crash — always return a score + notice.
+    const liveGradesAllowed = Boolean(primaryKey) && canUseProFeature('liveLabGrades');
+
+    if (liveGradesAllowed && primaryKey) {
       try {
         result = attachLocalFeedbackSignals(
           await scorePromptRemote(promptInput, primaryKey),
@@ -139,6 +141,9 @@ export default function PromptLabScreen() {
         result = scorePrompt(promptInput, locale);
       }
     } else {
+      if (primaryKey && !canUseProFeature('liveLabGrades')) {
+        setFallbackNotice('pro.gateLabBody');
+      }
       result = scorePrompt(promptInput, locale);
     }
 
@@ -204,11 +209,11 @@ export default function PromptLabScreen() {
             alignItems: 'center',
             backgroundColor: tokens.colors.surface.card,
             borderColor: tokens.colors.accent.warning,
-            borderRadius: tokens.radius.md,
+            borderRadius: tokens.presentation.preferredCardRadius,
             borderWidth: 1,
             flexDirection: 'row',
             gap: tokens.spacing.space3,
-            padding: tokens.spacing.space3,
+            padding: tokens.presentation.preferredCardPadding,
           }}>
           <KeyRound
             color={tokens.colors.accent.warning}
@@ -232,6 +237,41 @@ export default function PromptLabScreen() {
                 fontSize: tokens.typography.fontSize.bodySm,
               }}>
               {t('promptLab.addKeyCta')}
+            </Text>
+          </View>
+        </PressableScale>
+      ) : !canUseProFeature('liveLabGrades') ? (
+        <PressableScale
+          accessibilityRole="button"
+          onPress={() => router.push('/profil')}
+          style={{
+            alignItems: 'center',
+            backgroundColor: tokens.colors.surface.card,
+            borderColor: tokens.colors.border.subtle,
+            borderRadius: tokens.presentation.preferredCardRadius,
+            borderWidth: 1,
+            flexDirection: 'row',
+            gap: tokens.spacing.space3,
+            padding: tokens.presentation.preferredCardPadding,
+          }}>
+          <View style={{ flex: 1, gap: tokens.spacing.space1 }}>
+            <Badge label={t('pro.planPro')} tone="warning" />
+            <Text
+              style={{
+                color: tokens.colors.text.secondary,
+                fontFamily: tokens.typography.fontFamily.body,
+                fontSize: tokens.typography.fontSize.bodySm,
+                lineHeight: tokens.typography.fontSize.bodySm * 1.4,
+              }}>
+              {t('pro.gateLabBody')}
+            </Text>
+            <Text
+              style={{
+                color: tokens.colors.accent.primary,
+                fontFamily: tokens.typography.fontFamily.bodyMedium,
+                fontSize: tokens.typography.fontSize.bodySm,
+              }}>
+              {t('pro.openPlanCta')}
             </Text>
           </View>
         </PressableScale>

@@ -1153,11 +1153,11 @@ export const copyFr: CopyCatalog = {
   },
   'profile.guestAccountDescription': {
     playful: 'Tu utilises StructAI sans compte. La progression reste sur cet appareil — connecte-toi pour synchroniser.',
-    focus: 'Mode invite. Progression locale sur cet appareil ; connexion pour sync et certificats.',
+    focus: 'Mode invite. Progression locale sur cet appareil ; connexion pour sync entre appareils.',
   },
   'guest.saveProgressHint': {
     playful: 'Ta progression est seulement sur cet appareil. Un compte permet de synchroniser et de la sauvegarder.',
-    focus: 'Progression stockee localement. Connexion pour sync et certificats.',
+    focus: 'Progression stockee localement. Connexion pour sync entre appareils.',
   },
   'guest.saveProgressCta': {
     playful: 'Sauvegarder la progression – se connecter',
@@ -1636,7 +1636,61 @@ export const copyFr: CopyCatalog = {
     focus: 'Certificats de fin',
   },
   'profile.certificatesDescription': {
-    playful: 'Partage une image de certificat pour chaque parcours termine.',
-    focus: 'Parcours termines avec export en image.',
+    playful: 'Vois tes skill wins ici. Export et partage sont Pro.',
+    focus: 'Parcours termines — apercu gratuit ; export Pro.',
+  },
+  'pro.planSection': {
+    playful: 'Ton plan',
+    focus: 'Plan',
+  },
+  'pro.planEyebrow': {
+    playful: 'Acces',
+    focus: 'Acces',
+  },
+  'pro.planFree': {
+    playful: 'Free',
+    focus: 'Free',
+  },
+  'pro.planPro': {
+    playful: 'Pro',
+    focus: 'Pro',
+  },
+  'pro.planBodyFree': {
+    playful:
+      'Free pour toujours : toutes les lecons et le coach local du Prompt Lab. Pro ajoute les notes IA live (avec ta cle) et l export de certificats — paiements plus tard ; apercu Pro pour tester.',
+    focus:
+      'Free : toutes les lecons + coach Lab local. Pro : notes IA live (BYOK) et export certificats. Pas de paiement encore — apercu local seulement.',
+  },
+  'pro.planBodyPro': {
+    playful: 'Apercu Pro actif : notes Lab live et export de certificats debloques sur cet appareil.',
+    focus: 'Apercu Pro actif. Notes Lab live et export certificats debloques localement.',
+  },
+  'pro.previewUnlockCta': {
+    playful: 'Essayer l apercu Pro',
+    focus: 'Activer l apercu Pro',
+  },
+  'pro.previewLockCta': {
+    playful: 'Revenir a Free',
+    focus: 'Revenir a Free',
+  },
+  'pro.gateTitle': {
+    playful: 'Fonction Pro',
+    focus: 'Pro',
+  },
+  'pro.gateCertificateBody': {
+    playful: 'L export de certificat est Pro. Active l apercu Pro dans Profil — les paiements ne sont pas encore en ligne.',
+    focus: 'Export certificat = Pro. Jusqu aux paiements : Profil → apercu Pro.',
+  },
+  'pro.gateLabBody': {
+    playful: 'Les notes IA live sont Pro. Ton coach local reste — active l apercu Pro dans Profil.',
+    focus: 'Notes IA live = Pro. Coach local reste gratuit. Apercu Pro dans Profil.',
+  },
+  'pro.certificateCta': {
+    playful: 'Exporter avec Pro',
+    focus: 'Exporter (Pro)',
+  },
+  'pro.openPlanCta': {
+    playful: 'Ouvrir le plan dans Profil',
+    focus: 'Ouvrir le plan',
   },
 };

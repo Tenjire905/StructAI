@@ -74,7 +74,7 @@ Die App gilt erst als reif, wenn:
 1. **Focus-Modus-Eigenständigkeit** – Perplexity-Recherche bestätigt: aktuelles Focus-Konzept ("Playful, nur gedimmt") ist wahrscheinlich nicht überzeugend genug für Power-User. Konkrete Regeln liegen bereits vor (`THEME_MODES.md`, "Focus-Mode Rules v1"), Umsetzung ist **bewusst zurückgestellt**, bis 5–8 Power-User-Interviews das Ausmaß bestätigen (teure, schwer rückgängig zu machende Änderung – "erst validieren, dann investieren").
 2. **Haptic Feedback** – **implementiert** (siehe `HAPTICS.md`, "Haptics Map v1"). Wurde priorisiert VOR dem Focus-Redesign, weil additiv/reversibel/risikoarm.
 3. **Content-Ausbau restliche Pfade** (il, cm, es) – noch nicht auf Zielumfang.
-4. **Zahlungsinfrastruktur (Block H)** – bewusst zurückgestellt.
+4. **Zahlungsinfrastruktur (Block H)** – bewusst zurückgestellt. **P3.2 Framing existiert:** Free = alle Lektionen + lokaler Lab-Coach; Pro = Live-KI-Bewertung (BYOK remote) + Zertifikat-Export. Soft-Gates + lokaler Pro-Preview-Toggle — noch kein IAP/StoreKit.
 
 ## 7. Team-Logik (Rollenverteilung)
 

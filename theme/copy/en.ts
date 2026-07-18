@@ -1151,11 +1151,11 @@ export const copyEn: CopyCatalog = {
   },
   'profile.guestAccountDescription': {
     playful: 'You are using StructAI without an account. Progress stays on this device — sign in to sync across devices.',
-    focus: 'Guest mode. Progress is local on this device; sign in for sync and certificates.',
+    focus: 'Guest mode. Progress is local on this device; sign in to sync across devices.',
   },
   'guest.saveProgressHint': {
     playful: 'Your progress is only on this device. An account lets you sync and keep it safe.',
-    focus: 'Progress is stored locally only. Sign in to sync and unlock certificates.',
+    focus: 'Progress is stored locally only. Sign in to sync across devices.',
   },
   'guest.saveProgressCta': {
     playful: 'Save progress – sign in now',
@@ -1634,7 +1634,61 @@ export const copyEn: CopyCatalog = {
     focus: 'Completion certificates',
   },
   'profile.certificatesDescription': {
-    playful: 'Share a certificate image for every learning path you completed.',
-    focus: 'Completed learning paths with image export.',
+    playful: 'Preview your skill wins here. Export and share are Pro.',
+    focus: 'Completed paths — preview free; export is Pro.',
+  },
+  'pro.planSection': {
+    playful: 'Your plan',
+    focus: 'Plan',
+  },
+  'pro.planEyebrow': {
+    playful: 'Access',
+    focus: 'Access',
+  },
+  'pro.planFree': {
+    playful: 'Free',
+    focus: 'Free',
+  },
+  'pro.planPro': {
+    playful: 'Pro',
+    focus: 'Pro',
+  },
+  'pro.planBodyFree': {
+    playful:
+      'Free forever: all lessons and the local Prompt Lab coach. Pro adds live AI grades (with your key) and certificate export — payments come later; preview unlock is for testing.',
+    focus:
+      'Free: all lessons + local Lab coach. Pro: live AI grades (BYOK) and certificate export. No payments yet — preview unlock is local only.',
+  },
+  'pro.planBodyPro': {
+    playful: 'Pro preview on: live Lab grades and certificate export are unlocked on this device.',
+    focus: 'Pro preview active. Live Lab grades and certificate export unlocked locally.',
+  },
+  'pro.previewUnlockCta': {
+    playful: 'Try Pro preview',
+    focus: 'Enable Pro preview',
+  },
+  'pro.previewLockCta': {
+    playful: 'Back to Free',
+    focus: 'Return to Free',
+  },
+  'pro.gateTitle': {
+    playful: 'Pro feature',
+    focus: 'Pro',
+  },
+  'pro.gateCertificateBody': {
+    playful: 'Certificate export is Pro. Enable Pro preview in Profile — payments are not live yet.',
+    focus: 'Certificate export requires Pro. Use Profile → Pro preview until payments ship.',
+  },
+  'pro.gateLabBody': {
+    playful: 'Live AI grades are Pro. Your local coach still works — unlock Pro preview in Profile.',
+    focus: 'Live AI grades are Pro. Local coach remains free. Unlock Pro preview in Profile.',
+  },
+  'pro.certificateCta': {
+    playful: 'Export with Pro',
+    focus: 'Export (Pro)',
+  },
+  'pro.openPlanCta': {
+    playful: 'Open plan in Profile',
+    focus: 'Open plan',
   },
 };

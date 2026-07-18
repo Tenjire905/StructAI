@@ -12,6 +12,7 @@ export { PathCardRetryPeek, PATH_CARD_RETRY_PEEK_MAX_HEIGHT } from './PathCardRe
 export { PromptLabTextInput } from './PromptLabTextInput';
 export { PromptScoreHistoryList } from './PromptScoreHistoryList';
 export { ScoreChart } from './ScoreChart';
+export { ProPlanStrip } from './ProPlanStrip';
 export { SkillRankStrip } from './SkillRankStrip';
 export { StatBlock } from './StatBlock';
 export { StreakTracker } from './StreakTracker';

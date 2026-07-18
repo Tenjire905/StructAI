@@ -306,6 +306,21 @@ export async function clearDailyGoalSetupCompleted(): Promise<void> {
   await deleteAppStorageValue(DAILY_GOAL_SETUP_COMPLETED_KEY);
 }
 
+/** Local Pro preview (P3.2 framing) — not a real entitlement / IAP. */
+const PRO_PREVIEW_UNLOCKED_KEY = 'structai.pro-preview-unlocked';
+
+export function isProPreviewUnlocked(): boolean {
+  return appStorage.getString(PRO_PREVIEW_UNLOCKED_KEY) === 'true';
+}
+
+export async function setProPreviewUnlocked(): Promise<void> {
+  await persistAppStorageValue(PRO_PREVIEW_UNLOCKED_KEY, 'true');
+}
+
+export async function clearProPreviewUnlocked(): Promise<void> {
+  await deleteAppStorageValue(PRO_PREVIEW_UNLOCKED_KEY);
+}
+
 /** Clears onboarding + profile prefs so the next launch starts at welcome. */
 export async function clearAllOnboardingAndProfilePrefs(): Promise<void> {
   await clearOnboardingCompleted();
@@ -313,4 +328,5 @@ export async function clearAllOnboardingAndProfilePrefs(): Promise<void> {
   await clearGuestDisplayName();
   await clearProfileAge();
   await clearDailyGoalSetupCompleted();
+  await clearProPreviewUnlocked();
 }
