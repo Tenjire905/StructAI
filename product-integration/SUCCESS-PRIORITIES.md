@@ -82,7 +82,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 | # | Initiative | Note | Status |
 |---|------------|------|--------|
 | **P2.1** | Certificates more identity-forward | Skill claim + evidence + credential ID | **Shipped** |
-| P2.2 | Soft XP / ranks on top of orbs | Readable level strip | Open |
+| **P2.2** | Soft XP / ranks on top of orbs | Readable level strip (derived XP) | **Shipped** |
 | P2.3 | Widgets / richer notifications | After daily goal is stable | Open |
 | P2.4 | Selective social only if it reinforces practice | Duels later; not a core pillar | Open |
 
@@ -118,8 +118,8 @@ Aligned with Perplexity Jul 2026:
 3. ~~Wrong-answer coaching + settle pulse~~ **done** (P1.6–P1.7)  
 4. Auto skill-tag banners (P1.2/P1.4) **removed** — glossary heuristics were inaccurate  
 
-Shipped recently: Orb Language v1 (P1.8), identity certificates (P2.1).  
-Next: P2.2 soft XP/ranks, P0.1 mastery content when `pm-batch-01.json` exists, P0.2 Expo Go retest A–H.
+Shipped recently: Orb Language (P1.8), identity certificates (P2.1), soft XP/ranks (P2.2).  
+Next: P0.1 mastery content when `pm-batch-01.json` exists, P0.2 Expo Go retest A–H, P3.1 App Store one-liner surfaces, Focus density (ROI #9).
 
 ---
 

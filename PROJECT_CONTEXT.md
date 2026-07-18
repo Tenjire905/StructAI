@@ -68,6 +68,7 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 10. **Haptic Feedback (`lib/haptics.ts`, `expo-haptics`):** Umgesetzt gemäß `HAPTICS.md` – Lektions-Antwort richtig/falsch, Lektion/Pfad abgeschlossen, BYOK-Key validiert, Prompt-Lab-Vergleich erfolgreich/fehlgeschlagen.
 11. **Orb Language v1 (`ORB_LANGUAGE.md`):** Procedural SVG+Reanimated, States `think`/`worry`, Gesicht in beiden Modi, Playful-Coach-Stimme während der Lektion, Focus-Tipps nach Check (`lib/orbLanguage.ts`, `OrbPresence`).
 12. **Identity Certificates (P2.1):** Zertifikat zeigt Skill-Claim pro Pfad, Evidenz (Kapitel), Credential-ID; Share-Titel = Skill-Win (`lib/certificateIdentity.ts`, `lib/buildCertificateViewModel.ts`).
+13. **Soft XP / Ranks (P2.2):** Abgeleiteter XP aus Lektionen+Orbs+Pfadabschlüssen, Level/Rang-Strip auf Home+Profil, XP-Hinweis nach Lektion (`lib/skillRank.ts`, `SkillRankStrip`).
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 

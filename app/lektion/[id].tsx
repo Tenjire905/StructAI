@@ -48,6 +48,7 @@ import {
   resolveLessonOrbState,
   resolveLessonSpeechCopyKey,
 } from '@/lib/orbLanguage';
+import { lessonCompletionXpGain } from '@/lib/skillRank';
 import {
   computeLessonOrbReward,
   computeLessonPassRatio,
@@ -1114,6 +1115,18 @@ function CompletionView({
           fontSize: tokens.typography.fontSize.headingLg,
         }}>
         {orbsReward > 0 ? t('lesson.orbsEarned', { count: orbsReward }) : t('lesson.practiceComplete')}
+      </Text>
+
+      <Text
+        style={{
+          color: tokens.colors.text.secondary,
+          fontFamily: tokens.typography.fontFamily.bodyMedium,
+          fontSize: tokens.typography.fontSize.bodyMd,
+          textAlign: 'center',
+        }}>
+        {t('skillRank.lessonXpGain', {
+          xp: lessonCompletionXpGain(orbsReward),
+        })}
       </Text>
 
       <View
