@@ -6,6 +6,7 @@ import { OrbPresence } from '@/components/features/OrbPresence';
 import { StatBlock } from '@/components/features/StatBlock';
 import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
+import { buildCertificateViewModel } from '@/lib/buildCertificateViewModel';
 import {
   CERTIFICATE_LAYOUT_HEIGHT,
   CERTIFICATE_LAYOUT_WIDTH,
@@ -45,6 +46,14 @@ export function PathCompletionView({
     useProgressStore((state) => state.pathCompletedAt[pathId]) ?? new Date().toISOString();
   const recipientName = resolveProfileDisplayName(user);
   const previewScale = 0.72;
+  const certificate = buildCertificateViewModel({
+    chaptersCompleted: stats.completed,
+    chaptersTotal: stats.total,
+    completedAt,
+    pathId,
+    recipientName,
+    t,
+  });
 
   return (
     <ScrollView
@@ -132,20 +141,36 @@ export function PathCompletionView({
           width: CERTIFICATE_LAYOUT_WIDTH * previewScale,
         }}>
         <CertificateView
-          awardedToLabel={t('certificate.awardedTo')}
-          badgeLabel={t('certificate.badge')}
-          brandTagline={t('certificate.brandTagline')}
+          awardedToLabel={certificate.awardedToLabel}
+          badgeLabel={certificate.badgeLabel}
+          brandTagline={certificate.brandTagline}
           completedAt={completedAt}
-          completedOnLabel={t('certificate.completedOn')}
+          completedOnLabel={certificate.completedOnLabel}
+          credentialId={certificate.credentialId}
+          credentialLabel={certificate.credentialLabel}
+          evidenceLabel={certificate.evidenceLabel}
           locale={locale}
           mode={mode}
-          pathTitle={t(pathTitleKey(pathId))}
+          pathTitle={certificate.pathTitle}
           recipientName={recipientName}
+          skillLabel={certificate.skillLabel}
+          skillStatement={certificate.skillStatement}
           style={{
             transform: [{ scale: previewScale }],
           }}
         />
       </View>
+
+      <Text
+        style={{
+          color: tokens.colors.text.secondary,
+          fontFamily: tokens.typography.fontFamily.body,
+          fontSize: tokens.typography.fontSize.bodyMd,
+          lineHeight: tokens.typography.fontSize.bodyMd * 1.45,
+          textAlign: 'center',
+        }}>
+        {t('pathCompletion.identityLine', { skill: certificate.skillStatement })}
+      </Text>
 
       <View style={{ alignSelf: 'stretch', gap: tokens.spacing.space3, width: '100%' }}>
         {nextPathId && onStartNextPath ? (

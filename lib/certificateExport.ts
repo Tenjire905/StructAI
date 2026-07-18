@@ -3,13 +3,13 @@ import { Platform, type View } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 import type { RefObject } from 'react';
 
-/** On-screen layout size (4:5 portrait, social-friendly). */
+/** On-screen layout size (~4:5 portrait, social-friendly; taller for skill claim). */
 export const CERTIFICATE_LAYOUT_WIDTH = 360;
-export const CERTIFICATE_LAYOUT_HEIGHT = 450;
+export const CERTIFICATE_LAYOUT_HEIGHT = 520;
 
 /** High-resolution export target for sharing. */
 export const CERTIFICATE_EXPORT_WIDTH = 1080;
-export const CERTIFICATE_EXPORT_HEIGHT = 1350;
+export const CERTIFICATE_EXPORT_HEIGHT = 1560;
 
 export type CertificateExportResult = 'shared' | 'downloaded' | 'unavailable';
 

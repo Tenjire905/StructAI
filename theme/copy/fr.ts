@@ -1504,23 +1504,63 @@ export const copyFr: CopyCatalog = {
     focus: 'Retour a la vue d\'ensemble',
   },
   'certificate.badge': {
-    playful: 'Certificat de fin',
-    focus: 'Certificat',
+    playful: 'Certificat de competence prompt',
+    focus: 'Certificat de competence',
   },
   'certificate.awardedTo': {
-    playful: 'Decerne a',
-    focus: 'Participant',
+    playful: 'Obtenu par',
+    focus: 'Titulaire',
   },
   'certificate.completedOn': {
     playful: 'Termine le',
     focus: 'Date de fin',
   },
   'certificate.brandTagline': {
-    playful: 'Prompt Engineering · Parcours',
-    focus: 'StructAI · Fin de parcours',
+    playful: 'Meilleurs prompts. Jugement IA plus net.',
+    focus: 'Competence prompt · Parcours verifie',
+  },
+  'certificate.skillLabel': {
+    playful: 'Competence debloquee',
+    focus: 'Competence demontree',
+  },
+  'certificate.skill.prompt_basics': {
+    playful: 'Ecrire des prompts clairs, structures et orientes objectif.',
+    focus: 'Structure de prompt claire et orientee objectif',
+  },
+  'certificate.skill.structure_lab': {
+    playful: 'Construire des prompts avec role, contraintes et format.',
+    focus: 'Controle role, contraintes et format de sortie',
+  },
+  'certificate.skill.context_mastery': {
+    playful: 'Donner le bon contexte a l IA sans la noyer.',
+    focus: 'Selection de contexte et ancrage',
+  },
+  'certificate.skill.iteration_loops': {
+    playful: 'Iterer les prompts jusqu a ce que la sortie tienne.',
+    focus: 'Iteration et affinage de prompts',
+  },
+  'certificate.skill.eval_scoring': {
+    playful: 'Juger les reponses IA — et detecter les faibles.',
+    focus: 'Evaluation et critique de sorties',
+  },
+  'certificate.skill.prompt_mastery': {
+    playful: 'Designer des prompts avances sous vraies contraintes.',
+    focus: 'Design avance de prompts sous contraintes',
+  },
+  'certificate.skill.generic': {
+    playful: 'Parcours StructAI de prompting termine.',
+    focus: 'Parcours StructAI de prompting termine',
+  },
+  'certificate.evidence': {
+    playful: '{{completed}} / {{total}} chapitres termines',
+    focus: '{{completed}} sur {{total}} chapitres termines',
+  },
+  'certificate.credentialLabel': {
+    playful: 'ID credential',
+    focus: 'ID credential',
   },
   'certificate.share': {
-    playful: 'Partager le certificat',
+    playful: 'Partager ta competence',
     focus: 'Exporter le certificat',
   },
   'certificate.sharing': {
@@ -1528,8 +1568,12 @@ export const copyFr: CopyCatalog = {
     focus: 'Export en cours…',
   },
   'certificate.shareDialogTitle': {
-    playful: 'Partager ton certificat StructAI',
-    focus: 'Partager le certificat StructAI',
+    playful: '{{name}} sait maintenant : {{skill}}',
+    focus: '{{name}} — {{skill}}',
+  },
+  'pathCompletion.identityLine': {
+    playful: 'A partager : {{skill}}',
+    focus: 'Credential : {{skill}}',
   },
   'certificate.shareUnavailable': {
     playful: 'Le partage n\'est pas disponible sur cet appareil.',
