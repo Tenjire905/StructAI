@@ -8,6 +8,8 @@ export { OrbIcon } from './OrbIcon';
 export { LockedPathView } from './LockedPathView';
 export { PathCard } from './PathCard';
 export { PathCardRetryPeek, PATH_CARD_RETRY_PEEK_MAX_HEIGHT } from './PathCardRetryPeek';
+export { PromptLabTextInput } from './PromptLabTextInput';
+export { PromptScoreHistoryList } from './PromptScoreHistoryList';
 export { ScoreChart } from './ScoreChart';
 export { StatBlock } from './StatBlock';
 export { StreakTracker } from './StreakTracker';

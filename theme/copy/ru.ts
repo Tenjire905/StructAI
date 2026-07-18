@@ -601,6 +601,38 @@ export const copyRu: CopyCatalog = {
     playful: 'История твоих баллов',
     focus: 'История баллов',
   },
+  'promptLab.promptHistoryTitle': {
+    playful: 'Твои оценённые промпты',
+    focus: 'Недавно оценённые промпты',
+  },
+  'promptLab.promptHistoryDescription': {
+    playful: 'Нажми на промпт, чтобы снова загрузить его в редактор.',
+    focus: 'Выберите запись, чтобы снова использовать этот промпт.',
+  },
+  'promptLab.promptHistoryEmpty': {
+    playful: 'Пока нет оценённых промптов — оцени один, чтобы начать след.',
+    focus: 'Оценённые промпты ещё не сохранены.',
+  },
+  'promptLab.promptHistoryMissing': {
+    playful: 'Старая запись — текст промпта тогда ещё не сохранялся.',
+    focus: 'Старая запись без сохранённого текста промпта.',
+  },
+  'promptLab.promptHistoryScore': {
+    playful: 'Балл {{score}}',
+    focus: '{{score}} / 100',
+  },
+  'promptLab.promptHistoryTapReuse': {
+    playful: 'Нажми, чтобы использовать снова',
+    focus: 'Использовать снова',
+  },
+  'promptLab.promptHistoryReuseHint': {
+    playful: 'Загружает этот промпт в поле ввода',
+    focus: 'Загружает этот промпт в поле ввода',
+  },
+  'promptLab.promptHistoryItemA11y': {
+    playful: 'Оценённый промпт, балл {{score}}',
+    focus: 'Оценённый промпт, балл {{score}}',
+  },
   'promptLab.scoringInProgress': {
     playful: 'Идет оценка...',
     focus: 'Оценка...',

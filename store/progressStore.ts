@@ -42,7 +42,7 @@ type ProgressActions = {
   recordLessonFailed: (lessonId: string) => void;
   completeLesson: (lessonId: string, orbsEarned: number) => string | null;
   setDailyOrbGoal: (dailyOrbGoal: number, notificationsEnabled: boolean) => void;
-  addPromptScore: (score: number) => void;
+  addPromptScore: (score: number, prompt?: string) => void;
   getResumeLessonId: (pathId: string) => string | undefined;
   getActivePaths: () => Array<{
     id: string;
@@ -375,13 +375,18 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     });
   },
 
-  addPromptScore: (score) => {
+  addPromptScore: (score, prompt) => {
     set((state) => {
+      const trimmedPrompt = prompt?.trim();
       const snapshot: ProgressSnapshot = {
         ...state,
         promptScoreHistory: [
           ...state.promptScoreHistory.slice(-9),
-          { score, recordedAt: new Date().toISOString() },
+          {
+            score,
+            recordedAt: new Date().toISOString(),
+            ...(trimmedPrompt ? { prompt: trimmedPrompt } : {}),
+          },
         ],
       };
 

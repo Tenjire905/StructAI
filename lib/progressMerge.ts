@@ -133,6 +133,7 @@ function normalizePromptScoreEntry(
   if (entry && typeof entry === 'object' && 'score' in entry) {
     const score = Number((entry as PromptScoreHistoryEntry).score);
     const recordedAt = (entry as PromptScoreHistoryEntry).recordedAt;
+    const prompt = (entry as PromptScoreHistoryEntry).prompt;
 
     if (!Number.isFinite(score)) {
       return null;
@@ -144,6 +145,9 @@ function normalizePromptScoreEntry(
         typeof recordedAt === 'string' && recordedAt.length > 0
           ? recordedAt
           : new Date(Date.now() - (total - index) * 60_000).toISOString(),
+      ...(typeof prompt === 'string' && prompt.trim().length > 0
+        ? { prompt: prompt.trim() }
+        : {}),
     };
   }
 
@@ -168,7 +172,7 @@ export function mergePromptScoreHistory(
 
   return [...local, ...remote]
     .filter((entry) => {
-      const key = `${entry.recordedAt}|${entry.score}`;
+      const key = `${entry.recordedAt}|${entry.score}|${entry.prompt ?? ''}`;
       if (seen.has(key)) {
         return false;
       }

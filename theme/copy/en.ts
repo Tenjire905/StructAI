@@ -599,6 +599,38 @@ export const copyEn: CopyCatalog = {
     playful: 'Your score history',
     focus: 'Score history',
   },
+  'promptLab.promptHistoryTitle': {
+    playful: 'Prompts you scored',
+    focus: 'Recent scored prompts',
+  },
+  'promptLab.promptHistoryDescription': {
+    playful: 'Tap a prompt to load it back into the editor.',
+    focus: 'Select an entry to reuse that prompt in the input field.',
+  },
+  'promptLab.promptHistoryEmpty': {
+    playful: 'No scored prompts yet — score one to build your trail.',
+    focus: 'No scored prompts stored yet.',
+  },
+  'promptLab.promptHistoryMissing': {
+    playful: 'Older entry — prompt text was not saved yet.',
+    focus: 'Legacy entry without stored prompt text.',
+  },
+  'promptLab.promptHistoryScore': {
+    playful: 'Score {{score}}',
+    focus: '{{score}} / 100',
+  },
+  'promptLab.promptHistoryTapReuse': {
+    playful: 'Tap to reuse',
+    focus: 'Reuse',
+  },
+  'promptLab.promptHistoryReuseHint': {
+    playful: 'Loads this prompt into the input field',
+    focus: 'Loads this prompt into the input field',
+  },
+  'promptLab.promptHistoryItemA11y': {
+    playful: 'Scored prompt, score {{score}}',
+    focus: 'Scored prompt, score {{score}}',
+  },
   'promptLab.scoringInProgress': {
     playful: 'Scoring in progress...',
     focus: 'Scoring...',

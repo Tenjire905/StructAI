@@ -5,11 +5,11 @@ import {
   ActivityIndicator,
   ScrollView,
   Text,
-  TextInput,
   useWindowDimensions,
   View,
 } from 'react-native';
 
+import { PromptLabTextInput } from '@/components/features/PromptLabTextInput';
 import { Badge, Button, Card, PressableScale } from '@/components/ui';
 import {
   getSpendingWarning,
@@ -298,24 +298,9 @@ export function ModelComparer({
           }}>
           {t('modelComparer.promptLabel')}
         </Text>
-        <TextInput
-          multiline
+        <PromptLabTextInput
           onChangeText={setPromptInput}
           placeholder={t('modelComparer.promptPlaceholder')}
-          placeholderTextColor={tokens.colors.text.tertiary}
-          style={{
-            backgroundColor: tokens.colors.surface.card,
-            borderColor: tokens.colors.border.strong,
-            borderRadius: tokens.radius.md,
-            borderWidth: 1,
-            color: tokens.colors.text.primary,
-            fontFamily: tokens.typography.fontFamily.body,
-            fontSize: tokens.typography.fontSize.bodyLg,
-            lineHeight: tokens.typography.fontSize.bodyLg * 1.4,
-            minHeight: 140,
-            padding: tokens.spacing.space4,
-            textAlignVertical: 'top',
-          }}
           value={promptInput}
         />
         <Button

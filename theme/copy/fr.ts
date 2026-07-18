@@ -601,6 +601,38 @@ export const copyFr: CopyCatalog = {
     playful: 'Ton historique de scores',
     focus: 'Historique des scores',
   },
+  'promptLab.promptHistoryTitle': {
+    playful: 'Tes prompts evalues',
+    focus: 'Prompts evalues recents',
+  },
+  'promptLab.promptHistoryDescription': {
+    playful: 'Touche un prompt pour le recharger dans l editeur.',
+    focus: 'Selectionnez une entree pour reutiliser ce prompt.',
+  },
+  'promptLab.promptHistoryEmpty': {
+    playful: 'Aucun prompt evalue pour l instant — evalue-en un pour commencer.',
+    focus: 'Aucun prompt evalue enregistre.',
+  },
+  'promptLab.promptHistoryMissing': {
+    playful: 'Ancienne entree — le texte du prompt n etait pas encore enregistre.',
+    focus: 'Entree legacy sans texte de prompt enregistre.',
+  },
+  'promptLab.promptHistoryScore': {
+    playful: 'Score {{score}}',
+    focus: '{{score}} / 100',
+  },
+  'promptLab.promptHistoryTapReuse': {
+    playful: 'Toucher pour reutiliser',
+    focus: 'Reutiliser',
+  },
+  'promptLab.promptHistoryReuseHint': {
+    playful: 'Charge ce prompt dans le champ de saisie',
+    focus: 'Charge ce prompt dans le champ de saisie',
+  },
+  'promptLab.promptHistoryItemA11y': {
+    playful: 'Prompt evalue, score {{score}}',
+    focus: 'Prompt evalue, score {{score}}',
+  },
   'promptLab.scoringInProgress': {
     playful: 'Evaluation en cours...',
     focus: 'Evaluation...',

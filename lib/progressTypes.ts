@@ -11,6 +11,8 @@ export type PathProgressRecord = {
 export type PromptScoreHistoryEntry = {
   score: number;
   recordedAt: string;
+  /** Prompt text that produced this score (optional for legacy entries). */
+  prompt?: string;
 };
 
 export type ProgressSnapshot = {

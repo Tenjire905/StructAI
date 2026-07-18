@@ -601,6 +601,38 @@ export const copyDe: CopyCatalog = {
     playful: 'Dein Bewertungsverlauf',
     focus: 'Bewertungsverlauf',
   },
+  'promptLab.promptHistoryTitle': {
+    playful: 'Deine bewerteten Prompts',
+    focus: 'Zuletzt bewertete Prompts',
+  },
+  'promptLab.promptHistoryDescription': {
+    playful: 'Tippe einen Prompt an, um ihn wieder in den Editor zu laden.',
+    focus: 'Eintrag wählen, um den Prompt im Eingabefeld wiederzuverwenden.',
+  },
+  'promptLab.promptHistoryEmpty': {
+    playful: 'Noch keine bewerteten Prompts — bewerte einen, um deine Spur zu starten.',
+    focus: 'Noch keine bewerteten Prompts gespeichert.',
+  },
+  'promptLab.promptHistoryMissing': {
+    playful: 'Älterer Eintrag — Prompt-Text wurde damals noch nicht gespeichert.',
+    focus: 'Älterer Eintrag ohne gespeicherten Prompt-Text.',
+  },
+  'promptLab.promptHistoryScore': {
+    playful: 'Score {{score}}',
+    focus: '{{score}} / 100',
+  },
+  'promptLab.promptHistoryTapReuse': {
+    playful: 'Tippen zum Wiederverwenden',
+    focus: 'Wiederverwenden',
+  },
+  'promptLab.promptHistoryReuseHint': {
+    playful: 'Lädt diesen Prompt in das Eingabefeld',
+    focus: 'Lädt diesen Prompt in das Eingabefeld',
+  },
+  'promptLab.promptHistoryItemA11y': {
+    playful: 'Bewerteter Prompt, Score {{score}}',
+    focus: 'Bewerteter Prompt, Score {{score}}',
+  },
   'promptLab.scoringInProgress': {
     playful: 'Wird bewertet...',
     focus: 'Bewertung läuft...',
