@@ -214,8 +214,8 @@ export const copyRu: CopyCatalog = {
     focus: 'StructAI',
   },
   'dailyGoal.notificationBody': {
-    playful: 'Дневная цель ждёт — ты уже учился сегодня?',
-    focus: 'Дневная цель ещё не выполнена — вы уже учились сегодня?',
+    playful: 'Ещё {{remaining}} орбов до дневной цели — короткий урок тоже считается.',
+    focus: 'Осталось {{remaining}} орбов до дневной цели.',
   },
   'pathCard.chapters': {
     playful: 'Глава {{current}} из {{total}}',

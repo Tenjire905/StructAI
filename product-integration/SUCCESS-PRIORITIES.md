@@ -83,7 +83,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 |---|------------|------|--------|
 | **P2.1** | Certificates more identity-forward | Skill claim + evidence + credential ID | **Shipped** |
 | **P2.2** | Soft XP / ranks on top of orbs | Readable level strip (derived XP) | **Shipped** |
-| P2.3 | Widgets / richer notifications | After daily goal is stable | Open |
+| **P2.3** | Widgets / richer notifications | Progress-aware evening reminder first; widgets later | **In PR** (skip when goal met + remaining orbs copy) |
 | P2.4 | Selective social only if it reinforces practice | Duels later; not a core pillar | Open |
 
 ### P3 — Growth

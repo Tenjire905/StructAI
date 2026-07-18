@@ -214,8 +214,8 @@ export const copyFr: CopyCatalog = {
     focus: 'StructAI',
   },
   'dailyGoal.notificationBody': {
-    playful: "Ton objectif du jour t'attend — as-tu deja appris aujourd'hui ?",
-    focus: "Objectif du jour encore ouvert — avez-vous deja appris aujourd'hui ?",
+    playful: 'Encore {{remaining}} orbs pour l objectif du jour — une courte lecon compte.',
+    focus: 'Il reste {{remaining}} orbs pour l objectif du jour.',
   },
   'pathCard.chapters': {
     playful: 'Chapitre {{current}} sur {{total}}',

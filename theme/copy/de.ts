@@ -214,8 +214,8 @@ export const copyDe: CopyCatalog = {
     focus: 'StructAI',
   },
   'dailyGoal.notificationBody': {
-    playful: 'Dein Tagesziel wartet — hast du heute schon gelernt?',
-    focus: 'Tagesziel noch offen — heute schon gelernt?',
+    playful: 'Noch {{remaining}} Orbs bis zum Tagesziel — eine kurze Lektion zählt.',
+    focus: 'Noch {{remaining}} Orbs bis zum Tagesziel.',
   },
   'pathCard.chapters': {
     playful: 'Kapitel {{current}} von {{total}}',

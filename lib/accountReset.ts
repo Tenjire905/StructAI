@@ -57,7 +57,11 @@ export async function wipeAccountDataForOnboarding(options?: {
   await clearAllOnboardingAndProfilePrefs();
   await clearSpendingData();
   await deleteApiKey().catch(() => undefined);
-  await syncDailyGoalReminder(false).catch(() => undefined);
+  await syncDailyGoalReminder({
+    enabled: false,
+    dailyOrbGoal: 0,
+    orbsEarnedToday: 0,
+  }).catch(() => undefined);
 
   if (options?.signOut) {
     await options.signOut().catch(() => undefined);
