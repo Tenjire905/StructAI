@@ -3,10 +3,12 @@ import { Alert, Platform, View } from 'react-native';
 
 import { CertificateView } from '@/components/features/CertificateView';
 import { Button } from '@/components/ui';
+import { buildCertificateViewModel } from '@/lib/buildCertificateViewModel';
 import { exportCertificateImage } from '@/lib/certificateExport';
-import { pathTitleKey } from '@/lib/pathProgress';
+import { getPathCompletionStats } from '@/lib/pathCapstone';
 import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { useAuth } from '@/providers/AuthProvider';
+import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
 type CertificateShareActionProps = {
@@ -25,9 +27,19 @@ export function CertificateShareAction({
   const certificateRef = useRef<View>(null);
   const { t, locale, mode } = useThemeMode();
   const { user } = useAuth();
+  const pathProgress = useProgressStore((state) => state.pathProgress[pathId]);
   const [isSharing, setIsSharing] = useState(false);
   const recipientName = resolveProfileDisplayName(user);
   const isWeb = Platform.OS === 'web';
+  const stats = getPathCompletionStats(pathId, pathProgress);
+  const viewModel = buildCertificateViewModel({
+    chaptersCompleted: stats.completed,
+    chaptersTotal: stats.total,
+    completedAt,
+    pathId,
+    recipientName,
+    t,
+  });
 
   const handleShare = async () => {
     setIsSharing(true);
@@ -35,7 +47,7 @@ export function CertificateShareAction({
     try {
       const result = await exportCertificateImage(
         certificateRef,
-        t('certificate.shareDialogTitle'),
+        viewModel.shareDialogTitle,
         `structai-certificate-${pathId}.png`,
       );
 
@@ -71,16 +83,21 @@ export function CertificateShareAction({
           top: 0,
         }}>
         <CertificateView
-          awardedToLabel={t('certificate.awardedTo')}
-          badgeLabel={t('certificate.badge')}
-          brandTagline={t('certificate.brandTagline')}
+          awardedToLabel={viewModel.awardedToLabel}
+          badgeLabel={viewModel.badgeLabel}
+          brandTagline={viewModel.brandTagline}
           completedAt={completedAt}
-          completedOnLabel={t('certificate.completedOn')}
+          completedOnLabel={viewModel.completedOnLabel}
+          credentialId={viewModel.credentialId}
+          credentialLabel={viewModel.credentialLabel}
+          evidenceLabel={viewModel.evidenceLabel}
           locale={locale}
           mode={mode}
-          pathTitle={t(pathTitleKey(pathId))}
+          pathTitle={viewModel.pathTitle}
           recipientName={recipientName}
           ref={certificateRef}
+          skillLabel={viewModel.skillLabel}
+          skillStatement={viewModel.skillStatement}
         />
       </View>
 

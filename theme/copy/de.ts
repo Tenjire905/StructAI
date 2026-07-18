@@ -1504,23 +1504,63 @@ export const copyDe: CopyCatalog = {
     focus: 'Zur Lernpfad-Übersicht',
   },
   'certificate.badge': {
-    playful: 'Abschluss-Zertifikat',
-    focus: 'Zertifikat',
+    playful: 'Prompt-Skill-Zertifikat',
+    focus: 'Skill-Zertifikat',
   },
   'certificate.awardedTo': {
-    playful: 'Verliehen an',
-    focus: 'Teilnehmer',
+    playful: 'Erarbeitet von',
+    focus: 'Inhaber',
   },
   'certificate.completedOn': {
     playful: 'Abgeschlossen am',
     focus: 'Abschlussdatum',
   },
   'certificate.brandTagline': {
-    playful: 'Prompt Engineering · Lernpfad',
-    focus: 'StructAI · Lernpfad-Abschluss',
+    playful: 'Bessere Prompts. Schärferes Urteil über KI.',
+    focus: 'Prompt-Skill · Verifizierter Pfadabschluss',
+  },
+  'certificate.skillLabel': {
+    playful: 'Skill freigeschaltet',
+    focus: 'Nachgewiesener Skill',
+  },
+  'certificate.skill.prompt_basics': {
+    playful: 'Klare, zielgerichtete Prompts mit Struktur schreiben.',
+    focus: 'Klare, zielgerichtete Prompt-Struktur',
+  },
+  'certificate.skill.structure_lab': {
+    playful: 'Prompts mit Rolle, Constraints und Format bauen.',
+    focus: 'Rolle, Constraints und Ausgabeformat steuern',
+  },
+  'certificate.skill.context_mastery': {
+    playful: 'Der KI den richtigen Kontext geben — ohne sie zu überfluten.',
+    focus: 'Kontextauswahl und Grounding',
+  },
+  'certificate.skill.iteration_loops': {
+    playful: 'Prompts iterieren, bis die Ausgabe trägt.',
+    focus: 'Prompt-Iteration und Verfeinerung',
+  },
+  'certificate.skill.eval_scoring': {
+    playful: 'KI-Antworten beurteilen — und schwache erkennen.',
+    focus: 'Output-Bewertung und Kritik',
+  },
+  'certificate.skill.prompt_mastery': {
+    playful: 'Fortgeschrittene Prompts unter echten Constraints designen.',
+    focus: 'Fortgeschrittenes Prompt-Design unter Constraints',
+  },
+  'certificate.skill.generic': {
+    playful: 'Einen StructAI-Prompting-Pfad abgeschlossen.',
+    focus: 'StructAI-Prompting-Pfad abgeschlossen',
+  },
+  'certificate.evidence': {
+    playful: '{{completed}} / {{total}} Kapitel abgeschlossen',
+    focus: '{{completed}} von {{total}} Kapiteln abgeschlossen',
+  },
+  'certificate.credentialLabel': {
+    playful: 'Credential-ID',
+    focus: 'Credential-ID',
   },
   'certificate.share': {
-    playful: 'Zertifikat teilen',
+    playful: 'Skill-Win teilen',
     focus: 'Zertifikat exportieren',
   },
   'certificate.sharing': {
@@ -1528,8 +1568,12 @@ export const copyDe: CopyCatalog = {
     focus: 'Export läuft…',
   },
   'certificate.shareDialogTitle': {
-    playful: 'Dein StructAI-Zertifikat teilen',
-    focus: 'StructAI-Zertifikat teilen',
+    playful: '{{name}} kann jetzt: {{skill}}',
+    focus: '{{name}} — {{skill}}',
+  },
+  'pathCompletion.identityLine': {
+    playful: 'Das darfst du teilen: {{skill}}',
+    focus: 'Credential: {{skill}}',
   },
   'certificate.shareUnavailable': {
     playful: 'Teilen ist auf diesem Gerät gerade nicht möglich.',

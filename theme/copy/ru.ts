@@ -1504,23 +1504,63 @@ export const copyRu: CopyCatalog = {
     focus: 'К обзору путей',
   },
   'certificate.badge': {
-    playful: 'Сертификат об окончании',
-    focus: 'Сертификат',
+    playful: 'Сертификат навыка промптинга',
+    focus: 'Сертификат навыка',
   },
   'certificate.awardedTo': {
-    playful: 'Вручено',
-    focus: 'Участник',
+    playful: 'Получил(а)',
+    focus: 'Владелец',
   },
   'certificate.completedOn': {
     playful: 'Завершено',
     focus: 'Дата завершения',
   },
   'certificate.brandTagline': {
-    playful: 'Prompt Engineering · Учебный путь',
-    focus: 'StructAI · Завершение пути',
+    playful: 'Лучшие промпты. Точнее оценка ответов ИИ.',
+    focus: 'Навык промптинга · Подтверждённый путь',
+  },
+  'certificate.skillLabel': {
+    playful: 'Навык открыт',
+    focus: 'Подтверждённый навык',
+  },
+  'certificate.skill.prompt_basics': {
+    playful: 'Писать ясные, целевые промпты со структурой.',
+    focus: 'Ясная целевая структура промпта',
+  },
+  'certificate.skill.structure_lab': {
+    playful: 'Собирать промпты с ролью, ограничениями и форматом.',
+    focus: 'Роль, ограничения и формат вывода',
+  },
+  'certificate.skill.context_mastery': {
+    playful: 'Давать ИИ нужный контекст без перегруза.',
+    focus: 'Выбор контекста и grounding',
+  },
+  'certificate.skill.iteration_loops': {
+    playful: 'Итерировать промпты, пока вывод не станет надёжным.',
+    focus: 'Итерация и доработка промптов',
+  },
+  'certificate.skill.eval_scoring': {
+    playful: 'Оценивать ответы ИИ — и ловить слабые.',
+    focus: 'Оценка и критика вывода',
+  },
+  'certificate.skill.prompt_mastery': {
+    playful: 'Проектировать продвинутые промпты под реальные ограничения.',
+    focus: 'Продвинутый дизайн промптов под ограничения',
+  },
+  'certificate.skill.generic': {
+    playful: 'Завершён путь StructAI по промптингу.',
+    focus: 'Завершён путь StructAI по промптингу',
+  },
+  'certificate.evidence': {
+    playful: '{{completed}} / {{total}} глав завершено',
+    focus: '{{completed}} из {{total}} глав завершено',
+  },
+  'certificate.credentialLabel': {
+    playful: 'ID credential',
+    focus: 'ID credential',
   },
   'certificate.share': {
-    playful: 'Поделиться сертификатом',
+    playful: 'Поделиться навыком',
     focus: 'Экспорт сертификата',
   },
   'certificate.sharing': {
@@ -1528,8 +1568,12 @@ export const copyRu: CopyCatalog = {
     focus: 'Экспорт…',
   },
   'certificate.shareDialogTitle': {
-    playful: 'Поделиться сертификатом StructAI',
-    focus: 'Поделиться сертификатом StructAI',
+    playful: '{{name}} теперь умеет: {{skill}}',
+    focus: '{{name}} — {{skill}}',
+  },
+  'pathCompletion.identityLine': {
+    playful: 'Этим можно делиться: {{skill}}',
+    focus: 'Credential: {{skill}}',
   },
   'certificate.shareUnavailable': {
     playful: 'Поделиться сейчас нельзя на этом устройстве.',

@@ -20,6 +20,15 @@ export type CertificateViewProps = {
   awardedToLabel: string;
   completedOnLabel: string;
   brandTagline: string;
+  /** Eyebrow above the skill claim (e.g. “Skill unlocked”). */
+  skillLabel: string;
+  /** Concrete capability earned on this path. */
+  skillStatement: string;
+  /** Evidence line, e.g. “35 chapters completed”. */
+  evidenceLabel: string;
+  /** Short credential code for share credibility. */
+  credentialId: string;
+  credentialLabel: string;
   style?: ViewStyle;
 };
 
@@ -34,6 +43,11 @@ export const CertificateView = forwardRef<View, CertificateViewProps>(function C
     awardedToLabel,
     completedOnLabel,
     brandTagline,
+    skillLabel,
+    skillStatement,
+    evidenceLabel,
+    credentialId,
+    credentialLabel,
     style,
   },
   ref,
@@ -89,16 +103,14 @@ export const CertificateView = forwardRef<View, CertificateViewProps>(function C
           style={{
             alignItems: 'center',
             flex: 1,
-            gap: spacing.space4,
+            gap: spacing.space3,
             justifyContent: 'center',
-            paddingVertical: spacing.space3,
+            paddingVertical: spacing.space2,
           }}>
           <View
             style={{
-              backgroundColor: isPlayful
-                ? 'rgba(139,92,246,0.18)'
-                : colors.surface.glass,
-              borderColor: isPlayful ? colors.accent.primary : colors.border.subtle,
+              backgroundColor: isPlayful ? colors.surface.glass : colors.surface.glass,
+              borderColor: isPlayful ? colors.accent.structure : colors.border.subtle,
               borderRadius: radius.pill,
               borderWidth: 1,
               paddingHorizontal: spacing.space4,
@@ -116,18 +128,7 @@ export const CertificateView = forwardRef<View, CertificateViewProps>(function C
             </Text>
           </View>
 
-          <Text
-            style={{
-              color: colors.text.primary,
-              fontFamily: typography.fontFamily.display,
-              fontSize: typography.fontSize.displayLg,
-              lineHeight: typography.fontSize.displayLg * 1.15,
-              textAlign: 'center',
-            }}>
-            {pathTitle}
-          </Text>
-
-          <View style={{ alignItems: 'center', gap: spacing.space2, width: '100%' }}>
+          <View style={{ alignItems: 'center', gap: spacing.space1, width: '100%' }}>
             <Text
               style={{
                 color: colors.text.tertiary,
@@ -140,11 +141,65 @@ export const CertificateView = forwardRef<View, CertificateViewProps>(function C
             <Text
               style={{
                 color: colors.text.primary,
-                fontFamily: typography.fontFamily.heading,
-                fontSize: typography.fontSize.headingLg,
+                fontFamily: typography.fontFamily.display,
+                fontSize: typography.fontSize.displayLg,
+                lineHeight: typography.fontSize.displayLg * 1.1,
                 textAlign: 'center',
               }}>
               {recipientName}
+            </Text>
+          </View>
+
+          <Text
+            style={{
+              color: colors.text.secondary,
+              fontFamily: typography.fontFamily.bodyMedium,
+              fontSize: typography.fontSize.bodyMd,
+              textAlign: 'center',
+            }}>
+            {pathTitle}
+          </Text>
+
+          <View
+            style={{
+              alignItems: 'center',
+              backgroundColor: colors.surface.card,
+              borderColor: colors.border.subtle,
+              borderRadius: radius.lg,
+              borderWidth: 1,
+              gap: spacing.space2,
+              paddingHorizontal: spacing.space4,
+              paddingVertical: spacing.space3,
+              width: '100%',
+            }}>
+            <Text
+              style={{
+                color: colors.accent.structure,
+                fontFamily: typography.fontFamily.bodyMedium,
+                fontSize: typography.fontSize.bodySm,
+                letterSpacing: 0.6,
+                textTransform: 'uppercase',
+              }}>
+              {skillLabel}
+            </Text>
+            <Text
+              style={{
+                color: colors.text.primary,
+                fontFamily: typography.fontFamily.heading,
+                fontSize: typography.fontSize.headingMd,
+                lineHeight: typography.fontSize.headingMd * 1.35,
+                textAlign: 'center',
+              }}>
+              {skillStatement}
+            </Text>
+            <Text
+              style={{
+                color: colors.text.tertiary,
+                fontFamily: typography.fontFamily.body,
+                fontSize: typography.fontSize.bodySm,
+                textAlign: 'center',
+              }}>
+              {evidenceLabel}
             </Text>
           </View>
 
@@ -164,6 +219,27 @@ export const CertificateView = forwardRef<View, CertificateViewProps>(function C
                 fontSize: typography.fontSize.bodyMd,
               }}>
               {formattedDate}
+            </Text>
+          </View>
+
+          <View style={{ alignItems: 'center', gap: spacing.space1 }}>
+            <Text
+              style={{
+                color: colors.text.tertiary,
+                fontFamily: typography.fontFamily.body,
+                fontSize: typography.fontSize.bodySm,
+                textTransform: 'uppercase',
+              }}>
+              {credentialLabel}
+            </Text>
+            <Text
+              style={{
+                color: colors.text.secondary,
+                fontFamily: typography.fontFamily.mono,
+                fontSize: typography.fontSize.bodySm,
+                letterSpacing: 1,
+              }}>
+              {credentialId}
             </Text>
           </View>
         </View>

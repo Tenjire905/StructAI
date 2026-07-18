@@ -1,6 +1,6 @@
 # StructAI — Success Priorities (Learning Feeling)
 
-**Stand:** Jul 2026 · Branch `cursor/lesson-learning-beat-fd20`  
+**Stand:** Jul 2026 · `develop` tip after Orb Language + certificate identity track  
 **North star:** Users leave every session thinking *“I actually learned something”* — Mimo-level *feeling*, StructAI *category* (prompt skill).
 
 **Teach-by-doing peers:** Iro AI (threat 5), AiQ (4), PromptFluent (3), PromptSpar (3).  
@@ -73,13 +73,18 @@ We do **not** need to match content volume to win — feedback loops + session c
 | **P1.6** | Wrong-answer coaching beat (“why + next pattern”) | Deepen beyond Learning Beat | **Shipped** |
 | **P1.7** | Instant settlement micro-motion on checks | Correct/incorrect dopamine | **Shipped** (feedback settle pulse) |
 
+### P1.8 — Companion language (Orb)
+| # | Initiative | Status |
+|---|------------|--------|
+| **P1.8** | Orb Language v1 (face + coach voice; Focus tips after check) | **Shipped** (`ORB_LANGUAGE.md`) |
+
 ### P2 — Habit / identity (selective)
-| # | Initiative | Note |
-|---|------------|------|
-| P2.1 | Certificates more identity-forward | Shareable, specific, credible |
-| P2.2 | Soft XP / ranks on top of orbs | Readable level strip |
-| P2.3 | Widgets / richer notifications | After daily goal is stable |
-| P2.4 | Selective social only if it reinforces practice | Duels later; not a core pillar |
+| # | Initiative | Note | Status |
+|---|------------|------|--------|
+| **P2.1** | Certificates more identity-forward | Skill claim + evidence + credential ID | **Shipped** |
+| P2.2 | Soft XP / ranks on top of orbs | Readable level strip | Open |
+| P2.3 | Widgets / richer notifications | After daily goal is stable | Open |
+| P2.4 | Selective social only if it reinforces practice | Duels later; not a core pillar | Open |
 
 ### P3 — Growth
 | # | Initiative |
@@ -113,7 +118,8 @@ Aligned with Perplexity Jul 2026:
 3. ~~Wrong-answer coaching + settle pulse~~ **done** (P1.6–P1.7)  
 4. Auto skill-tag banners (P1.2/P1.4) **removed** — glossary heuristics were inaccurate  
 
-Next after this track: P0.1 mastery content (pm-4…pm-35 — needs `pm-batch-01.json`), P0.2 Expo Go retest A–H, then P2 identity/habit.
+Shipped recently: Orb Language v1 (P1.8), identity certificates (P2.1).  
+Next: P2.2 soft XP/ranks, P0.1 mastery content when `pm-batch-01.json` exists, P0.2 Expo Go retest A–H.
 
 ---
 

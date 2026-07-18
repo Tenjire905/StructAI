@@ -1502,23 +1502,63 @@ export const copyEn: CopyCatalog = {
     focus: 'Back to path overview',
   },
   'certificate.badge': {
-    playful: 'Completion certificate',
-    focus: 'Certificate',
+    playful: 'Prompt skill certificate',
+    focus: 'Skill certificate',
   },
   'certificate.awardedTo': {
-    playful: 'Awarded to',
-    focus: 'Participant',
+    playful: 'Earned by',
+    focus: 'Holder',
   },
   'certificate.completedOn': {
     playful: 'Completed on',
     focus: 'Completion date',
   },
   'certificate.brandTagline': {
-    playful: 'Prompt Engineering · Learning Path',
-    focus: 'StructAI · Path Completion',
+    playful: 'Better prompts. Sharper AI judgment.',
+    focus: 'Prompt skill · Verified path completion',
+  },
+  'certificate.skillLabel': {
+    playful: 'Skill unlocked',
+    focus: 'Demonstrated skill',
+  },
+  'certificate.skill.prompt_basics': {
+    playful: 'Write clear, goal-driven prompts with structure.',
+    focus: 'Clear, goal-driven prompt structure',
+  },
+  'certificate.skill.structure_lab': {
+    playful: 'Build prompts with role, constraints, and format.',
+    focus: 'Role, constraints, and output format control',
+  },
+  'certificate.skill.context_mastery': {
+    playful: 'Feed AI the right context without drowning it.',
+    focus: 'Context selection and grounding',
+  },
+  'certificate.skill.iteration_loops': {
+    playful: 'Iterate prompts until the output holds up.',
+    focus: 'Prompt iteration and refinement loops',
+  },
+  'certificate.skill.eval_scoring': {
+    playful: 'Judge AI answers — and catch weak ones.',
+    focus: 'Output evaluation and critique',
+  },
+  'certificate.skill.prompt_mastery': {
+    playful: 'Design advanced prompts under real constraints.',
+    focus: 'Advanced prompt design under constraints',
+  },
+  'certificate.skill.generic': {
+    playful: 'Completed a StructAI prompting path.',
+    focus: 'StructAI prompting path completed',
+  },
+  'certificate.evidence': {
+    playful: '{{completed}} / {{total}} chapters completed',
+    focus: '{{completed}} of {{total}} chapters completed',
+  },
+  'certificate.credentialLabel': {
+    playful: 'Credential ID',
+    focus: 'Credential ID',
   },
   'certificate.share': {
-    playful: 'Share certificate',
+    playful: 'Share your skill win',
     focus: 'Export certificate',
   },
   'certificate.sharing': {
@@ -1526,8 +1566,12 @@ export const copyEn: CopyCatalog = {
     focus: 'Exporting…',
   },
   'certificate.shareDialogTitle': {
-    playful: 'Share your StructAI certificate',
-    focus: 'Share StructAI certificate',
+    playful: '{{name}} can now: {{skill}}',
+    focus: '{{name}} — {{skill}}',
+  },
+  'pathCompletion.identityLine': {
+    playful: 'This is yours to share: {{skill}}',
+    focus: 'Credential: {{skill}}',
   },
   'certificate.shareUnavailable': {
     playful: 'Sharing is not available on this device right now.',
