@@ -16,11 +16,13 @@ import {
   PathCard,
   PathCardRetryPeek,
   PATH_CARD_RETRY_PEEK_MAX_HEIGHT,
+  SkillRankStrip,
 } from '@/components/features';
 import { Avatar, Button, Card } from '@/components/ui';
 import { hydrateAppStorage, isDailyGoalSetupCompleted } from '@/lib/appStorage';
 import { resolveDailyChallenge } from '@/lib/dailyChallenge';
 import { buildLessonHref } from '@/lib/lessonNavigation';
+import { resolveSkillRankProgress } from '@/lib/skillRank';
 import {
   computePathProgressBarModel,
   getFirstFailedLessonIdInOrder,
@@ -59,11 +61,21 @@ export default function HomeScreen() {
   const streakDays = useProgressStore((state) => state.streakDays);
   const dailyOrbHistory = useProgressStore((state) => state.dailyOrbHistory);
   const pathProgress = useProgressStore((state) => state.pathProgress);
+  const completedPathIds = useProgressStore((state) => state.completedPathIds);
   const activePaths = useMemo(
     () => useProgressStore.getState().getActivePaths(),
     [pathProgress],
   );
   const dailyChallenge = useMemo(() => resolveDailyChallenge(pathProgress), [pathProgress]);
+  const skillRank = useMemo(
+    () =>
+      resolveSkillRankProgress({
+        completedLessons,
+        completedPathCount: completedPathIds.length,
+        orbCount,
+      }),
+    [completedLessons, completedPathIds.length, orbCount],
+  );
 
   const scrollPeekIntoView = useCallback(
     (pathId: string) => {
@@ -170,6 +182,8 @@ export default function HomeScreen() {
           orbsEarnedToday={orbsEarnedToday}
         />
       </View>
+
+      <SkillRankStrip progress={skillRank} variant="compact" />
 
       <HomeActivityInsightsTile
         completedLessons={completedLessons}

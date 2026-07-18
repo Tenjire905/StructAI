@@ -21,6 +21,46 @@ export const copyRu: CopyCatalog = {
     playful: 'С возвращением, {{name}}!',
     focus: 'Здравствуйте, {{name}}.',
   },
+  'skillRank.eyebrow': {
+    playful: 'Твой ранг',
+    focus: 'Ранг навыка',
+  },
+  'skillRank.level': {
+    playful: 'Ур. {{level}}',
+    focus: 'Уровень {{level}}',
+  },
+  'skillRank.xpProgress': {
+    playful: '{{current}} / {{next}} XP до следующего уровня',
+    focus: '{{current}} / {{next}} XP',
+  },
+  'skillRank.totalXp': {
+    playful: '{{xp}} XP всего — из уроков и Орбов.',
+    focus: 'Всего XP: {{xp}} (уроки + Орбы).',
+  },
+  'skillRank.lessonXpGain': {
+    playful: '+{{xp}} XP к рангу',
+    focus: '+{{xp}} XP',
+  },
+  'skillRank.rank.spark': {
+    playful: 'Искра',
+    focus: 'Новичок',
+  },
+  'skillRank.rank.builder': {
+    playful: 'Строитель',
+    focus: 'Ученик',
+  },
+  'skillRank.rank.craftsman': {
+    playful: 'Мастер',
+    focus: 'Практик',
+  },
+  'skillRank.rank.specialist': {
+    playful: 'Специалист',
+    focus: 'Специалист',
+  },
+  'skillRank.rank.architect': {
+    playful: 'Архитектор промптов',
+    focus: 'Архитектор',
+  },
   'home.continueLearning': {
     playful: 'Продолжить обучение',
     focus: 'Текущие треки',

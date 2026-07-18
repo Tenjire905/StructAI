@@ -21,6 +21,46 @@ export const copyFr: CopyCatalog = {
     playful: 'Bon retour, {{name}} !',
     focus: 'Bonjour, {{name}}.',
   },
+  'skillRank.eyebrow': {
+    playful: 'Ton rang',
+    focus: 'Rang de competence',
+  },
+  'skillRank.level': {
+    playful: 'Niv. {{level}}',
+    focus: 'Niveau {{level}}',
+  },
+  'skillRank.xpProgress': {
+    playful: '{{current}} / {{next}} XP vers le niveau suivant',
+    focus: '{{current}} / {{next}} XP',
+  },
+  'skillRank.totalXp': {
+    playful: '{{xp}} XP au total — lecons et Orbs.',
+    focus: 'XP total : {{xp}} (lecons + Orbs).',
+  },
+  'skillRank.lessonXpGain': {
+    playful: '+{{xp}} XP vers ton rang',
+    focus: '+{{xp}} XP',
+  },
+  'skillRank.rank.spark': {
+    playful: 'Etincelle',
+    focus: 'Novice',
+  },
+  'skillRank.rank.builder': {
+    playful: 'Builder',
+    focus: 'Apprenti',
+  },
+  'skillRank.rank.craftsman': {
+    playful: 'Artisan',
+    focus: 'Praticien',
+  },
+  'skillRank.rank.specialist': {
+    playful: 'Specialiste',
+    focus: 'Specialiste',
+  },
+  'skillRank.rank.architect': {
+    playful: 'Architecte de prompts',
+    focus: 'Architecte',
+  },
   'home.continueLearning': {
     playful: 'Continuer a apprendre',
     focus: 'Parcours actifs',
