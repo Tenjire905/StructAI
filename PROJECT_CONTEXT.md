@@ -65,7 +65,8 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 8. **Content-Ingestion (`main`):** Prompt-Basics-Pfad auf 45 Lektionen erweitert (`pb-9` bis `pb-45`), in 4 Batches eingepflegt. `main` und `develop` waren zu diesem Zeitpunkt gleich.
 9. **Structure-Lab-Ausbau (aktuellster Stand, nur `develop`, NICHT in `main`):** `structure-lab`-Pfad von 6 auf **35/35 Zielumfang** erweitert (`sl-7` bis `sl-35`, 4 Batches). Ein Content-Qualitätsfehler dabei aufgedeckt und behoben (sl-11 categorize-Step war von Cursor eigenständig nachgedichtet statt aus Quelle übernommen → führte zur harten Prozessregel in `PRODUCT_CONCEPT.md` Abschnitt 3: nie improvisieren, Lücken melden). `main` ist Stand dieser Analyse **9 Commits hinter `develop`** – ein kuratierter Merge nach `main` steht noch aus.
 
-10. **Haptic Feedback (`lib/haptics.ts`, `expo-haptics`):** Umgesetzt gemäß `HAPTICS.md` ("Haptics Map v1") – Lektions-Antwort richtig/falsch, Lektion/Pfad abgeschlossen, BYOK-Key validiert, Prompt-Lab-Vergleich erfolgreich/fehlgeschlagen. Nächster offener Schritt laut Priorisierung ist danach das (zurückgestellte) Focus-Modus-Redesign.
+10. **Haptic Feedback (`lib/haptics.ts`, `expo-haptics`):** Umgesetzt gemäß `HAPTICS.md` – Lektions-Antwort richtig/falsch, Lektion/Pfad abgeschlossen, BYOK-Key validiert, Prompt-Lab-Vergleich erfolgreich/fehlgeschlagen.
+11. **Orb Language v1 (`ORB_LANGUAGE.md`):** Procedural SVG+Reanimated (kein Lottie), neue States `think`/`worry`, Blink in Playful, `OrbPresence` mit Playful-Einzeilern, Focus stumm/minimal. Orb während Lektions-Lesen/Üben/Feedback präsent (`lib/orbLanguage.ts`).
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 

@@ -1,7 +1,7 @@
 import { ScrollView, Text, View } from 'react-native';
 
 import { LockedPathPreview } from '@/components/features/LockedPathPreview';
-import { OrbCompanion } from '@/components/features/OrbCompanion';
+import { OrbPresence } from '@/components/features/OrbPresence';
 import { StatBlock } from '@/components/features/StatBlock';
 import { Button, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
@@ -55,7 +55,11 @@ export function CapstoneIncompleteView({
             width: tokens.spacing.space8,
           },
         ]}>
-        <OrbCompanion size={tokens.spacing.space8 * 0.75} state={companionState} />
+        <OrbPresence
+          showSpeech
+          size={tokens.spacing.space8 * 0.75}
+          state={companionState}
+        />
       </View>
 
       <Text

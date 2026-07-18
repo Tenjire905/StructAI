@@ -377,6 +377,26 @@ export const copyFr: CopyCatalog = {
     playful: 'Parfait ! Bonus d Orbs debloque.',
     focus: 'Parfait. Bonus obtenu.',
   },
+  'orb.speech.think': {
+    playful: 'Hmm… interessant.',
+    focus: '',
+  },
+  'orb.speech.happy': {
+    playful: 'Bien joue !',
+    focus: '',
+  },
+  'orb.speech.worry': {
+    playful: 'Presque — autre angle.',
+    focus: '',
+  },
+  'orb.speech.celebrating': {
+    playful: 'Bravo !',
+    focus: '',
+  },
+  'orb.speech.lowEnergy': {
+    playful: 'Encore quelques Orbs ?',
+    focus: '',
+  },
   'lesson.check': {
     playful: 'Verifier la reponse !',
     focus: 'Verifier',

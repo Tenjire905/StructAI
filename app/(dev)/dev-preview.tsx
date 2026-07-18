@@ -63,7 +63,9 @@ const CATEGORIZE_PREVIEW_STEP: ResolvedCategorizeStep = {
 const COMPANION_STATES: OrbCompanionState[] = [
   'idle',
   'attentive',
+  'think',
   'happy',
+  'worry',
   'low_energy',
   'celebrating',
   'sleepy',

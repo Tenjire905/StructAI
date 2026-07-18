@@ -5,6 +5,7 @@ export { ChapterRow } from './ChapterRow';
 export { OrbCompanion } from './OrbCompanion';
 export { OrbCounter } from './OrbCounter';
 export { OrbIcon } from './OrbIcon';
+export { OrbPresence } from './OrbPresence';
 export { LockedPathView } from './LockedPathView';
 export { PathCard } from './PathCard';
 export { PathCardRetryPeek, PATH_CARD_RETRY_PEEK_MAX_HEIGHT } from './PathCardRetryPeek';

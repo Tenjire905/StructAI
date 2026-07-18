@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 
-import { OrbCompanion } from '@/components/features/OrbCompanion';
+import { OrbPresence } from '@/components/features/OrbPresence';
 import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { getShadow, useThemeMode } from '@/theme';
@@ -44,7 +44,11 @@ export function SectionMilestoneView({
             width: tokens.spacing.space8,
           },
         ]}>
-        <OrbCompanion size={tokens.spacing.space8 * 0.75} state={companionState} />
+        <OrbPresence
+          showSpeech
+          size={tokens.spacing.space8 * 0.75}
+          state={companionState}
+        />
       </View>
 
       <Text

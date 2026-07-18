@@ -377,6 +377,26 @@ export const copyRu: CopyCatalog = {
     playful: 'Идеально! Бонус-орбы твои.',
     focus: 'Идеально. Бонус получен.',
   },
+  'orb.speech.think': {
+    playful: 'Хм… интересно.',
+    focus: '',
+  },
+  'orb.speech.happy': {
+    playful: 'Отлично!',
+    focus: '',
+  },
+  'orb.speech.worry': {
+    playful: 'Почти — другой угол.',
+    focus: '',
+  },
+  'orb.speech.celebrating': {
+    playful: 'Получилось!',
+    focus: '',
+  },
+  'orb.speech.lowEnergy': {
+    playful: 'Ещё пару Орбов сегодня?',
+    focus: '',
+  },
   'lesson.check': {
     playful: 'Проверить ответ!',
     focus: 'Проверить',

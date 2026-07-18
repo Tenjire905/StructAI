@@ -8,7 +8,9 @@ import { useCelebration, useThemeMode } from '@/theme';
 export type OrbCompanionState =
   | 'idle'
   | 'attentive'
+  | 'think'
   | 'happy'
+  | 'worry'
   | 'low_energy'
   | 'celebrating'
   | 'sleepy';
@@ -23,19 +25,19 @@ function isLowDailyProgress(orbsEarnedToday: number, dailyOrbGoal: number): bool
  * Derives the orb companion mood from progress, celebrations, theme mode, and
  * optional external overrides (e.g. attentive from step B4).
  *
- * Priority: celebrating > attentive (override) > low_energy > sleepy > idle
+ * Priority: celebrating > override (think/attentive/happy/worry/…) > low_energy > sleepy > idle
  *
  * @example
  * // celebrating beats attentive override:
  * // companionOverride='attentive' AND lastEvent.isActive → 'celebrating'
  *
  * @example
- * // attentive beats low_energy:
- * // companionOverride='attentive' AND orbCount/orbMax === 0.05 → 'attentive'
+ * // lesson override beats low_energy:
+ * // companionOverride='think' AND daily progress < 15% → 'think'
  *
  * @example
  * // low_energy beats sleepy:
- * // playful background >60s, no celebration, orbCount/orbMax === 0.10 → 'low_energy'
+ * // playful background >60s, no celebration, no override → 'low_energy'
  */
 export function useOrbCompanionState(
   companionOverride?: OrbCompanionState,
