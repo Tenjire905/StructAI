@@ -46,6 +46,7 @@ import {
   ORB_READING_THINK_DELAY_MS,
   resolveLessonMoment,
   resolveLessonOrbState,
+  resolveLessonSpeechCopyKey,
 } from '@/lib/orbLanguage';
 import {
   computeLessonOrbReward,
@@ -296,18 +297,22 @@ function LessonSessionScreenContent({
   };
   const previewAnswerCorrect =
     isChecked && evaluateGradedStepAnswers(previewGraded, gradedAnswerInput);
-  const lessonOrbOverride =
+  const lessonMoment =
     lessonOutcome === 'active' && previewStep
-      ? resolveLessonOrbState(
-          resolveLessonMoment({
-            isAnswerCorrect: previewAnswerCorrect,
-            isChecked,
-            isInfoStep: previewStep.type === 'info',
-            readingSettled,
-          }),
-        )
-      : undefined;
+      ? resolveLessonMoment({
+          isAnswerCorrect: previewAnswerCorrect,
+          isChecked,
+          isInfoStep: previewStep.type === 'info',
+          readingSettled,
+        })
+      : null;
+  const lessonOrbOverride =
+    lessonMoment !== null ? resolveLessonOrbState(lessonMoment) : undefined;
   const companionState = useOrbCompanionState(lessonOrbOverride);
+  const lessonSpeechKey =
+    lessonMoment !== null
+      ? resolveLessonSpeechCopyKey(lessonMoment, mode, stepIndex)
+      : null;
 
   const headerOptions = {
     headerShown: true,
@@ -797,17 +802,14 @@ function LessonSessionScreenContent({
             />
           </View>
 
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              gap: tokens.spacing.space3,
-              justifyContent: 'space-between',
-            }}>
-            <View style={{ flex: 1 }}>
-              <StepTypeBadge step={step} />
-            </View>
-            <OrbPresence showSpeech state={companionState} />
+          <View style={{ gap: tokens.spacing.space3 }}>
+            <StepTypeBadge step={step} />
+            <OrbPresence
+              showSpeech
+              speechKey={lessonSpeechKey}
+              speechSeed={stepIndex}
+              state={companionState}
+            />
           </View>
 
           {step.type === 'info' ? (
@@ -1090,6 +1092,7 @@ function CompletionView({
         <OrbPresence
           showSpeech
           size={tokens.spacing.space8 * 0.75}
+          speechSeed={lessonId.length}
           state={companionState}
         />
       </View>

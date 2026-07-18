@@ -377,25 +377,129 @@ export const copyFr: CopyCatalog = {
     playful: 'Parfait ! Bonus d Orbs debloque.',
     focus: 'Parfait. Bonus obtenu.',
   },
-  'orb.speech.think': {
-    playful: 'Hmm… interessant.',
+  'orb.speech.readingStart.a': {
+    playful: 'Ok — je suis avec toi. Lis ca.',
     focus: '',
   },
-  'orb.speech.happy': {
-    playful: 'Bien joue !',
+  'orb.speech.readingStart.b': {
+    playful: 'Nouvelle page ! On absorbe.',
     focus: '',
   },
-  'orb.speech.worry': {
-    playful: 'Presque — autre angle.',
+  'orb.speech.readingStart.c': {
+    playful: 'Les yeux ici — ca compte.',
     focus: '',
   },
-  'orb.speech.celebrating': {
-    playful: 'Bravo !',
+  'orb.speech.reading.a': {
+    playful: 'Hmm… regarde la structure.',
     focus: '',
   },
-  'orb.speech.lowEnergy': {
-    playful: 'Encore quelques Orbs ?',
+  'orb.speech.reading.b': {
+    playful: 'Interessant. Quel est le vrai job de ce prompt ?',
     focus: '',
+  },
+  'orb.speech.reading.c': {
+    playful: 'Continue — l indice est dans le libelle.',
+    focus: '',
+  },
+  'orb.speech.practicing.a': {
+    playful: 'A toi. Choisis avec intention.',
+    focus: '',
+  },
+  'orb.speech.practicing.b': {
+    playful: 'Sans te presser — prends l option la plus nette.',
+    focus: '',
+  },
+  'orb.speech.practicing.c': {
+    playful: 'Je veux une reponse propre. Vas-y.',
+    focus: '',
+  },
+  'orb.speech.correct.a': {
+    playful: 'Oui ! Ce raisonnement tient.',
+    focus: '',
+  },
+  'orb.speech.correct.b': {
+    playful: 'Pile — c est le schema.',
+    focus: '',
+  },
+  'orb.speech.correct.c': {
+    playful: 'Beau tir. Garde ca.',
+    focus: '',
+  },
+  'orb.speech.wrong.a': {
+    playful: 'Presque. Change d angle une fois.',
+    focus: '',
+  },
+  'orb.speech.wrong.b': {
+    playful: 'Pas tout a fait — relis la contrainte.',
+    focus: '',
+  },
+  'orb.speech.wrong.c': {
+    playful: 'Pas loin ! Le piege etait dans les details.',
+    focus: '',
+  },
+  'orb.speech.celebrating.a': {
+    playful: 'Tu l as fait ! Cette lecon est a nous.',
+    focus: '',
+  },
+  'orb.speech.celebrating.b': {
+    playful: 'Boom — progression debloquee.',
+    focus: '',
+  },
+  'orb.speech.celebrating.c': {
+    playful: 'Belle serie. On continue !',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.a': {
+    playful: 'Hey — encore quelques Orbs et l objectif sourit.',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.b': {
+    playful: 'Je suis un peu faible. Une courte lecon aide.',
+    focus: '',
+  },
+  'orb.speech.lowEnergy.c': {
+    playful: 'Check energie : il nous faut une petite victoire.',
+    focus: '',
+  },
+  'orb.speech.focus.correctTip.a': {
+    playful: '',
+    focus: 'Garde ce schema — nomme le job avant d ecrire.',
+  },
+  'orb.speech.focus.correctTip.b': {
+    playful: '',
+    focus: 'Bien. Ensuite, durcis une contrainte.',
+  },
+  'orb.speech.focus.correctTip.c': {
+    playful: '',
+    focus: 'Solide. Reutilise cette structure au prochain prompt.',
+  },
+  'orb.speech.focus.wrongTip.a': {
+    playful: '',
+    focus: 'Astuce : separe role, tache et format.',
+  },
+  'orb.speech.focus.wrongTip.b': {
+    playful: '',
+    focus: 'Revérifie la contrainte qui limitait la reponse.',
+  },
+  'orb.speech.focus.wrongTip.c': {
+    playful: '',
+    focus: 'Essai suivant : quelle forme de sortie etait exigee ?',
+  },
+  'orb.speech.focus.celebrating.a': {
+    playful: '',
+    focus: 'Lecon terminee. Emporte une regle claire.',
+  },
+  'orb.speech.focus.celebrating.b': {
+    playful: '',
+    focus: 'Fait. Note le schema qui a valu la reussite.',
+  },
+  'orb.speech.focus.lowEnergy.a': {
+    playful: '',
+    focus: 'Objectif bas — une lecon concentree reduit l ecart.',
+  },
+  'orb.speech.focus.lowEnergy.b': {
+    playful: '',
+    focus: 'Astuce : termine un court bloc de pratique aujourd hui.',
   },
   'lesson.check': {
     playful: 'Verifier la reponse !',

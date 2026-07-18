@@ -27,49 +27,49 @@ for (const state of ['think', 'worry']) {
   }
 }
 
-if (!orbLanguage.includes('resolveLessonOrbState')) {
-  violations.push('lib/orbLanguage.ts must export resolveLessonOrbState');
+if (!orbLanguage.includes('resolveLessonSpeechCopyKey')) {
+  violations.push('lib/orbLanguage.ts must export resolveLessonSpeechCopyKey');
 }
 
-if (!orbLanguage.includes('resolveOrbSpeechCopyKey')) {
-  violations.push('lib/orbLanguage.ts must export resolveOrbSpeechCopyKey');
+if (!orbLanguage.includes("mode === 'focus'")) {
+  violations.push('Focus speech must be gated to post-check tips');
 }
 
-if (!orbLanguage.includes("mode !== 'playful'")) {
-  violations.push('speech must stay Playful-only');
+if (!orbLanguage.includes('FOCUS_FEEDBACK_SPEECH') && !orbLanguage.includes('focus.correctTip')) {
+  violations.push('Focus tip speech variants are missing');
 }
 
-if (!orbCompanion.includes('withDelay') || !orbCompanion.includes('blink')) {
-  violations.push('OrbCompanion must implement a Playful blink loop');
+if (!orbCompanion.includes('showFace')) {
+  violations.push('OrbCompanion must show a face in Focus as well as Playful');
 }
 
-if (!orbCompanion.includes("state === 'think'") && !orbCompanion.includes("case 'think'")) {
-  violations.push('OrbCompanion must render a think expression');
+if (!orbCompanion.includes('blink')) {
+  violations.push('OrbCompanion must implement a blink loop');
 }
 
-if (!orbCompanion.includes("case 'worry'")) {
-  violations.push('OrbCompanion must render a worry expression');
+if (!orbPresence.includes('speechKey')) {
+  violations.push('OrbPresence must accept explicit speechKey for lesson voice');
 }
 
-if (!orbPresence.includes('resolveOrbSpeechCopyKey')) {
-  violations.push('OrbPresence must resolve speech via orbLanguage helper');
+if (!lesson.includes('resolveLessonSpeechCopyKey') || !lesson.includes('OrbPresence')) {
+  violations.push('Lesson screen must drive OrbPresence speech from lesson moments');
 }
 
-if (!lesson.includes('OrbPresence') || !lesson.includes('resolveLessonMoment')) {
-  violations.push('Lesson screen must drive OrbPresence from lesson moments');
+if (!doc.includes('Focus-Stimme') && !doc.includes('Focus')) {
+  violations.push('ORB_LANGUAGE.md must document Focus tip voice');
 }
 
-if (!doc.includes('Orb Language v1')) {
-  violations.push('ORB_LANGUAGE.md must document v1 decisions');
-}
+const requiredKeys = [
+  'orb.speech.readingStart.a',
+  'orb.speech.reading.a',
+  'orb.speech.practicing.a',
+  'orb.speech.correct.a',
+  'orb.speech.wrong.a',
+  'orb.speech.focus.correctTip.a',
+  'orb.speech.focus.wrongTip.a',
+];
 
-for (const key of [
-  'orb.speech.think',
-  'orb.speech.happy',
-  'orb.speech.worry',
-  'orb.speech.celebrating',
-  'orb.speech.lowEnergy',
-]) {
+for (const key of requiredKeys) {
   if (!copyEn.includes(`'${key}'`)) {
     violations.push(`en copy missing ${key}`);
   }

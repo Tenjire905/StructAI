@@ -60,7 +60,7 @@ function resolveScaleDriver(state, isFocused, reduceMotion, isPlayfulPresentatio
     return { kind: 'low-energy-pulse', loop: true };
   }
 
-  if (isPlayfulPresentation && (state === 'happy' || state === 'celebrating')) {
+  if (state === 'happy' || state === 'celebrating' || state === 'worry') {
     return { kind: `${state}-pulse`, loop: false };
   }
 
