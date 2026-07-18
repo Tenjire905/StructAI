@@ -1264,12 +1264,14 @@ export const copyFr: CopyCatalog = {
     focus: 'Definir EXPO_PUBLIC_SUPABASE_URL et EXPO_PUBLIC_SUPABASE_ANON_KEY dans .env.',
   },
   'onboarding.welcomeHeadline': {
-    playful: 'Apprends le prompting comme un pro',
-    focus: 'Apprendre le prompting IA de facon structuree',
+    playful: 'Ecris de meilleurs prompts. Juge les reponses IA.',
+    focus: 'Ecris de meilleurs prompts. Juge les reponses IA.',
   },
   'onboarding.welcomeSub': {
-    playful: 'Lecons courtes, vraie evaluation, progression visible - pas a pas vers de meilleurs prompts.',
-    focus: 'Lecons courtes, evaluation mesurable, progression claire.',
+    playful:
+      'StructAI t apprend a ecrire de meilleurs prompts et a juger les reponses IA grace a de courtes lecons, un scoring en direct et un Prompt Lab BYOK.',
+    focus:
+      'StructAI t apprend a ecrire de meilleurs prompts et a juger les reponses IA grace a de courtes lecons, un scoring en direct et un Prompt Lab BYOK.',
   },
   'onboarding.welcomeCta': {
     playful: 'C est parti !',

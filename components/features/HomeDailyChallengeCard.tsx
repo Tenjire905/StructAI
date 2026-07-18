@@ -15,10 +15,11 @@ type HomeDailyChallengeCardProps = {
  */
 export function HomeDailyChallengeCard({ challenge, onStart }: HomeDailyChallengeCardProps) {
   const { tokens, t } = useThemeMode();
+  const isFocus = tokens.presentation.orbStyle === 'minimal';
 
   return (
     <Card variant="solid">
-      <View style={{ gap: tokens.spacing.space3 }}>
+      <View style={{ gap: isFocus ? tokens.spacing.space2 : tokens.spacing.space3 }}>
         <Text
           style={{
             color: tokens.colors.accent.structure,

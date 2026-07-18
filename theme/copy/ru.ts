@@ -1264,12 +1264,14 @@ export const copyRu: CopyCatalog = {
     focus: 'Задайте EXPO_PUBLIC_SUPABASE_URL и EXPO_PUBLIC_SUPABASE_ANON_KEY в .env.',
   },
   'onboarding.welcomeHeadline': {
-    playful: 'Освой промптинг как профи',
-    focus: 'Структурированное обучение AI-промптингу',
+    playful: 'Пиши лучшие промпты. Оценивай ответы ИИ.',
+    focus: 'Пиши лучшие промпты. Оценивай ответы ИИ.',
   },
   'onboarding.welcomeSub': {
-    playful: 'Короткие уроки, реальная оценка, заметный прогресс - шаг за шагом к лучшим промптам.',
-    focus: 'Короткие уроки, измеримая оценка, ясный прогресс.',
+    playful:
+      'StructAI учит писать лучшие промпты и оценивать ответы ИИ — через короткие уроки, живой скоринг и BYOK Prompt Lab.',
+    focus:
+      'StructAI учит писать лучшие промпты и оценивать ответы ИИ — через короткие уроки, живой скоринг и BYOK Prompt Lab.',
   },
   'onboarding.welcomeCta': {
     playful: 'Поехали!',

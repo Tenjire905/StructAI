@@ -167,6 +167,10 @@ export type BaseGradients = typeof gradients;
 
 export type ThemePresentation = {
   preferredCardRadius: number;
+  /** Inner padding for Card and card-like strips — Focus one step denser. */
+  preferredCardPadding: number;
+  /** Vertical stack gap between Home/Profile sections — Focus one step denser. */
+  preferredSectionGap: number;
   springPreset: SpringPreset;
   allowCelebrationSpring: boolean;
   soundEnabled: boolean;
@@ -201,6 +205,8 @@ export const BASE_TOKENS: Omit<ResolvedThemeTokens, 'presentation'> = {
 const MODE_PRESENTATION: Record<ThemeMode, ThemePresentation> = {
   playful: {
     preferredCardRadius: radius.xl,
+    preferredCardPadding: spacing.space4,
+    preferredSectionGap: spacing.space5,
     springPreset: 'bouncy',
     allowCelebrationSpring: true,
     soundEnabled: true,
@@ -209,7 +215,10 @@ const MODE_PRESENTATION: Record<ThemeMode, ThemePresentation> = {
     orbStyle: 'illustrated',
   },
   focus: {
-    preferredCardRadius: radius.lg,
+    // THEME_MODES §7: Focus keeps radius-md (not lg/xl) for core layout density.
+    preferredCardRadius: radius.md,
+    preferredCardPadding: spacing.space3,
+    preferredSectionGap: spacing.space4,
     springPreset: 'default',
     allowCelebrationSpring: false,
     soundEnabled: false,

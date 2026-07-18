@@ -19,16 +19,17 @@ export function SkillRankStrip({
 }: SkillRankStripProps) {
   const { tokens, t } = useThemeMode();
   const isDetailed = variant === 'detailed';
+  const isFocus = tokens.presentation.orbStyle === 'minimal';
 
   return (
     <View
       style={{
         backgroundColor: tokens.colors.surface.card,
         borderColor: tokens.colors.border.subtle,
-        borderRadius: tokens.radius.lg,
+        borderRadius: tokens.presentation.preferredCardRadius,
         borderWidth: 1,
-        gap: tokens.spacing.space2,
-        padding: tokens.spacing.space4,
+        gap: isFocus ? tokens.spacing.space1 : tokens.spacing.space2,
+        padding: tokens.presentation.preferredCardPadding,
       }}>
       <View
         style={{
