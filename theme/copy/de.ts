@@ -1264,12 +1264,14 @@ export const copyDe: CopyCatalog = {
     focus: 'EXPO_PUBLIC_SUPABASE_URL und EXPO_PUBLIC_SUPABASE_ANON_KEY in .env setzen.',
   },
   'onboarding.welcomeHeadline': {
-    playful: 'Lerne Prompting wie ein Profi',
-    focus: 'KI-Prompting strukturiert lernen',
+    playful: 'Bessere Prompts schreiben. KI-Antworten beurteilen.',
+    focus: 'Bessere Prompts schreiben. KI-Antworten beurteilen.',
   },
   'onboarding.welcomeSub': {
-    playful: 'Kurze Lektionen, echte Bewertung, sichtbarer Fortschritt - Schritt für Schritt zu besseren Prompts.',
-    focus: 'Kurze Lektionen, messbare Bewertung, klarer Fortschritt.',
+    playful:
+      'StructAI bringt dir bei, bessere Prompts zu schreiben und KI-Antworten zu beurteilen – mit kurzen Lektionen, Live-Bewertung und einem BYOK Prompt Lab.',
+    focus:
+      'StructAI bringt dir bei, bessere Prompts zu schreiben und KI-Antworten zu beurteilen – mit kurzen Lektionen, Live-Bewertung und einem BYOK Prompt Lab.',
   },
   'onboarding.welcomeCta': {
     playful: 'Los geht es!',

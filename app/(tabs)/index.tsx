@@ -136,10 +136,10 @@ export default function HomeScreen() {
     <ScrollView
       ref={scrollViewRef}
       contentContainerStyle={{
-        gap: tokens.spacing.space5,
+        gap: tokens.presentation.preferredSectionGap,
         paddingBottom: tokens.spacing.space7,
         paddingHorizontal: tokens.spacing.screenPadding,
-        paddingTop: tokens.spacing.space5,
+        paddingTop: tokens.presentation.preferredSectionGap,
       }}
       onScroll={(event) => {
         scrollOffsetRef.current = event.nativeEvent.contentOffset.y;

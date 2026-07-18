@@ -17,7 +17,7 @@ export function Card({ children, variant = 'solid', style }: CardProps) {
   const cardStyle = {
     borderRadius: tokens.presentation.preferredCardRadius,
     overflow: 'hidden' as const,
-    padding: tokens.spacing.space4,
+    padding: tokens.presentation.preferredCardPadding,
     ...getShadow(1),
   };
 

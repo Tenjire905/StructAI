@@ -16,17 +16,18 @@ type LearningBeatStripProps = {
 export function LearningBeatStrip({ beat }: LearningBeatStripProps) {
   const { tokens, t } = useThemeMode();
   const termHighlight = getGlossaryTermHighlightStyle(tokens);
+  const isFocus = tokens.presentation.orbStyle === 'minimal';
 
   return (
     <View
       style={{
         backgroundColor: tokens.colors.background.elevated,
         borderColor: tokens.colors.border.subtle,
-        borderRadius: tokens.radius.md,
+        borderRadius: isFocus ? tokens.radius.sm : tokens.radius.md,
         borderWidth: 1,
         gap: tokens.spacing.space1,
-        paddingHorizontal: tokens.spacing.space3,
-        paddingVertical: tokens.spacing.space2,
+        paddingHorizontal: isFocus ? tokens.spacing.space2 : tokens.spacing.space3,
+        paddingVertical: isFocus ? tokens.spacing.space1 : tokens.spacing.space2,
       }}>
       <Text
         style={{

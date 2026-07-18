@@ -69,10 +69,11 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 11. **Orb Language v1 (`ORB_LANGUAGE.md`):** Procedural SVG+Reanimated, States `think`/`worry`, Gesicht in beiden Modi, Playful-Coach-Stimme während der Lektion, Focus-Tipps nach Check (`lib/orbLanguage.ts`, `OrbPresence`).
 12. **Identity Certificates (P2.1):** Zertifikat zeigt Skill-Claim pro Pfad, Evidenz (Kapitel), Credential-ID; Share-Titel = Skill-Win (`lib/certificateIdentity.ts`, `lib/buildCertificateViewModel.ts`).
 13. **Soft XP / Ranks (P2.2):** Abgeleiteter XP aus Lektionen+Orbs+Pfadabschlüssen, Level/Rang-Strip auf Home+Profil, XP-Hinweis nach Lektion (`lib/skillRank.ts`, `SkillRankStrip`).
+14. **App Store one-liner + Focus density (P3.1):** Welcome trägt die kanonische Store-Zeile (DE/EN/FR/RU) mit StructAI als Brand-Hero; Focus bekommt dichtere Presentation-Tokens (`preferredCardPadding`, `preferredSectionGap`, kleinerer Card-Radius) gemäß `THEME_MODES.md` §7 — erster systematischer Density-Schritt, kein Full Redesign.
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 
-Priorisierung war explizit: **Haptics + Content-Ingestion zuerst** (additiv, reversibel, geringes Risiko), **Focus-Modus-Redesign bewusst zurückgestellt** (teuer, schwer rückgängig, erst durch Nutzerinterviews validieren). Haptics sind jetzt umgesetzt (siehe Abschnitt 5, Punkt 10). Details zum noch offenen Focus-Redesign siehe `THEME_MODES.md` Abschnitt 7 ("Focus-Mode Rules v1", spezifiziert aber zurückgestellt bis Nutzerinterviews vorliegen). Offene Fäden siehe `PRODUCT_CONCEPT.md` Abschnitt 6.
+Priorisierung folgt `product-integration/SUCCESS-PRIORITIES.md`: P0.1 mastery content (wenn Batch-JSON da), P0.2 Expo Go retest A–H, P3.2 Free vs Pro. Focus-Mode Rules v1 (`THEME_MODES.md` §7) werden schrittweise über Presentation-Tokens ausgerollt, nicht als Big-Bang-Redesign. Offene Fäden siehe `PRODUCT_CONCEPT.md` Abschnitt 6.
 
 **Offene Remote-Branches** (Stand dieser Analyse, ggf. inzwischen gemerged – vor neuer Arbeit prüfen): `feature/content-lektionen-katalog`, `feature/dev-progress-i18n-lessons`, `feature/schritt-6-motion-pass`, `feature/schritt-j1..j4-*`. (`feature/content-ingestion-sl-batch-01/02/03` und `feature/schritt-k1/k2-*` sind bereits in `develop` gemerged, siehe Abschnitt 5 Punkt 7 und 9.)
 

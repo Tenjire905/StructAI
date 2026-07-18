@@ -1262,12 +1262,14 @@ export const copyEn: CopyCatalog = {
     focus: 'Set EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY in .env.',
   },
   'onboarding.welcomeHeadline': {
-    playful: 'Learn prompting like a pro',
-    focus: 'Learn AI prompting in a structured way',
+    playful: 'Write better prompts. Judge AI answers.',
+    focus: 'Write better prompts. Judge AI answers.',
   },
   'onboarding.welcomeSub': {
-    playful: 'Short lessons, real scoring, visible progress - step by step to better prompts.',
-    focus: 'Short lessons, measurable scoring, clear progress.',
+    playful:
+      'StructAI teaches you to write better prompts and judge AI answers through short lessons, live scoring, and a BYOK Prompt Lab.',
+    focus:
+      'StructAI teaches you to write better prompts and judge AI answers through short lessons, live scoring, and a BYOK Prompt Lab.',
   },
   'onboarding.welcomeCta': {
     playful: "Let's go!",

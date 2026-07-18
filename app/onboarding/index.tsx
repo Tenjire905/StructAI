@@ -6,8 +6,9 @@ import { Button } from '@/components/ui';
 import { useThemeMode } from '@/theme';
 
 export default function OnboardingWelcomeScreen() {
-  const { tokens, t } = useThemeMode();
+  const { tokens, t, mode } = useThemeMode();
   const router = useRouter();
+  const isFocus = mode === 'focus';
 
   return (
     <LinearGradient
@@ -20,13 +21,30 @@ export default function OnboardingWelcomeScreen() {
         paddingBottom: tokens.spacing.space7,
         paddingHorizontal: tokens.spacing.screenPaddingHero,
       }}>
-      <View style={{ gap: tokens.spacing.space4 }}>
+      <View style={{ gap: isFocus ? tokens.spacing.space3 : tokens.spacing.space4 }}>
+        {/* Brand is the hero signal; headline stays secondary to StructAI. */}
+        <Text
+          style={{
+            color: tokens.colors.accent.primary,
+            fontFamily: tokens.typography.fontFamily.display,
+            fontSize: tokens.typography.fontSize.displayXl,
+            letterSpacing: 1,
+            lineHeight: tokens.typography.fontSize.displayXl * 1.1,
+          }}>
+          StructAI
+        </Text>
+
         <Text
           style={{
             color: tokens.colors.text.primary,
             fontFamily: tokens.typography.fontFamily.display,
-            fontSize: tokens.typography.fontSize.displayXl,
-            lineHeight: tokens.typography.fontSize.displayXl * 1.15,
+            fontSize: isFocus
+              ? tokens.typography.fontSize.headingMd
+              : tokens.typography.fontSize.headingLg,
+            lineHeight:
+              (isFocus
+                ? tokens.typography.fontSize.headingMd
+                : tokens.typography.fontSize.headingLg) * 1.25,
           }}>
           {t('onboarding.welcomeHeadline')}
         </Text>
@@ -36,8 +54,8 @@ export default function OnboardingWelcomeScreen() {
             color: tokens.colors.text.secondary,
             fontFamily: tokens.typography.fontFamily.body,
             fontSize: tokens.typography.fontSize.bodyLg,
-            lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
-            marginBottom: tokens.spacing.space4,
+            lineHeight: tokens.typography.fontSize.bodyLg * (isFocus ? 1.4 : 1.5),
+            marginBottom: tokens.spacing.space3,
           }}>
           {t('onboarding.welcomeSub')}
         </Text>
