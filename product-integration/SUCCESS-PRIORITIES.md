@@ -1,6 +1,6 @@
 # StructAI — Success Priorities (Learning Feeling)
 
-**Stand:** Jul 2026 · P3.1 + P3.2 on develop  
+**Stand:** Jul 2026 · P3.1–P3.2 + progress-aware reminders on develop  
 **North star:** Users leave every session thinking *“I actually learned something”* — Mimo-level *feeling*, StructAI *category* (prompt skill).
 
 **Teach-by-doing peers:** Iro AI (threat 5), AiQ (4), PromptFluent (3), PromptSpar (3).  
@@ -83,7 +83,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 |---|------------|------|--------|
 | **P2.1** | Certificates more identity-forward | Skill claim + evidence + credential ID | **Shipped** |
 | **P2.2** | Soft XP / ranks on top of orbs | Readable level strip (derived XP) | **Shipped** |
-| **P2.3** | Widgets / richer notifications | Progress-aware evening reminder first; widgets later | **In PR** (skip when goal met + remaining orbs copy) |
+| **P2.3** | Widgets / richer notifications | Progress-aware evening reminder shipped; widgets later | **Partial** (reminders done; widgets open) |
 | P2.4 | Selective social only if it reinforces practice | Duels later; not a core pillar | Open |
 
 ### P3 — Growth
