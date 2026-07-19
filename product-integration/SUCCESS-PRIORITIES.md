@@ -1,6 +1,6 @@
 # StructAI — Success Priorities (Learning Feeling)
 
-**Stand:** Jul 2026 · P3.1–P3.2 + progress-aware reminders on develop  
+**Stand:** Jul 2026 · P3.1–P3.2 shipped; P2.3 reminders founder-verified on device; pm-13…pm-24 in flight  
 **North star:** Users leave every session thinking *“I actually learned something”* — Mimo-level *feeling*, StructAI *category* (prompt skill).
 
 **Teach-by-doing peers:** Iro AI (threat 5), AiQ (4), PromptFluent (3), PromptSpar (3).  
@@ -83,7 +83,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 |---|------------|------|--------|
 | **P2.1** | Certificates more identity-forward | Skill claim + evidence + credential ID | **Shipped** |
 | **P2.2** | Soft XP / ranks on top of orbs | Readable level strip (derived XP) | **Shipped** |
-| **P2.3** | Widgets / richer notifications | Progress-aware evening reminder shipped; widgets later | **Partial** (reminders done; widgets open) |
+| **P2.3** | Widgets / richer notifications | Evening reminders **founder-verified** on Android dev build; widgets later | **Partial** (reminders done; widgets open) |
 | P2.4 | Selective social only if it reinforces practice | Duels later; not a core pillar | Open |
 
 ### P3 — Growth
@@ -119,8 +119,8 @@ Aligned with Perplexity Jul 2026:
 4. Auto skill-tag banners (P1.2/P1.4) **removed** — glossary heuristics were inaccurate  
 
 Shipped recently: P3.1 store-line, P3.2 paywall, pm-4…pm-12, soft XP/ranks, certificates, Orb Language.  
-P2.3 reminders already on develop (need development build to test — see `DEV-BUILD-NOTIFICATIONS.md`); widgets still open.  
-Next: pm-13…pm-35, P2.3 widgets, Block H store billing.
+P2.3 evening reminders verified on Android development build.  
+Next: finish prompt-mastery pm-13…pm-35 (content depth), then widgets / Block H based on Perplexity.
 
 ---
 
