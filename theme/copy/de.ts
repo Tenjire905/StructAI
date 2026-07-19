@@ -593,6 +593,142 @@ export const copyDe: CopyCatalog = {
     playful: 'Übung abgeschlossen — keine Extra-Orbs.',
     focus: 'Wiederholt. Keine zusätzlichen Orbs.',
   },
+  'sessionSkill.eyebrow': {
+    playful: 'Das kannst du jetzt',
+    focus: 'Skill gewonnen',
+  },
+  'sessionSkill.generic.name': {
+    playful: 'Klarer prompten',
+    focus: 'Klarer prompten',
+  },
+  'sessionSkill.generic.proof': {
+    playful: 'Du hast ein konkretes Prompting-Muster geübt, das du bei der nächsten KI-Aufgabe nutzen kannst.',
+    focus: 'Du hast ein wiederverwendbares Prompting-Muster für die nächste KI-Aufgabe geübt.',
+  },
+  'sessionSkill.pb-1.name': {
+    playful: 'Erkennen, was ein Prompt wirklich ist',
+    focus: 'Prompt als Aufgabenbrief definieren',
+  },
+  'sessionSkill.pb-1.proof': {
+    playful: 'Du unterscheidest einen vagen Wunsch von einer nutzbaren Anweisung — der erste Schritt zu besseren KI-Antworten.',
+    focus: 'Du unterscheidest einen vagen Wunsch von einer nutzbaren Anweisung an ein Modell.',
+  },
+  'sessionSkill.pb-2.name': {
+    playful: 'Ein klares Ziel in den Prompt legen',
+    focus: 'Explizites Ziel formulieren',
+  },
+  'sessionSkill.pb-2.proof': {
+    playful: 'Du weißt, warum „mach irgendwas damit“ scheitert — und wie du das gewünschte Ergebnis benennst.',
+    focus: 'Du benennst das gewünschte Ergebnis statt einer vagen Bitte.',
+  },
+  'sessionSkill.pb-3.name': {
+    playful: 'Den Kontext liefern, den das Modell braucht',
+    focus: 'Notwendigen Kontext liefern',
+  },
+  'sessionSkill.pb-3.proof': {
+    playful: 'Du siehst, wann ein Prompt kontextarm ist und was du vor dem Senden ergänzt.',
+    focus: 'Du erkennst fehlenden Kontext, bevor du den Prompt sendest.',
+  },
+  'sessionSkill.pb-4.name': {
+    playful: 'Rolle und Zielgruppe wählen',
+    focus: 'Rolle und Zielgruppe setzen',
+  },
+  'sessionSkill.pb-4.proof': {
+    playful: 'Du steuerst Ton und Expertise, indem du eine Rolle vergibst und sagst, für wen die Antwort ist.',
+    focus: 'Du steuerst den Output über Rolle und Zielgruppe.',
+  },
+  'sessionSkill.pb-5.name': {
+    playful: 'Format bewusst eingrenzen',
+    focus: 'Ausgabeformat festlegen',
+  },
+  'sessionSkill.pb-5.proof': {
+    playful: 'Du forderst die Form der Antwort (Liste, Länge, Struktur), statt zu hoffen.',
+    focus: 'Du spezifizierst Liste/Länge/Struktur statt auf eine brauchbare Form zu hoffen.',
+  },
+  'sessionSkill.pb-6.name': {
+    playful: 'Negative Constraints richtig nutzen',
+    focus: 'Negative Constraints anwenden',
+  },
+  'sessionSkill.pb-6.proof': {
+    playful: 'Du verbietest schlechte Muster, ohne das Modell raten zu lassen, was es stattdessen tun soll.',
+    focus: 'Du kombinierst Verbote mit positiver Führung, damit das Modell weiß, was zu tun ist.',
+  },
+  'firstSessionProof.brand': {
+    playful: 'Dein erster Skill-Beweis',
+    focus: 'Erster Skill-Beweis',
+  },
+  'firstSessionProof.headline': {
+    playful: 'Sieh zu, wie ein vager Prompt besser wird — und benenne, was du gelernt hast.',
+    focus: 'Kritik, Rewrite, Vergleich — dann den Skill benennen.',
+  },
+  'firstSessionProof.sub': {
+    playful: 'Kein API-Key nötig. Der lokale Coach zeigt Qualität → Kritik → Rewrite in unter einer Minute.',
+    focus: 'Nur lokaler Coach. Qualität, Kritik, Rewrite — kein BYOK nötig.',
+  },
+  'firstSessionProof.weakLabel': {
+    playful: 'Vager Prompt',
+    focus: 'Vager Prompt',
+  },
+  'firstSessionProof.improvedLabel': {
+    playful: 'Umschriebener Prompt',
+    focus: 'Umschriebener Prompt',
+  },
+  'firstSessionProof.scoreLabel': {
+    playful: 'Coach-Score: {{score}}/100',
+    focus: 'Score: {{score}}/100',
+  },
+  'firstSessionProof.critiqueBody': {
+    playful: 'Zu vage: keine Rolle, keine Zielgruppe, kein Format, keine Länge. Das Modell muss raten.',
+    focus: 'Rolle, Zielgruppe, Format und Länge fehlen — das Modell muss raten.',
+  },
+  'firstSessionProof.compareTitle': {
+    playful: '{{before}} → {{after}} (+{{delta}})',
+    focus: '{{before}} → {{after}} (+{{delta}})',
+  },
+  'firstSessionProof.skillName': {
+    playful: 'Aus einer vagen Bitte ein brauchbares Briefing machen',
+    focus: 'Aus einer vagen Bitte ein brauchbares Briefing machen',
+  },
+  'firstSessionProof.skillProof': {
+    playful: 'Vor zehn Minuten hieß es „schreib etwas“. Jetzt siehst du, warum Struktur, Rolle und Constraints den Score ändern.',
+    focus: 'Du kannst erklären, warum Rolle, Kontext und Constraints die Prompt-Qualität heben.',
+  },
+  'firstSessionProof.ctaCritique': {
+    playful: 'Kritik zeigen',
+    focus: 'Kritik zeigen',
+  },
+  'firstSessionProof.ctaRewrite': {
+    playful: 'Rewrite zeigen',
+    focus: 'Rewrite zeigen',
+  },
+  'firstSessionProof.ctaCompare': {
+    playful: 'Scores vergleichen',
+    focus: 'Scores vergleichen',
+  },
+  'firstSessionProof.ctaSummary': {
+    playful: 'Benennen, was ich gelernt habe',
+    focus: 'Skill-Zusammenfassung',
+  },
+  'firstSessionProof.ctaDone': {
+    playful: 'Weiter — Profil einrichten',
+    focus: 'Weiter zum Profil',
+  },
+  'promptLab.learnedEyebrow': {
+    playful: 'Du hast geübt',
+    focus: 'Geübter Skill',
+  },
+  'promptLab.learnedImproved': {
+    playful: 'Du hast diesen Entwurf um +{{delta}} verbessert — ein echter Skill-Gewinn, nicht nur eine Zahl.',
+    focus: 'Entwurf um +{{delta}} verbessert. Gewinn: klarere Struktur und Constraints.',
+  },
+  'promptLab.learnedNext': {
+    playful: 'Nächster Skill zum Festigen: {{skill}}',
+    focus: 'Nächster Skill-Fokus: {{skill}}',
+  },
+  'promptLab.learnedComplete': {
+    playful: 'Du triffst die Kern-Säulen — Rolle, Kontext, Format, Constraints.',
+    focus: 'Kern-Säulen vorhanden: Rolle, Kontext, Format, Constraints.',
+  },
   'lesson.backToPath': {
     playful: 'Zurück zum Pfad',
     focus: 'Zurück zum Pfad',

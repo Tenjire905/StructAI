@@ -12,8 +12,10 @@ export { PathCardRetryPeek, PATH_CARD_RETRY_PEEK_MAX_HEIGHT } from './PathCardRe
 export { PromptLabTextInput } from './PromptLabTextInput';
 export { PromptScoreHistoryList } from './PromptScoreHistoryList';
 export { ScoreChart } from './ScoreChart';
+export { FirstSessionProofView } from './FirstSessionProofView';
 export { ProPaywallView } from './ProPaywallView';
 export { ProPlanStrip } from './ProPlanStrip';
+export { SessionSkillSummaryCard } from './SessionSkillSummaryCard';
 export { SkillRankStrip } from './SkillRankStrip';
 export { StatBlock } from './StatBlock';
 export { StreakTracker } from './StreakTracker';

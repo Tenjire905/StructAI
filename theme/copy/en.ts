@@ -591,6 +591,142 @@ export const copyEn: CopyCatalog = {
     playful: 'Practice complete — no extra Orbs.',
     focus: 'Repeated. No additional Orbs.',
   },
+  'sessionSkill.eyebrow': {
+    playful: 'You can do this now',
+    focus: 'Skill gained',
+  },
+  'sessionSkill.generic.name': {
+    playful: 'Clearer prompting',
+    focus: 'Clearer prompting',
+  },
+  'sessionSkill.generic.proof': {
+    playful: 'You practiced a concrete prompting pattern you can reuse on your next AI task.',
+    focus: 'You practiced a reusable prompting pattern for your next AI task.',
+  },
+  'sessionSkill.pb-1.name': {
+    playful: 'Spot what a prompt really is',
+    focus: 'Define a prompt as a task brief',
+  },
+  'sessionSkill.pb-1.proof': {
+    playful: 'You can tell a vague wish from a usable instruction — the first step to better AI answers.',
+    focus: 'You can distinguish a vague wish from a usable instruction for an AI model.',
+  },
+  'sessionSkill.pb-2.name': {
+    playful: 'Name a clear goal into the prompt',
+    focus: 'State an explicit goal',
+  },
+  'sessionSkill.pb-2.proof': {
+    playful: 'You know why “do something with this” fails — and how to name the outcome you want.',
+    focus: 'You can name the desired outcome instead of a vague request.',
+  },
+  'sessionSkill.pb-3.name': {
+    playful: 'Add the context the model needs',
+    focus: 'Supply necessary context',
+  },
+  'sessionSkill.pb-3.proof': {
+    playful: 'You can see when a prompt is thin on context and what to add before you send it.',
+    focus: 'You can identify missing context before sending a prompt.',
+  },
+  'sessionSkill.pb-4.name': {
+    playful: 'Choose role and audience',
+    focus: 'Set role and audience',
+  },
+  'sessionSkill.pb-4.proof': {
+    playful: 'You can steer tone and expertise by assigning a role and naming who the answer is for.',
+    focus: 'You can steer output by assigning role and audience.',
+  },
+  'sessionSkill.pb-5.name': {
+    playful: 'Constrain format on purpose',
+    focus: 'Specify output format',
+  },
+  'sessionSkill.pb-5.proof': {
+    playful: 'You can ask for the shape of the answer (list, length, structure) instead of hoping.',
+    focus: 'You can specify list/length/structure instead of hoping for a usable shape.',
+  },
+  'sessionSkill.pb-6.name': {
+    playful: 'Use negative constraints well',
+    focus: 'Apply negative constraints',
+  },
+  'sessionSkill.pb-6.proof': {
+    playful: 'You can ban bad patterns without leaving the model guessing what to do instead.',
+    focus: 'You can combine prohibitions with positive guidance so the model knows what to do.',
+  },
+  'firstSessionProof.brand': {
+    playful: 'Your first skill proof',
+    focus: 'First skill proof',
+  },
+  'firstSessionProof.headline': {
+    playful: 'Watch a vague prompt get better — then name what you learned.',
+    focus: 'Critique, rewrite, compare — then name the skill.',
+  },
+  'firstSessionProof.sub': {
+    playful: 'No API key needed. Local coach shows quality → critique → rewrite in under a minute.',
+    focus: 'Local coach only. Quality, critique, rewrite — no BYOK required.',
+  },
+  'firstSessionProof.weakLabel': {
+    playful: 'Vague prompt',
+    focus: 'Vague prompt',
+  },
+  'firstSessionProof.improvedLabel': {
+    playful: 'Rewritten prompt',
+    focus: 'Rewritten prompt',
+  },
+  'firstSessionProof.scoreLabel': {
+    playful: 'Coach score: {{score}}/100',
+    focus: 'Score: {{score}}/100',
+  },
+  'firstSessionProof.critiqueBody': {
+    playful: 'Too vague: no role, no audience, no format, no length. The model has to guess.',
+    focus: 'Missing role, audience, format, and length — the model must guess.',
+  },
+  'firstSessionProof.compareTitle': {
+    playful: '{{before}} → {{after}} (+{{delta}})',
+    focus: '{{before}} → {{after}} (+{{delta}})',
+  },
+  'firstSessionProof.skillName': {
+    playful: 'Turn a vague ask into a usable brief',
+    focus: 'Turn a vague ask into a usable brief',
+  },
+  'firstSessionProof.skillProof': {
+    playful: 'Ten minutes ago that was “write something.” Now you can see why structure, role, and constraints change the score.',
+    focus: 'You can explain why role, context, and constraints raise prompt quality.',
+  },
+  'firstSessionProof.ctaCritique': {
+    playful: 'Critique it',
+    focus: 'Show critique',
+  },
+  'firstSessionProof.ctaRewrite': {
+    playful: 'Show a rewrite',
+    focus: 'Show rewrite',
+  },
+  'firstSessionProof.ctaCompare': {
+    playful: 'Compare scores',
+    focus: 'Compare scores',
+  },
+  'firstSessionProof.ctaSummary': {
+    playful: 'Name what I learned',
+    focus: 'Show skill summary',
+  },
+  'firstSessionProof.ctaDone': {
+    playful: 'Continue — set up my profile',
+    focus: 'Continue to profile',
+  },
+  'promptLab.learnedEyebrow': {
+    playful: 'You practiced',
+    focus: 'Skill practiced',
+  },
+  'promptLab.learnedImproved': {
+    playful: 'You improved this draft by +{{delta}} — that is a real skill gain, not just a number.',
+    focus: 'Draft improved by +{{delta}}. Named gain: clearer structure and constraints.',
+  },
+  'promptLab.learnedNext': {
+    playful: 'Next skill to lock in: {{skill}}',
+    focus: 'Next skill focus: {{skill}}',
+  },
+  'promptLab.learnedComplete': {
+    playful: 'You hit the core pillars — role, context, format, constraints.',
+    focus: 'Core pillars present: role, context, format, constraints.',
+  },
   'lesson.backToPath': {
     playful: 'Back to path',
     focus: 'Back to path',

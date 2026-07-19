@@ -490,6 +490,42 @@ function ScoreResult({ score, feedbackKey, comparison, promptText }: ScoreResult
             {t(feedbackKey)}
           </Text>
 
+          <View
+            style={{
+              backgroundColor: tokens.colors.background.elevated,
+              borderColor: tokens.colors.border.subtle,
+              borderRadius: tokens.radius.md,
+              borderWidth: 1,
+              gap: tokens.spacing.space1,
+              paddingHorizontal: tokens.spacing.space3,
+              paddingVertical: tokens.spacing.space2,
+            }}>
+            <Text
+              style={{
+                color: tokens.colors.accent.structure,
+                fontFamily: tokens.typography.fontFamily.bodyMedium,
+                fontSize: tokens.typography.fontSize.bodySm,
+                textTransform: 'uppercase',
+              }}>
+              {t('promptLab.learnedEyebrow')}
+            </Text>
+            <Text
+              style={{
+                color: tokens.colors.text.primary,
+                fontFamily: tokens.typography.fontFamily.bodyMedium,
+                fontSize: tokens.typography.fontSize.bodyMd,
+                lineHeight: tokens.typography.fontSize.bodyMd * 1.4,
+              }}>
+              {comparison !== null && comparison.totalDelta > 0
+                ? t('promptLab.learnedImproved', { delta: comparison.totalDelta })
+                : improvementPath
+                  ? t('promptLab.learnedNext', {
+                      skill: t(PILLAR_COPY_KEY[improvementPath.primary]),
+                    })
+                  : t('promptLab.learnedComplete')}
+            </Text>
+          </View>
+
           <View style={{ gap: tokens.spacing.space3 }}>
             {categories.map((category) => (
               <View key={category.copyKey} style={{ gap: tokens.spacing.space1 }}>

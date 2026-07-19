@@ -593,6 +593,142 @@ export const copyFr: CopyCatalog = {
     playful: 'Entrainement termine — pas d\'Orbs en plus.',
     focus: 'Repetee. Aucun Orbe supplementaire.',
   },
+  'sessionSkill.eyebrow': {
+    playful: 'Tu peux faire ca maintenant',
+    focus: 'Competence acquise',
+  },
+  'sessionSkill.generic.name': {
+    playful: 'Prompting plus clair',
+    focus: 'Prompting plus clair',
+  },
+  'sessionSkill.generic.proof': {
+    playful: 'Tu as pratique un schema de prompting concret a reutiliser sur ta prochaine tache IA.',
+    focus: 'Tu as pratique un schema de prompting reutilisable pour ta prochaine tache IA.',
+  },
+  'sessionSkill.pb-1.name': {
+    playful: 'Repérer ce qu est vraiment un prompt',
+    focus: 'Definir un prompt comme brief',
+  },
+  'sessionSkill.pb-1.proof': {
+    playful: 'Tu distingues un souhait vague d une instruction utilisable — premiere etape vers de meilleures reponses.',
+    focus: 'Tu distingues un souhait vague d une instruction utilisable pour un modele.',
+  },
+  'sessionSkill.pb-2.name': {
+    playful: 'Mettre un objectif clair dans le prompt',
+    focus: 'Enoncer un objectif explicite',
+  },
+  'sessionSkill.pb-2.proof': {
+    playful: 'Tu sais pourquoi « fais quelque chose » echoue — et comment nommer le resultat voulu.',
+    focus: 'Tu nommes le resultat voulu au lieu d une demande vague.',
+  },
+  'sessionSkill.pb-3.name': {
+    playful: 'Ajouter le contexte dont le modele a besoin',
+    focus: 'Fournir le contexte necessaire',
+  },
+  'sessionSkill.pb-3.proof': {
+    playful: 'Tu vois quand un prompt manque de contexte et quoi ajouter avant d envoyer.',
+    focus: 'Tu identifies le contexte manquant avant d envoyer un prompt.',
+  },
+  'sessionSkill.pb-4.name': {
+    playful: 'Choisir role et audience',
+    focus: 'Definir role et audience',
+  },
+  'sessionSkill.pb-4.proof': {
+    playful: 'Tu orientes ton et expertise en assignant un role et en nommant pour qui est la reponse.',
+    focus: 'Tu orientes la sortie via role et audience.',
+  },
+  'sessionSkill.pb-5.name': {
+    playful: 'Contrainer le format volontairement',
+    focus: 'Specifier le format de sortie',
+  },
+  'sessionSkill.pb-5.proof': {
+    playful: 'Tu demandes la forme de la reponse (liste, longueur, structure) au lieu d esperer.',
+    focus: 'Tu specifies liste/longueur/structure au lieu d esperer une forme utilisable.',
+  },
+  'sessionSkill.pb-6.name': {
+    playful: 'Bien utiliser les contraintes negatives',
+    focus: 'Appliquer des contraintes negatives',
+  },
+  'sessionSkill.pb-6.proof': {
+    playful: 'Tu interdis les mauvais schemas sans laisser le modele deviner quoi faire a la place.',
+    focus: 'Tu combines interdits et guidance positive pour que le modele sache quoi faire.',
+  },
+  'firstSessionProof.brand': {
+    playful: 'Ta premiere preuve de skill',
+    focus: 'Premiere preuve de skill',
+  },
+  'firstSessionProof.headline': {
+    playful: 'Vois un prompt vague s ameliorer — puis nomme ce que tu as appris.',
+    focus: 'Critique, rewrite, compare — puis nomme le skill.',
+  },
+  'firstSessionProof.sub': {
+    playful: 'Pas de cle API. Le coach local montre qualite → critique → rewrite en moins d une minute.',
+    focus: 'Coach local seulement. Qualite, critique, rewrite — pas de BYOK.',
+  },
+  'firstSessionProof.weakLabel': {
+    playful: 'Prompt vague',
+    focus: 'Prompt vague',
+  },
+  'firstSessionProof.improvedLabel': {
+    playful: 'Prompt reecrit',
+    focus: 'Prompt reecrit',
+  },
+  'firstSessionProof.scoreLabel': {
+    playful: 'Score coach : {{score}}/100',
+    focus: 'Score : {{score}}/100',
+  },
+  'firstSessionProof.critiqueBody': {
+    playful: 'Trop vague : pas de role, pas d audience, pas de format, pas de longueur. Le modele doit deviner.',
+    focus: 'Role, audience, format et longueur manquent — le modele doit deviner.',
+  },
+  'firstSessionProof.compareTitle': {
+    playful: '{{before}} → {{after}} (+{{delta}})',
+    focus: '{{before}} → {{after}} (+{{delta}})',
+  },
+  'firstSessionProof.skillName': {
+    playful: 'Transformer une demande vague en brief utilisable',
+    focus: 'Transformer une demande vague en brief utilisable',
+  },
+  'firstSessionProof.skillProof': {
+    playful: 'Il y a dix minutes c etait « ecris quelque chose ». Maintenant tu vois pourquoi structure, role et contraintes changent le score.',
+    focus: 'Tu peux expliquer pourquoi role, contexte et contraintes ameliorent la qualite du prompt.',
+  },
+  'firstSessionProof.ctaCritique': {
+    playful: 'Montrer la critique',
+    focus: 'Montrer la critique',
+  },
+  'firstSessionProof.ctaRewrite': {
+    playful: 'Montrer un rewrite',
+    focus: 'Montrer le rewrite',
+  },
+  'firstSessionProof.ctaCompare': {
+    playful: 'Comparer les scores',
+    focus: 'Comparer les scores',
+  },
+  'firstSessionProof.ctaSummary': {
+    playful: 'Nommer ce que j ai appris',
+    focus: 'Resume du skill',
+  },
+  'firstSessionProof.ctaDone': {
+    playful: 'Continuer — configurer mon profil',
+    focus: 'Continuer vers le profil',
+  },
+  'promptLab.learnedEyebrow': {
+    playful: 'Tu as pratique',
+    focus: 'Skill pratique',
+  },
+  'promptLab.learnedImproved': {
+    playful: 'Tu as ameliore ce brouillon de +{{delta}} — un vrai gain de skill, pas seulement un chiffre.',
+    focus: 'Brouillon ameliore de +{{delta}}. Gain : structure et contraintes plus claires.',
+  },
+  'promptLab.learnedNext': {
+    playful: 'Prochain skill a verrouiller : {{skill}}',
+    focus: 'Prochain focus skill : {{skill}}',
+  },
+  'promptLab.learnedComplete': {
+    playful: 'Tu touches les piliers cles — role, contexte, format, contraintes.',
+    focus: 'Piliers cles presents : role, contexte, format, contraintes.',
+  },
   'lesson.backToPath': {
     playful: 'Retour au parcours',
     focus: 'Retour au parcours',
