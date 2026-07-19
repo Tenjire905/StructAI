@@ -28,8 +28,8 @@ import { listApiKeys, type ByokKeyEntry } from '@/lib/secureKeyStore';
 import {
   attachLocalFeedbackSignals,
   buildDemoImprovedPrompt,
+  buildDemoWeakPrompt,
   comparePromptScores,
-  DEMO_WEAK_PROMPT,
   getPrimaryImprovementPath,
   scorePrompt,
   type PromptImprovementPillar,
@@ -325,7 +325,7 @@ export default function PromptLabScreen() {
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.space2 }}>
             <Button
               label={t('promptLab.demoWeakExample')}
-              onPress={() => handleDemoPromptViewed(DEMO_WEAK_PROMPT)}
+              onPress={() => handleDemoPromptViewed(buildDemoWeakPrompt(locale))}
               variant="ghost"
             />
             <Button

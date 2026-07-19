@@ -1,6 +1,7 @@
 # StructAI — Success Priorities (Learning Feeling)
 
-**Stand:** Jul 2026 · prompt-mastery 35/35; Week-1 proof + day-2 comeback polish in flight  
+**Stand:** Jul 2026 · **Release candidate for founder user review** (develop tip after polish merge)  
+
 
 
 **North star:** Users leave every session thinking *“I actually learned something”* — Mimo-level *feeling*, StructAI *category* (prompt skill).
