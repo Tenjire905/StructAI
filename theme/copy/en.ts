@@ -97,6 +97,14 @@ export const copyEn: CopyCatalog = {
     playful: 'Let\'s go!',
     focus: 'Open first path',
   },
+  'home.labPracticeHint': {
+    playful: 'Turn today’s skill into a real prompt — score it in Prompt Lab.',
+    focus: 'Practice the skill you just named in Prompt Lab.',
+  },
+  'home.labPracticeCta': {
+    playful: 'Open Prompt Lab',
+    focus: 'Practice in Prompt Lab',
+  },
   'home.retryFailedCta': {
     playful: 'Retry first open lesson',
     focus: 'Go to first failed lesson',
@@ -216,6 +224,11 @@ export const copyEn: CopyCatalog = {
   'dailyGoal.notificationBody': {
     playful: '{{remaining}} orbs left for today’s goal — a short lesson still counts.',
     focus: '{{remaining}} orbs remaining on today’s goal.',
+  },
+  'dailyGoal.notificationBodySkill': {
+    playful:
+      'Come back and reuse “{{skill}}” — {{remaining}} orbs left for today’s goal.',
+    focus: 'Return to practice “{{skill}}”. {{remaining}} orbs left on today’s goal.',
   },
   'pathCard.chapters': {
     playful: 'Chapter {{current}} of {{total}}',
@@ -603,6 +616,10 @@ export const copyEn: CopyCatalog = {
     playful: 'You practiced a concrete prompting pattern you can reuse on your next AI task.',
     focus: 'You practiced a reusable prompting pattern for your next AI task.',
   },
+  'sessionSkill.comeBackTomorrow': {
+    playful: 'Come back tomorrow and reuse this pattern on a real task — that is how it sticks.',
+    focus: 'Return tomorrow and apply this pattern on a real task.',
+  },
   'sessionSkill.pb-1.name': {
     playful: 'Spot what a prompt really is',
     focus: 'Define a prompt as a task brief',
@@ -612,36 +629,36 @@ export const copyEn: CopyCatalog = {
     focus: 'You can distinguish a vague wish from a usable instruction for an AI model.',
   },
   'sessionSkill.pb-2.name': {
-    playful: 'Name a clear goal into the prompt',
-    focus: 'State an explicit goal',
+    playful: 'Write clear instructions',
+    focus: 'Write clear instructions',
   },
   'sessionSkill.pb-2.proof': {
-    playful: 'You know why “do something with this” fails — and how to name the outcome you want.',
-    focus: 'You can name the desired outcome instead of a vague request.',
+    playful: 'You can replace fuzzy asks with direct instructions the model can follow.',
+    focus: 'You can replace vague requests with direct, followable instructions.',
   },
   'sessionSkill.pb-3.name': {
-    playful: 'Add the context the model needs',
-    focus: 'Supply necessary context',
+    playful: 'Define the goal up front',
+    focus: 'Define the goal up front',
   },
   'sessionSkill.pb-3.proof': {
-    playful: 'You can see when a prompt is thin on context and what to add before you send it.',
-    focus: 'You can identify missing context before sending a prompt.',
+    playful: 'You can name the outcome you want before you ask the model to work.',
+    focus: 'You can state the desired outcome before sending the prompt.',
   },
   'sessionSkill.pb-4.name': {
-    playful: 'Choose role and audience',
-    focus: 'Set role and audience',
+    playful: 'Specify the output format',
+    focus: 'Specify the output format',
   },
   'sessionSkill.pb-4.proof': {
-    playful: 'You can steer tone and expertise by assigning a role and naming who the answer is for.',
-    focus: 'You can steer output by assigning role and audience.',
-  },
-  'sessionSkill.pb-5.name': {
-    playful: 'Constrain format on purpose',
-    focus: 'Specify output format',
-  },
-  'sessionSkill.pb-5.proof': {
     playful: 'You can ask for the shape of the answer (list, length, structure) instead of hoping.',
     focus: 'You can specify list/length/structure instead of hoping for a usable shape.',
+  },
+  'sessionSkill.pb-5.name': {
+    playful: 'Steer with examples',
+    focus: 'Steer with examples',
+  },
+  'sessionSkill.pb-5.proof': {
+    playful: 'You can show the model what “good” looks like instead of only describing it.',
+    focus: 'You can use examples so the model matches the pattern you want.',
   },
   'sessionSkill.pb-6.name': {
     playful: 'Use negative constraints well',
@@ -650,6 +667,54 @@ export const copyEn: CopyCatalog = {
   'sessionSkill.pb-6.proof': {
     playful: 'You can ban bad patterns without leaving the model guessing what to do instead.',
     focus: 'You can combine prohibitions with positive guidance so the model knows what to do.',
+  },
+  'sessionSkill.pb-7.name': {
+    playful: 'Keep prompts as short as they can be',
+    focus: 'Right-size prompt length',
+  },
+  'sessionSkill.pb-7.proof': {
+    playful: 'You can cut filler and keep only context, task, and constraints that change the answer.',
+    focus: 'You can trim filler so every line adds context, task, or constraint.',
+  },
+  'sessionSkill.pb-8.name': {
+    playful: 'Assemble a full basics brief',
+    focus: 'Assemble a full basics brief',
+  },
+  'sessionSkill.pb-8.proof': {
+    playful: 'You can combine goal, format, examples, and bans into one compact brief.',
+    focus: 'You can combine goal, format, examples, and constraints into one brief.',
+  },
+  'sessionSkill.pb-9.name': {
+    playful: 'Replace vague words with precise ones',
+    focus: 'Prefer precise wording',
+  },
+  'sessionSkill.pb-9.proof': {
+    playful: 'You can swap “short” / “good” for measurable limits the model can hit.',
+    focus: 'You can replace relative words with measurable limits.',
+  },
+  'sessionSkill.pb-10.name': {
+    playful: 'Give the model one job at a time',
+    focus: 'One task per prompt',
+  },
+  'sessionSkill.pb-10.proof': {
+    playful: 'You can split multi-asks so each prompt has a single clear job.',
+    focus: 'You can split multi-asks into one clear job per prompt.',
+  },
+  'sessionSkill.pb-11.name': {
+    playful: 'Name who the answer is for',
+    focus: 'Specify the audience',
+  },
+  'sessionSkill.pb-11.proof': {
+    playful: 'You can name the reader so tone and depth match who will use the answer.',
+    focus: 'You can name the audience so tone and depth match the reader.',
+  },
+  'sessionSkill.pb-12.name': {
+    playful: 'Spot common beginner mistakes',
+    focus: 'Spot common beginner mistakes',
+  },
+  'sessionSkill.pb-12.proof': {
+    playful: 'You can catch missing goal, format, or constraints before you hit send.',
+    focus: 'You can catch missing goal, format, or constraints before sending.',
   },
   'firstSessionProof.brand': {
     playful: 'Your first skill proof',
@@ -690,6 +755,10 @@ export const copyEn: CopyCatalog = {
   'firstSessionProof.skillProof': {
     playful: 'Ten minutes ago that was “write something.” Now you can see why structure, role, and constraints change the score.',
     focus: 'You can explain why role, context, and constraints raise prompt quality.',
+  },
+  'firstSessionProof.comeBackTomorrow': {
+    playful: 'Tomorrow: reuse this rewrite pattern on one real task — that is your day-2 win.',
+    focus: 'Tomorrow: apply this rewrite pattern on one real task.',
   },
   'firstSessionProof.ctaCritique': {
     playful: 'Critique it',
@@ -1816,8 +1885,10 @@ export const copyEn: CopyCatalog = {
     focus: 'Certificate export is Pro. Open the Pro paywall for pricing.',
   },
   'pro.gateLabBody': {
-    playful: 'Live AI grades are Pro. Your local coach still works — see what Pro includes.',
-    focus: 'Live AI grades are Pro. Local coach stays free. Open Pro for pricing.',
+    playful:
+      'Your API key alone is not Pro. Live AI grades are Pro — local coach scoring stays free.',
+    focus:
+      'An API key is not Pro. Live grades are Pro; local coach scoring stays free. Open Pro for planned pricing.',
   },
   'pro.certificateCta': {
     playful: 'Export with Pro',
@@ -1894,18 +1965,18 @@ export const copyEn: CopyCatalog = {
     focus: '{{monthly}}/mo equivalent',
   },
   'pro.paywall.cta': {
-    playful: 'Continue with Pro · {{price}}',
-    focus: 'Unlock Pro · {{price}}',
+    playful: 'Try Pro on this device (preview)',
+    focus: 'Enable Pro preview on this device',
   },
   'pro.paywall.ctaBusy': {
-    playful: 'Unlocking…',
-    focus: 'Unlocking…',
+    playful: 'Enabling preview…',
+    focus: 'Enabling preview…',
   },
   'pro.paywall.billingFootnote': {
     playful:
-      'App Store / Play billing ships with Block H. For now this unlocks Pro on this device so you can judge the value.',
+      'Prices above are planned. App Store / Play billing is not live yet (Block H). This button only unlocks a local Pro preview — you will not be charged.',
     focus:
-      'Store billing not live yet (Block H). CTA unlocks Pro locally so you can evaluate the offer.',
+      'Prices are planned, not billed yet (Block H). CTA enables a local Pro preview only — no store charge.',
   },
   'pro.paywall.dismiss': {
     playful: 'Not now',

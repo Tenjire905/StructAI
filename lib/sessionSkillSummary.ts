@@ -1,6 +1,7 @@
 /**
  * Named skill gain for session closure (Week-1 retention).
- * Curated per early lessons — not glossary heuristics (those were removed as noisy).
+ * Curated per early prompt-basics lessons — not glossary heuristics (those were removed as noisy).
+ * Aligned to actual lesson titles in data/lessonContent/*_pb.ts.
  */
 
 export type SessionSkillSummary = {
@@ -35,6 +36,30 @@ const CURATED_SKILL_BY_LESSON: Record<string, SessionSkillSummary> = {
   'pb-6': {
     nameKey: 'sessionSkill.pb-6.name',
     proofKey: 'sessionSkill.pb-6.proof',
+  },
+  'pb-7': {
+    nameKey: 'sessionSkill.pb-7.name',
+    proofKey: 'sessionSkill.pb-7.proof',
+  },
+  'pb-8': {
+    nameKey: 'sessionSkill.pb-8.name',
+    proofKey: 'sessionSkill.pb-8.proof',
+  },
+  'pb-9': {
+    nameKey: 'sessionSkill.pb-9.name',
+    proofKey: 'sessionSkill.pb-9.proof',
+  },
+  'pb-10': {
+    nameKey: 'sessionSkill.pb-10.name',
+    proofKey: 'sessionSkill.pb-10.proof',
+  },
+  'pb-11': {
+    nameKey: 'sessionSkill.pb-11.name',
+    proofKey: 'sessionSkill.pb-11.proof',
+  },
+  'pb-12': {
+    nameKey: 'sessionSkill.pb-12.name',
+    proofKey: 'sessionSkill.pb-12.proof',
   },
 };
 

@@ -45,6 +45,15 @@ export function SessionSkillSummaryCard({ lessonId }: SessionSkillSummaryCardPro
           }}>
           {t(summary.proofKey)}
         </Text>
+        <Text
+          style={{
+            color: tokens.colors.text.tertiary,
+            fontFamily: tokens.typography.fontFamily.body,
+            fontSize: tokens.typography.fontSize.bodySm,
+            lineHeight: tokens.typography.fontSize.bodySm * 1.45,
+          }}>
+          {t('sessionSkill.comeBackTomorrow')}
+        </Text>
       </View>
     </Card>
   );

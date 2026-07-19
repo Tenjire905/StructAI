@@ -201,6 +201,25 @@ export default function HomeScreen() {
         />
       ) : null}
 
+      {completedLessons >= 1 ? (
+        <View style={{ gap: tokens.spacing.space2 }}>
+          <Text
+            style={{
+              color: tokens.colors.text.secondary,
+              fontFamily: tokens.typography.fontFamily.body,
+              fontSize: tokens.typography.fontSize.bodyMd,
+              lineHeight: tokens.typography.fontSize.bodyMd * 1.45,
+            }}>
+            {t('home.labPracticeHint')}
+          </Text>
+          <Button
+            label={t('home.labPracticeCta')}
+            onPress={() => router.push('/(tabs)/prompt-lab')}
+            variant="ghost"
+          />
+        </View>
+      ) : null}
+
       <View style={{ gap: tokens.spacing.space3 }}>
         <Text
           style={{

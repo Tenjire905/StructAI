@@ -618,8 +618,25 @@ export function comparePromptScores(
   };
 }
 
-/** Demo weak prompt for guest-mode Prompt Lab */
-export const DEMO_WEAK_PROMPT = 'Schreibe etwas über KI.';
+/** Demo weak prompt for guest-mode Prompt Lab (locale-aware). */
+export function buildDemoWeakPrompt(locale: Locale = DEFAULT_LOCALE): string {
+  if (locale === 'en') {
+    return 'Write something about AI.';
+  }
+
+  if (locale === 'fr') {
+    return 'Ecris quelque chose sur l’IA.';
+  }
+
+  if (locale === 'ru') {
+    return 'Напиши что-нибудь про ИИ.';
+  }
+
+  return 'Schreibe etwas über KI.';
+}
+
+/** @deprecated Prefer buildDemoWeakPrompt(locale) — kept for callers that need a stable DE string. */
+export const DEMO_WEAK_PROMPT = buildDemoWeakPrompt('de');
 
 export function buildDemoImprovedPrompt(locale: Locale = DEFAULT_LOCALE): string {
   if (locale === 'en') {

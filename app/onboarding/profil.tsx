@@ -15,6 +15,7 @@ import { Button, Card } from '@/components/ui';
 import {
   getGuestDisplayName,
   getProfileAge,
+  isDailyGoalSetupCompleted,
   setGuestDisplayName,
   setProfileAge,
   setProfileOnboardingCompleted,
@@ -118,7 +119,12 @@ export default function OnboardingProfileScreen() {
       await setProfileAge(parsedAge);
       setMode(selectedMode);
       await setProfileOnboardingCompleted();
-      router.replace(resolveHomeRoute(completedLessons));
+      // Day-2 retention: set daily goal + reminder before home — otherwise most guests never opt in.
+      if (!isDailyGoalSetupCompleted()) {
+        router.replace('/onboarding/tagesziel');
+      } else {
+        router.replace(resolveHomeRoute(completedLessons));
+      }
     } catch {
       setValidationError(t('onboarding.profileSaveError'));
     } finally {

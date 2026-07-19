@@ -1,7 +1,8 @@
 import { isRunningInExpoGo } from 'expo';
 
-import { appStorage } from '@/lib/appStorage';
+import { appStorage, getLastCompletedLessonId } from '@/lib/appStorage';
 import { isBelowDailyGoal } from '@/lib/dailyOrbGoal';
+import { resolveSessionSkillSummary } from '@/lib/sessionSkillSummary';
 import { getCatalogForLocale } from '@/theme/copy/index';
 import { formatCopyText, getCopyText } from '@/theme/copy/types';
 import { DEFAULT_LOCALE, isLocale } from '@/theme/locale';
@@ -17,6 +18,8 @@ export type DailyGoalReminderContext = {
   enabled: boolean;
   dailyOrbGoal: number;
   orbsEarnedToday: number;
+  /** Optional override; falls back to last completed lesson in storage. */
+  lastLessonId?: string;
 };
 
 let notificationsModulePromise: Promise<NotificationsModule | null> | null = null;
@@ -75,13 +78,33 @@ function readStoredMode(): ThemeMode {
   return stored === 'playful' || stored === 'focus' ? stored : 'focus';
 }
 
-function getDailyGoalNotificationCopy(remainingOrbs: number) {
+export function getDailyGoalNotificationCopy(
+  remainingOrbs: number,
+  lastLessonId?: string,
+): { title: string; body: string } {
   const locale = readStoredLocale();
   const mode = readStoredMode();
   const catalog = getCatalogForLocale(locale);
+  const lessonId = lastLessonId ?? getLastCompletedLessonId();
+  const title = getCopyText('dailyGoal.notificationTitle', mode, catalog);
+
+  if (lessonId) {
+    const summary = resolveSessionSkillSummary(lessonId);
+    const skill = getCopyText(summary.nameKey, mode, catalog);
+
+    if (skill.length > 0) {
+      return {
+        title,
+        body: formatCopyText('dailyGoal.notificationBodySkill', mode, catalog, {
+          skill,
+          remaining: remainingOrbs,
+        }),
+      };
+    }
+  }
 
   return {
-    title: getCopyText('dailyGoal.notificationTitle', mode, catalog),
+    title,
     body: formatCopyText('dailyGoal.notificationBody', mode, catalog, {
       remaining: remainingOrbs,
     }),
@@ -133,7 +156,7 @@ export async function syncDailyGoalReminder(context: DailyGoalReminderContext): 
   }
 
   const remaining = Math.max(0, context.dailyOrbGoal - context.orbsEarnedToday);
-  const { title, body } = getDailyGoalNotificationCopy(remaining);
+  const { title, body } = getDailyGoalNotificationCopy(remaining, context.lastLessonId);
 
   await Notifications.scheduleNotificationAsync({
     identifier: DAILY_GOAL_REMINDER_ID,

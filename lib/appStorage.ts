@@ -293,9 +293,20 @@ export function isExpoGoMemoryStorage(): boolean {
 }
 
 const DAILY_GOAL_SETUP_COMPLETED_KEY = 'structai.daily-goal-setup-completed';
+const LAST_COMPLETED_LESSON_KEY = 'structai.last-completed-lesson-id';
 
 export function isDailyGoalSetupCompleted(): boolean {
   return appStorage.getString(DAILY_GOAL_SETUP_COMPLETED_KEY) === 'true';
+}
+
+/** Most recent lesson completion — used for day-2 skill-named reminders. */
+export function getLastCompletedLessonId(): string | undefined {
+  const value = appStorage.getString(LAST_COMPLETED_LESSON_KEY)?.trim();
+  return value && value.length > 0 ? value : undefined;
+}
+
+export async function setLastCompletedLessonId(lessonId: string): Promise<void> {
+  await persistAppStorageValue(LAST_COMPLETED_LESSON_KEY, lessonId.trim());
 }
 
 export async function setDailyGoalSetupCompleted(): Promise<void> {

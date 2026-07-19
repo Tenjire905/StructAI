@@ -1,6 +1,11 @@
 import { create } from 'zustand';
 
-import { appStorage, deleteAppStorageValue, persistAppStorageValue } from '@/lib/appStorage';
+import {
+  appStorage,
+  deleteAppStorageValue,
+  persistAppStorageValue,
+  setLastCompletedLessonId,
+} from '@/lib/appStorage';
 import {
   detectNewlyCompletedPathId,
   reconcileCompletedPathIds,
@@ -361,10 +366,12 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
       };
 
       persistAndSync(snapshot);
+      void setLastCompletedLessonId(lessonId);
       void syncDailyGoalReminder({
         enabled: snapshot.dailyGoalNotificationsEnabled,
         dailyOrbGoal: snapshot.dailyOrbGoal,
         orbsEarnedToday: snapshot.orbsEarnedToday,
+        lastLessonId: lessonId,
       });
 
       return snapshot;
