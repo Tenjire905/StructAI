@@ -8,9 +8,14 @@
     "scheme": "structai",
     "userInterfaceStyle": "dark",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.structai.app",
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"]
+      }
     },
     "android": {
+      "package": "com.structai.app",
       "adaptiveIcon": {
         "backgroundColor": "#0A0612",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -26,7 +31,15 @@
     },
     "plugins": [
       "expo-router",
+      "expo-dev-client",
       "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "color": "#8B5CF6",
+          "defaultChannel": "daily-goal"
+        }
+      ],
       [
         "expo-splash-screen",
         {

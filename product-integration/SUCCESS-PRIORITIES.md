@@ -58,7 +58,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 ### P0 — Trust & completeness
 | # | Initiative | Status |
 |---|------------|--------|
-| P0.1 | Finish prompt-mastery pm-4…pm-35 | ROADMAP #1 open |
+| **P0.1** | Finish prompt-mastery pm-4…pm-35 | **Partial** — pm-4…pm-12 shipped; pm-13…pm-35 open |
 | **P0.2** | Expo Go retest A–H | **Done** (founder verified A–H) |
 | P0.3 | Crash/nav + home UX on develop | Integration branch; merge when approved |
 
@@ -90,7 +90,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 | # | Initiative | Status |
 |---|------------|--------|
 | **P3.1** | App Store one-liner on welcome + Focus density (ROI #9) | **Shipped** |
-| **P3.2** | Free vs Pro paywall (value + pricing) | **Rework** — replace soft preview with paywall screens |
+| **P3.2** | Free vs Pro paywall (value + pricing) | **Shipped** (`/paywall`, €9.99 / €59.99; Block H billing later) |
 
 ---
 
@@ -118,9 +118,9 @@ Aligned with Perplexity Jul 2026:
 3. ~~Wrong-answer coaching + settle pulse~~ **done** (P1.6–P1.7)  
 4. Auto skill-tag banners (P1.2/P1.4) **removed** — glossary heuristics were inaccurate  
 
-Shipped recently: Orb Language (P1.8), identity certificates (P2.1), soft XP/ranks (P2.2), P3.1 store-line + Focus density.  
-P0.2 Expo Go retest A–H verified. P3.2 soft-gates being replaced by real paywall screens.  
-Next: P0.1 mastery content (pm-batch-01), finish P3.2 paywall, P2.3 widgets (reminders already on develop).
+Shipped recently: P3.1 store-line, P3.2 paywall, pm-4…pm-12, soft XP/ranks, certificates, Orb Language.  
+P2.3 reminders already on develop (need development build to test — see `DEV-BUILD-NOTIFICATIONS.md`); widgets still open.  
+Next: pm-13…pm-35, P2.3 widgets, Block H store billing.
 
 ---
 
