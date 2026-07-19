@@ -11,7 +11,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.structai.app",
       "infoPlist": {
-        "UIBackgroundModes": ["remote-notification"]
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
       }
     },
     "android": {
@@ -52,6 +54,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "dc1dcbf5-6cc7-45c7-872e-2b5197591238"
+      }
+    },
+    "owner": "stabileo"
   }
 }
