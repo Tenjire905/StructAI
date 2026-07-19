@@ -59,6 +59,7 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="onboarding" />
             <Stack.Screen name="tagesziel" />
+            <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
             {__DEV__ ? <Stack.Screen name="(dev)" options={{ headerShown: false }} /> : null}
           </Stack>
           <AuthNavigationController />

@@ -1657,13 +1657,13 @@ export const copyDe: CopyCatalog = {
   },
   'pro.planBodyFree': {
     playful:
-      'Für immer Free: alle Lektionen und der lokale Prompt-Lab-Coach. Pro ergänzt Live-KI-Bewertung (mit deinem Key) und Zertifikat-Export — Zahlungen kommen später; Preview-Unlock nur zum Testen.',
+      'Free: alle Lektionen + lokaler Lab-Coach. Pro: Live-KI-Bewertung und Zertifikat-Export ab {{monthly}}/Monat oder {{yearly}}/Jahr.',
     focus:
-      'Free: alle Lektionen + lokaler Lab-Coach. Pro: Live-KI-Bewertung (BYOK) und Zertifikat-Export. Noch keine Zahlungen — Preview nur lokal.',
+      'Free: Lektionen + lokaler Lab. Pro: Live-KI-Bewertung + Zertifikat-Export — ab {{monthly}}/Monat oder {{yearly}}/Jahr.',
   },
   'pro.planBodyPro': {
-    playful: 'Pro-Preview an: Live-Lab-Bewertung und Zertifikat-Export sind auf diesem Gerät freigeschaltet.',
-    focus: 'Pro-Preview aktiv. Live-Lab-Bewertung und Zertifikat-Export lokal freigeschaltet.',
+    playful: 'Pro ist auf diesem Gerät aktiv: Live-Lab-Bewertung und Zertifikat-Export sind freigeschaltet.',
+    focus: 'Pro aktiv. Live-Lab-Bewertung und Zertifikat-Export auf diesem Gerät freigeschaltet.',
   },
   'pro.previewUnlockCta': {
     playful: 'Pro-Preview testen',
@@ -1678,19 +1678,103 @@ export const copyDe: CopyCatalog = {
     focus: 'Pro',
   },
   'pro.gateCertificateBody': {
-    playful: 'Zertifikat-Export ist Pro. Pro-Preview im Profil aktivieren — Zahlungen sind noch nicht live.',
-    focus: 'Zertifikat-Export erfordert Pro. Bis Zahlungen da sind: Profil → Pro-Preview.',
+    playful: 'Zertifikat-Export ist Pro — Preise siehst du auf dem Pro-Screen.',
+    focus: 'Zertifikat-Export ist Pro. Paywall öffnen für Preise.',
   },
   'pro.gateLabBody': {
-    playful: 'Live-KI-Bewertung ist Pro. Dein lokaler Coach bleibt — Pro-Preview im Profil freischalten.',
-    focus: 'Live-KI-Bewertung ist Pro. Lokaler Coach bleibt frei. Pro-Preview im Profil.',
+    playful: 'Live-KI-Bewertung ist Pro. Dein lokaler Coach bleibt — schau dir an, was Pro bietet.',
+    focus: 'Live-KI-Bewertung ist Pro. Lokaler Coach bleibt frei. Pro-Paywall für Preise.',
   },
   'pro.certificateCta': {
     playful: 'Mit Pro exportieren',
     focus: 'Export (Pro)',
   },
   'pro.openPlanCta': {
-    playful: 'Plan im Profil öffnen',
-    focus: 'Plan öffnen',
+    playful: 'Pro-Pläne ansehen',
+    focus: 'Pro ansehen',
+  },
+  'pro.openPaywallCta': {
+    playful: 'Pro-Pläne & Preise',
+    focus: 'Pro-Preise ansehen',
+  },
+  'pro.paywall.brand': {
+    playful: 'StructAI Pro',
+    focus: 'StructAI Pro',
+  },
+  'pro.paywall.headline': {
+    playful: 'Skill beweisen. Mit echten Modellen bewerten.',
+    focus: 'Live-Bewertung und teilbarer Skill-Nachweis.',
+  },
+  'pro.paywall.sub': {
+    playful:
+      'Lernen bleibt Free. Upgrade, wenn du Live-KI-Scoring im Prompt Lab und exportierbare Zertifikate willst.',
+    focus:
+      'Lektionen bleiben Free. Pro schaltet Live-Lab-Bewertung (dein Key) und Zertifikat-Export nach Pfadabschluss frei.',
+  },
+  'pro.paywall.compareFeature': {
+    playful: 'Was du bekommst',
+    focus: 'Enthalten',
+  },
+  'pro.paywall.benefitLessons': {
+    playful: 'Alle Lernpfade & tägliche Praxis',
+    focus: 'Alle Lernpfade und tägliche Praxis',
+  },
+  'pro.paywall.benefitLabLocal': {
+    playful: 'Lokaler Prompt-Lab-Coach',
+    focus: 'Lokaler Prompt-Lab-Coach',
+  },
+  'pro.paywall.benefitLabLive': {
+    playful: 'Live-KI-Bewertung mit deinem API-Key',
+    focus: 'Live-KI-Bewertung (BYOK)',
+  },
+  'pro.paywall.benefitCertificates': {
+    playful: 'Zertifikate exportieren & teilen',
+    focus: 'Zertifikat-Export und Teilen',
+  },
+  'pro.paywall.included': {
+    playful: 'Ja',
+    focus: 'Ja',
+  },
+  'pro.paywall.excluded': {
+    playful: '—',
+    focus: '—',
+  },
+  'pro.paywall.periodMonthly': {
+    playful: 'Monatlich',
+    focus: 'Monatlich',
+  },
+  'pro.paywall.periodYearly': {
+    playful: 'Jährlich',
+    focus: 'Jährlich',
+  },
+  'pro.paywall.bestValue': {
+    playful: 'Bester Preis',
+    focus: 'Bester Preis',
+  },
+  'pro.paywall.monthlyHint': {
+    playful: 'Jederzeit kündbar',
+    focus: 'Monatliche Abrechnung',
+  },
+  'pro.paywall.yearlyHint': {
+    playful: 'Ca. {{monthly}}/Monat',
+    focus: '{{monthly}}/Monat effektiv',
+  },
+  'pro.paywall.cta': {
+    playful: 'Weiter mit Pro · {{price}}',
+    focus: 'Pro freischalten · {{price}}',
+  },
+  'pro.paywall.ctaBusy': {
+    playful: 'Wird freigeschaltet…',
+    focus: 'Wird freigeschaltet…',
+  },
+  'pro.paywall.billingFootnote': {
+    playful:
+      'App-Store-/Play-Billing kommt mit Block H. Bis dahin schaltet dieser Button Pro auf diesem Gerät frei — damit du den Wert beurteilen kannst.',
+    focus:
+      'Store-Billing noch nicht live (Block H). CTA schaltet Pro lokal frei zur Bewertung des Angebots.',
+  },
+  'pro.paywall.dismiss': {
+    playful: 'Nicht jetzt',
+    focus: 'Nicht jetzt',
   },
 };

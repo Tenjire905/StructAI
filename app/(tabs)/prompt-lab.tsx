@@ -243,7 +243,7 @@ export default function PromptLabScreen() {
       ) : !canUseProFeature('liveLabGrades') ? (
         <PressableScale
           accessibilityRole="button"
-          onPress={() => router.push('/profil')}
+          onPress={() => router.push('/paywall')}
           style={{
             alignItems: 'center',
             backgroundColor: tokens.colors.surface.card,
@@ -271,7 +271,7 @@ export default function PromptLabScreen() {
                 fontFamily: tokens.typography.fontFamily.bodyMedium,
                 fontSize: tokens.typography.fontSize.bodySm,
               }}>
-              {t('pro.openPlanCta')}
+              {t('pro.openPaywallCta')}
             </Text>
           </View>
         </PressableScale>

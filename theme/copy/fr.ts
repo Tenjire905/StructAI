@@ -1657,13 +1657,13 @@ export const copyFr: CopyCatalog = {
   },
   'pro.planBodyFree': {
     playful:
-      'Free pour toujours : toutes les lecons et le coach local du Prompt Lab. Pro ajoute les notes IA live (avec ta cle) et l export de certificats — paiements plus tard ; apercu Pro pour tester.',
+      'Free : toutes les lecons + coach Lab local. Pro : notes IA live et export certificats a partir de {{monthly}}/mois ou {{yearly}}/an.',
     focus:
-      'Free : toutes les lecons + coach Lab local. Pro : notes IA live (BYOK) et export certificats. Pas de paiement encore — apercu local seulement.',
+      'Free : lecons + Lab local. Pro : notes IA live + export certificats — a partir de {{monthly}}/mois ou {{yearly}}/an.',
   },
   'pro.planBodyPro': {
-    playful: 'Apercu Pro actif : notes Lab live et export de certificats debloques sur cet appareil.',
-    focus: 'Apercu Pro actif. Notes Lab live et export certificats debloques localement.',
+    playful: 'Pro est actif sur cet appareil : notes Lab live et export de certificats debloques.',
+    focus: 'Pro actif. Notes Lab live et export certificats debloques sur cet appareil.',
   },
   'pro.previewUnlockCta': {
     playful: 'Essayer l apercu Pro',
@@ -1678,19 +1678,103 @@ export const copyFr: CopyCatalog = {
     focus: 'Pro',
   },
   'pro.gateCertificateBody': {
-    playful: 'L export de certificat est Pro. Active l apercu Pro dans Profil — les paiements ne sont pas encore en ligne.',
-    focus: 'Export certificat = Pro. Jusqu aux paiements : Profil → apercu Pro.',
+    playful: 'L export de certificat est Pro — vois les prix sur l ecran Pro.',
+    focus: 'Export certificat = Pro. Ouvre la paywall pour les prix.',
   },
   'pro.gateLabBody': {
-    playful: 'Les notes IA live sont Pro. Ton coach local reste — active l apercu Pro dans Profil.',
-    focus: 'Notes IA live = Pro. Coach local reste gratuit. Apercu Pro dans Profil.',
+    playful: 'Les notes IA live sont Pro. Ton coach local reste — vois ce que Pro inclut.',
+    focus: 'Notes IA live = Pro. Coach local reste gratuit. Paywall Pro pour les prix.',
   },
   'pro.certificateCta': {
     playful: 'Exporter avec Pro',
     focus: 'Exporter (Pro)',
   },
   'pro.openPlanCta': {
-    playful: 'Ouvrir le plan dans Profil',
-    focus: 'Ouvrir le plan',
+    playful: 'Voir les offres Pro',
+    focus: 'Voir Pro',
+  },
+  'pro.openPaywallCta': {
+    playful: 'Voir plans et prix Pro',
+    focus: 'Voir les prix Pro',
+  },
+  'pro.paywall.brand': {
+    playful: 'StructAI Pro',
+    focus: 'StructAI Pro',
+  },
+  'pro.paywall.headline': {
+    playful: 'Prouve ton skill. Note avec de vrais modeles.',
+    focus: 'Notes live et preuve de skill partageable.',
+  },
+  'pro.paywall.sub': {
+    playful:
+      'Apprendre reste Free. Passe a Pro pour le scoring IA live dans le Prompt Lab et des certificats exportables.',
+    focus:
+      'Les lecons restent Free. Pro debloque les notes Lab live (ta cle) et l export de certificats apres un parcours.',
+  },
+  'pro.paywall.compareFeature': {
+    playful: 'Ce que tu obtiens',
+    focus: 'Inclus',
+  },
+  'pro.paywall.benefitLessons': {
+    playful: 'Tous les parcours et la pratique quotidienne',
+    focus: 'Tous les parcours et la pratique quotidienne',
+  },
+  'pro.paywall.benefitLabLocal': {
+    playful: 'Coach Prompt Lab local',
+    focus: 'Coach Prompt Lab local',
+  },
+  'pro.paywall.benefitLabLive': {
+    playful: 'Notes IA live avec ta cle API',
+    focus: 'Notes IA live (BYOK)',
+  },
+  'pro.paywall.benefitCertificates': {
+    playful: 'Exporter et partager les certificats',
+    focus: 'Export et partage de certificats',
+  },
+  'pro.paywall.included': {
+    playful: 'Oui',
+    focus: 'Oui',
+  },
+  'pro.paywall.excluded': {
+    playful: '—',
+    focus: '—',
+  },
+  'pro.paywall.periodMonthly': {
+    playful: 'Mensuel',
+    focus: 'Mensuel',
+  },
+  'pro.paywall.periodYearly': {
+    playful: 'Annuel',
+    focus: 'Annuel',
+  },
+  'pro.paywall.bestValue': {
+    playful: 'Meilleur prix',
+    focus: 'Meilleur prix',
+  },
+  'pro.paywall.monthlyHint': {
+    playful: 'Resiliable a tout moment',
+    focus: 'Facturation mensuelle',
+  },
+  'pro.paywall.yearlyHint': {
+    playful: 'Environ {{monthly}}/mois',
+    focus: '{{monthly}}/mois equivalent',
+  },
+  'pro.paywall.cta': {
+    playful: 'Continuer avec Pro · {{price}}',
+    focus: 'Debloquer Pro · {{price}}',
+  },
+  'pro.paywall.ctaBusy': {
+    playful: 'Debloquage…',
+    focus: 'Debloquage…',
+  },
+  'pro.paywall.billingFootnote': {
+    playful:
+      'La facturation App Store / Play arrive avec Block H. Pour l instant, ce bouton debloque Pro sur cet appareil pour que tu juges la valeur.',
+    focus:
+      'Billing store pas encore live (Block H). Le CTA debloque Pro localement pour evaluer l offre.',
+  },
+  'pro.paywall.dismiss': {
+    playful: 'Pas maintenant',
+    focus: 'Pas maintenant',
   },
 };
