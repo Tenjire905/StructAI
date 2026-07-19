@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Badge, Button, Card } from '@/components/ui';
 import {
@@ -21,6 +22,7 @@ type ProPaywallViewProps = {
  */
 export function ProPaywallView({ onClose, onUnlocked }: ProPaywallViewProps) {
   const { tokens, t } = useThemeMode();
+  const insets = useSafeAreaInsets();
   const [period, setPeriod] = useState<ProBillingPeriod>(DEFAULT_PRO_BILLING_PERIOD);
   const [busy, setBusy] = useState(false);
   const isFocus = tokens.presentation.orbStyle === 'minimal';
@@ -39,9 +41,10 @@ export function ProPaywallView({ onClose, onUnlocked }: ProPaywallViewProps) {
     <ScrollView
       contentContainerStyle={{
         gap: tokens.presentation.preferredSectionGap,
-        paddingBottom: tokens.spacing.space7,
+        paddingBottom: tokens.spacing.space7 + insets.bottom,
         paddingHorizontal: tokens.spacing.screenPadding,
-        paddingTop: tokens.spacing.space5,
+        // Modal has no nav header — clear the status bar / notch.
+        paddingTop: insets.top + tokens.spacing.space5,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <View style={{ gap: tokens.spacing.space2 }}>
