@@ -9,7 +9,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { LockedPathView, OrbPresence } from '@/components/features';
+import { LockedPathView, OrbPresence, SessionSkillSummaryCard } from '@/components/features';
 import { CapstoneIncompleteView } from '@/components/features/CapstoneIncompleteView';
 import { GuestSaveProgressHint } from '@/components/features/GuestSaveProgressHint';
 import { PathCompletionView } from '@/components/features/PathCompletionView';
@@ -58,7 +58,7 @@ import {
 import { resolveLessonLearningBeat } from '@/lib/lessonLearningBeat';
 import { resolveWrongAnswerCoaching } from '@/lib/lessonWrongAnswerCoaching';
 import { trackEvent } from '@/lib/analytics';
-import { isProfileOnboardingCompleted, markProfileOnboardingRequired } from '@/lib/appStorage';
+import { isProfileOnboardingCompleted } from '@/lib/appStorage';
 import {
   hapticCorrectAnswer,
   hapticLessonComplete,
@@ -525,10 +525,9 @@ function LessonSessionScreenContent({
         useProgressStore.getState().completedLessons === 1 &&
         !isProfileOnboardingCompleted()
       ) {
+        // Week-1 proof loop before profile onboarding (critique → rewrite → compare).
         dismissCelebration();
-        void markProfileOnboardingRequired().then(() => {
-          leaveLesson(router, '/onboarding/profil');
-        });
+        leaveLesson(router, '/onboarding/proof');
         return;
       }
 
@@ -1107,6 +1106,8 @@ function CompletionView({
         }}>
         {t('lesson.completeTitle')}
       </Text>
+
+      <SessionSkillSummaryCard lessonId={lessonId} />
 
       <Text
         style={{

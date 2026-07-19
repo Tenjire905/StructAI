@@ -1,6 +1,7 @@
 # StructAI — Success Priorities (Learning Feeling)
 
-**Stand:** Jul 2026 · P3.1–P3.2 shipped; P2.3 reminders founder-verified on device; pm-13…pm-35 shipped — prompt-mastery path complete  
+**Stand:** Jul 2026 · prompt-mastery 35/35; Week-1 proof loop (Perplexity ROI #1–#3) shipped in PR  
+
 **North star:** Users leave every session thinking *“I actually learned something”* — Mimo-level *feeling*, StructAI *category* (prompt skill).
 
 **Teach-by-doing peers:** Iro AI (threat 5), AiQ (4), PromptFluent (3), PromptSpar (3).  
@@ -66,7 +67,10 @@ We do **not** need to match content volume to win — feedback loops + session c
 | # | Initiative | Feeling | Status |
 |---|------------|---------|--------|
 | **P1.1** | Post-check **Learning Beat** | Pattern to remember under feedback | **Shipped** |
-| **P1.2** | End-of-lesson **Skill Card** | Glossary-heuristic skill tags | **Removed** (noisy / inaccurate) |
+| **P1.2** | End-of-lesson **named skill summary** | Curated “you can do this now” (not glossary heuristics) | **Shipped** (pb-1…pb-6 + generic) |
+| **P1.2b** | First-session proof loop | Critique → rewrite → compare → summarize | **Shipped** (`/onboarding/proof`) |
+| **P1.2c** | Prompt Lab “you learned X” | Score result framed as skill practiced | **Shipped** |
+| ~~P1.2-old~~ | Glossary-heuristic Skill Card | Auto tags | **Removed** (noisy / inaccurate) |
 | **P1.3** | Home **Daily Challenge** CTA | One clear job today | **Shipped** |
 | **P1.4** | Home progress = competence strip | Auto skill tags from lessons | **Removed** (same heuristic) |
 | **P1.5** | Prompt Lab feedback tightening | Concrete missing: context / format / role / constraints | **Shipped** |
@@ -111,16 +115,17 @@ We do **not** need to match content volume to win — feedback loops + session c
 
 ## Recommended next 30 days (only 3)
 
-Aligned with Perplexity Jul 2026:
+Aligned with Perplexity Week-1 retention (Jul 2026):
 
-1. ~~Daily challenge / one-clear-job~~ **done** (P1.3)  
-2. ~~Prompt Lab feedback tightening~~ **done** (P1.5)  
-3. ~~Wrong-answer coaching + settle pulse~~ **done** (P1.6–P1.7)  
-4. Auto skill-tag banners (P1.2/P1.4) **removed** — glossary heuristics were inaccurate  
+1. ~~First-session proof loop~~ **done** (P1.2b — critique → rewrite → compare → summarize)  
+2. ~~Session closure names a skill gain~~ **done** (P1.2)  
+3. ~~Prompt Lab “you learned X”~~ **done** (P1.2c)  
+4. Polish first path **only** where it strengthens proof (not volume)  
+5. Day-2 comeback cue (push/widget) **after** closure feels strong  
 
-Shipped recently: P3.1 store-line, P3.2 paywall, pm-4…pm-35 (prompt-mastery path complete, 35 lessons), soft XP/ranks, certificates, Orb Language.  
+Shipped recently: Week-1 proof, P3.1 store-line, P3.2 paywall, pm-4…pm-35, soft XP/ranks, certificates, Orb Language.  
 P2.3 evening reminders verified on Android development build.  
-Next: widgets / Block H based on Perplexity.
+Next: day-2 comeback cue; first-path polish for proof; defer social / widgets-as-retention / Block H until habit + proof hold.
 
 ---
 
@@ -129,7 +134,11 @@ Next: widgets / Block H based on Perplexity.
 - Matching Iro’s content volume or duel/league stack first  
 - Prompt-library breadth (PromptPal’s game)  
 - Coding IDE / portfolio (Mimo’s moat)  
-- Paywall before habit works  
+- Social / widgets as retention before session closure is meaningful  
+- BYOK as the first meaningful hurdle  
+- Relying on XP alone for the learning feeling  
+- More curriculum depth past first/second-session proof  
+- Paywall before habit works (Block H after proof + habit)  
 
 ---
 
