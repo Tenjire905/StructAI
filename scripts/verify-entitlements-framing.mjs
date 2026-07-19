@@ -36,8 +36,8 @@ if (!cert.includes("canUseProFeature('certificateExport')")) {
 if (!profile.includes('ProPlanStrip')) {
   violations.push('Profile must show ProPlanStrip');
 }
-if (!strip.includes('unlockProPreview')) {
-  violations.push('ProPlanStrip must offer preview unlock');
+if (!strip.includes("router.push('/paywall')") && !strip.includes('openPaywallCta')) {
+  violations.push('ProPlanStrip must open the Pro paywall');
 }
 if (!en.includes("'pro.planBodyFree'")) {
   violations.push('EN copy must define Free vs Pro framing');

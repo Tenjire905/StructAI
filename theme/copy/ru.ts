@@ -1657,13 +1657,13 @@ export const copyRu: CopyCatalog = {
   },
   'pro.planBodyFree': {
     playful:
-      'Навсегда Free: все уроки и локальный coach Prompt Lab. Pro добавляет live AI-оценки (со своим ключом) и экспорт сертификатов — оплаты позже; preview unlock только для теста.',
+      'Free: все уроки + локальный Lab coach. Pro: live AI-оценки и экспорт сертификатов от {{monthly}}/мес или {{yearly}}/год.',
     focus:
-      'Free: все уроки + локальный Lab coach. Pro: live AI-оценки (BYOK) и экспорт сертификатов. Оплат ещё нет — preview только локально.',
+      'Free: уроки + локальный Lab. Pro: live AI-оценки + экспорт сертификатов — от {{monthly}}/мес или {{yearly}}/год.',
   },
   'pro.planBodyPro': {
-    playful: 'Pro preview включён: live Lab-оценки и экспорт сертификатов разблокированы на этом устройстве.',
-    focus: 'Pro preview активен. Live Lab-оценки и экспорт сертификатов разблокированы локально.',
+    playful: 'Pro активен на этом устройстве: live Lab-оценки и экспорт сертификатов разблокированы.',
+    focus: 'Pro активен. Live Lab-оценки и экспорт сертификатов разблокированы на этом устройстве.',
   },
   'pro.previewUnlockCta': {
     playful: 'Попробовать Pro preview',
@@ -1678,19 +1678,103 @@ export const copyRu: CopyCatalog = {
     focus: 'Pro',
   },
   'pro.gateCertificateBody': {
-    playful: 'Экспорт сертификата — Pro. Включи Pro preview в Профиле — оплаты ещё нет.',
-    focus: 'Экспорт сертификата требует Pro. Пока нет оплат: Профиль → Pro preview.',
+    playful: 'Экспорт сертификата — Pro. Цены на экране Pro.',
+    focus: 'Экспорт сертификата — Pro. Открой paywall для цен.',
   },
   'pro.gateLabBody': {
-    playful: 'Live AI-оценки — Pro. Локальный coach работает — включи Pro preview в Профиле.',
-    focus: 'Live AI-оценки — Pro. Локальный coach остаётся бесплатным. Pro preview в Профиле.',
+    playful: 'Live AI-оценки — Pro. Локальный coach работает — посмотри, что даёт Pro.',
+    focus: 'Live AI-оценки — Pro. Локальный coach бесплатен. Paywall Pro для цен.',
   },
   'pro.certificateCta': {
     playful: 'Экспорт с Pro',
     focus: 'Экспорт (Pro)',
   },
   'pro.openPlanCta': {
-    playful: 'Открыть план в Профиле',
-    focus: 'Открыть план',
+    playful: 'Смотреть тарифы Pro',
+    focus: 'Смотреть Pro',
+  },
+  'pro.openPaywallCta': {
+    playful: 'Тарифы и цены Pro',
+    focus: 'Цены Pro',
+  },
+  'pro.paywall.brand': {
+    playful: 'StructAI Pro',
+    focus: 'StructAI Pro',
+  },
+  'pro.paywall.headline': {
+    playful: 'Докажи навык. Оценивай реальными моделями.',
+    focus: 'Live-оценки и делимое подтверждение навыка.',
+  },
+  'pro.paywall.sub': {
+    playful:
+      'Обучение остаётся Free. Переходи на Pro ради live AI-скоринга в Prompt Lab и экспорта сертификатов.',
+    focus:
+      'Уроки остаются Free. Pro открывает live Lab-оценки (твой ключ) и экспорт сертификатов после пути.',
+  },
+  'pro.paywall.compareFeature': {
+    playful: 'Что ты получаешь',
+    focus: 'Включено',
+  },
+  'pro.paywall.benefitLessons': {
+    playful: 'Все пути и ежедневная практика',
+    focus: 'Все пути и ежедневная практика',
+  },
+  'pro.paywall.benefitLabLocal': {
+    playful: 'Локальный Prompt Lab coach',
+    focus: 'Локальный Prompt Lab coach',
+  },
+  'pro.paywall.benefitLabLive': {
+    playful: 'Live AI-оценки со своим API-ключом',
+    focus: 'Live AI-оценки (BYOK)',
+  },
+  'pro.paywall.benefitCertificates': {
+    playful: 'Экспорт и шаринг сертификатов',
+    focus: 'Экспорт и шаринг сертификатов',
+  },
+  'pro.paywall.included': {
+    playful: 'Да',
+    focus: 'Да',
+  },
+  'pro.paywall.excluded': {
+    playful: '—',
+    focus: '—',
+  },
+  'pro.paywall.periodMonthly': {
+    playful: 'Месяц',
+    focus: 'Месяц',
+  },
+  'pro.paywall.periodYearly': {
+    playful: 'Год',
+    focus: 'Год',
+  },
+  'pro.paywall.bestValue': {
+    playful: 'Выгоднее',
+    focus: 'Выгоднее',
+  },
+  'pro.paywall.monthlyHint': {
+    playful: 'Отмена в любой момент',
+    focus: 'Ежемесячная оплата',
+  },
+  'pro.paywall.yearlyHint': {
+    playful: 'Около {{monthly}}/мес',
+    focus: '{{monthly}}/мес эквивалент',
+  },
+  'pro.paywall.cta': {
+    playful: 'Продолжить с Pro · {{price}}',
+    focus: 'Открыть Pro · {{price}}',
+  },
+  'pro.paywall.ctaBusy': {
+    playful: 'Разблокировка…',
+    focus: 'Разблокировка…',
+  },
+  'pro.paywall.billingFootnote': {
+    playful:
+      'Оплата через App Store / Play появится с Block H. Сейчас кнопка открывает Pro на этом устройстве, чтобы ты оценил ценность.',
+    focus:
+      'Store-биллинг ещё не live (Block H). CTA открывает Pro локально для оценки оффера.',
+  },
+  'pro.paywall.dismiss': {
+    playful: 'Не сейчас',
+    focus: 'Не сейчас',
   },
 };

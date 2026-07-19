@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Alert, Platform, View } from 'react-native';
 
@@ -27,6 +28,7 @@ export function CertificateShareAction({
 }: CertificateShareActionProps) {
   const certificateRef = useRef<View>(null);
   const { t, locale, mode } = useThemeMode();
+  const router = useRouter();
   const { user } = useAuth();
   const pathProgress = useProgressStore((state) => state.pathProgress[pathId]);
   const [isSharing, setIsSharing] = useState(false);
@@ -44,7 +46,7 @@ export function CertificateShareAction({
 
   const handleShare = async () => {
     if (!canUseProFeature('certificateExport')) {
-      Alert.alert(t('pro.gateTitle'), t('pro.gateCertificateBody'));
+      router.push('/paywall');
       return;
     }
 

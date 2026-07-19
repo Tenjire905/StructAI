@@ -1,24 +1,21 @@
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { Button, Card } from '@/components/ui';
-import {
-  getPlanId,
-  isProUnlocked,
-  lockProPreview,
-  unlockProPreview,
-} from '@/lib/entitlements';
+import { getPlanId, isProUnlocked, lockProPreview } from '@/lib/entitlements';
+import { PRO_PRICE_OFFERS } from '@/lib/proPricing';
 import { useThemeMode } from '@/theme';
 
 /**
- * Free vs Pro framing strip — no IAP yet.
- * Preview unlock is local-only so soft gates can be demoed before Block H.
+ * Profile plan strip — opens the value/pricing paywall for Free users.
  */
 export function ProPlanStrip() {
   const { tokens, t } = useThemeMode();
+  const router = useRouter();
   const [planId, setPlanId] = useState(getPlanId);
   const pro = planId === 'pro';
+  const yearly = PRO_PRICE_OFFERS.yearly;
 
   const refresh = useCallback(() => {
     setPlanId(getPlanId());
@@ -66,23 +63,36 @@ export function ProPlanStrip() {
             fontSize: tokens.typography.fontSize.bodySm,
             lineHeight: tokens.typography.fontSize.bodySm * 1.45,
           }}>
-          {pro ? t('pro.planBodyPro') : t('pro.planBodyFree')}
+          {pro
+            ? t('pro.planBodyPro')
+            : t('pro.planBodyFree', {
+                monthly: PRO_PRICE_OFFERS.monthly.priceLabel,
+                yearly: yearly.priceLabel,
+              })}
         </Text>
 
-        <Button
-          label={pro ? t('pro.previewLockCta') : t('pro.previewUnlockCta')}
-          onPress={() => {
-            void (async () => {
-              if (isProUnlocked()) {
+        {pro ? (
+          <Button
+            label={t('pro.previewLockCta')}
+            onPress={() => {
+              void (async () => {
                 await lockProPreview();
-              } else {
-                await unlockProPreview();
+                refresh();
+              })();
+            }}
+            variant="ghost"
+          />
+        ) : (
+          <Button
+            label={t('pro.openPaywallCta')}
+            onPress={() => {
+              if (!isProUnlocked()) {
+                router.push('/paywall');
               }
-              refresh();
-            })();
-          }}
-          variant="ghost"
-        />
+            }}
+            variant="primary"
+          />
+        )}
       </View>
     </Card>
   );

@@ -1655,13 +1655,13 @@ export const copyEn: CopyCatalog = {
   },
   'pro.planBodyFree': {
     playful:
-      'Free forever: all lessons and the local Prompt Lab coach. Pro adds live AI grades (with your key) and certificate export — payments come later; preview unlock is for testing.',
+      'Free: all lessons + local Lab coach. Pro: live AI grades and certificate export from {{monthly}}/mo or {{yearly}}/year.',
     focus:
-      'Free: all lessons + local Lab coach. Pro: live AI grades (BYOK) and certificate export. No payments yet — preview unlock is local only.',
+      'Free: lessons + local Lab. Pro: live AI grades + certificate export — from {{monthly}}/mo or {{yearly}}/year.',
   },
   'pro.planBodyPro': {
-    playful: 'Pro preview on: live Lab grades and certificate export are unlocked on this device.',
-    focus: 'Pro preview active. Live Lab grades and certificate export unlocked locally.',
+    playful: 'Pro is active on this device: live Lab grades and certificate export are unlocked.',
+    focus: 'Pro active. Live Lab grades and certificate export unlocked on this device.',
   },
   'pro.previewUnlockCta': {
     playful: 'Try Pro preview',
@@ -1676,19 +1676,103 @@ export const copyEn: CopyCatalog = {
     focus: 'Pro',
   },
   'pro.gateCertificateBody': {
-    playful: 'Certificate export is Pro. Enable Pro preview in Profile — payments are not live yet.',
-    focus: 'Certificate export requires Pro. Use Profile → Pro preview until payments ship.',
+    playful: 'Certificate export is Pro — see pricing on the Pro screen.',
+    focus: 'Certificate export is Pro. Open the Pro paywall for pricing.',
   },
   'pro.gateLabBody': {
-    playful: 'Live AI grades are Pro. Your local coach still works — unlock Pro preview in Profile.',
-    focus: 'Live AI grades are Pro. Local coach remains free. Unlock Pro preview in Profile.',
+    playful: 'Live AI grades are Pro. Your local coach still works — see what Pro includes.',
+    focus: 'Live AI grades are Pro. Local coach stays free. Open Pro for pricing.',
   },
   'pro.certificateCta': {
     playful: 'Export with Pro',
     focus: 'Export (Pro)',
   },
   'pro.openPlanCta': {
-    playful: 'Open plan in Profile',
-    focus: 'Open plan',
+    playful: 'See Pro plans',
+    focus: 'See Pro',
+  },
+  'pro.openPaywallCta': {
+    playful: 'See Pro plans & pricing',
+    focus: 'View Pro pricing',
+  },
+  'pro.paywall.brand': {
+    playful: 'StructAI Pro',
+    focus: 'StructAI Pro',
+  },
+  'pro.paywall.headline': {
+    playful: 'Prove your skill. Grade with real models.',
+    focus: 'Live grades and shareable proof of skill.',
+  },
+  'pro.paywall.sub': {
+    playful:
+      'Keep learning free. Upgrade when you want live AI scoring in the Prompt Lab and certificates you can export.',
+    focus:
+      'Lessons stay free. Pro unlocks live Lab AI grades (your key) and certificate export after path completion.',
+  },
+  'pro.paywall.compareFeature': {
+    playful: 'What you get',
+    focus: 'Included',
+  },
+  'pro.paywall.benefitLessons': {
+    playful: 'Full lesson paths & daily practice',
+    focus: 'All lesson paths and daily practice',
+  },
+  'pro.paywall.benefitLabLocal': {
+    playful: 'Local Prompt Lab coach',
+    focus: 'Local Prompt Lab coach',
+  },
+  'pro.paywall.benefitLabLive': {
+    playful: 'Live AI grades with your API key',
+    focus: 'Live AI grades (BYOK)',
+  },
+  'pro.paywall.benefitCertificates': {
+    playful: 'Export & share skill certificates',
+    focus: 'Certificate export and share',
+  },
+  'pro.paywall.included': {
+    playful: 'Yes',
+    focus: 'Yes',
+  },
+  'pro.paywall.excluded': {
+    playful: '—',
+    focus: '—',
+  },
+  'pro.paywall.periodMonthly': {
+    playful: 'Monthly',
+    focus: 'Monthly',
+  },
+  'pro.paywall.periodYearly': {
+    playful: 'Yearly',
+    focus: 'Yearly',
+  },
+  'pro.paywall.bestValue': {
+    playful: 'Best value',
+    focus: 'Best value',
+  },
+  'pro.paywall.monthlyHint': {
+    playful: 'Cancel anytime',
+    focus: 'Billed monthly',
+  },
+  'pro.paywall.yearlyHint': {
+    playful: 'About {{monthly}}/mo',
+    focus: '{{monthly}}/mo equivalent',
+  },
+  'pro.paywall.cta': {
+    playful: 'Continue with Pro · {{price}}',
+    focus: 'Unlock Pro · {{price}}',
+  },
+  'pro.paywall.ctaBusy': {
+    playful: 'Unlocking…',
+    focus: 'Unlocking…',
+  },
+  'pro.paywall.billingFootnote': {
+    playful:
+      'App Store / Play billing ships with Block H. For now this unlocks Pro on this device so you can judge the value.',
+    focus:
+      'Store billing not live yet (Block H). CTA unlocks Pro locally so you can evaluate the offer.',
+  },
+  'pro.paywall.dismiss': {
+    playful: 'Not now',
+    focus: 'Not now',
   },
 };

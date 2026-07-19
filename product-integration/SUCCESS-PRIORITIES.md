@@ -59,7 +59,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 | # | Initiative | Status |
 |---|------------|--------|
 | P0.1 | Finish prompt-mastery pm-4…pm-35 | ROADMAP #1 open |
-| P0.2 | Expo Go retest A–H | ROADMAP #2 open |
+| **P0.2** | Expo Go retest A–H | **Done** (founder verified A–H) |
 | P0.3 | Crash/nav + home UX on develop | Integration branch; merge when approved |
 
 ### P1 — “I learned something” every session
@@ -90,7 +90,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 | # | Initiative | Status |
 |---|------------|--------|
 | **P3.1** | App Store one-liner on welcome + Focus density (ROI #9) | **Shipped** |
-| **P3.2** | Free vs Pro: Lab AI grades, certificates — not wall lesson 1 | **Shipped** (soft gates + Profile plan strip; no IAP) |
+| **P3.2** | Free vs Pro paywall (value + pricing) | **Rework** — replace soft preview with paywall screens |
 
 ---
 
@@ -119,8 +119,8 @@ Aligned with Perplexity Jul 2026:
 4. Auto skill-tag banners (P1.2/P1.4) **removed** — glossary heuristics were inaccurate  
 
 Shipped recently: Orb Language (P1.8), identity certificates (P2.1), soft XP/ranks (P2.2), P3.1 store-line + Focus density.  
-Shipped: P3.2 Free vs Pro framing (soft gates; Block H payments still deferred).  
-Next: P0.1 mastery content when `pm-batch-01.json` exists, P0.2 Expo Go retest A–H, P2.3 widgets/notifications.
+P0.2 Expo Go retest A–H verified. P3.2 soft-gates being replaced by real paywall screens.  
+Next: P0.1 mastery content (pm-batch-01), finish P3.2 paywall, P2.3 widgets (reminders already on develop).
 
 ---
 
