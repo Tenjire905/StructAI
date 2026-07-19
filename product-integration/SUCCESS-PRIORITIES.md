@@ -1,6 +1,6 @@
 # StructAI — Success Priorities (Learning Feeling)
 
-**Stand:** Jul 2026 · P3.1–P3.2 shipped; P2.3 reminders founder-verified on device; pm-13…pm-24 in flight  
+**Stand:** Jul 2026 · P3.1–P3.2 shipped; P2.3 reminders founder-verified on device; pm-13…pm-35 shipped — prompt-mastery path complete  
 **North star:** Users leave every session thinking *“I actually learned something”* — Mimo-level *feeling*, StructAI *category* (prompt skill).
 
 **Teach-by-doing peers:** Iro AI (threat 5), AiQ (4), PromptFluent (3), PromptSpar (3).  
@@ -58,7 +58,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 ### P0 — Trust & completeness
 | # | Initiative | Status |
 |---|------------|--------|
-| **P0.1** | Finish prompt-mastery pm-4…pm-35 | **Partial** — pm-4…pm-12 shipped; pm-13…pm-35 open |
+| **P0.1** | Finish prompt-mastery pm-4…pm-35 | **Done** — pm-4…pm-12 shipped; pm-13…pm-35 shipped (path complete) |
 | **P0.2** | Expo Go retest A–H | **Done** (founder verified A–H) |
 | P0.3 | Crash/nav + home UX on develop | Integration branch; merge when approved |
 
@@ -118,9 +118,9 @@ Aligned with Perplexity Jul 2026:
 3. ~~Wrong-answer coaching + settle pulse~~ **done** (P1.6–P1.7)  
 4. Auto skill-tag banners (P1.2/P1.4) **removed** — glossary heuristics were inaccurate  
 
-Shipped recently: P3.1 store-line, P3.2 paywall, pm-4…pm-12, soft XP/ranks, certificates, Orb Language.  
+Shipped recently: P3.1 store-line, P3.2 paywall, pm-4…pm-35 (prompt-mastery path complete, 35 lessons), soft XP/ranks, certificates, Orb Language.  
 P2.3 evening reminders verified on Android development build.  
-Next: finish prompt-mastery pm-13…pm-35 (content depth), then widgets / Block H based on Perplexity.
+Next: widgets / Block H based on Perplexity.
 
 ---
 
