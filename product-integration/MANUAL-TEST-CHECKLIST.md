@@ -1,7 +1,7 @@
 # StructAI — Manuelle Test-Checkliste (Expo)
 
-**Stand:** develop `7a341161052b21fd009cbc6726b4c0b0b8959452` (Sprint 5–7)  
-**Gerät:** Expo Go **SDK 57** (nicht Play Store SDK 56)  
+**Stand:** develop `5191436e9defdff35a0bf460cb09c37b01505ce2` (Week-1 proof + day-2 polish)  
+**Gerät:** Expo Go **SDK 57** (nicht Play Store SDK 56); Evening-Reminders nur im **dev build**  
 **Vorbereitung:** Guest-Modus (nicht eingeloggt), ggf. Progress löschen (Profil/Dev oder frische Install)
 
 ---
@@ -80,9 +80,26 @@
 ```bash
 npm run verify:lessons
 npx tsc --noEmit
+node scripts/verify-week1-session-proof.mjs
+node scripts/verify-release-week1-polish.mjs
 ```
 
-Erwartung: 6/6 paths pass, tsc grün.
+Erwartung: paths pass, tsc grün, Week-1 verify ok.
+
+---
+
+## J — Week-1 retention (founder review path)
+
+| # | Schritt | Erwartung | ✓ |
+|---|---|---|---|
+| J1 | pb-1 bestehen (erster Abschluss) | Completion zeigt **Skill-Card** („You can do this now“) + Come-back-Zeile | |
+| J2 | Weiter nach erstem Abschluss | **`/onboarding/proof`** (vague → critique → rewrite → compare → summary), Prompt-Sprache = App-Locale | |
+| J3 | Proof fertig | → Profil (`/onboarding/profil`) | |
+| J4 | Profil speichern | → **Tagesziel** (`/onboarding/tagesziel`), Reminder-Toggle default ON (dev build) | |
+| J5 | Tagesziel speichern | → Home; Daily Challenge + **Prompt Lab** CTA sichtbar | |
+| J6 | Prompt Lab Demo (weak) | Weak-Prompt in App-Locale; Score-Ergebnis mit „you practiced / learned“ | |
+| J7 | Paywall öffnen | CTA = **Pro preview** (kein „Unlock · €…“); Footnote: keine Store-Zahlung | |
+| J8 | Evening reminder (dev build) | Body nennt zuletzt geübten Skill (nicht nur Orbs) | |
 
 ---
 
