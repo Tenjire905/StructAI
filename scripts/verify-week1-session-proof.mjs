@@ -23,7 +23,7 @@ if (!skill.includes('resolveSessionSkillSummary') || !skill.includes("'pb-1'")) 
 if (!card.includes('sessionSkill.eyebrow')) {
   violations.push('SessionSkillSummaryCard must show skill eyebrow');
 }
-if (!proof.includes('comparePromptScores') || !proof.includes('DEMO_WEAK_PROMPT')) {
+if (!proof.includes('comparePromptScores') || !proof.includes('buildDemoWeakPrompt')) {
   violations.push('FirstSessionProofView must critique/rewrite/compare locally');
 }
 if (!proofRoute.includes('/onboarding/profil')) {

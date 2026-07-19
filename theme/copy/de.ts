@@ -97,6 +97,14 @@ export const copyDe: CopyCatalog = {
     playful: 'Los geht\'s!',
     focus: 'Ersten Pfad öffnen',
   },
+  'home.labPracticeHint': {
+    playful: 'Mach aus dem heutigen Skill einen echten Prompt — score ihn im Prompt Lab.',
+    focus: 'Übe den gerade benannten Skill im Prompt Lab.',
+  },
+  'home.labPracticeCta': {
+    playful: 'Prompt Lab öffnen',
+    focus: 'Im Prompt Lab üben',
+  },
   'home.retryFailedCta': {
     playful: 'Erste offene Lektion wiederholen',
     focus: 'Zur ersten nicht bestandenen Lektion',
@@ -216,6 +224,11 @@ export const copyDe: CopyCatalog = {
   'dailyGoal.notificationBody': {
     playful: 'Noch {{remaining}} Orbs bis zum Tagesziel — eine kurze Lektion zählt.',
     focus: 'Noch {{remaining}} Orbs bis zum Tagesziel.',
+  },
+  'dailyGoal.notificationBodySkill': {
+    playful:
+      'Komm zurück und nutze „{{skill}}“ — noch {{remaining}} Orbs bis zum Tagesziel.',
+    focus: 'Komm zurück und übe „{{skill}}“. Noch {{remaining}} Orbs bis zum Tagesziel.',
   },
   'pathCard.chapters': {
     playful: 'Kapitel {{current}} von {{total}}',
@@ -605,6 +618,10 @@ export const copyDe: CopyCatalog = {
     playful: 'Du hast ein konkretes Prompting-Muster geübt, das du bei der nächsten KI-Aufgabe nutzen kannst.',
     focus: 'Du hast ein wiederverwendbares Prompting-Muster für die nächste KI-Aufgabe geübt.',
   },
+  'sessionSkill.comeBackTomorrow': {
+    playful: 'Komm morgen wieder und nutze dieses Muster an einer echten Aufgabe — so bleibt es hängen.',
+    focus: 'Komm morgen wieder und wende dieses Muster an einer echten Aufgabe an.',
+  },
   'sessionSkill.pb-1.name': {
     playful: 'Erkennen, was ein Prompt wirklich ist',
     focus: 'Prompt als Aufgabenbrief definieren',
@@ -614,36 +631,36 @@ export const copyDe: CopyCatalog = {
     focus: 'Du unterscheidest einen vagen Wunsch von einer nutzbaren Anweisung an ein Modell.',
   },
   'sessionSkill.pb-2.name': {
-    playful: 'Ein klares Ziel in den Prompt legen',
-    focus: 'Explizites Ziel formulieren',
+    playful: 'Klare Anweisungen schreiben',
+    focus: 'Klare Anweisungen schreiben',
   },
   'sessionSkill.pb-2.proof': {
-    playful: 'Du weißt, warum „mach irgendwas damit“ scheitert — und wie du das gewünschte Ergebnis benennst.',
-    focus: 'Du benennst das gewünschte Ergebnis statt einer vagen Bitte.',
+    playful: 'Du ersetzt unklare Bitten durch direkte Anweisungen, denen das Modell folgen kann.',
+    focus: 'Du ersetzt vage Bitten durch direkte, befolgbare Anweisungen.',
   },
   'sessionSkill.pb-3.name': {
-    playful: 'Den Kontext liefern, den das Modell braucht',
-    focus: 'Notwendigen Kontext liefern',
+    playful: 'Das Ziel zuerst festlegen',
+    focus: 'Das Ziel zuerst festlegen',
   },
   'sessionSkill.pb-3.proof': {
-    playful: 'Du siehst, wann ein Prompt kontextarm ist und was du vor dem Senden ergänzt.',
-    focus: 'Du erkennst fehlenden Kontext, bevor du den Prompt sendest.',
+    playful: 'Du benennst das gewünschte Ergebnis, bevor das Modell arbeitet.',
+    focus: 'Du formulierst das gewünschte Ergebnis, bevor du den Prompt sendest.',
   },
   'sessionSkill.pb-4.name': {
-    playful: 'Rolle und Zielgruppe wählen',
-    focus: 'Rolle und Zielgruppe setzen',
+    playful: 'Das Ausgabeformat festlegen',
+    focus: 'Das Ausgabeformat festlegen',
   },
   'sessionSkill.pb-4.proof': {
-    playful: 'Du steuerst Ton und Expertise, indem du eine Rolle vergibst und sagst, für wen die Antwort ist.',
-    focus: 'Du steuerst den Output über Rolle und Zielgruppe.',
-  },
-  'sessionSkill.pb-5.name': {
-    playful: 'Format bewusst eingrenzen',
-    focus: 'Ausgabeformat festlegen',
-  },
-  'sessionSkill.pb-5.proof': {
     playful: 'Du forderst die Form der Antwort (Liste, Länge, Struktur), statt zu hoffen.',
     focus: 'Du spezifizierst Liste/Länge/Struktur statt auf eine brauchbare Form zu hoffen.',
+  },
+  'sessionSkill.pb-5.name': {
+    playful: 'Mit Beispielen steuern',
+    focus: 'Mit Beispielen steuern',
+  },
+  'sessionSkill.pb-5.proof': {
+    playful: 'Du zeigst dem Modell, wie „gut“ aussieht, statt es nur zu beschreiben.',
+    focus: 'Du nutzt Beispiele, damit das Modell dein gewünschtes Muster trifft.',
   },
   'sessionSkill.pb-6.name': {
     playful: 'Negative Constraints richtig nutzen',
@@ -652,6 +669,54 @@ export const copyDe: CopyCatalog = {
   'sessionSkill.pb-6.proof': {
     playful: 'Du verbietest schlechte Muster, ohne das Modell raten zu lassen, was es stattdessen tun soll.',
     focus: 'Du kombinierst Verbote mit positiver Führung, damit das Modell weiß, was zu tun ist.',
+  },
+  'sessionSkill.pb-7.name': {
+    playful: 'Prompts so kurz wie nötig halten',
+    focus: 'Prompt-Länge richtig bemessen',
+  },
+  'sessionSkill.pb-7.proof': {
+    playful: 'Du streichst Fülltext und behältst nur Kontext, Aufgabe und Constraints, die die Antwort ändern.',
+    focus: 'Du kürzst Fülltext, sodass jede Zeile Kontext, Aufgabe oder Constraint liefert.',
+  },
+  'sessionSkill.pb-8.name': {
+    playful: 'Ein vollständiges Basics-Briefing bauen',
+    focus: 'Ein vollständiges Basics-Briefing bauen',
+  },
+  'sessionSkill.pb-8.proof': {
+    playful: 'Du kombinierst Ziel, Format, Beispiele und Verbote zu einem kompakten Briefing.',
+    focus: 'Du kombinierst Ziel, Format, Beispiele und Constraints zu einem Briefing.',
+  },
+  'sessionSkill.pb-9.name': {
+    playful: 'Vage Wörter durch präzise ersetzen',
+    focus: 'Präzise Formulierungen bevorzugen',
+  },
+  'sessionSkill.pb-9.proof': {
+    playful: 'Du ersetzt „kurz“ / „gut“ durch messbare Grenzen, die das Modell treffen kann.',
+    focus: 'Du ersetzt relative Wörter durch messbare Grenzen.',
+  },
+  'sessionSkill.pb-10.name': {
+    playful: 'Dem Modell eine Aufgabe auf einmal geben',
+    focus: 'Eine Aufgabe pro Prompt',
+  },
+  'sessionSkill.pb-10.proof': {
+    playful: 'Du teilst Mehrfachbitten so, dass jeder Prompt eine klare Aufgabe hat.',
+    focus: 'Du teilst Mehrfachbitten in eine klare Aufgabe pro Prompt.',
+  },
+  'sessionSkill.pb-11.name': {
+    playful: 'Sagen, für wen die Antwort ist',
+    focus: 'Zielgruppe festlegen',
+  },
+  'sessionSkill.pb-11.proof': {
+    playful: 'Du benennst die Leserschaft, damit Ton und Tiefe passen.',
+    focus: 'Du benennst die Zielgruppe, damit Ton und Tiefe zur Leserschaft passen.',
+  },
+  'sessionSkill.pb-12.name': {
+    playful: 'Typische Anfängerfehler erkennen',
+    focus: 'Typische Anfängerfehler erkennen',
+  },
+  'sessionSkill.pb-12.proof': {
+    playful: 'Du erkennst fehlendes Ziel, Format oder Constraints, bevor du sendest.',
+    focus: 'Du erkennst fehlendes Ziel, Format oder Constraints vor dem Senden.',
   },
   'firstSessionProof.brand': {
     playful: 'Dein erster Skill-Beweis',
@@ -692,6 +757,10 @@ export const copyDe: CopyCatalog = {
   'firstSessionProof.skillProof': {
     playful: 'Vor zehn Minuten hieß es „schreib etwas“. Jetzt siehst du, warum Struktur, Rolle und Constraints den Score ändern.',
     focus: 'Du kannst erklären, warum Rolle, Kontext und Constraints die Prompt-Qualität heben.',
+  },
+  'firstSessionProof.comeBackTomorrow': {
+    playful: 'Morgen: nutze dieses Rewrite-Muster an einer echten Aufgabe — das ist dein Tag-2-Win.',
+    focus: 'Morgen: wende dieses Rewrite-Muster an einer echten Aufgabe an.',
   },
   'firstSessionProof.ctaCritique': {
     playful: 'Kritik zeigen',
@@ -1817,9 +1886,11 @@ export const copyDe: CopyCatalog = {
     playful: 'Zertifikat-Export ist Pro — Preise siehst du auf dem Pro-Screen.',
     focus: 'Zertifikat-Export ist Pro. Paywall öffnen für Preise.',
   },
-  'pro.gateLabBody': {
-    playful: 'Live-KI-Bewertung ist Pro. Dein lokaler Coach bleibt — schau dir an, was Pro bietet.',
-    focus: 'Live-KI-Bewertung ist Pro. Lokaler Coach bleibt frei. Pro-Paywall für Preise.',
+    'pro.gateLabBody': {
+    playful:
+      'Dein API-Key allein ist nicht Pro. Live-KI-Bewertungen sind Pro — lokales Coach-Scoring bleibt gratis.',
+    focus:
+      'Ein API-Key ist nicht Pro. Live-Grades sind Pro; lokales Coach-Scoring bleibt gratis. Öffne Pro für geplante Preise.',
   },
   'pro.certificateCta': {
     playful: 'Mit Pro exportieren',
@@ -1895,19 +1966,19 @@ export const copyDe: CopyCatalog = {
     playful: 'Ca. {{monthly}}/Monat',
     focus: '{{monthly}}/Monat effektiv',
   },
-  'pro.paywall.cta': {
-    playful: 'Weiter mit Pro · {{price}}',
-    focus: 'Pro freischalten · {{price}}',
+    'pro.paywall.cta': {
+    playful: 'Pro auf diesem Gerät testen (Vorschau)',
+    focus: 'Pro-Vorschau auf diesem Gerät aktivieren',
   },
   'pro.paywall.ctaBusy': {
-    playful: 'Wird freigeschaltet…',
-    focus: 'Wird freigeschaltet…',
+    playful: 'Vorschau wird aktiviert…',
+    focus: 'Vorschau wird aktiviert…',
   },
   'pro.paywall.billingFootnote': {
     playful:
-      'App-Store-/Play-Billing kommt mit Block H. Bis dahin schaltet dieser Button Pro auf diesem Gerät frei — damit du den Wert beurteilen kannst.',
+      'Preise oben sind geplant. App-Store-/Play-Abrechnung ist noch nicht live (Block H). Dieser Button schaltet nur eine lokale Pro-Vorschau frei — es wird nichts berechnet.',
     focus:
-      'Store-Billing noch nicht live (Block H). CTA schaltet Pro lokal frei zur Bewertung des Angebots.',
+      'Preise sind geplant, noch nicht abrechenbar (Block H). CTA aktiviert nur eine lokale Pro-Vorschau — keine Store-Zahlung.',
   },
   'pro.paywall.dismiss': {
     playful: 'Nicht jetzt',

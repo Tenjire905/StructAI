@@ -1,6 +1,7 @@
 # StructAI — Success Priorities (Learning Feeling)
 
-**Stand:** Jul 2026 · prompt-mastery 35/35; Week-1 proof loop (Perplexity ROI #1–#3) shipped in PR  
+**Stand:** Jul 2026 · prompt-mastery 35/35; Week-1 proof + day-2 comeback polish in flight  
+
 
 **North star:** Users leave every session thinking *“I actually learned something”* — Mimo-level *feeling*, StructAI *category* (prompt skill).
 
@@ -61,7 +62,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 |---|------------|--------|
 | **P0.1** | Finish prompt-mastery pm-4…pm-35 | **Done** — pm-4…pm-12 shipped; pm-13…pm-35 shipped (path complete) |
 | **P0.2** | Expo Go retest A–H | **Done** (founder verified A–H) |
-| P0.3 | Crash/nav + home UX on develop | Integration branch; merge when approved |
+| P0.3 | Crash/nav + home UX on develop | **Done** on develop (lesson exit/continue/back-path + onboarding nav); retest on device with proof flow |
 
 ### P1 — “I learned something” every session
 | # | Initiative | Feeling | Status |
@@ -87,7 +88,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 |---|------------|------|--------|
 | **P2.1** | Certificates more identity-forward | Skill claim + evidence + credential ID | **Shipped** |
 | **P2.2** | Soft XP / ranks on top of orbs | Readable level strip (derived XP) | **Shipped** |
-| **P2.3** | Widgets / richer notifications | Evening reminders **founder-verified** on Android dev build; widgets later | **Partial** (reminders done; widgets open) |
+| **P2.3** | Widgets / richer notifications | Evening reminders **founder-verified**; skill-named day-2 body + post-profile goal opt-in | **Partial** (reminders + day-2 copy; widgets deferred) |
 | P2.4 | Selective social only if it reinforces practice | Duels later; not a core pillar | Open |
 
 ### P3 — Growth
@@ -117,15 +118,15 @@ We do **not** need to match content volume to win — feedback loops + session c
 
 Aligned with Perplexity Week-1 retention (Jul 2026):
 
-1. ~~First-session proof loop~~ **done** (P1.2b — critique → rewrite → compare → summarize)  
-2. ~~Session closure names a skill gain~~ **done** (P1.2)  
-3. ~~Prompt Lab “you learned X”~~ **done** (P1.2c)  
-4. Polish first path **only** where it strengthens proof (not volume)  
-5. Day-2 comeback cue (push/widget) **after** closure feels strong  
+1. ~~First-session proof loop~~ **done** (P1.2b)  
+2. ~~Session closure names a skill gain~~ **done** (P1.2; curated pb-1…pb-12)  
+3. ~~Prompt Lab “you learned X” + home Lab bridge~~ **done** (P1.2c)  
+4. ~~Day-2 comeback cue~~ **done** (skill-named evening reminder + post-profile tagesziel + session “come back tomorrow”)  
+5. Honest Pro preview CTA (no fake store charge) — in this polish  
 
-Shipped recently: Week-1 proof, P3.1 store-line, P3.2 paywall, pm-4…pm-35, soft XP/ranks, certificates, Orb Language.  
+Shipped recently: Week-1 proof, day-2 comeback, paywall honesty, P3.1 store-line, P3.2 paywall framing, pm-4…pm-35, soft XP/ranks, certificates, Orb Language.  
 P2.3 evening reminders verified on Android development build.  
-Next: day-2 comeback cue; first-path polish for proof; defer social / widgets-as-retention / Block H until habit + proof hold.
+Next for release review: cold-install device pass (guest → proof → profil → tagesziel → home → Lab). Defer social / widgets / Block H IAP.
 
 ---
 

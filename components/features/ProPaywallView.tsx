@@ -17,8 +17,8 @@ type ProPaywallViewProps = {
 };
 
 /**
- * Value-first Pro paywall: Free vs Pro, clear prices, one CTA.
- * Block H IAP not wired — CTA unlocks local Pro preview with honest footnote.
+ * Value-first Pro paywall: Free vs Pro, planned prices, one preview CTA.
+ * Block H IAP not wired — CTA unlocks local Pro preview (not a store purchase).
  */
 export function ProPaywallView({ onClose, onUnlocked }: ProPaywallViewProps) {
   const { tokens, t } = useThemeMode();
@@ -230,7 +230,7 @@ export function ProPaywallView({ onClose, onUnlocked }: ProPaywallViewProps) {
           label={
             busy
               ? t('pro.paywall.ctaBusy')
-              : t('pro.paywall.cta', { price: offer.priceLabel })
+              : t('pro.paywall.cta')
           }
           onPress={() => {
             void (async () => {

@@ -4,9 +4,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, ProgressBar } from '@/components/ui';
 import {
-  DEMO_WEAK_PROMPT,
   buildDemoImprovedPrompt,
+  buildDemoWeakPrompt,
   comparePromptScores,
+  getMissingHints,
   scorePrompt,
 } from '@/lib/promptScoring';
 import { useThemeMode } from '@/theme';
@@ -26,7 +27,7 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
   const insets = useSafeAreaInsets();
   const [step, setStep] = useState<ProofStep>('weak');
 
-  const weakPrompt = DEMO_WEAK_PROMPT;
+  const weakPrompt = useMemo(() => buildDemoWeakPrompt(locale), [locale]);
   const improvedPrompt = useMemo(() => buildDemoImprovedPrompt(locale), [locale]);
   const beforeScore = useMemo(() => scorePrompt(weakPrompt, locale), [locale, weakPrompt]);
   const afterScore = useMemo(
@@ -37,6 +38,11 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
     () => comparePromptScores(beforeScore, afterScore),
     [afterScore, beforeScore],
   );
+  const critiqueHints = useMemo(() => getMissingHints(beforeScore, 3), [beforeScore]);
+  const critiqueBody =
+    critiqueHints.length > 0
+      ? critiqueHints.join(' ')
+      : t('firstSessionProof.critiqueBody');
 
   const advance = () => {
     const order: ProofStep[] = ['weak', 'critique', 'rewrite', 'compare', 'summary'];
@@ -137,7 +143,7 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
                     fontSize: tokens.typography.fontSize.bodyMd,
                     lineHeight: tokens.typography.fontSize.bodyMd * 1.45,
                   }}>
-                  {t('firstSessionProof.critiqueBody')}
+                  {critiqueBody}
                 </Text>
                 <ProgressBar color="structure" progress={beforeScore.total / 100} />
               </View>
@@ -230,6 +236,15 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
                 lineHeight: tokens.typography.fontSize.bodyMd * 1.45,
               }}>
               {t('firstSessionProof.skillProof')}
+            </Text>
+            <Text
+              style={{
+                color: tokens.colors.text.tertiary,
+                fontFamily: tokens.typography.fontFamily.body,
+                fontSize: tokens.typography.fontSize.bodySm,
+                lineHeight: tokens.typography.fontSize.bodySm * 1.45,
+              }}>
+              {t('firstSessionProof.comeBackTomorrow')}
             </Text>
           </View>
         </Card>

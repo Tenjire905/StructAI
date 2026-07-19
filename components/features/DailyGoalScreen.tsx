@@ -4,7 +4,7 @@ import { ScrollView, Switch, Text, View } from 'react-native';
 
 import { Button } from '@/components/ui';
 import { PressableScale } from '@/components/ui/PressableScale';
-import { setDailyGoalSetupCompleted } from '@/lib/appStorage';
+import { isDailyGoalSetupCompleted, setDailyGoalSetupCompleted } from '@/lib/appStorage';
 import { requestDailyGoalNotificationPermission, areDailyGoalNotificationsSupported } from '@/lib/dailyGoalNotifications';
 import { DAILY_ORB_GOAL_PRESETS, DEFAULT_DAILY_ORB_GOAL } from '@/lib/dailyOrbGoal';
 import { useProgressStore } from '@/store/progressStore';
@@ -21,12 +21,19 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
   const storedGoal = useProgressStore((state) => state.dailyOrbGoal);
   const storedNotifications = useProgressStore((state) => state.dailyGoalNotificationsEnabled);
 
+  const notificationsSupported = areDailyGoalNotificationsSupported();
   const [selectedGoal, setSelectedGoal] = useState(
     storedGoal > 0 ? storedGoal : DEFAULT_DAILY_ORB_GOAL,
   );
-  const [notificationsEnabled, setNotificationsEnabled] = useState(storedNotifications);
+  // First setup: default ON when supported so day-2 comeback is one tap away. Respect prior choice after setup.
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    if (isDailyGoalSetupCompleted()) {
+      return storedNotifications;
+    }
+
+    return notificationsSupported || storedNotifications;
+  });
   const [isSaving, setIsSaving] = useState(false);
-  const notificationsSupported = areDailyGoalNotificationsSupported();
 
   const handleToggleNotifications = async (enabled: boolean) => {
     if (enabled) {
