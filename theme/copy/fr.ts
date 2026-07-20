@@ -797,6 +797,64 @@ export const copyFr: CopyCatalog = {
     playful: 'Tu touches les piliers cles — role, contexte, format, contraintes.',
     focus: 'Piliers cles presents : role, contexte, format, contraintes.',
   },
+
+  'promptLab.dictationStart': {
+    playful: 'Dicter le prompt',
+    focus: 'Dicter le prompt',
+  },
+  'promptLab.dictationStop': {
+    playful: 'Arrêter la dictée',
+    focus: 'Arrêter la dictée',
+  },
+  'promptLab.dictationListening': {
+    playful: 'J’écoute… dis ton prompt',
+    focus: 'Écoute… dicte ton prompt',
+  },
+  'promptLab.dictationPermission': {
+    playful: 'Le micro est nécessaire pour dicter. Active-le dans les réglages.',
+    focus: 'L’accès micro est requis pour la dictée.',
+  },
+  'promptLab.dictationError': {
+    playful: 'Dictée en panne — retape sur le micro.',
+    focus: 'Échec de la dictée. Réessaie avec le micro.',
+  },
+  'promptLab.dictationUnavailable': {
+    playful: 'La dictée nécessite le development build StructAI (pas Expo Go).',
+    focus: 'La dictée exige un development build StructAI — Expo Go n’a pas le module speech.',
+  },
+  'orb.speech.onboarding.welcome': {
+    playful: 'Salut ! Je suis ton Orb — on va rendre le prompting facile.',
+    focus: 'Je suis ton coach Orb. On va pratiquer des prompts clairs.',
+  },
+  'orb.speech.onboarding.mode': {
+    playful: 'Choisis l’ambiance qui te va — je m’adapte.',
+    focus: 'Focus ou Playful — mêmes compétences, densité différente.',
+  },
+  'orb.speech.onboarding.loop': {
+    playful: 'Petit loop : apprendre → pratiquer → progresser. Prêt ?',
+    focus: 'Trois temps : apprendre, pratiquer, améliorer. Lance quand tu veux.',
+  },
+  'orb.speech.onboarding.proof': {
+    playful: 'Regarde ce prompt vague s’améliorer — c’est le skill.',
+    focus: 'Critique → rewrite → comparer. C’est la preuve.',
+  },
+  'orb.speech.onboarding.proofDone': {
+    playful: 'Top — tu repères un prompt faible et tu le corriges.',
+    focus: 'Tu peux transformer une demande vague en brief utile.',
+  },
+  'orb.speech.onboarding.dailyGoal': {
+    playful: 'Fixe un petit objectif du jour — je te rappelle demain.',
+    focus: 'Choisis un objectif d’orbes quotidien pour un streak honnête.',
+  },
+  'orb.speech.lessonComplete': {
+    playful: 'Yes ! Ce skill est à toi — réutilise-le demain.',
+    focus: 'Leçon réussie. Réapplique ce schéma demain sur une vraie tâche.',
+  },
+  'orb.speech.lessonRetry': {
+    playful: 'Presque ! On reprend les points faibles — tu vas y arriver.',
+    focus: 'Pas encore. Réessaie les checks manqués pour verrouiller le schéma.',
+  },
+
   'lesson.backToPath': {
     playful: 'Retour au parcours',
     focus: 'Retour au parcours',

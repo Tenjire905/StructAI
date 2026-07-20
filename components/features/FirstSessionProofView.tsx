@@ -2,7 +2,9 @@ import { useMemo, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { OrbPresence } from '@/components/features/OrbPresence';
 import { Button, Card, ProgressBar } from '@/components/ui';
+import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import {
   buildDemoImprovedPrompt,
   buildDemoWeakPrompt,
@@ -26,6 +28,15 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
   const { tokens, t, locale } = useThemeMode();
   const insets = useSafeAreaInsets();
   const [step, setStep] = useState<ProofStep>('weak');
+  const orbOverride =
+    step === 'critique' || step === 'compare'
+      ? 'think'
+      : step === 'summary'
+        ? 'celebrating'
+        : step === 'rewrite'
+          ? 'happy'
+          : 'attentive';
+  const companionState = useOrbCompanionState(orbOverride);
 
   const weakPrompt = useMemo(() => buildDemoWeakPrompt(locale), [locale]);
   const improvedPrompt = useMemo(() => buildDemoImprovedPrompt(locale), [locale]);
@@ -76,6 +87,17 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
         paddingTop: insets.top + tokens.spacing.space5,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
+      <OrbPresence
+        showSpeech
+        size={tokens.spacing.space8}
+        speechKey={
+          step === 'summary'
+            ? 'orb.speech.onboarding.proofDone'
+            : 'orb.speech.onboarding.proof'
+        }
+        state={companionState}
+      />
+
       <View style={{ gap: tokens.spacing.space2 }}>
         <Text
           style={{

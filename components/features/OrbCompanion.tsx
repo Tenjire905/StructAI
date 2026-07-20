@@ -35,6 +35,9 @@ type OrbCompanionProps = {
   size?: number;
 };
 
+type GazeDirection = 'center' | 'right' | 'down' | 'left';
+type MouthMood = 'none' | 'smile' | 'grin' | 'frown';
+
 function stopScaleAnimation(scale: SharedValue<number>) {
   cancelAnimation(scale);
   scale.value = 1;
@@ -106,6 +109,87 @@ function getHighlightOpacity(state: OrbCompanionState, isPlayfulPresentation: bo
   }
 }
 
+/** Static eye centers — never animate SVG cx/cy (Expo Go crash). */
+function getEyeCenters(
+  gaze: GazeDirection,
+  thinkGlance: boolean,
+): { leftCx: number; rightCx: number; cy: number } {
+  if (thinkGlance) {
+    return { leftCx: 9.6, rightCx: 16.6, cy: 10.5 };
+  }
+
+  switch (gaze) {
+    case 'right':
+      return { leftCx: 9.8, rightCx: 16.8, cy: 10.5 };
+    case 'left':
+      return { leftCx: 7.2, rightCx: 14.2, cy: 10.5 };
+    case 'down':
+      return { leftCx: 8.5, rightCx: 15.5, cy: 12.0 };
+    default:
+      return { leftCx: 8.5, rightCx: 15.5, cy: 10.5 };
+  }
+}
+
+function resolveMouthMood(state: OrbCompanionState, gaze: GazeDirection): MouthMood {
+  switch (state) {
+    case 'happy':
+    case 'celebrating':
+      return 'grin';
+    case 'worry':
+      return 'frown';
+    case 'sleepy':
+    case 'low_energy':
+    case 'think':
+      return 'none';
+    case 'attentive':
+      return 'smile';
+    case 'idle':
+    default:
+      // Soft smile while looking around; stronger when facing forward again.
+      return gaze === 'center' ? 'smile' : 'smile';
+  }
+}
+
+function OrbMouth({ mood, color }: { mood: MouthMood; color: string }) {
+  if (mood === 'none') {
+    return null;
+  }
+
+  if (mood === 'frown') {
+    return (
+      <Path
+        d="M 9.2 15.6 Q 12 14.4 14.8 15.6"
+        fill="none"
+        stroke={color}
+        strokeLinecap="round"
+        strokeWidth={1.15}
+      />
+    );
+  }
+
+  if (mood === 'grin') {
+    return (
+      <Path
+        d="M 8.4 14.6 Q 12 17.4 15.6 14.6"
+        fill="none"
+        stroke={color}
+        strokeLinecap="round"
+        strokeWidth={1.3}
+      />
+    );
+  }
+
+  return (
+    <Path
+      d="M 9 15 Q 12 16.7 15 15"
+      fill="none"
+      stroke={color}
+      strokeLinecap="round"
+      strokeWidth={1.2}
+    />
+  );
+}
+
 type PlayfulEyesProps = {
   state: OrbCompanionState;
   reduceMotion: boolean;
@@ -117,10 +201,48 @@ function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
   const eyeRadius = useSharedValue(1.1);
   const eyeHeight = useSharedValue(1.1);
   const blink = useSharedValue(1);
-  // Think glance uses static eye centers (animated SVG cx crashed on Expo Go).
+  const [gaze, setGaze] = useState<GazeDirection>('center');
+
   const thinkGlance = state === 'think';
-  const leftEyeCx = thinkGlance ? 9.6 : 8.5;
-  const rightEyeCx = thinkGlance ? 16.6 : 15.5;
+  const { leftCx, rightCx, cy } = getEyeCenters(gaze, thinkGlance);
+  const mouthMood = resolveMouthMood(state, gaze);
+  const usesHappyArcs = state === 'happy' || state === 'celebrating';
+
+  // Idle: look right → center → down → center (with a smile), not endless blank blinking.
+  useEffect(() => {
+    if (!isFocused || reduceMotion || state !== 'idle') {
+      setGaze('center');
+      return;
+    }
+
+    let step = 0;
+    const sequence: Array<{ gaze: GazeDirection; ms: number }> = [
+      { gaze: 'center', ms: 2200 },
+      { gaze: 'right', ms: 1100 },
+      { gaze: 'center', ms: 1400 },
+      { gaze: 'down', ms: 1000 },
+      { gaze: 'center', ms: 1800 },
+      { gaze: 'left', ms: 900 },
+      { gaze: 'center', ms: 2000 },
+    ];
+
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    const tick = () => {
+      const current = sequence[step % sequence.length];
+      setGaze(current.gaze);
+      step += 1;
+      timer = setTimeout(tick, current.ms);
+    };
+
+    tick();
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [isFocused, reduceMotion, state]);
 
   useEffect(() => {
     if (!isFocused || reduceMotion) {
@@ -132,19 +254,16 @@ function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
 
     stopEyeAnimations(eyeRadius, eyeHeight, blink);
 
-    const canBlink =
-      state === 'idle' ||
-      state === 'attentive' ||
-      state === 'think' ||
-      state === 'worry';
+    // Occasional single blinks on idle/attentive — not a constant open/close loop.
+    const softBlinkStates =
+      state === 'idle' || state === 'attentive' || state === 'think' || state === 'worry';
 
-    if (canBlink) {
+    if (softBlinkStates) {
+      const gap = state === 'idle' ? 3800 : 2600;
       blink.value = withRepeat(
         withSequence(
-          withDelay(2200, withTiming(0.12, { duration: 70 })),
-          withTiming(1, { duration: 90 }),
-          withDelay(1600, withTiming(0.12, { duration: 70 })),
-          withTiming(1, { duration: 90 }),
+          withDelay(gap, withTiming(0.12, { duration: 80 })),
+          withTiming(1, { duration: 110 }),
         ),
         -1,
         false,
@@ -227,7 +346,7 @@ function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
     );
   }
 
-  if (state === 'happy') {
+  if (usesHappyArcs) {
     return (
       <>
         <Path
@@ -244,6 +363,7 @@ function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
           strokeLinecap="round"
           strokeWidth={1.2}
         />
+        <OrbMouth color={eyeColor} mood={mouthMood} />
       </>
     );
   }
@@ -267,18 +387,19 @@ function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
         />
         <AnimatedEllipse
           animatedProps={leftEyeProps}
-          cx={leftEyeCx}
+          cx={leftCx}
           cy={11.2}
           fill={eyeColor}
           opacity={0.9}
         />
         <AnimatedEllipse
           animatedProps={rightEyeProps}
-          cx={rightEyeCx}
+          cx={rightCx}
           cy={11.2}
           fill={eyeColor}
           opacity={0.9}
         />
+        <OrbMouth color={eyeColor} mood={mouthMood} />
       </>
     );
   }
@@ -287,21 +408,22 @@ function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
     <>
       <AnimatedEllipse
         animatedProps={leftEyeProps}
-        cx={leftEyeCx}
-        cy={10.5}
+        cx={leftCx}
+        cy={cy}
         fill={eyeColor}
         opacity={0.9}
       />
       <AnimatedEllipse
         animatedProps={rightEyeProps}
-        cx={rightEyeCx}
-        cy={10.5}
+        cx={rightCx}
+        cy={cy}
         fill={eyeColor}
         opacity={0.9}
       />
       {state === 'think' ? (
         <Circle cx={18.5} cy={7.5} fill={eyeColor} opacity={0.55} r={0.7} />
       ) : null}
+      <OrbMouth color={eyeColor} mood={mouthMood} />
     </>
   );
 }

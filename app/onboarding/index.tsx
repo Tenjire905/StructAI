@@ -1,14 +1,19 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { OrbPresence } from '@/components/features/OrbPresence';
 import { Button } from '@/components/ui';
+import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { useThemeMode } from '@/theme';
 
 export default function OnboardingWelcomeScreen() {
   const { tokens, t, mode } = useThemeMode();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const isFocus = mode === 'focus';
+  const companionState = useOrbCompanionState('attentive');
 
   return (
     <LinearGradient
@@ -17,10 +22,21 @@ export default function OnboardingWelcomeScreen() {
       start={tokens.gradients.heroBackground.start}
       style={{
         flex: 1,
-        justifyContent: 'flex-end',
-        paddingBottom: tokens.spacing.space7,
+        justifyContent: 'space-between',
+        paddingBottom: tokens.spacing.space7 + insets.bottom,
         paddingHorizontal: tokens.spacing.screenPaddingHero,
+        paddingTop: insets.top + tokens.spacing.space6,
       }}>
+      {/* First contact is the Orb coach — not a wall of text. */}
+      <View style={{ alignItems: 'center', paddingTop: tokens.spacing.space5 }}>
+        <OrbPresence
+          showSpeech
+          size={tokens.spacing.space8 * 1.35}
+          speechKey="orb.speech.onboarding.welcome"
+          state={companionState}
+        />
+      </View>
+
       <View style={{ gap: isFocus ? tokens.spacing.space3 : tokens.spacing.space4 }}>
         {/* Brand is the hero signal; headline stays secondary to StructAI. */}
         <Text

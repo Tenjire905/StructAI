@@ -2,10 +2,18 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, Switch, Text, View } from 'react-native';
 
+import { OrbPresence } from '@/components/features/OrbPresence';
 import { Button } from '@/components/ui';
 import { PressableScale } from '@/components/ui/PressableScale';
-import { isDailyGoalSetupCompleted, setDailyGoalSetupCompleted } from '@/lib/appStorage';
-import { requestDailyGoalNotificationPermission, areDailyGoalNotificationsSupported } from '@/lib/dailyGoalNotifications';
+import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
+import {
+  isDailyGoalSetupCompleted,
+  setDailyGoalSetupCompleted,
+} from '@/lib/appStorage';
+import {
+  areDailyGoalNotificationsSupported,
+  requestDailyGoalNotificationPermission,
+} from '@/lib/dailyGoalNotifications';
 import { DAILY_ORB_GOAL_PRESETS, DEFAULT_DAILY_ORB_GOAL } from '@/lib/dailyOrbGoal';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
@@ -20,6 +28,7 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
   const setDailyOrbGoal = useProgressStore((state) => state.setDailyOrbGoal);
   const storedGoal = useProgressStore((state) => state.dailyOrbGoal);
   const storedNotifications = useProgressStore((state) => state.dailyGoalNotificationsEnabled);
+  const companionState = useOrbCompanionState('attentive');
 
   const notificationsSupported = areDailyGoalNotificationsSupported();
   const [selectedGoal, setSelectedGoal] = useState(
@@ -68,6 +77,13 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
         paddingTop: tokens.spacing.space7,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
+      <OrbPresence
+        showSpeech
+        size={tokens.spacing.space8}
+        speechKey="orb.speech.onboarding.dailyGoal"
+        state={companionState}
+      />
+
       <View style={{ gap: tokens.spacing.space3 }}>
         <Text
           style={{

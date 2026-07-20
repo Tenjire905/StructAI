@@ -16,6 +16,7 @@ import { PromptLabTextInput } from '@/components/features/PromptLabTextInput';
 import { PromptScoreHistoryList } from '@/components/features/PromptScoreHistoryList';
 import { Badge, Button, Card, PressableScale, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
+import { usePromptDictation } from '@/hooks/usePromptDictation';
 import { trackEvent } from '@/lib/analytics';
 import {
   ScoringError,
@@ -63,6 +64,11 @@ export default function PromptLabScreen() {
   const addPromptScore = useProgressStore((state) => state.addPromptScore);
   const [promptInput, setPromptInput] = useState('');
   const promptInputRef = useRef<TextInput>(null);
+  const dictation = usePromptDictation({
+    locale,
+    onChangeText: setPromptInput,
+    value: promptInput,
+  });
   const [score, setScore] = useState<PromptScore | null>(null);
   const [comparison, setComparison] = useState<PromptScoreComparison | null>(null);
   const [baselineScore, setBaselineScore] = useState<PromptScore | null>(null);
@@ -304,6 +310,7 @@ export default function PromptLabScreen() {
 
       <View style={{ gap: tokens.spacing.space3 }}>
         <PromptLabTextInput
+          dictation={dictation}
           onBlur={() => setInputFocused(false)}
           onChangeText={setPromptInput}
           onFocus={() => setInputFocused(true)}

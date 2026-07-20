@@ -50,7 +50,17 @@
           "backgroundColor": "#0A0612"
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Allow StructAI to use the microphone for Prompt Lab dictation.",
+          "speechRecognitionPermission": "Allow StructAI to convert speech into prompt text.",
+          "androidSpeechServicePackages": [
+            "com.google.android.googlequicksearchbox"
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
