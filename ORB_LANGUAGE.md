@@ -12,7 +12,7 @@ Grundregel: **Der Orb ist ein lokaler Coach** — abstrakte Energie-Präsenz (ke
 | Look | **Abstrakt** — dunkler Kern + violette Corona / Wellen (Eclipse), kein menschliches Gesicht |
 | Assets | **SVG + Reanimated** (kein Rive-Abo) |
 | Ausdruck | Energie-Wellen (`lib/orbExpressions.ts`): Spin, Counter-Spin, Dash-Dichte, Ellipse-Form — Idle vs Calcul |
-| Voice (Dev) | **Lokale MP3-Clips** (`assets/orb-voice`) via `expo-av` — **$0 Runtime**, generiert mit kostenlosem Edge-TTS |
+| Voice (Dev) | **Lokale MP3-Clips** (`assets/orb-voice`) via `expo-audio` — **$0 Runtime**, Expo Go, Edge-TTS |
 | Voice (Release später) | Clips austauschen (Studio / bezahlte Stimme) — gleiche Keys, kein API-Umbau nötig |
 | Kein Runtime-Cloud-TTS | Keine ElevenLabs/OpenAI-API im Client (Kosten + Offline + Privacy) |
 | Playful | Bubbles + Audio an Lehr-Momenten (`soundEnabled`) |
@@ -56,5 +56,5 @@ Lektions-Momente → State: `reading_start`→attentive, `reading`→think, `pra
 1. **SVG-Coach:** `OrbSvgCompanion.tsx` + `lib/orbExpressions.ts` + `lib/orbChoreography.ts`.
 2. **Facade:** `OrbCompanion.tsx` → SVG only.
 3. **Präsenz:** `OrbPresence.tsx` — `layout="hero"`, `interaction`, `voiceKey`.
-4. **Audio:** `expo-av` + bundled MP3s.
+4. **Audio:** `expo-audio` + bundled MP3s (probe `ExpoAudio` first).
 5. Verify: `scripts/verify-orb-coach.mjs`, `scripts/verify-orb-rich-presence.mjs`.

@@ -25,9 +25,6 @@ if (pkg.includes('@rive-app/react-native')) {
 if (!pkg.includes('expo-speech')) {
   violations.push('package.json must include expo-speech as optional TTS fallback');
 }
-if (!pkg.includes('expo-av')) {
-  violations.push('package.json must include expo-av for local voiceover');
-}
 if (!expressions.includes('energyForState') || !expressions.includes('counterSpinMs') || !expressions.includes('waveSegments')) {
   violations.push('orbExpressions must define dual-spin + wave segment energy');
 }
@@ -43,20 +40,23 @@ if (!facade.includes('OrbSvgCompanion') || facade.includes('OrbRiveCompanion')) 
 if (!presence.includes('voiceKey') || !presence.includes('speakOrbCoachLine')) {
   violations.push('OrbPresence must support sparse coach voice');
 }
-if (!voice.includes('expo-av') || !voice.includes('soundEnabled')) {
-  violations.push('orbCoachVoice must play bundled clips via expo-av and respect soundEnabled');
+if (!voice.includes('expo-audio') || !voice.includes('soundEnabled')) {
+  violations.push('orbCoachVoice must play bundled clips via expo-audio and respect soundEnabled');
 }
 if (!voice.includes('resolveOrbVoiceAsset') || !voice.includes('playBundledClip')) {
   violations.push('orbCoachVoice must prefer local voiceover clips');
 }
-if (!voice.includes('requireOptionalNativeModule') || !voice.includes('ExponentAV')) {
-  violations.push('orbCoachVoice must probe ExponentAV before importing expo-av');
+if (!voice.includes('requireOptionalNativeModule') || !voice.includes('ExpoAudio')) {
+  violations.push('orbCoachVoice must probe ExpoAudio before importing expo-audio');
 }
-if (voice.includes("from 'expo-av'") || voice.includes('from "expo-av"')) {
-  violations.push('orbCoachVoice must not top-level-import expo-av (Expo Go crash)');
+if (voice.includes("from 'expo-audio'") || voice.includes('from "expo-audio"')) {
+  violations.push('orbCoachVoice must not top-level-import expo-audio');
 }
-if (!pkg.includes('expo-av')) {
-  violations.push('package.json must include expo-av for local voiceover');
+if (voice.includes("from 'expo-av'") || pkg.includes('expo-av')) {
+  violations.push('use expo-audio (Expo Go), not expo-av');
+}
+if (!pkg.includes('expo-audio')) {
+  violations.push('package.json must include expo-audio for local voiceover');
 }
 if (!existsSync(join(root, 'assets/orb-voice/de/onboarding.welcome.playful.mp3'))) {
   violations.push('bundled DE onboarding welcome clip missing');

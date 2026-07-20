@@ -1,11 +1,10 @@
 /**
- * Local Orb coach voiceover — Expo-Go safe.
+ * Local Orb coach voiceover — works in Expo Go via `expo-audio` (ExpoAudio).
  *
- * Never top-level-import `expo-av` / `expo-speech`: missing native modules
- * crash route load (`Cannot find native module 'ExponentAV'`).
+ * Never top-level-import audio packages: probe native module first.
  *
  * Priority:
- * 1. Bundled MP3 via expo-av when ExponentAV exists ($0 runtime)
+ * 1. Bundled MP3 via expo-audio when ExpoAudio exists ($0 runtime, Expo Go OK)
  * 2. Device TTS when ExpoSpeech exists
  * 3. Otherwise silent (visual coach still works)
  */
@@ -29,26 +28,27 @@ export type OrbCoachVoiceOptions = {
   force?: boolean;
 };
 
-type AvModule = typeof import('expo-av');
+type AudioModule = typeof import('expo-audio');
 type SpeechModule = typeof import('expo-speech');
-type SoundInstance = {
-  stopAsync: () => Promise<unknown>;
-  unloadAsync: () => Promise<unknown>;
-  setOnPlaybackStatusUpdate: (
-    callback: (status: { isLoaded: boolean; didJustFinish?: boolean }) => void,
-  ) => void;
+type AudioPlayer = {
+  play: () => void;
+  pause: () => void;
+  seekTo: (seconds: number) => void | Promise<void>;
+  remove?: () => void;
+  release?: () => void;
+  volume: number;
 };
 
-let avModulePromise: Promise<AvModule | null> | null = null;
+let audioModulePromise: Promise<AudioModule | null> | null = null;
 let speechModulePromise: Promise<SpeechModule | null> | null = null;
-let activeSound: SoundInstance | null = null;
+let activePlayer: AudioPlayer | null = null;
 let audioModeReady = false;
 let lastSpokenKey = '';
 let reduceMotionCached: boolean | null = null;
 
-function canUseNativeAv(): boolean {
+function canUseNativeAudio(): boolean {
   try {
-    return requireOptionalNativeModule('ExponentAV') != null;
+    return requireOptionalNativeModule('ExpoAudio') != null;
   } catch {
     return false;
   }
@@ -62,18 +62,18 @@ function canUseNativeSpeech(): boolean {
   }
 }
 
-async function loadAvModule(): Promise<AvModule | null> {
-  if (!canUseNativeAv()) {
+async function loadAudioModule(): Promise<AudioModule | null> {
+  if (!canUseNativeAudio()) {
     return null;
   }
 
-  if (!avModulePromise) {
-    avModulePromise = import('expo-av')
+  if (!audioModulePromise) {
+    audioModulePromise = import('expo-audio')
       .then((mod) => mod)
       .catch(() => null);
   }
 
-  return avModulePromise;
+  return audioModulePromise;
 }
 
 async function loadSpeechModule(): Promise<SpeechModule | null> {
@@ -102,46 +102,47 @@ async function isReduceMotion(): Promise<boolean> {
   return reduceMotionCached;
 }
 
-async function ensureAudioMode(av: AvModule): Promise<void> {
+async function ensureAudioMode(audio: AudioModule): Promise<void> {
   if (audioModeReady) {
     return;
   }
   try {
-    await av.Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      playsInSilentModeIOS: true,
-      staysActiveInBackground: false,
-      interruptionModeIOS: av.InterruptionModeIOS.DuckOthers,
-      interruptionModeAndroid: av.InterruptionModeAndroid.DuckOthers,
-      shouldDuckAndroid: true,
-      playThroughEarpieceAndroid: false,
+    await audio.setAudioModeAsync({
+      playsInSilentMode: true,
+      interruptionMode: 'duckOthers',
+      shouldPlayInBackground: false,
     });
     audioModeReady = true;
   } catch {
-    // Still attempt playback if mode setup fails.
+    // Still attempt playback.
   }
 }
 
-async function stopClip(): Promise<void> {
-  if (!activeSound) {
+function releaseActivePlayer(): void {
+  if (!activePlayer) {
     return;
   }
   try {
-    await activeSound.stopAsync();
+    activePlayer.pause();
   } catch {
     // ignore
   }
   try {
-    await activeSound.unloadAsync();
+    activePlayer.release?.();
   } catch {
     // ignore
   }
-  activeSound = null;
+  try {
+    activePlayer.remove?.();
+  } catch {
+    // ignore
+  }
+  activePlayer = null;
 }
 
 /** Stop any in-flight coach line (screen change / unmount). */
 export function stopOrbCoachVoice(): void {
-  void stopClip();
+  releaseActivePlayer();
   void loadSpeechModule().then((Speech) => {
     try {
       Speech?.stop();
@@ -152,33 +153,24 @@ export function stopOrbCoachVoice(): void {
 }
 
 async function playBundledClip(asset: number): Promise<boolean> {
-  const av = await loadAvModule();
-  if (!av) {
+  const audio = await loadAudioModule();
+  if (!audio) {
     return false;
   }
 
   try {
-    await ensureAudioMode(av);
-    await stopClip();
-    const { sound } = await av.Audio.Sound.createAsync(asset, {
-      shouldPlay: true,
-      volume: 1,
-    });
-    const clip: SoundInstance = sound;
-    activeSound = clip;
-    sound.setOnPlaybackStatusUpdate((status) => {
-      if (!status.isLoaded) {
-        return;
-      }
-      if (status.didJustFinish) {
-        void sound.unloadAsync().catch(() => undefined);
-        if (activeSound === clip) {
-          activeSound = null;
-        }
-      }
-    });
+    await ensureAudioMode(audio);
+    releaseActivePlayer();
+
+    const player = audio.createAudioPlayer(asset) as AudioPlayer;
+    activePlayer = player;
+    player.volume = 1;
+    // Fresh player starts at 0; seek defensively for replay edge cases.
+    await Promise.resolve(player.seekTo(0));
+    player.play();
     return true;
   } catch {
+    releaseActivePlayer();
     return false;
   }
 }
