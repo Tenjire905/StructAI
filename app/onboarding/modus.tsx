@@ -38,8 +38,9 @@ export default function OnboardingModusScreen() {
         interaction="enter"
         layout="hero"
         showSpeech={false}
-        size={tokens.spacing.space8 * 1.15}
+        size={tokens.spacing.space8 * 1.25}
         state={companionState}
+        voiceKey="orb.speech.onboarding.mode"
       />
 
       <Text

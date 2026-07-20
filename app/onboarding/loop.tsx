@@ -50,6 +50,7 @@ export default function OnboardingLoopScreen() {
         showSpeech={false}
         size={tokens.spacing.space8 * 1.1}
         state={companionState}
+        voiceKey="orb.speech.onboarding.loop"
       />
 
       <Text

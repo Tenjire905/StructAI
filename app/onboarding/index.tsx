@@ -35,6 +35,7 @@ export default function OnboardingWelcomeScreen() {
           showSpeech={false}
           size={tokens.spacing.space8 * 1.55}
           state={companionState}
+          voiceKey="orb.speech.onboarding.welcome"
         />
       </View>
 

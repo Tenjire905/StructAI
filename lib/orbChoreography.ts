@@ -18,18 +18,20 @@ export type OrbIdleBeat = {
   eyeScale?: number;
 };
 
-/** Curiosity scan — looks like evaluating structure, not doodling. */
+/** Curiosity scan — evaluating structure, not doodling. Richer than a blink loop. */
 export const IDLE_CURIOSITY_BEATS: OrbIdleBeat[] = [
-  { gaze: { x: 0, y: 0 }, holdMs: 1600, eyeScale: 1 },
-  { gaze: { x: 1.4, y: -0.2 }, holdMs: 900, eyeScale: 1.05 },
-  { gaze: { x: 1.4, y: -0.2 }, holdMs: 120, lid: 0.12, eyeScale: 1.05 },
-  { gaze: { x: 0.6, y: 1.1 }, holdMs: 700, eyeScale: 0.95 },
-  { gaze: { x: 0, y: 0 }, holdMs: 1100, eyeScale: 1 },
-  { gaze: { x: -1.3, y: 0.15 }, holdMs: 850, eyeScale: 1.04 },
-  { gaze: { x: -0.4, y: -0.9 }, holdMs: 650, eyeScale: 1.12 },
-  { gaze: { x: 0, y: 0 }, holdMs: 1400, eyeScale: 1 },
-  { gaze: { x: 0.9, y: 0.4 }, holdMs: 500, eyeScale: 1.02 },
-  { gaze: { x: 0, y: 0 }, holdMs: 1800, eyeScale: 1 },
+  { gaze: { x: 0, y: 0 }, holdMs: 1500, eyeScale: 1 },
+  { gaze: { x: 1.5, y: -0.25 }, holdMs: 850, eyeScale: 1.06 },
+  { gaze: { x: 1.5, y: -0.25 }, holdMs: 110, lid: 0.12, eyeScale: 1.06 },
+  { gaze: { x: 0.7, y: 1.15 }, holdMs: 650, eyeScale: 0.94 },
+  { gaze: { x: 0, y: 0 }, holdMs: 1000, eyeScale: 1 },
+  { gaze: { x: -1.4, y: 0.1 }, holdMs: 800, eyeScale: 1.05 },
+  { gaze: { x: -0.5, y: -1.0 }, holdMs: 600, eyeScale: 1.14 },
+  { gaze: { x: -0.5, y: -1.0 }, holdMs: 100, lid: 0.15, eyeScale: 1.1 },
+  { gaze: { x: 0, y: 0 }, holdMs: 1300, eyeScale: 1 },
+  { gaze: { x: 1.1, y: 0.35 }, holdMs: 480, eyeScale: 1.03 },
+  { gaze: { x: -1.0, y: 0.5 }, holdMs: 520, eyeScale: 1.02 },
+  { gaze: { x: 0, y: 0 }, holdMs: 1700, eyeScale: 1 },
 ];
 
 export function defaultGazeForState(state: OrbCompanionState): OrbGaze {

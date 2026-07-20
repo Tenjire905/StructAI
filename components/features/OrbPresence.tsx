@@ -8,6 +8,11 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import type { OrbCompanionState } from '@/hooks/useOrbCompanionState';
+import {
+  resetOrbCoachVoiceDedupe,
+  speakOrbCoachLine,
+  stopOrbCoachVoice,
+} from '@/lib/orbCoachVoice';
 import { resolveOrbSpeechCopyKey } from '@/lib/orbLanguage';
 import { useThemeMode } from '@/theme';
 
@@ -16,13 +21,18 @@ import { OrbCompanion } from './OrbCompanion';
 type OrbPresenceProps = {
   state: OrbCompanionState;
   size?: number;
-  /** When false, only the orb is shown (motion carries the beat). */
+  /** When false, only the orb is shown (motion carries the beat) — unless voiceKey is set. */
   showSpeech?: boolean;
   /**
    * Explicit lesson/coach line. When set, wins over state-derived speech.
    * Prefer sparse speech — especially in onboarding.
    */
   speechKey?: string | null;
+  /**
+   * Audio-only coach line (Liftoff-style parallel tip).
+   * Speaks without requiring a text bubble. Still gated by soundEnabled (Playful).
+   */
+  voiceKey?: string | null;
   /** Rotates state-fallback lines when speechKey is omitted. */
   speechSeed?: number;
   /** hero = centered presence (onboarding); coach = orb + optional bubble */
@@ -32,23 +42,28 @@ type OrbPresenceProps = {
 
 /**
  * Orb presence — motion-first. Speech is optional and should stay sparse
- * so the companion doesn't drown the screen in copy.
+ * so the companion doesn't drown the screen in copy. Voice is parallel audio
+ * when theme sound is on (Playful), never a second wall of text.
  */
 export function OrbPresence({
   state,
   size,
   showSpeech = true,
   speechKey,
+  voiceKey = null,
   speechSeed = 0,
   layout = 'coach',
   interaction = 'none',
 }: OrbPresenceProps) {
-  const { tokens, t, mode } = useThemeMode();
+  const { tokens, t, mode, locale } = useThemeMode();
   const resolvedKey = showSpeech
     ? (speechKey ?? resolveOrbSpeechCopyKey(state, mode, speechSeed))
     : null;
   const line = resolvedKey ? t(resolvedKey).trim() : '';
   const hasLine = line.length > 0;
+
+  const voiceSourceKey = voiceKey ?? resolvedKey;
+  const voiceLine = voiceSourceKey ? t(voiceSourceKey).trim() : '';
 
   const speechOpacity = useSharedValue(hasLine ? 1 : 0);
   const speechScale = useSharedValue(hasLine ? 1 : 0.96);
@@ -66,6 +81,30 @@ export function OrbPresence({
     speechScale,
     tokens.motion.duration.fast,
     tokens.motion.spring.default,
+  ]);
+
+  useEffect(() => {
+    if (!voiceSourceKey || voiceLine.length === 0) {
+      return;
+    }
+
+    void speakOrbCoachLine(voiceSourceKey, {
+      text: voiceLine,
+      locale,
+      soundEnabled: tokens.presentation.soundEnabled,
+      playful: mode === 'playful',
+    });
+
+    return () => {
+      stopOrbCoachVoice();
+      resetOrbCoachVoiceDedupe();
+    };
+  }, [
+    locale,
+    mode,
+    tokens.presentation.soundEnabled,
+    voiceLine,
+    voiceSourceKey,
   ]);
 
   const speechStyle = useAnimatedStyle(() => ({

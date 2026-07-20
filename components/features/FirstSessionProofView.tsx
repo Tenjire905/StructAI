@@ -94,6 +94,11 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
         size={tokens.spacing.space8 * 1.05}
         speechKey={step === 'summary' ? 'orb.speech.onboarding.proofDone' : null}
         state={companionState}
+        voiceKey={
+          step === 'summary'
+            ? 'orb.speech.onboarding.proofDone'
+            : 'orb.speech.onboarding.proof'
+        }
       />
 
       <View style={{ gap: tokens.spacing.space2 }}>

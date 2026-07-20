@@ -1,5 +1,5 @@
 /**
- * Rich Orb presence: choreography + motion-first onboarding (no cheap smile).
+ * Rich Orb presence: expression choreography + motion-first onboarding.
  */
 
 import assert from 'node:assert/strict';
@@ -26,11 +26,17 @@ if (orb.includes('OrbMouth') || orb.includes("'smile'") || orb.includes("'grin'"
 if (!orb.includes('accent.structure') || !orb.includes('gazeX') || !orb.includes('ringPulse')) {
   violations.push('OrbSvgCompanion must use structure iris + gaze transforms + energy ring');
 }
-if (!facade.includes('OrbSvgCompanion') || !facade.includes('isRunningInExpoGo')) {
-  violations.push('OrbCompanion facade must keep SVG fallback and Expo Go safety');
+if (!orb.includes('browLeft') || !orb.includes('expressionForState')) {
+  violations.push('OrbSvgCompanion must use expression-driven brows');
+}
+if (!facade.includes('OrbSvgCompanion') || facade.includes('OrbRiveCompanion')) {
+  violations.push('OrbCompanion must keep SVG coach only (no Rive facade)');
 }
 if (!presence.includes("layout === 'hero'") || !presence.includes('interaction')) {
   violations.push('OrbPresence must support hero layout + interaction beats');
+}
+if (!presence.includes('voiceKey')) {
+  violations.push('OrbPresence must support voiceKey for parallel coach audio');
 }
 if (!welcome.includes('showSpeech={false}') || !welcome.includes('layout="hero"')) {
   violations.push('Welcome must be motion-first hero orb without speech pile-on');
