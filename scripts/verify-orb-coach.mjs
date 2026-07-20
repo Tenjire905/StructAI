@@ -46,6 +46,9 @@ if (!presence.includes('voiceKey') || !presence.includes('speakOrbCoachLine')) {
 if (!voice.includes('expo-speech') || !voice.includes('soundEnabled')) {
   violations.push('orbCoachVoice must gate TTS on theme soundEnabled');
 }
+if (!voice.includes('requireOptionalNativeModule') || voice.includes("from 'expo-speech'")) {
+  violations.push('orbCoachVoice must probe ExpoSpeech before importing (Expo Go safe)');
+}
 if (!choreo.includes('IDLE_ENERGY_BEATS') || !choreo.includes('bodyOpacityForState')) {
   violations.push('orbChoreography must define abstract energy beats');
 }

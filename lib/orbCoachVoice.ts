@@ -1,10 +1,11 @@
 /**
- * Local Orb coach voice — device TTS (expo-speech).
- * Sparse, mode-aware: Playful may speak; Focus stays quiet (soundEnabled=false).
+ * Local Orb coach voice — device TTS (expo-speech) when native module exists.
+ * Never top-level-import expo-speech: missing ExpoSpeech crashes route load
+ * (ErrorBoundary of undefined). Probe first, same pattern as dictation.
  */
 
+import { requireOptionalNativeModule } from 'expo-modules-core';
 import { AccessibilityInfo } from 'react-native';
-import * as Speech from 'expo-speech';
 
 import type { Locale } from '@/theme';
 
@@ -24,8 +25,33 @@ export type OrbCoachVoiceOptions = {
   playful?: boolean;
 };
 
+type SpeechModule = typeof import('expo-speech');
+
+let speechModulePromise: Promise<SpeechModule | null> | null = null;
 let lastSpokenKey = '';
 let reduceMotionCached: boolean | null = null;
+
+function canUseNativeSpeech(): boolean {
+  try {
+    return requireOptionalNativeModule('ExpoSpeech') != null;
+  } catch {
+    return false;
+  }
+}
+
+async function loadSpeechModule(): Promise<SpeechModule | null> {
+  if (!canUseNativeSpeech()) {
+    return null;
+  }
+
+  if (!speechModulePromise) {
+    speechModulePromise = import('expo-speech')
+      .then((mod) => mod)
+      .catch(() => null);
+  }
+
+  return speechModulePromise;
+}
 
 async function isReduceMotion(): Promise<boolean> {
   if (reduceMotionCached != null) {
@@ -41,16 +67,18 @@ async function isReduceMotion(): Promise<boolean> {
 
 /** Stop any in-flight coach line (screen change / unmount). */
 export function stopOrbCoachVoice(): void {
-  try {
-    Speech.stop();
-  } catch {
-    // Expo Go / web may throw if speech unavailable — ignore.
-  }
+  void loadSpeechModule().then((Speech) => {
+    try {
+      Speech?.stop();
+    } catch {
+      // ignore
+    }
+  });
 }
 
 /**
- * Speak a coach line once per unique key. Empty text or disabled sound = no-op.
- * Dedupes identical consecutive lines so re-renders don't restart mid-sentence.
+ * Speak a coach line once per unique key. Empty text, disabled sound, or
+ * missing native TTS = no-op (visual coach still works).
  */
 export async function speakOrbCoachLine(
   key: string,
@@ -65,13 +93,22 @@ export async function speakOrbCoachLine(
     return;
   }
 
+  const Speech = await loadSpeechModule();
+  if (!Speech) {
+    return;
+  }
+
   const dedupe = `${key}::${trimmed}`;
   if (dedupe === lastSpokenKey) {
     return;
   }
   lastSpokenKey = dedupe;
 
-  stopOrbCoachVoice();
+  try {
+    Speech.stop();
+  } catch {
+    // ignore
+  }
 
   try {
     Speech.speak(trimmed, {
