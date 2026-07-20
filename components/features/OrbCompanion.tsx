@@ -1,9 +1,10 @@
 import { useIsFocused } from 'expo-router';
 import { useEffect, useId, useMemo, useState } from 'react';
-import { AccessibilityInfo } from 'react-native';
+import { AccessibilityInfo, View } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
+  interpolate,
   type SharedValue,
   useAnimatedProps,
   useAnimatedStyle,
@@ -18,468 +19,115 @@ import Svg, {
   Circle,
   Defs,
   Ellipse,
-  Line,
-  Path,
   RadialGradient,
   Stop,
 } from 'react-native-svg';
 
 import type { OrbCompanionState } from '@/hooks/useOrbCompanionState';
+import {
+  defaultGazeForState,
+  eyeOpennessForState,
+  IDLE_CURIOSITY_BEATS,
+} from '@/lib/orbChoreography';
 import { useThemeMode } from '@/theme';
 
-const AnimatedEllipse = Animated.createAnimatedComponent(Ellipse);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const AnimatedEllipse = Animated.createAnimatedComponent(Ellipse);
 
 type OrbCompanionProps = {
   state: OrbCompanionState;
   size?: number;
+  /**
+   * Interaction beat layered on top of mood:
+   * enter = first-seen presence, watch = user is reading, react = short punch.
+   */
+  interaction?: 'none' | 'enter' | 'watch' | 'react';
 };
 
-type GazeDirection = 'center' | 'right' | 'down' | 'left';
-type MouthMood = 'none' | 'smile' | 'grin' | 'frown';
-
-function stopScaleAnimation(scale: SharedValue<number>) {
-  cancelAnimation(scale);
-  scale.value = 1;
+function stopShared(value: SharedValue<number>, reset = 1) {
+  cancelAnimation(value);
+  value.value = reset;
 }
 
-function stopEyeAnimations(
-  eyeRadius: SharedValue<number>,
-  eyeHeight: SharedValue<number>,
-  blink: SharedValue<number>,
-) {
-  cancelAnimation(eyeRadius);
-  cancelAnimation(eyeHeight);
-  cancelAnimation(blink);
-  eyeRadius.value = 1.1;
-  eyeHeight.value = 1.1;
-  blink.value = 1;
-}
-
-function stopGradientIntensity(intensity: SharedValue<number>, value = 1) {
-  cancelAnimation(intensity);
-  intensity.value = value;
-}
-
-function getOrbBodyOpacity(state: OrbCompanionState): number {
+function getBodyOpacity(state: OrbCompanionState): number {
   switch (state) {
     case 'low_energy':
-      return 0.8;
+      return 0.78;
     case 'sleepy':
-      return 0.85;
+      return 0.84;
     case 'worry':
-      return 0.92;
+      return 0.9;
     case 'think':
       return 0.96;
-    case 'happy':
-    case 'celebrating':
-    case 'attentive':
-      return 1;
     default:
       return 1;
   }
 }
 
-function getHighlightOpacity(state: OrbCompanionState, isPlayfulPresentation: boolean): number {
-  if (!isPlayfulPresentation) {
-    switch (state) {
-      case 'low_energy':
-        return 0.15;
-      case 'sleepy':
-        return 0.12;
-      case 'celebrating':
-      case 'happy':
-      case 'attentive':
-      case 'think':
-        return 0.3;
-      case 'worry':
-        return 0.22;
-      default:
-        return 0.25;
-    }
-  }
-
-  switch (state) {
-    case 'low_energy':
-      return 0.18;
-    case 'sleepy':
-      return 0.14;
-    default:
-      return 0.25;
-  }
-}
-
-/** Static eye centers — never animate SVG cx/cy (Expo Go crash). */
-function getEyeCenters(
-  gaze: GazeDirection,
-  thinkGlance: boolean,
-): { leftCx: number; rightCx: number; cy: number } {
-  if (thinkGlance) {
-    return { leftCx: 9.6, rightCx: 16.6, cy: 10.5 };
-  }
-
-  switch (gaze) {
-    case 'right':
-      return { leftCx: 9.8, rightCx: 16.8, cy: 10.5 };
-    case 'left':
-      return { leftCx: 7.2, rightCx: 14.2, cy: 10.5 };
-    case 'down':
-      return { leftCx: 8.5, rightCx: 15.5, cy: 12.0 };
-    default:
-      return { leftCx: 8.5, rightCx: 15.5, cy: 10.5 };
-  }
-}
-
-function resolveMouthMood(state: OrbCompanionState, gaze: GazeDirection): MouthMood {
-  switch (state) {
-    case 'happy':
-    case 'celebrating':
-      return 'grin';
-    case 'worry':
-      return 'frown';
-    case 'sleepy':
-    case 'low_energy':
-    case 'think':
-      return 'none';
-    case 'attentive':
-      return 'smile';
-    case 'idle':
-    default:
-      // Soft smile while looking around; stronger when facing forward again.
-      return gaze === 'center' ? 'smile' : 'smile';
-  }
-}
-
-function OrbMouth({ mood, color }: { mood: MouthMood; color: string }) {
-  if (mood === 'none') {
-    return null;
-  }
-
-  if (mood === 'frown') {
-    return (
-      <Path
-        d="M 9.2 15.6 Q 12 14.4 14.8 15.6"
-        fill="none"
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={1.15}
-      />
-    );
-  }
-
-  if (mood === 'grin') {
-    return (
-      <Path
-        d="M 8.4 14.6 Q 12 17.4 15.6 14.6"
-        fill="none"
-        stroke={color}
-        strokeLinecap="round"
-        strokeWidth={1.3}
-      />
-    );
-  }
-
-  return (
-    <Path
-      d="M 9 15 Q 12 16.7 15 15"
-      fill="none"
-      stroke={color}
-      strokeLinecap="round"
-      strokeWidth={1.2}
-    />
-  );
-}
-
-type PlayfulEyesProps = {
-  state: OrbCompanionState;
-  reduceMotion: boolean;
-  isFocused: boolean;
-};
-
-function PlayfulEyes({ state, reduceMotion, isFocused }: PlayfulEyesProps) {
-  const { tokens } = useThemeMode();
-  const eyeRadius = useSharedValue(1.1);
-  const eyeHeight = useSharedValue(1.1);
-  const blink = useSharedValue(1);
-  const [gaze, setGaze] = useState<GazeDirection>('center');
-
-  const thinkGlance = state === 'think';
-  const { leftCx, rightCx, cy } = getEyeCenters(gaze, thinkGlance);
-  const mouthMood = resolveMouthMood(state, gaze);
-  const usesHappyArcs = state === 'happy' || state === 'celebrating';
-
-  // Idle: look right → center → down → center (with a smile), not endless blank blinking.
-  useEffect(() => {
-    if (!isFocused || reduceMotion || state !== 'idle') {
-      setGaze('center');
-      return;
-    }
-
-    let step = 0;
-    const sequence: Array<{ gaze: GazeDirection; ms: number }> = [
-      { gaze: 'center', ms: 2200 },
-      { gaze: 'right', ms: 1100 },
-      { gaze: 'center', ms: 1400 },
-      { gaze: 'down', ms: 1000 },
-      { gaze: 'center', ms: 1800 },
-      { gaze: 'left', ms: 900 },
-      { gaze: 'center', ms: 2000 },
-    ];
-
-    let timer: ReturnType<typeof setTimeout> | undefined;
-
-    const tick = () => {
-      const current = sequence[step % sequence.length];
-      setGaze(current.gaze);
-      step += 1;
-      timer = setTimeout(tick, current.ms);
-    };
-
-    tick();
-
-    return () => {
-      if (timer) {
-        clearTimeout(timer);
-      }
-    };
-  }, [isFocused, reduceMotion, state]);
-
-  useEffect(() => {
-    if (!isFocused || reduceMotion) {
-      stopEyeAnimations(eyeRadius, eyeHeight, blink);
-      return () => {
-        stopEyeAnimations(eyeRadius, eyeHeight, blink);
-      };
-    }
-
-    stopEyeAnimations(eyeRadius, eyeHeight, blink);
-
-    // Occasional single blinks on idle/attentive — not a constant open/close loop.
-    const softBlinkStates =
-      state === 'idle' || state === 'attentive' || state === 'think' || state === 'worry';
-
-    if (softBlinkStates) {
-      const gap = state === 'idle' ? 3800 : 2600;
-      blink.value = withRepeat(
-        withSequence(
-          withDelay(gap, withTiming(0.12, { duration: 80 })),
-          withTiming(1, { duration: 110 }),
-        ),
-        -1,
-        false,
-      );
-    }
-
-    switch (state) {
-      case 'attentive':
-        eyeRadius.value = withTiming(1.35, { duration: tokens.motion.duration.fast });
-        eyeHeight.value = withTiming(1.35, { duration: tokens.motion.duration.fast });
-        break;
-      case 'think':
-        eyeRadius.value = withTiming(1.15, { duration: tokens.motion.duration.fast });
-        eyeHeight.value = withTiming(1.05, { duration: tokens.motion.duration.fast });
-        break;
-      case 'worry':
-        eyeRadius.value = withTiming(1.05, { duration: tokens.motion.duration.fast });
-        eyeHeight.value = withTiming(0.85, { duration: tokens.motion.duration.fast });
-        break;
-      case 'low_energy':
-        eyeRadius.value = withTiming(1.1, { duration: tokens.motion.duration.fast });
-        eyeHeight.value = withTiming(0.35, { duration: tokens.motion.duration.fast });
-        break;
-      case 'idle':
-      case 'celebrating':
-      case 'happy':
-      default:
-        eyeRadius.value = withTiming(1.1, { duration: tokens.motion.duration.fast });
-        eyeHeight.value = withTiming(1.1, { duration: tokens.motion.duration.fast });
-        break;
-    }
-
-    return () => {
-      stopEyeAnimations(eyeRadius, eyeHeight, blink);
-    };
-  }, [
-    blink,
-    eyeHeight,
-    eyeRadius,
-    isFocused,
-    reduceMotion,
-    state,
-    tokens.motion.duration.fast,
-  ]);
-
-  const leftEyeProps = useAnimatedProps(() => ({
-    rx: eyeRadius.value,
-    ry: eyeHeight.value * blink.value,
-  }));
-
-  const rightEyeProps = useAnimatedProps(() => ({
-    rx: eyeRadius.value,
-    ry: eyeHeight.value * blink.value,
-  }));
-
-  const eyeColor = tokens.colors.text.onAccent;
-
-  if (state === 'sleepy') {
-    return (
-      <>
-        <Line
-          stroke={eyeColor}
-          strokeLinecap="round"
-          strokeWidth={1.2}
-          x1={7}
-          x2={10}
-          y1={10.5}
-          y2={10.5}
-        />
-        <Line
-          stroke={eyeColor}
-          strokeLinecap="round"
-          strokeWidth={1.2}
-          x1={14}
-          x2={17}
-          y1={10.5}
-          y2={10.5}
-        />
-      </>
-    );
-  }
-
-  if (usesHappyArcs) {
-    return (
-      <>
-        <Path
-          d="M 7.2 10.8 Q 8.5 9.1 9.8 10.8"
-          fill="none"
-          stroke={eyeColor}
-          strokeLinecap="round"
-          strokeWidth={1.2}
-        />
-        <Path
-          d="M 14.2 10.8 Q 15.5 9.1 16.8 10.8"
-          fill="none"
-          stroke={eyeColor}
-          strokeLinecap="round"
-          strokeWidth={1.2}
-        />
-        <OrbMouth color={eyeColor} mood={mouthMood} />
-      </>
-    );
-  }
-
-  if (state === 'worry') {
-    return (
-      <>
-        <Path
-          d="M 6.8 9.2 Q 8.5 10.4 10.2 9.2"
-          fill="none"
-          stroke={eyeColor}
-          strokeLinecap="round"
-          strokeWidth={1.1}
-        />
-        <Path
-          d="M 13.8 9.2 Q 15.5 10.4 17.2 9.2"
-          fill="none"
-          stroke={eyeColor}
-          strokeLinecap="round"
-          strokeWidth={1.1}
-        />
-        <AnimatedEllipse
-          animatedProps={leftEyeProps}
-          cx={leftCx}
-          cy={11.2}
-          fill={eyeColor}
-          opacity={0.9}
-        />
-        <AnimatedEllipse
-          animatedProps={rightEyeProps}
-          cx={rightCx}
-          cy={11.2}
-          fill={eyeColor}
-          opacity={0.9}
-        />
-        <OrbMouth color={eyeColor} mood={mouthMood} />
-      </>
-    );
-  }
-
-  return (
-    <>
-      <AnimatedEllipse
-        animatedProps={leftEyeProps}
-        cx={leftCx}
-        cy={cy}
-        fill={eyeColor}
-        opacity={0.9}
-      />
-      <AnimatedEllipse
-        animatedProps={rightEyeProps}
-        cx={rightCx}
-        cy={cy}
-        fill={eyeColor}
-        opacity={0.9}
-      />
-      {state === 'think' ? (
-        <Circle cx={18.5} cy={7.5} fill={eyeColor} opacity={0.55} r={0.7} />
-      ) : null}
-      <OrbMouth color={eyeColor} mood={mouthMood} />
-    </>
-  );
-}
-
-export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
+/**
+ * StructAI Orb — living structure coach.
+ * Personality = gaze choreography + cyan iris + ring energy. No cartoon mouth.
+ */
+export function OrbCompanion({
+  state,
+  size = 24,
+  interaction = 'none',
+}: OrbCompanionProps) {
   const { tokens } = useThemeMode();
   const isFocused = useIsFocused();
   const gradientId = useId().replace(/:/g, '');
-  const orbScale = useSharedValue(1);
-  const gradientIntensity = useSharedValue(getOrbBodyOpacity(state));
+  const ringId = useId().replace(/:/g, '');
   const [reduceMotion, setReduceMotion] = useState(false);
-
-  const isPlayfulPresentation =
+  const isPlayful =
     !reduceMotion && tokens.presentation.orbStyle === 'illustrated';
-  // Faces run in both modes; Playful only increases motion amplitude.
   const showFace = !reduceMotion;
 
-  const highlightRatio = useMemo(() => {
-    const bodyOpacity = getOrbBodyOpacity(state);
-    return getHighlightOpacity(state, isPlayfulPresentation) / bodyOpacity;
-  }, [isPlayfulPresentation, state]);
+  const bodyScale = useSharedValue(1);
+  const bodySquash = useSharedValue(1);
+  const bodyTilt = useSharedValue(0);
+  const bodyOpacity = useSharedValue(getBodyOpacity(state));
+  const ringPulse = useSharedValue(0.35);
+  const ringSpin = useSharedValue(0);
+  const highlightDrift = useSharedValue(0);
+  const gazeX = useSharedValue(0);
+  const gazeY = useSharedValue(0);
+  const eyeOpen = useSharedValue(1);
+  const irisGlow = useSharedValue(0.85);
 
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion);
   }, []);
 
-  useEffect(() => {
-    const targetIntensity = getOrbBodyOpacity(state);
-    stopGradientIntensity(gradientIntensity, gradientIntensity.value);
-    gradientIntensity.value = withTiming(targetIntensity, {
-      duration: tokens.motion.duration.fast,
-    });
-
-    return () => {
-      stopGradientIntensity(gradientIntensity, targetIntensity);
-    };
-  }, [gradientIntensity, state, tokens.motion.duration.fast]);
-
+  // Mood → body / ring / iris (frame-rich loops where it pays off).
   useEffect(() => {
     if (!isFocused || reduceMotion) {
-      stopScaleAnimation(orbScale);
-      return () => {
-        stopScaleAnimation(orbScale);
-      };
+      stopShared(bodyScale, 1);
+      stopShared(bodySquash, 1);
+      stopShared(bodyTilt, 0);
+      stopShared(ringPulse, 0.25);
+      stopShared(ringSpin, 0);
+      stopShared(highlightDrift, 0);
+      stopShared(irisGlow, 0.7);
+      bodyOpacity.value = withTiming(getBodyOpacity(state), {
+        duration: tokens.motion.duration.fast,
+      });
+      return;
     }
 
-    stopScaleAnimation(orbScale);
+    const fast = tokens.motion.duration.fast;
+    const amp = isPlayful ? 1 : 0.55;
 
-    if (state === 'idle' || state === 'think') {
-      const duration = isPlayfulPresentation ? 1200 : 1500;
-      const peak = isPlayfulPresentation
-        ? state === 'think'
-          ? 1.025
-          : 1.03
-        : 1.01;
-      orbScale.value = withRepeat(
+    bodyOpacity.value = withTiming(getBodyOpacity(state), { duration: fast });
+    stopShared(bodyScale, bodyScale.value);
+    stopShared(bodySquash, 1);
+    stopShared(bodyTilt, 0);
+    stopShared(ringPulse, ringPulse.value);
+    stopShared(ringSpin, ringSpin.value);
+    stopShared(highlightDrift, 0);
+    stopShared(irisGlow, irisGlow.value);
+
+    const breathe = (peak: number, duration: number) => {
+      bodyScale.value = withRepeat(
         withSequence(
           withTiming(peak, { duration, easing: Easing.inOut(Easing.sin) }),
           withTiming(1, { duration, easing: Easing.inOut(Easing.sin) }),
@@ -487,141 +135,500 @@ export function OrbCompanion({ state, size = 24 }: OrbCompanionProps) {
         -1,
         false,
       );
+    };
 
-      return () => {
-        stopScaleAnimation(orbScale);
-      };
+    switch (state) {
+      case 'idle':
+        breathe(1 + 0.028 * amp, isPlayful ? 1400 : 1700);
+        ringPulse.value = withRepeat(
+          withSequence(
+            withTiming(0.55, { duration: 1600, easing: Easing.inOut(Easing.quad) }),
+            withTiming(0.28, { duration: 1600, easing: Easing.inOut(Easing.quad) }),
+          ),
+          -1,
+          false,
+        );
+        ringSpin.value = withRepeat(
+          withTiming(1, { duration: 12000, easing: Easing.linear }),
+          -1,
+          false,
+        );
+        highlightDrift.value = withRepeat(
+          withSequence(
+            withTiming(1, { duration: 2200, easing: Easing.inOut(Easing.sin) }),
+            withTiming(0, { duration: 2200, easing: Easing.inOut(Easing.sin) }),
+          ),
+          -1,
+          false,
+        );
+        irisGlow.value = withTiming(0.88, { duration: fast });
+        break;
+
+      case 'attentive':
+        bodyScale.value = withSpring(1 + 0.045 * amp, tokens.motion.spring.default);
+        bodyTilt.value = withTiming(-2 * amp, { duration: fast });
+        ringPulse.value = withRepeat(
+          withSequence(
+            withTiming(0.75, { duration: 700 }),
+            withTiming(0.4, { duration: 700 }),
+          ),
+          -1,
+          false,
+        );
+        irisGlow.value = withTiming(1, { duration: fast });
+        break;
+
+      case 'think':
+        breathe(1 + 0.02 * amp, 1900);
+        bodyTilt.value = withRepeat(
+          withSequence(
+            withTiming(3 * amp, { duration: 1600, easing: Easing.inOut(Easing.sin) }),
+            withTiming(-1 * amp, { duration: 1600, easing: Easing.inOut(Easing.sin) }),
+          ),
+          -1,
+          false,
+        );
+        ringPulse.value = withRepeat(
+          withSequence(
+            withTiming(0.65, { duration: 1100 }),
+            withTiming(0.3, { duration: 1100 }),
+          ),
+          -1,
+          false,
+        );
+        ringSpin.value = withRepeat(
+          withTiming(1, { duration: 8000, easing: Easing.linear }),
+          -1,
+          false,
+        );
+        irisGlow.value = withRepeat(
+          withSequence(
+            withTiming(0.7, { duration: 900 }),
+            withTiming(1, { duration: 900 }),
+          ),
+          -1,
+          false,
+        );
+        break;
+
+      case 'happy':
+        bodyScale.value = withSequence(
+          withSpring(1 + 0.09 * amp, tokens.motion.spring.bouncy),
+          withSpring(1.02, tokens.motion.spring.default),
+        );
+        bodySquash.value = withSequence(
+          withTiming(0.92, { duration: 90 }),
+          withSpring(1.06, tokens.motion.spring.bouncy),
+          withSpring(1, tokens.motion.spring.default),
+        );
+        ringPulse.value = withSequence(
+          withTiming(0.95, { duration: 160 }),
+          withTiming(0.45, { duration: 420 }),
+        );
+        irisGlow.value = withSequence(
+          withTiming(1, { duration: 120 }),
+          withTiming(0.92, { duration: 400 }),
+        );
+        break;
+
+      case 'celebrating':
+        bodyScale.value = withSequence(
+          withSpring(1 + 0.14 * amp, tokens.motion.spring.bouncy),
+          withSpring(0.96, tokens.motion.spring.default),
+          withSpring(1 + 0.1 * amp, tokens.motion.spring.bouncy),
+          withSpring(1, tokens.motion.spring.default),
+        );
+        bodySquash.value = withSequence(
+          withTiming(0.88, { duration: 80 }),
+          withSpring(1.1, tokens.motion.spring.bouncy),
+          withTiming(0.94, { duration: 90 }),
+          withSpring(1, tokens.motion.spring.default),
+        );
+        ringPulse.value = withRepeat(
+          withSequence(
+            withTiming(1, { duration: 220 }),
+            withTiming(0.35, { duration: 220 }),
+          ),
+          5,
+          false,
+        );
+        ringSpin.value = withRepeat(
+          withTiming(1, { duration: 2400, easing: Easing.linear }),
+          -1,
+          false,
+        );
+        irisGlow.value = withRepeat(
+          withSequence(withTiming(1, { duration: 180 }), withTiming(0.75, { duration: 180 })),
+          6,
+          false,
+        );
+        break;
+
+      case 'worry':
+        bodyScale.value = withSequence(
+          withTiming(0.94, { duration: fast }),
+          withSpring(0.97, tokens.motion.spring.default),
+        );
+        bodyTilt.value = withTiming(4 * amp, { duration: fast });
+        ringPulse.value = withTiming(0.2, { duration: fast });
+        irisGlow.value = withTiming(0.55, { duration: fast });
+        break;
+
+      case 'sleepy':
+        breathe(1 + 0.015 * amp, 2400);
+        ringPulse.value = withTiming(0.15, { duration: fast });
+        irisGlow.value = withTiming(0.4, { duration: fast });
+        break;
+
+      case 'low_energy':
+        breathe(1 + 0.012 * amp, 2100);
+        ringPulse.value = withTiming(0.18, { duration: fast });
+        irisGlow.value = withTiming(0.5, { duration: fast });
+        break;
+
+      default:
+        breathe(1.02, 1600);
+        break;
     }
 
-    if (state === 'sleepy' && isPlayfulPresentation) {
-      orbScale.value = withRepeat(
-        withSequence(
-          withTiming(1.015, { duration: 2000, easing: Easing.inOut(Easing.sin) }),
-          withTiming(1, { duration: 2000, easing: Easing.inOut(Easing.sin) }),
-        ),
-        -1,
-        false,
-      );
-
-      return () => {
-        stopScaleAnimation(orbScale);
-      };
-    }
-
-    if (state === 'low_energy' && isPlayfulPresentation) {
-      const duration = 1600;
-      const peak = 1.015;
-
-      orbScale.value = withRepeat(
-        withSequence(
-          withTiming(peak, { duration, easing: Easing.inOut(Easing.sin) }),
-          withTiming(1, { duration, easing: Easing.inOut(Easing.sin) }),
-        ),
-        -1,
-        false,
-      );
-
-      return () => {
-        stopScaleAnimation(orbScale);
-      };
-    }
-
-    if (state === 'happy') {
-      const peak = isPlayfulPresentation ? 1.08 : 1.04;
-      orbScale.value = withSequence(
-        withSpring(peak, tokens.motion.spring.default),
+    if (interaction === 'enter') {
+      bodyScale.value = withSequence(
+        withTiming(0.82, { duration: 1 }),
+        withSpring(1 + 0.06 * amp, tokens.motion.spring.bouncy),
         withSpring(1, tokens.motion.spring.default),
       );
-
-      return () => {
-        stopScaleAnimation(orbScale);
-      };
+      ringPulse.value = withSequence(
+        withTiming(1, { duration: 280 }),
+        withTiming(0.4, { duration: 500 }),
+      );
     }
 
-    if (state === 'worry') {
-      orbScale.value = withSequence(
-        withTiming(isPlayfulPresentation ? 0.97 : 0.985, {
-          duration: tokens.motion.duration.fast,
-        }),
+    if (interaction === 'react') {
+      bodyScale.value = withSequence(
+        withSpring(1 + 0.08 * amp, tokens.motion.spring.bouncy),
         withSpring(1, tokens.motion.spring.default),
       );
-
-      return () => {
-        stopScaleAnimation(orbScale);
-      };
     }
-
-    if (state === 'celebrating') {
-      const peak = isPlayfulPresentation ? 1.12 : 1.06;
-      orbScale.value = withSequence(
-        withSpring(
-          peak,
-          isPlayfulPresentation
-            ? tokens.motion.spring.bouncy
-            : tokens.motion.spring.default,
-        ),
-        withSpring(1, tokens.motion.spring.default),
-      );
-
-      return () => {
-        stopScaleAnimation(orbScale);
-      };
-    }
-
-    orbScale.value = withTiming(1, { duration: tokens.motion.duration.fast });
 
     return () => {
-      stopScaleAnimation(orbScale);
+      stopShared(bodyScale, 1);
+      stopShared(bodySquash, 1);
+      stopShared(bodyTilt, 0);
     };
   }, [
+    bodyOpacity,
+    bodyScale,
+    bodySquash,
+    bodyTilt,
+    highlightDrift,
+    interaction,
+    irisGlow,
     isFocused,
-    isPlayfulPresentation,
-    orbScale,
+    isPlayful,
     reduceMotion,
+    ringPulse,
+    ringSpin,
     state,
     tokens.motion.duration.fast,
     tokens.motion.spring,
   ]);
 
-  const containerStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: orbScale.value }],
+  // Gaze + lid choreography (View transforms — never SVG cx).
+  useEffect(() => {
+    if (!isFocused || reduceMotion || !showFace) {
+      gazeX.value = 0;
+      gazeY.value = 0;
+      eyeOpen.value = 1;
+      return;
+    }
+
+    const ease = Easing.out(Easing.cubic);
+    const moveGaze = (x: number, y: number, duration = 280) => {
+      gazeX.value = withTiming(x, { duration, easing: ease });
+      gazeY.value = withTiming(y, { duration, easing: ease });
+    };
+
+    cancelAnimation(eyeOpen);
+
+    if (state === 'idle') {
+      let step = 0;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      let cancelled = false;
+
+      const runBeat = () => {
+        if (cancelled) {
+          return;
+        }
+
+        const beat = IDLE_CURIOSITY_BEATS[step % IDLE_CURIOSITY_BEATS.length];
+        moveGaze(beat.gaze.x, beat.gaze.y, 320);
+        eyeOpen.value = withTiming(beat.lid ?? beat.eyeScale ?? 1, {
+          duration: beat.lid != null ? 70 : 220,
+        });
+
+        if (beat.lid != null) {
+          eyeOpen.value = withSequence(
+            withTiming(0.12, { duration: 70 }),
+            withTiming(beat.eyeScale ?? 1, { duration: 110 }),
+          );
+        }
+
+        step += 1;
+        timer = setTimeout(runBeat, beat.holdMs);
+      };
+
+      runBeat();
+
+      return () => {
+        cancelled = true;
+        if (timer) {
+          clearTimeout(timer);
+        }
+      };
+    }
+
+    if (state === 'celebrating') {
+      const path = [
+        { x: 0, y: -0.9 },
+        { x: 1.2, y: -0.4 },
+        { x: -1.1, y: -0.3 },
+        { x: 0.4, y: 0.5 },
+        { x: 0, y: -0.5 },
+      ];
+      let i = 0;
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      let cancelled = false;
+
+      const tick = () => {
+        if (cancelled) {
+          return;
+        }
+        const g = path[i % path.length];
+        moveGaze(g.x, g.y, 180);
+        eyeOpen.value = withTiming(1.12, { duration: 120 });
+        i += 1;
+        timer = setTimeout(tick, 280);
+      };
+      tick();
+      return () => {
+        cancelled = true;
+        if (timer) {
+          clearTimeout(timer);
+        }
+      };
+    }
+
+    const gaze = defaultGazeForState(state);
+    moveGaze(gaze.x, gaze.y, 340);
+    eyeOpen.value = withTiming(eyeOpennessForState(state), { duration: 260 });
+
+    if (state === 'think') {
+      eyeOpen.value = withRepeat(
+        withSequence(
+          withTiming(0.85, { duration: 700 }),
+          withTiming(1.02, { duration: 700 }),
+        ),
+        -1,
+        false,
+      );
+    }
+
+    if (state === 'attentive') {
+      eyeOpen.value = withSequence(
+        withTiming(1.22, { duration: 160 }),
+        withTiming(1.12, { duration: 280 }),
+      );
+    }
+
+    if (state === 'worry') {
+      eyeOpen.value = withSequence(
+        withTiming(0.55, { duration: 120 }),
+        withTiming(0.75, { duration: 220 }),
+        withDelay(900, withTiming(0.2, { duration: 80 })),
+        withTiming(0.72, { duration: 120 }),
+      );
+    }
+  }, [
+    eyeOpen,
+    gazeX,
+    gazeY,
+    isFocused,
+    reduceMotion,
+    showFace,
+    state,
+  ]);
+
+  const bodyStyle = useAnimatedStyle(() => ({
+    opacity: bodyOpacity.value,
+    transform: [
+      { rotate: `${bodyTilt.value}deg` },
+      { scaleX: bodyScale.value * interpolate(bodySquash.value, [0.85, 1.15], [1.06, 0.94]) },
+      { scaleY: bodyScale.value * bodySquash.value },
+    ],
   }));
 
-  const bodyAnimatedProps = useAnimatedProps(() => ({
-    opacity: gradientIntensity.value,
+  const faceStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: gazeX.value },
+      { translateY: gazeY.value },
+    ],
   }));
 
-  const highlightAnimatedProps = useAnimatedProps(() => ({
-    opacity: gradientIntensity.value * highlightRatio,
+  const ringProps = useAnimatedProps(() => ({
+    opacity: ringPulse.value,
+    strokeDashoffset: interpolate(ringSpin.value, [0, 1], [0, 40]),
   }));
+
+  // Specular highlight: opacity-only (never animate SVG cx — Expo Go crash).
+  const highlightSafeProps = useAnimatedProps(() => ({
+    opacity: interpolate(
+      highlightDrift.value,
+      [0, 1],
+      [isPlayful ? 0.2 : 0.14, isPlayful ? 0.36 : 0.26],
+    ),
+  }));
+
+  const leftLidProps = useAnimatedProps(() => ({
+    ry: 1.35 * eyeOpen.value,
+  }));
+  const rightLidProps = useAnimatedProps(() => ({
+    ry: 1.35 * eyeOpen.value,
+  }));
+  const irisProps = useAnimatedProps(() => ({
+    opacity: irisGlow.value,
+  }));
+
+  const faceColor = tokens.colors.text.onAccent;
+  const irisColor = tokens.colors.accent.structure;
+  const pupilColor = tokens.colors.background.base;
+
+  const eyeGeometry = useMemo(
+    () => ({
+      left: { cx: 9.1, cy: 10.6 },
+      right: { cx: 14.9, cy: 10.6 },
+    }),
+    [],
+  );
 
   return (
-    <Animated.View style={containerStyle}>
-      <Svg height={size} viewBox="0 0 24 24" width={size}>
-        <Defs>
-          <RadialGradient cx="35%" cy="30%" id={gradientId} rx="70%" ry="70%">
-            <Stop offset="0%" stopColor={tokens.colors.accent.structure} />
-            <Stop offset="100%" stopColor={tokens.colors.accent.primary} />
-          </RadialGradient>
-        </Defs>
-        <AnimatedCircle
-          animatedProps={bodyAnimatedProps}
-          cx="12"
-          cy="12"
-          fill={`url(#${gradientId})`}
-          r="10"
-        />
-        <AnimatedCircle
-          animatedProps={highlightAnimatedProps}
-          cx="9"
-          cy="9"
-          fill={tokens.colors.text.onAccent}
-          r="3"
-        />
+    <Animated.View style={[{ height: size, width: size }, bodyStyle]}>
+      <View style={{ height: size, width: size }}>
+        <Svg height={size} viewBox="0 0 24 24" width={size}>
+          <Defs>
+            <RadialGradient cx="34%" cy="28%" id={gradientId} rx="72%" ry="72%">
+              <Stop offset="0%" stopColor={tokens.colors.accent.structure} />
+              <Stop offset="55%" stopColor={tokens.colors.accent.primary} />
+              <Stop offset="100%" stopColor={tokens.colors.accent.primaryDim} />
+            </RadialGradient>
+            <RadialGradient cx="50%" cy="50%" id={ringId} rx="50%" ry="50%">
+              <Stop offset="0%" stopColor={tokens.colors.accent.structure} stopOpacity="0" />
+              <Stop offset="100%" stopColor={tokens.colors.accent.structure} stopOpacity="0.9" />
+            </RadialGradient>
+          </Defs>
+
+          {/* Energy ring — structure signature, not a face accessory */}
+          <AnimatedCircle
+            animatedProps={ringProps}
+            cx="12"
+            cy="12"
+            fill="none"
+            r="11.1"
+            stroke={tokens.colors.accent.structure}
+            strokeDasharray="6 10"
+            strokeLinecap="round"
+            strokeWidth={isPlayful ? 1.15 : 0.9}
+          />
+
+          <Circle cx="12" cy="12" fill={`url(#${gradientId})`} r="10" />
+
+          <AnimatedCircle
+            animatedProps={highlightSafeProps}
+            cx="9"
+            cy="8.6"
+            fill={faceColor}
+            r="2.8"
+          />
+        </Svg>
+
         {showFace ? (
-          <PlayfulEyes isFocused={isFocused} reduceMotion={reduceMotion} state={state} />
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              {
+                height: size,
+                left: 0,
+                position: 'absolute',
+                top: 0,
+                width: size,
+              },
+              faceStyle,
+            ]}>
+            <Svg height={size} viewBox="0 0 24 24" width={size}>
+              {/* Left eye — sclera / structure iris / pupil (no mouth) */}
+              <AnimatedEllipse
+                animatedProps={leftLidProps}
+                cx={eyeGeometry.left.cx}
+                cy={eyeGeometry.left.cy}
+                fill={faceColor}
+                opacity={0.95}
+                rx={1.55}
+              />
+              <AnimatedEllipse
+                animatedProps={irisProps}
+                cx={eyeGeometry.left.cx + 0.15}
+                cy={eyeGeometry.left.cy + 0.1}
+                fill={irisColor}
+                rx={0.95}
+                ry={0.95}
+              />
+              <Circle
+                cx={eyeGeometry.left.cx + 0.25}
+                cy={eyeGeometry.left.cy + 0.15}
+                fill={pupilColor}
+                r={0.45}
+              />
+              <Circle
+                cx={eyeGeometry.left.cx - 0.15}
+                cy={eyeGeometry.left.cy - 0.25}
+                fill={faceColor}
+                opacity={0.55}
+                r={0.22}
+              />
+
+              {/* Right eye */}
+              <AnimatedEllipse
+                animatedProps={rightLidProps}
+                cx={eyeGeometry.right.cx}
+                cy={eyeGeometry.right.cy}
+                fill={faceColor}
+                opacity={0.95}
+                rx={1.55}
+              />
+              <AnimatedEllipse
+                animatedProps={irisProps}
+                cx={eyeGeometry.right.cx + 0.15}
+                cy={eyeGeometry.right.cy + 0.1}
+                fill={irisColor}
+                rx={0.95}
+                ry={0.95}
+              />
+              <Circle
+                cx={eyeGeometry.right.cx + 0.25}
+                cy={eyeGeometry.right.cy + 0.15}
+                fill={pupilColor}
+                r={0.45}
+              />
+              <Circle
+                cx={eyeGeometry.right.cx - 0.15}
+                cy={eyeGeometry.right.cy - 0.25}
+                fill={faceColor}
+                opacity={0.55}
+                r={0.22}
+              />
+            </Svg>
+          </Animated.View>
         ) : null}
-      </Svg>
+      </View>
     </Animated.View>
   );
 }

@@ -27,12 +27,13 @@ export default function OnboardingWelcomeScreen() {
         paddingHorizontal: tokens.spacing.screenPaddingHero,
         paddingTop: insets.top + tokens.spacing.space6,
       }}>
-      {/* First contact is the Orb coach — not a wall of text. */}
+      {/* First contact = living Orb presence. Motion only — no speech pile-on. */}
       <View style={{ alignItems: 'center', paddingTop: tokens.spacing.space5 }}>
         <OrbPresence
-          showSpeech
-          size={tokens.spacing.space8 * 1.35}
-          speechKey="orb.speech.onboarding.welcome"
+          interaction="enter"
+          layout="hero"
+          showSpeech={false}
+          size={tokens.spacing.space8 * 1.55}
           state={companionState}
         />
       </View>
