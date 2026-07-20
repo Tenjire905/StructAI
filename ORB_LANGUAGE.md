@@ -40,6 +40,7 @@ Lektions-Momente → State: `reading_start`→attentive, `reading`→think, `pra
 
 ## 4. Technik
 
-1. Gesicht/Motion: `OrbCompanion.tsx` + `lib/orbChoreography.ts` — **kein Smiley-Mund**. Persönlichkeit über Gaze-Choreografie (View-Transform), Cyan-Iris, Energy-Ring, Squash/Tilt. Nie animiertes SVG-`cx`.
-2. Präsenz: `OrbPresence.tsx` — `layout="hero"` motion-first (Onboarding ohne Speech-Stapel); `coach` nur wenn eine Zeile wirklich hilft.
-3. Verify: `scripts/verify-orb-language.mjs` / `scripts/verify-orb-rich-presence.mjs`.
+1. **Rive (Zielbild):** `@rive-app/react-native` + `assets/rive/ORB_RIVE_SPEC.md`. `OrbCompanion` lazy-loadet Rive nur mit Dev-Client + konfigurierter `.riv`; sonst SVG-Fallback. Nie Expo-Go-Crash durch starren Rive-Import.
+2. **SVG-Fallback:** `OrbSvgCompanion.tsx` + `lib/orbChoreography.ts` — Gaze/Ring/Iris bis das `.riv` liegt.
+3. **Präsenz:** `OrbPresence.tsx` — `layout="hero"` motion-first (Onboarding ohne Speech-Stapel).
+4. Verify: `scripts/verify-orb-rive.mjs`, `scripts/verify-orb-rich-presence.mjs`.
