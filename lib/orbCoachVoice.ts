@@ -1,12 +1,9 @@
 /**
- * Local Orb coach voiceover — works in Expo Go via `expo-audio` (ExpoAudio).
+ * Local Orb coach voiceover — Expo Go via expo-audio when available.
  *
- * Never top-level-import audio packages: probe native module first.
- *
- * Priority:
- * 1. Bundled MP3 via expo-audio when ExpoAudio exists ($0 runtime, Expo Go OK)
- * 2. Device TTS when ExpoSpeech exists
- * 3. Otherwise silent (visual coach still works)
+ * Playback UI lives in OrbCoachVoicePlayer (useAudioPlayer).
+ * This module only resolves assets + optional device-TTS fallback.
+ * Never top-level-import expo-audio here (route-load crash if missing).
  */
 
 import { requireOptionalNativeModule } from 'expo-modules-core';
@@ -19,34 +16,16 @@ export type OrbCoachVoiceOptions = {
   text: string;
   locale: Locale;
   mode: ThemeMode;
-  /** From theme presentation — Focus defaults off for ambient sound. */
   soundEnabled: boolean;
-  /**
-   * When true, play even if soundEnabled is false (explicit coach beat).
-   * Used sparingly for onboarding voiceKey lines in Focus.
-   */
   force?: boolean;
 };
 
-type AudioModule = typeof import('expo-audio');
 type SpeechModule = typeof import('expo-speech');
-type AudioPlayer = {
-  play: () => void;
-  pause: () => void;
-  seekTo: (seconds: number) => void | Promise<void>;
-  remove?: () => void;
-  release?: () => void;
-  volume: number;
-};
 
-let audioModulePromise: Promise<AudioModule | null> | null = null;
 let speechModulePromise: Promise<SpeechModule | null> | null = null;
-let activePlayer: AudioPlayer | null = null;
-let audioModeReady = false;
-let lastSpokenKey = '';
-let reduceMotionCached: boolean | null = null;
+let lastTtsKey = '';
 
-function canUseNativeAudio(): boolean {
+export function isOrbAudioNativeAvailable(): boolean {
   try {
     return requireOptionalNativeModule('ExpoAudio') != null;
   } catch {
@@ -62,117 +41,16 @@ function canUseNativeSpeech(): boolean {
   }
 }
 
-async function loadAudioModule(): Promise<AudioModule | null> {
-  if (!canUseNativeAudio()) {
-    return null;
-  }
-
-  if (!audioModulePromise) {
-    audioModulePromise = import('expo-audio')
-      .then((mod) => mod)
-      .catch(() => null);
-  }
-
-  return audioModulePromise;
-}
-
 async function loadSpeechModule(): Promise<SpeechModule | null> {
   if (!canUseNativeSpeech()) {
     return null;
   }
-
   if (!speechModulePromise) {
     speechModulePromise = import('expo-speech')
       .then((mod) => mod)
       .catch(() => null);
   }
-
   return speechModulePromise;
-}
-
-async function isReduceMotion(): Promise<boolean> {
-  if (reduceMotionCached != null) {
-    return reduceMotionCached;
-  }
-  try {
-    reduceMotionCached = await AccessibilityInfo.isReduceMotionEnabled();
-  } catch {
-    reduceMotionCached = false;
-  }
-  return reduceMotionCached;
-}
-
-async function ensureAudioMode(audio: AudioModule): Promise<void> {
-  if (audioModeReady) {
-    return;
-  }
-  try {
-    await audio.setAudioModeAsync({
-      playsInSilentMode: true,
-      interruptionMode: 'duckOthers',
-      shouldPlayInBackground: false,
-    });
-    audioModeReady = true;
-  } catch {
-    // Still attempt playback.
-  }
-}
-
-function releaseActivePlayer(): void {
-  if (!activePlayer) {
-    return;
-  }
-  try {
-    activePlayer.pause();
-  } catch {
-    // ignore
-  }
-  try {
-    activePlayer.release?.();
-  } catch {
-    // ignore
-  }
-  try {
-    activePlayer.remove?.();
-  } catch {
-    // ignore
-  }
-  activePlayer = null;
-}
-
-/** Stop any in-flight coach line (screen change / unmount). */
-export function stopOrbCoachVoice(): void {
-  releaseActivePlayer();
-  void loadSpeechModule().then((Speech) => {
-    try {
-      Speech?.stop();
-    } catch {
-      // ignore
-    }
-  });
-}
-
-async function playBundledClip(asset: number): Promise<boolean> {
-  const audio = await loadAudioModule();
-  if (!audio) {
-    return false;
-  }
-
-  try {
-    await ensureAudioMode(audio);
-    releaseActivePlayer();
-
-    const player = audio.createAudioPlayer(asset) as AudioPlayer;
-    activePlayer = player;
-    player.volume = 1;
-    // Fresh player starts at 0; seek defensively for replay edge cases.
-    await Promise.resolve(player.seekTo(0));
-    player.play();
-    return true;
-  } catch {
-    releaseActivePlayer();
-    return false;
-  }
 }
 
 const SPEECH_LOCALE: Record<Locale, string> = {
@@ -182,37 +60,28 @@ const SPEECH_LOCALE: Record<Locale, string> = {
   ru: 'ru-RU',
 };
 
-async function playDeviceTts(
-  text: string,
-  locale: Locale,
-  playful: boolean,
-): Promise<boolean> {
-  const Speech = await loadSpeechModule();
-  if (!Speech) {
-    return false;
+/**
+ * Resolve a bundled clip for OrbPresence to mount OrbCoachVoicePlayer.
+ * Returns null when gated off or no asset.
+ */
+export function resolveOrbCoachClip(options: {
+  speechKey: string | null | undefined;
+  locale: Locale;
+  mode: ThemeMode;
+  soundEnabled: boolean;
+  force?: boolean;
+}): number | null {
+  if (!options.speechKey) {
+    return null;
   }
-  try {
-    Speech.stop();
-  } catch {
-    // ignore
+  if (!options.force && !options.soundEnabled) {
+    return null;
   }
-  try {
-    Speech.speak(text, {
-      language: SPEECH_LOCALE[locale] ?? SPEECH_LOCALE.de,
-      pitch: playful ? 1.05 : 1.0,
-      rate: playful ? 0.96 : 0.92,
-    });
-    return true;
-  } catch {
-    return false;
-  }
+  return resolveOrbVoiceAsset(options.speechKey, options.locale, options.mode);
 }
 
-/**
- * Speak a coach line: bundled voiceover first, device TTS fallback.
- * Dedupes identical consecutive keys so re-renders don't restart mid-line.
- */
-export async function speakOrbCoachLine(
+/** Device TTS fallback when ExpoAudio / clip path is unavailable. */
+export async function speakOrbCoachTtsFallback(
   key: string,
   options: OrbCoachVoiceOptions,
 ): Promise<void> {
@@ -220,33 +89,68 @@ export async function speakOrbCoachLine(
   if (trimmed.length === 0) {
     return;
   }
-
   if (!options.force && !options.soundEnabled) {
     return;
   }
 
-  if (await isReduceMotion()) {
-    return;
-  }
+  // Do NOT gate on Reduce Motion — that is visual-only; coach voice stays.
 
   const dedupe = `${key}::${options.locale}::${options.mode}`;
-  if (dedupe === lastSpokenKey) {
+  if (dedupe === lastTtsKey) {
     return;
   }
-  lastSpokenKey = dedupe;
+  lastTtsKey = dedupe;
 
-  const asset = resolveOrbVoiceAsset(key, options.locale, options.mode);
-  if (asset != null) {
-    const played = await playBundledClip(asset);
-    if (played) {
-      return;
-    }
+  const Speech = await loadSpeechModule();
+  if (!Speech) {
+    return;
   }
-
-  await playDeviceTts(trimmed, options.locale, options.mode === 'playful');
+  try {
+    Speech.stop();
+  } catch {
+    // ignore
+  }
+  try {
+    Speech.speak(trimmed, {
+      language: SPEECH_LOCALE[options.locale] ?? SPEECH_LOCALE.de,
+      pitch: options.mode === 'playful' ? 1.05 : 1.0,
+      rate: options.mode === 'playful' ? 0.96 : 0.92,
+    });
+  } catch {
+    // ignore
+  }
 }
 
-/** Reset dedupe when navigating away so the same tip can replay later. */
+export function stopOrbCoachVoice(): void {
+  void loadSpeechModule().then((Speech) => {
+    try {
+      Speech?.stop();
+    } catch {
+      // ignore
+    }
+  });
+}
+
 export function resetOrbCoachVoiceDedupe(): void {
-  lastSpokenKey = '';
+  lastTtsKey = '';
+}
+
+/** @deprecated Use resolveOrbCoachClip + OrbCoachVoicePlayer. Kept for callers. */
+export async function speakOrbCoachLine(
+  key: string,
+  options: OrbCoachVoiceOptions,
+): Promise<void> {
+  // Prefer clip path in UI; TTS only as last resort when no native audio.
+  if (isOrbAudioNativeAvailable() && resolveOrbVoiceAsset(key, options.locale, options.mode)) {
+    return;
+  }
+  await speakOrbCoachTtsFallback(key, options);
+}
+
+export async function isReduceMotionEnabled(): Promise<boolean> {
+  try {
+    return await AccessibilityInfo.isReduceMotionEnabled();
+  } catch {
+    return false;
+  }
 }

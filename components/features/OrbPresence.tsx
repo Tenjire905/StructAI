@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState, type ComponentType } from 'react';
 import { Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -9,8 +9,9 @@ import Animated, {
 
 import type { OrbCompanionState } from '@/hooks/useOrbCompanionState';
 import {
-  resetOrbCoachVoiceDedupe,
-  speakOrbCoachLine,
+  isOrbAudioNativeAvailable,
+  resolveOrbCoachClip,
+  speakOrbCoachTtsFallback,
   stopOrbCoachVoice,
 } from '@/lib/orbCoachVoice';
 import { resolveOrbSpeechCopyKey } from '@/lib/orbLanguage';
@@ -21,29 +22,22 @@ import { OrbCompanion } from './OrbCompanion';
 type OrbPresenceProps = {
   state: OrbCompanionState;
   size?: number;
-  /** When false, only the orb is shown (motion carries the beat) — unless voiceKey is set. */
   showSpeech?: boolean;
-  /**
-   * Explicit lesson/coach line. When set, wins over state-derived speech.
-   * Prefer sparse speech — especially in onboarding.
-   */
   speechKey?: string | null;
-  /**
-   * Audio-only coach line (Liftoff-style parallel tip).
-   * Speaks without requiring a text bubble. Still gated by soundEnabled (Playful).
-   */
   voiceKey?: string | null;
-  /** Rotates state-fallback lines when speechKey is omitted. */
   speechSeed?: number;
-  /** hero = centered presence (onboarding); coach = orb + optional bubble */
   layout?: 'coach' | 'hero';
   interaction?: 'none' | 'enter' | 'watch' | 'react';
 };
 
+type VoicePlayerProps = {
+  source: number;
+  playId: string;
+};
+
 /**
- * Orb presence — motion-first. Speech is optional and should stay sparse
- * so the companion doesn't drown the screen in copy. Voice is parallel audio
- * when theme sound is on (Playful), never a second wall of text.
+ * Orb presence — motion-first. Parallel coach audio via expo-audio player
+ * (mounted when ExpoAudio exists) or device TTS fallback.
  */
 export function OrbPresence({
   state,
@@ -64,6 +58,76 @@ export function OrbPresence({
 
   const voiceSourceKey = voiceKey ?? resolvedKey;
   const voiceLine = voiceSourceKey ? t(voiceSourceKey).trim() : '';
+  const forceVoice = voiceKey != null;
+
+  const clip = resolveOrbCoachClip({
+    speechKey: voiceSourceKey,
+    locale,
+    mode,
+    soundEnabled: tokens.presentation.soundEnabled,
+    force: forceVoice,
+  });
+
+  const [VoicePlayer, setVoicePlayer] = useState<ComponentType<VoicePlayerProps> | null>(
+    null,
+  );
+
+  useEffect(() => {
+    if (!isOrbAudioNativeAvailable()) {
+      setVoicePlayer(null);
+      return;
+    }
+    let cancelled = false;
+    void import('./OrbCoachVoicePlayer')
+      .then((mod) => {
+        if (!cancelled) {
+          setVoicePlayer(() => mod.OrbCoachVoicePlayer);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setVoicePlayer(null);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // TTS fallback only when we cannot mount the native clip player.
+  useEffect(() => {
+    if (!voiceSourceKey || voiceLine.length === 0) {
+      return;
+    }
+    if (clip != null && VoicePlayer) {
+      return;
+    }
+    if (clip != null && isOrbAudioNativeAvailable()) {
+      // Player still loading — wait, don't TTS over it.
+      return;
+    }
+
+    void speakOrbCoachTtsFallback(voiceSourceKey, {
+      text: voiceLine,
+      locale,
+      mode,
+      soundEnabled: tokens.presentation.soundEnabled,
+      force: forceVoice,
+    });
+
+    return () => {
+      stopOrbCoachVoice();
+    };
+  }, [
+    VoicePlayer,
+    clip,
+    forceVoice,
+    locale,
+    mode,
+    tokens.presentation.soundEnabled,
+    voiceLine,
+    voiceSourceKey,
+  ]);
 
   const speechOpacity = useSharedValue(hasLine ? 1 : 0);
   const speechScale = useSharedValue(hasLine ? 1 : 0.96);
@@ -83,33 +147,6 @@ export function OrbPresence({
     tokens.motion.spring.default,
   ]);
 
-  useEffect(() => {
-    if (!voiceSourceKey || voiceLine.length === 0) {
-      return;
-    }
-
-    void speakOrbCoachLine(voiceSourceKey, {
-      text: voiceLine,
-      locale,
-      mode,
-      soundEnabled: tokens.presentation.soundEnabled,
-      // Explicit voiceKey = intentional coach beat (onboarding) — play clip even in Focus.
-      force: voiceKey != null,
-    });
-
-    return () => {
-      stopOrbCoachVoice();
-      resetOrbCoachVoiceDedupe();
-    };
-  }, [
-    locale,
-    mode,
-    tokens.presentation.soundEnabled,
-    voiceKey,
-    voiceLine,
-    voiceSourceKey,
-  ]);
-
   const speechStyle = useAnimatedStyle(() => ({
     opacity: speechOpacity.value,
     transform: [{ scale: speechScale.value }],
@@ -117,10 +154,19 @@ export function OrbPresence({
 
   const orbSize = size ?? tokens.spacing.space8 * 0.85;
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
+  const playId = voiceSourceKey
+    ? `${voiceSourceKey}:${locale}:${mode}`
+    : '';
+
+  const voiceNode =
+    clip != null && VoicePlayer && playId ? (
+      <VoicePlayer playId={playId} source={clip} />
+    ) : null;
 
   if (layout === 'hero') {
     return (
       <View style={{ alignItems: 'center', gap: tokens.spacing.space3, width: '100%' }}>
+        {voiceNode}
         <OrbCompanion interaction={interaction} size={orbSize} state={state} />
         {hasLine ? (
           <Animated.View
@@ -156,6 +202,7 @@ export function OrbPresence({
         gap: tokens.spacing.space3,
         width: '100%',
       }}>
+      {voiceNode}
       <View style={{ paddingTop: tokens.spacing.space1 }}>
         <OrbCompanion interaction={interaction} size={orbSize} state={state} />
       </View>
