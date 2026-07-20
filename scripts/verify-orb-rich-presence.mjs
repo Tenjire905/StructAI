@@ -9,7 +9,8 @@ import { join } from 'node:path';
 const root = new URL('..', import.meta.url).pathname;
 const violations = [];
 
-const orb = readFileSync(join(root, 'components/features/OrbCompanion.tsx'), 'utf8');
+const orb = readFileSync(join(root, 'components/features/OrbSvgCompanion.tsx'), 'utf8');
+const facade = readFileSync(join(root, 'components/features/OrbCompanion.tsx'), 'utf8');
 const choreo = readFileSync(join(root, 'lib/orbChoreography.ts'), 'utf8');
 const presence = readFileSync(join(root, 'components/features/OrbPresence.tsx'), 'utf8');
 const welcome = readFileSync(join(root, 'app/onboarding/index.tsx'), 'utf8');
@@ -20,10 +21,13 @@ if (!choreo.includes('IDLE_CURIOSITY_BEATS') || !choreo.includes('defaultGazeFor
   violations.push('orbChoreography must define idle curiosity beats + state gaze');
 }
 if (orb.includes('OrbMouth') || orb.includes("'smile'") || orb.includes("'grin'")) {
-  violations.push('OrbCompanion must not use cartoon smile/grin mouths');
+  violations.push('OrbSvgCompanion must not use cartoon smile/grin mouths');
 }
 if (!orb.includes('accent.structure') || !orb.includes('gazeX') || !orb.includes('ringPulse')) {
-  violations.push('OrbCompanion must use structure iris + gaze transforms + energy ring');
+  violations.push('OrbSvgCompanion must use structure iris + gaze transforms + energy ring');
+}
+if (!facade.includes('OrbSvgCompanion') || !facade.includes('isRunningInExpoGo')) {
+  violations.push('OrbCompanion facade must keep SVG fallback and Expo Go safety');
 }
 if (!presence.includes("layout === 'hero'") || !presence.includes('interaction')) {
   violations.push('OrbPresence must support hero layout + interaction beats');
