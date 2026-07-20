@@ -1,5 +1,5 @@
 import { useEffect, useState, type ComponentType } from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,7 +9,6 @@ import Animated, {
 
 import type { OrbCompanionState } from '@/hooks/useOrbCompanionState';
 import {
-  isOrbAudioNativeAvailable,
   resolveOrbCoachClip,
   speakOrbCoachTtsFallback,
   stopOrbCoachVoice,
@@ -33,11 +32,12 @@ type OrbPresenceProps = {
 type VoicePlayerProps = {
   source: number;
   playId: string;
+  replayNonce?: number;
 };
 
 /**
- * Orb presence — motion-first. Parallel coach audio via expo-audio player
- * (mounted when ExpoAudio exists) or device TTS fallback.
+ * Orb presence — motion-first. Coach audio via expo-audio when available.
+ * Tap the Orb to (re)play the current voice line (mobile autoplay-safe).
  */
 export function OrbPresence({
   state,
@@ -71,22 +71,23 @@ export function OrbPresence({
   const [VoicePlayer, setVoicePlayer] = useState<ComponentType<VoicePlayerProps> | null>(
     null,
   );
+  const [audioUnavailable, setAudioUnavailable] = useState(false);
+  const [replayNonce, setReplayNonce] = useState(0);
+  const [unlocked, setUnlocked] = useState(false);
 
   useEffect(() => {
-    if (!isOrbAudioNativeAvailable()) {
-      setVoicePlayer(null);
-      return;
-    }
     let cancelled = false;
     void import('./OrbCoachVoicePlayer')
       .then((mod) => {
         if (!cancelled) {
           setVoicePlayer(() => mod.OrbCoachVoicePlayer);
+          setAudioUnavailable(false);
         }
       })
       .catch(() => {
         if (!cancelled) {
           setVoicePlayer(null);
+          setAudioUnavailable(true);
         }
       });
     return () => {
@@ -94,16 +95,18 @@ export function OrbPresence({
     };
   }, []);
 
-  // TTS fallback only when we cannot mount the native clip player.
+  // Unlock + first play after user gesture (required on some Android/Expo Go paths).
+  const unlockAndPlay = () => {
+    setUnlocked(true);
+    setReplayNonce((n) => n + 1);
+  };
+
+  // TTS only when clip player cannot load at all.
   useEffect(() => {
     if (!voiceSourceKey || voiceLine.length === 0) {
       return;
     }
-    if (clip != null && VoicePlayer) {
-      return;
-    }
-    if (clip != null && isOrbAudioNativeAvailable()) {
-      // Player still loading — wait, don't TTS over it.
+    if (!audioUnavailable) {
       return;
     }
 
@@ -119,8 +122,7 @@ export function OrbPresence({
       stopOrbCoachVoice();
     };
   }, [
-    VoicePlayer,
-    clip,
+    audioUnavailable,
     forceVoice,
     locale,
     mode,
@@ -154,20 +156,43 @@ export function OrbPresence({
 
   const orbSize = size ?? tokens.spacing.space8 * 0.85;
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
-  const playId = voiceSourceKey
-    ? `${voiceSourceKey}:${locale}:${mode}`
-    : '';
+  const playId = voiceSourceKey ? `${voiceSourceKey}:${locale}:${mode}` : '';
 
-  const voiceNode =
-    clip != null && VoicePlayer && playId ? (
-      <VoicePlayer playId={playId} source={clip} />
+  const showPlayer = clip != null && VoicePlayer && playId && unlocked;
+  const voiceNode = showPlayer ? (
+    <VoicePlayer playId={playId} replayNonce={replayNonce} source={clip} />
+  ) : null;
+
+  const orbPressable = (
+    <Pressable
+      accessibilityHint={t('orb.voice.tapHint')}
+      accessibilityLabel={t('orb.voice.tapA11y')}
+      accessibilityRole="button"
+      hitSlop={tokens.spacing.space3}
+      onPress={unlockAndPlay}>
+      <OrbCompanion interaction={interaction} size={orbSize} state={state} />
+    </Pressable>
+  );
+
+  const hint =
+    clip != null ? (
+      <Text
+        style={{
+          color: tokens.colors.text.tertiary,
+          fontFamily: tokens.typography.fontFamily.body,
+          fontSize: tokens.typography.fontSize.bodySm,
+          textAlign: layout === 'hero' ? 'center' : 'left',
+        }}>
+        {audioUnavailable ? t('orb.voice.needsDevBuild') : t('orb.voice.tapHint')}
+      </Text>
     ) : null;
 
   if (layout === 'hero') {
     return (
       <View style={{ alignItems: 'center', gap: tokens.spacing.space3, width: '100%' }}>
         {voiceNode}
-        <OrbCompanion interaction={interaction} size={orbSize} state={state} />
+        {orbPressable}
+        {hint}
         {hasLine ? (
           <Animated.View
             accessibilityRole="text"
@@ -203,40 +228,42 @@ export function OrbPresence({
         width: '100%',
       }}>
       {voiceNode}
-      <View style={{ paddingTop: tokens.spacing.space1 }}>
-        <OrbCompanion interaction={interaction} size={orbSize} state={state} />
+      <View style={{ gap: tokens.spacing.space1, paddingTop: tokens.spacing.space1 }}>
+        {orbPressable}
       </View>
 
-      {hasLine ? (
-        <Animated.View
-          accessibilityRole="text"
-          style={[
-            speechStyle,
-            {
-              backgroundColor: tokens.colors.surface.card,
-              borderColor: isPlayful
-                ? tokens.colors.border.strong
-                : tokens.colors.border.subtle,
-              borderRadius: tokens.radius.lg,
-              borderWidth: 1,
-              flex: 1,
-              paddingHorizontal: tokens.spacing.space4,
-              paddingVertical: tokens.spacing.space3,
-            },
-          ]}>
-          <Text
-            style={{
-              color: tokens.colors.text.primary,
-              fontFamily: isPlayful
-                ? tokens.typography.fontFamily.bodyMedium
-                : tokens.typography.fontFamily.body,
-              fontSize: tokens.typography.fontSize.bodyLg,
-              lineHeight: tokens.typography.fontSize.bodyLg * 1.4,
-            }}>
-            {line}
-          </Text>
-        </Animated.View>
-      ) : null}
+      <View style={{ flex: 1, gap: tokens.spacing.space2 }}>
+        {hasLine ? (
+          <Animated.View
+            accessibilityRole="text"
+            style={[
+              speechStyle,
+              {
+                backgroundColor: tokens.colors.surface.card,
+                borderColor: isPlayful
+                  ? tokens.colors.border.strong
+                  : tokens.colors.border.subtle,
+                borderRadius: tokens.radius.lg,
+                borderWidth: 1,
+                paddingHorizontal: tokens.spacing.space4,
+                paddingVertical: tokens.spacing.space3,
+              },
+            ]}>
+            <Text
+              style={{
+                color: tokens.colors.text.primary,
+                fontFamily: isPlayful
+                  ? tokens.typography.fontFamily.bodyMedium
+                  : tokens.typography.fontFamily.body,
+                fontSize: tokens.typography.fontSize.bodyLg,
+                lineHeight: tokens.typography.fontSize.bodyLg * 1.4,
+              }}>
+              {line}
+            </Text>
+          </Animated.View>
+        ) : null}
+        {hint}
+      </View>
     </View>
   );
 }

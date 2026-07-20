@@ -1,30 +1,33 @@
 /**
- * Expo-Go voiceover player — only loaded when ExpoAudio native module exists.
- * Uses the official `useAudioPlayer` hook (more reliable than createAudioPlayer).
+ * Expo voiceover player — official useAudioPlayer + downloadFirst.
+ * Only imported when expo-audio native module can load.
  */
 
 import {
   setAudioModeAsync,
   setIsAudioActiveAsync,
   useAudioPlayer,
+  useAudioPlayerStatus,
 } from 'expo-audio';
 import { useEffect, useRef } from 'react';
 
 type OrbCoachVoicePlayerProps = {
   /** Metro asset module id from require(...mp3). */
   source: number;
-  /** Change this to force replay of the same source. */
+  /** Stable id for this line (key+locale+mode). */
   playId: string;
+  /** Increment to force replay (e.g. orb tap). */
+  replayNonce?: number;
 };
 
-/**
- * Plays a bundled MP3 once when `playId` / `source` changes.
- * Does not tear down mid-play on React Strict Mode double-invoke of parents
- * beyond pausing; remount with same playId will seek+play again.
- */
-export function OrbCoachVoicePlayer({ source, playId }: OrbCoachVoicePlayerProps) {
-  const player = useAudioPlayer(source);
-  const lastPlayId = useRef<string | null>(null);
+export function OrbCoachVoicePlayer({
+  source,
+  playId,
+  replayNonce = 0,
+}: OrbCoachVoicePlayerProps) {
+  const player = useAudioPlayer(source, { downloadFirst: true, updateInterval: 200 });
+  const status = useAudioPlayerStatus(player);
+  const startedFor = useRef<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -36,47 +39,55 @@ export function OrbCoachVoicePlayer({ source, playId }: OrbCoachVoicePlayerProps
           playsInSilentMode: true,
           interruptionMode: 'duckOthers',
           shouldPlayInBackground: false,
+          allowsRecording: false,
         });
       } catch {
-        // Continue — mode setup is best-effort.
+        // best-effort
       }
 
       if (cancelled) {
         return;
       }
 
-      lastPlayId.current = playId;
+      const token = `${playId}#${replayNonce}`;
+      // Wait briefly for downloadFirst / isLoaded
+      for (let i = 0; i < 20 && !cancelled; i += 1) {
+        if (player.isLoaded || status.isLoaded) {
+          break;
+        }
+        await new Promise((r) => setTimeout(r, 50));
+      }
+
+      if (cancelled) {
+        return;
+      }
+
+      startedFor.current = token;
       try {
         await player.seekTo(0);
       } catch {
         // ignore
       }
-      if (cancelled) {
-        return;
-      }
       try {
         player.volume = 1;
+        player.muted = false;
         player.play();
       } catch {
         // ignore
       }
     };
 
-    // Short defer so the native player finishes binding the source.
     const timer = setTimeout(() => {
       void run();
-    }, 80);
+    }, 60);
 
     return () => {
       cancelled = true;
       clearTimeout(timer);
-      try {
-        player.pause();
-      } catch {
-        // ignore
-      }
     };
-  }, [playId, player, source]);
+    // Intentionally do not pause on cleanup — Strict Mode was killing audio.
+    // Parent unmount / new playId remounts a fresh player instead.
+  }, [playId, player, replayNonce, source, status.isLoaded]);
 
   return null;
 }

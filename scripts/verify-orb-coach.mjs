@@ -44,6 +44,9 @@ if (!facade.includes('OrbSvgCompanion')) {
 if (!presence.includes('voiceKey') || !presence.includes('OrbCoachVoicePlayer')) {
   violations.push('OrbPresence must mount OrbCoachVoicePlayer for clips');
 }
+if (!presence.includes('unlockAndPlay') || !presence.includes('orb.voice.tapHint')) {
+  violations.push('OrbPresence must support tap-to-play coach voice');
+}
 if (!presence.includes('resolveOrbCoachClip')) {
   violations.push('OrbPresence must resolve coach clips');
 }

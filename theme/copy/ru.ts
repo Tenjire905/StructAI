@@ -822,6 +822,18 @@ export const copyRu: CopyCatalog = {
     playful: 'Диктовка нужна в StructAI development build (не Expo Go).',
     focus: 'Диктовка требует development build StructAI — в Expo Go нет speech-модуля.',
   },
+  'orb.voice.tapHint': {
+    playful: 'Нажми на Orb, чтобы услышать.',
+    focus: 'Нажми на Orb для voiceover.',
+  },
+  'orb.voice.tapA11y': {
+    playful: 'Воспроизвести голос Orb',
+    focus: 'Воспроизвести voiceover Orb',
+  },
+  'orb.voice.needsDevBuild': {
+    playful: 'Голос нужен в StructAI development build (не Expo Go).',
+    focus: 'Voiceover требует development build StructAI.',
+  },
   'orb.speech.onboarding.welcome': {
     playful: 'Привет! Я твой Orb — сделаем промптинг проще.',
     focus: 'Я твой Orb-коуч. Будем практиковать ясные промпты.',

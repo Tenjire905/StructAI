@@ -822,6 +822,18 @@ export const copyFr: CopyCatalog = {
     playful: 'La dictée nécessite le development build StructAI (pas Expo Go).',
     focus: 'La dictée exige un development build StructAI — Expo Go n’a pas le module speech.',
   },
+  'orb.voice.tapHint': {
+    playful: 'Touche l’Orb pour l’entendre.',
+    focus: 'Toucher l’Orb pour le voiceover.',
+  },
+  'orb.voice.tapA11y': {
+    playful: 'Lire la voix de l’Orb',
+    focus: 'Lire le voiceover de l’Orb',
+  },
+  'orb.voice.needsDevBuild': {
+    playful: 'La voix nécessite le development build StructAI (pas Expo Go).',
+    focus: 'Le voiceover exige un development build StructAI.',
+  },
   'orb.speech.onboarding.welcome': {
     playful: 'Salut ! Je suis ton Orb — on va rendre le prompting facile.',
     focus: 'Je suis ton coach Orb. On va pratiquer des prompts clairs.',
