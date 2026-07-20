@@ -1,3 +1,5 @@
+import { isRunningInExpoGo } from 'expo';
+import { requireOptionalNativeModule } from 'expo-modules-core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 
@@ -37,7 +39,28 @@ type SpeechModule = typeof import('expo-speech-recognition');
 
 let speechModulePromise: Promise<SpeechModule | null> | null = null;
 
+/**
+ * Expo Go / older native builds do not ship ExpoSpeechRecognition.
+ * Importing expo-speech-recognition there throws Uncaught Error at module init —
+ * so we probe the native module first and never load the JS package without it.
+ */
+function canUseNativeSpeechRecognition(): boolean {
+  if (isRunningInExpoGo()) {
+    return false;
+  }
+
+  try {
+    return requireOptionalNativeModule('ExpoSpeechRecognition') != null;
+  } catch {
+    return false;
+  }
+}
+
 async function loadSpeechModule(): Promise<SpeechModule | null> {
+  if (!canUseNativeSpeechRecognition()) {
+    return null;
+  }
+
   if (!speechModulePromise) {
     speechModulePromise = import('expo-speech-recognition')
       .then((mod) => mod)
@@ -48,8 +71,8 @@ async function loadSpeechModule(): Promise<SpeechModule | null> {
 }
 
 /**
- * Reliable Prompt Lab dictation via expo-speech-recognition.
- * Requires a native build (dev client / store) — Expo Go may report unavailable.
+ * Prompt Lab dictation via expo-speech-recognition when the native module exists.
+ * Expo Go stays crash-free and shows an unavailable hint instead.
  */
 export function usePromptDictation(options: {
   locale: Locale;
@@ -58,9 +81,12 @@ export function usePromptDictation(options: {
   enabled?: boolean;
 }): PromptDictationState {
   const { locale, value, onChangeText, enabled = true } = options;
-  const [status, setStatus] = useState<PromptDictationStatus>('idle');
+  const nativeReady = enabled && canUseNativeSpeechRecognition();
+  const [status, setStatus] = useState<PromptDictationStatus>(
+    nativeReady ? 'idle' : 'unavailable',
+  );
   const [errorKey, setErrorKey] = useState<string | null>(null);
-  const [available, setAvailable] = useState(false);
+  const [available, setAvailable] = useState(nativeReady);
   const baseTextRef = useRef(value);
   const valueRef = useRef(value);
 
@@ -72,7 +98,7 @@ export function usePromptDictation(options: {
     let cancelled = false;
 
     void (async () => {
-      if (!enabled) {
+      if (!enabled || !canUseNativeSpeechRecognition()) {
         setAvailable(false);
         setStatus('unavailable');
         return;
@@ -106,6 +132,10 @@ export function usePromptDictation(options: {
   }, [enabled]);
 
   useEffect(() => {
+    if (!canUseNativeSpeechRecognition()) {
+      return;
+    }
+
     let removeResult: (() => void) | undefined;
     let removeError: (() => void) | undefined;
     let removeEnd: (() => void) | undefined;
@@ -162,13 +192,20 @@ export function usePromptDictation(options: {
       removeResult?.();
       removeError?.();
       removeEnd?.();
-      void loadSpeechModule().then((mod) => {
-        mod?.ExpoSpeechRecognitionModule.abort();
-      });
+      if (canUseNativeSpeechRecognition()) {
+        void loadSpeechModule().then((mod) => {
+          mod?.ExpoSpeechRecognitionModule.abort();
+        });
+      }
     };
   }, [onChangeText]);
 
   const stop = useCallback(() => {
+    if (!canUseNativeSpeechRecognition()) {
+      setStatus('unavailable');
+      return;
+    }
+
     void loadSpeechModule().then((mod) => {
       mod?.ExpoSpeechRecognitionModule.stop();
     });
@@ -176,7 +213,7 @@ export function usePromptDictation(options: {
   }, []);
 
   const toggle = useCallback(async () => {
-    if (!available) {
+    if (!available || !canUseNativeSpeechRecognition()) {
       setStatus('unavailable');
       setErrorKey('promptLab.dictationUnavailable');
       return;
