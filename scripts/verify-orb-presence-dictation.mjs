@@ -34,6 +34,9 @@ if (!completion.includes("'celebrating'") || !completion.includes('orb.speech.le
 if (!retry.includes("'worry'") || !retry.includes('orb.speech.lessonRetry')) {
   violations.push('Retry prompt must show worry orb mimik with speech');
 }
+if (!dictation.includes('requireOptionalNativeModule') || !dictation.includes('isRunningInExpoGo')) {
+  violations.push('usePromptDictation must probe native module / Expo Go before importing speech package');
+}
 if (!dictation.includes('expo-speech-recognition') || !dictation.includes('requestPermissionsAsync')) {
   violations.push('usePromptDictation must use expo-speech-recognition with permissions');
 }
