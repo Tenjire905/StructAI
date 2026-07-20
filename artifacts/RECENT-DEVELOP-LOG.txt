@@ -1,0 +1,30 @@
+700c198 docs: add Perplexity animation brief and export bundle script
+1197204 feat: two-tier path completion transitions (capstone vs full path)
+504a5c4 fix: render completed chapters at path positions on progress bar
+3b49fcb fix: show skipped chapters as positional orange segments on progress bar
+fec943c fix: show skipped lessons as contiguous orange segment on progress bar
+cf484b4 fix: show clean progress bar without per-chapter failed markers
+2e0fe7b fix: render failed path progress as merged bars instead of dots
+17ff208 fix: advance to next lesson when skipping a failed chapter
+0f2340b docs: update roadmap and checklist with sprint 5-7 develop tip
+7a34116 feat: add prompt-mastery path skeleton with pm-1..3 lessons
+06d316c docs: refresh manual test checklist and add retest log
+90f0d39 feat: gate learning paths behind linear completion unlock chain
+3a0122d docs: expand sprint 5-7 build prompts with full copy, code, and checklists
+620a438 docs: add product integration roadmap and sprint 5-7 build prompts
+9737777 fix(layout): mount Stack before fonts load to avoid useLinking warning
+778f675 fix(storage): pin AsyncStorage to 2.2.0 for Expo Go compatibility
+04f8d0a fix(storage): persist guest onboarding and progress across app restarts
+9f5e018 fix(app): avoid pre-mount state updates during expo-router linking
+56fe101 fix(lessons): preserve authored step types and fix lesson back navigation
+f6ed1f1 fix(theme): break CelebrationOverlay require cycle with theme barrel
+2ee3d18 refactor(progress): break progressMerge ↔ progressStore require cycle
+c41df25 fix(onboarding): show loop screen before marking onboarding complete
+1b5a068 fix(storage): AsyncStorage fallback for Expo Go without NitroModules
+5a3fa28 Merge branch 'feature/product-integration-sprint-04' into develop
+30db6c4 feat: add first-run start CTA on home and onboarding loop
+183d3dd docs: add Sprint 4 prompt and manual test checklist
+71f13a4 Merge branch 'feature/product-integration-sprint-03' into develop
+ec247b1 chore: clean legacy locale keys, archive source JSONs, add full lesson verify
+eed42aa docs: add Sprint 3 QA hardening build prompt
+ba55147 Merge branch 'feature/product-integration-sprint-02' into develop

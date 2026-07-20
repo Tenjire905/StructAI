@@ -797,6 +797,64 @@ export const copyRu: CopyCatalog = {
     playful: 'Ты закрыл ключевые столпы — роль, контекст, формат, ограничения.',
     focus: 'Ключевые столпы на месте: роль, контекст, формат, ограничения.',
   },
+
+  'promptLab.dictationStart': {
+    playful: 'Надиктовать промпт',
+    focus: 'Надиктовать промпт',
+  },
+  'promptLab.dictationStop': {
+    playful: 'Остановить диктовку',
+    focus: 'Остановить диктовку',
+  },
+  'promptLab.dictationListening': {
+    playful: 'Слушаю… говори свой промпт',
+    focus: 'Слушаю… продиктуй промпт',
+  },
+  'promptLab.dictationPermission': {
+    playful: 'Для диктовки нужен доступ к микрофону. Включи его в настройках.',
+    focus: 'Для диктовки требуется разрешение микрофона.',
+  },
+  'promptLab.dictationError': {
+    playful: 'Диктовка сбойнула — нажми на микрофон ещё раз.',
+    focus: 'Диктовка не удалась. Нажми на микрофон и попробуй снова.',
+  },
+  'promptLab.dictationUnavailable': {
+    playful: 'Диктовка нужна в StructAI development build (не Expo Go).',
+    focus: 'Диктовка требует development build StructAI — в Expo Go нет speech-модуля.',
+  },
+  'orb.speech.onboarding.welcome': {
+    playful: 'Привет! Я твой Orb — сделаем промптинг проще.',
+    focus: 'Я твой Orb-коуч. Будем практиковать ясные промпты.',
+  },
+  'orb.speech.onboarding.mode': {
+    playful: 'Выбери вайб под себя — я подстроюсь.',
+    focus: 'Focus или Playful — те же навыки, разная плотность.',
+  },
+  'orb.speech.onboarding.loop': {
+    playful: 'Короткий цикл: учись → практикуй → становись лучше. Готов?',
+    focus: 'Три шага: учиться, практиковать, улучшать. Начни, когда готов.',
+  },
+  'orb.speech.onboarding.proof': {
+    playful: 'Смотри, как слабый промпт становится сильнее — вот навык.',
+    focus: 'Критика → перепись → сравнение. Это доказательство.',
+  },
+  'orb.speech.onboarding.proofDone': {
+    playful: 'Круто — ты видишь слабый промпт и умеешь его чинить.',
+    focus: 'Ты можешь превратить размытую просьбу в рабочий бриф.',
+  },
+  'orb.speech.onboarding.dailyGoal': {
+    playful: 'Поставь маленькую дневную цель — завтра напомню.',
+    focus: 'Выбери дневную цель по орбам, чтобы стрик был честным.',
+  },
+  'orb.speech.lessonComplete': {
+    playful: 'Да! Этот навык твой — завтра примени его снова.',
+    focus: 'Урок пройден. Завтра используй этот паттерн на реальной задаче.',
+  },
+  'orb.speech.lessonRetry': {
+    playful: 'Почти! Давай повторим слабые места — ты справишься.',
+    focus: 'Ещё не всё. Повтори пропущенные проверки и закрепи паттерн.',
+  },
+
   'lesson.backToPath': {
     playful: 'Назад к треку',
     focus: 'Назад к треку',

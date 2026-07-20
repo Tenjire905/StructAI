@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 
-import { OrbCompanion } from '@/components/features/OrbCompanion';
+import { OrbPresence } from '@/components/features/OrbPresence';
 import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { useThemeMode } from '@/theme';
@@ -19,7 +19,7 @@ export function RetryPromptView({
   onContinueLater,
 }: RetryPromptViewProps) {
   const { tokens, t } = useThemeMode();
-  const companionState = useOrbCompanionState('attentive');
+  const companionState = useOrbCompanionState('worry');
 
   return (
     <View
@@ -31,17 +31,13 @@ export function RetryPromptView({
         justifyContent: 'center',
         paddingHorizontal: tokens.spacing.screenPadding,
       }}>
-      <View
-        style={{
-          alignItems: 'center',
-          backgroundColor: tokens.colors.surface.card,
-          borderRadius: tokens.radius.pill,
-          height: tokens.spacing.space8,
-          justifyContent: 'center',
-          width: tokens.spacing.space8,
-        }}>
-        <OrbCompanion size={tokens.spacing.space8 * 0.75} state={companionState} />
-      </View>
+      <OrbPresence
+        showSpeech
+        size={tokens.spacing.space8 * 0.85}
+        speechKey="orb.speech.lessonRetry"
+        speechSeed={gradedCount}
+        state={companionState}
+      />
 
       <Text
         style={{

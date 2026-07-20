@@ -2,15 +2,17 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
-import { Button } from '@/components/ui';
-import { useThemeMode, type ThemeMode } from '@/theme';
-
 import { ModePreviewCard } from '@/components/features/onboarding/ModePreviewCard';
+import { OrbPresence } from '@/components/features/OrbPresence';
+import { Button } from '@/components/ui';
+import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
+import { useThemeMode, type ThemeMode } from '@/theme';
 
 export default function OnboardingModusScreen() {
   const { tokens, t, setMode } = useThemeMode();
   const router = useRouter();
   const [selectedMode, setSelectedMode] = useState<ThemeMode | null>(null);
+  const companionState = useOrbCompanionState(selectedMode ? 'happy' : 'attentive');
 
   const handleConfirm = () => {
     if (!selectedMode) {
@@ -32,6 +34,13 @@ export default function OnboardingModusScreen() {
         paddingTop: tokens.spacing.space7,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
+      <OrbPresence
+        showSpeech
+        size={tokens.spacing.space8}
+        speechKey="orb.speech.onboarding.mode"
+        state={companionState}
+      />
+
       <Text
         style={{
           color: tokens.colors.text.primary,

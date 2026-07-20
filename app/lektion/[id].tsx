@@ -1063,7 +1063,7 @@ function CompletionView({
   const { tokens, t } = useThemeMode();
   const { session } = useAuth();
   const completedLessons = useProgressStore((state) => state.completedLessons);
-  const companionState = useOrbCompanionState();
+  const companionState = useOrbCompanionState(orbsReward > 0 ? 'celebrating' : 'happy');
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
   const nextLessonId = pathId ? getNextLessonId(pathId, lessonId) : undefined;
 
@@ -1092,6 +1092,7 @@ function CompletionView({
         <OrbPresence
           showSpeech
           size={tokens.spacing.space8 * 0.75}
+          speechKey={orbsReward > 0 ? 'orb.speech.lessonComplete' : 'orb.speech.celebrating.a'}
           speechSeed={lessonId.length}
           state={companionState}
         />

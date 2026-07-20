@@ -1,7 +1,9 @@
 import { useRouter } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 
+import { OrbPresence } from '@/components/features/OrbPresence';
 import { Button } from '@/components/ui';
+import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { trackEvent } from '@/lib/analytics';
 import { setOnboardingCompleted } from '@/lib/appStorage';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
@@ -24,6 +26,7 @@ export default function OnboardingLoopScreen() {
   const router = useRouter();
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const firstLessonId = getFirstLessonIdForPath(DEFAULT_START_PATH_ID);
+  const companionState = useOrbCompanionState('happy');
 
   const finishOnboarding = async () => {
     await setOnboardingCompleted();
@@ -41,6 +44,13 @@ export default function OnboardingLoopScreen() {
         paddingTop: tokens.spacing.space7,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
+      <OrbPresence
+        showSpeech
+        size={tokens.spacing.space8}
+        speechKey="orb.speech.onboarding.loop"
+        state={companionState}
+      />
+
       <Text
         style={{
           color: tokens.colors.text.primary,
