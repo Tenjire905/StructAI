@@ -1,5 +1,5 @@
 /**
- * Abstract Orb presence: energy choreography + motion-first onboarding.
+ * Abstract Orb presence + Liftoff-style onboarding bubbles (no voiceover).
  */
 
 import assert from 'node:assert/strict';
@@ -20,29 +20,26 @@ const loop = readFileSync(join(root, 'app/onboarding/loop.tsx'), 'utf8');
 if (!choreo.includes('IDLE_ENERGY_BEATS') || !choreo.includes('bodyOpacityForState')) {
   violations.push('orbChoreography must define idle energy beats + opacity');
 }
-if (orb.includes('OrbMouth') || orb.includes("'smile'") || orb.includes("'grin'") || orb.includes('showFace')) {
+if (orb.includes('OrbMouth') || orb.includes("'smile'") || orb.includes('showFace')) {
   violations.push('OrbSvgCompanion must stay abstract (no face/smile)');
 }
 if (!orb.includes('accent.primary') || !orb.includes('spin') || !orb.includes('auraPulse')) {
   violations.push('OrbSvgCompanion must use brand glow + spin + aura pulse');
 }
-if (!orb.includes('energyForState')) {
-  violations.push('OrbSvgCompanion must drive motion from energy profiles');
-}
 if (!facade.includes('OrbSvgCompanion') || facade.includes('OrbRiveCompanion')) {
-  violations.push('OrbCompanion must keep SVG coach only (no Rive facade)');
+  violations.push('OrbCompanion must keep SVG coach only');
 }
-if (!presence.includes("layout === 'hero'") || !presence.includes('interaction')) {
-  violations.push('OrbPresence must support hero layout + interaction beats');
+if (!presence.includes("layout === 'hero'") || !presence.includes('speechKey')) {
+  violations.push('OrbPresence must support hero layout + speechKey');
 }
-if (!presence.includes('voiceKey')) {
-  violations.push('OrbPresence must support voiceKey for parallel coach audio');
+if (presence.includes('voiceKey')) {
+  violations.push('OrbPresence must not use voiceKey');
 }
-if (!welcome.includes('showSpeech={false}') || !welcome.includes('layout="hero"')) {
-  violations.push('Welcome must be motion-first hero orb without speech pile-on');
+if (!welcome.includes('showSpeech') || !welcome.includes('layout="hero"')) {
+  violations.push('Welcome must be Orb-led hero with speech bubble');
 }
-if (!modus.includes('showSpeech={false}') || !loop.includes('showSpeech={false}')) {
-  violations.push('Mode + loop onboarding must not stack orb speech bubbles');
+if (!modus.includes('showSpeech') || !loop.includes('showSpeech')) {
+  violations.push('Mode + loop onboarding must show Orb coach bubbles');
 }
 
 assert.equal(violations.length, 0, violations.join('\n'));

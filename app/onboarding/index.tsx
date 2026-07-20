@@ -8,6 +8,10 @@ import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { useThemeMode } from '@/theme';
 
+/**
+ * Liftoff-style welcome: Orb leads with a coach bubble; brand + one CTA.
+ * No voiceover — the bubble is the Jimbo beat.
+ */
 export default function OnboardingWelcomeScreen() {
   const { tokens, t, mode } = useThemeMode();
   const router = useRouter();
@@ -27,20 +31,7 @@ export default function OnboardingWelcomeScreen() {
         paddingHorizontal: tokens.spacing.screenPaddingHero,
         paddingTop: insets.top + tokens.spacing.space6,
       }}>
-      {/* First contact = living Orb presence. Motion only — no speech pile-on. */}
-      <View style={{ alignItems: 'center', paddingTop: tokens.spacing.space5 }}>
-        <OrbPresence
-          interaction="enter"
-          layout="hero"
-          showSpeech={false}
-          size={tokens.spacing.space8 * 1.55}
-          state={companionState}
-          voiceKey="orb.speech.onboarding.welcome"
-        />
-      </View>
-
-      <View style={{ gap: isFocus ? tokens.spacing.space3 : tokens.spacing.space4 }}>
-        {/* Brand is the hero signal; headline stays secondary to StructAI. */}
+      <View style={{ alignItems: 'center', gap: tokens.spacing.space4, paddingTop: tokens.spacing.space5 }}>
         <Text
           style={{
             color: tokens.colors.accent.primary,
@@ -48,10 +39,22 @@ export default function OnboardingWelcomeScreen() {
             fontSize: tokens.typography.fontSize.displayXl,
             letterSpacing: 1,
             lineHeight: tokens.typography.fontSize.displayXl * 1.1,
+            textAlign: 'center',
           }}>
           StructAI
         </Text>
 
+        <OrbPresence
+          interaction="enter"
+          layout="hero"
+          showSpeech
+          size={tokens.spacing.space8 * 1.55}
+          speechKey="orb.speech.onboarding.welcome"
+          state={companionState}
+        />
+      </View>
+
+      <View style={{ gap: isFocus ? tokens.spacing.space3 : tokens.spacing.space4 }}>
         <Text
           style={{
             color: tokens.colors.text.primary,
@@ -63,19 +66,9 @@ export default function OnboardingWelcomeScreen() {
               (isFocus
                 ? tokens.typography.fontSize.headingMd
                 : tokens.typography.fontSize.headingLg) * 1.25,
+            textAlign: 'center',
           }}>
           {t('onboarding.welcomeHeadline')}
-        </Text>
-
-        <Text
-          style={{
-            color: tokens.colors.text.secondary,
-            fontFamily: tokens.typography.fontFamily.body,
-            fontSize: tokens.typography.fontSize.bodyLg,
-            lineHeight: tokens.typography.fontSize.bodyLg * (isFocus ? 1.4 : 1.5),
-            marginBottom: tokens.spacing.space3,
-          }}>
-          {t('onboarding.welcomeSub')}
         </Text>
 
         <Button

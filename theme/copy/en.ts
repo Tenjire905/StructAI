@@ -834,28 +834,52 @@ export const copyEn: CopyCatalog = {
     focus: 'Voiceover requires a StructAI development build.',
   },
   'orb.speech.onboarding.welcome': {
-    playful: 'Hey! I’m your Orb — let’s make prompting feel easy.',
-    focus: 'I’m your Orb coach. We’ll practice clear prompts together.',
+    playful: 'Hey! I’m your Orb — your local prompt coach. Short and clear, promise.',
+    focus: 'I’m your Orb coach. We’ll practice clear prompts — step by step.',
   },
   'orb.speech.onboarding.mode': {
-    playful: 'Pick the vibe that fits you — I’ll match your pace.',
-    focus: 'Choose Focus or Playful — same skills, different density.',
+    playful: 'Pick the vibe — I’ll match pace and tone. Skills stay the same.',
+    focus: 'Focus or Playful: same skills, different density. Choose what fits.',
+  },
+  'orb.speech.onboarding.modePlayful': {
+    playful: 'Nice — Playful. Short beats, more energy. I’ve got you.',
+    focus: 'Playful selected: shorter steps, same learning goals.',
+  },
+  'orb.speech.onboarding.modeFocus': {
+    playful: 'Focus — clean and dense. I’ll keep the noise low.',
+    focus: 'Focus selected: sparse tips, full depth when you check.',
   },
   'orb.speech.onboarding.loop': {
-    playful: 'Short loop: learn → practice → get better. Ready?',
+    playful: 'Here’s the loop: learn → practice → get better. Ready for skill one?',
     focus: 'Three beats: learn, practice, improve. Start when ready.',
   },
   'orb.speech.onboarding.proof': {
     playful: 'Watch this vague prompt level up — that’s the skill.',
     focus: 'Critique → rewrite → compare. That’s the proof.',
   },
+  'orb.speech.onboarding.proofWeak': {
+    playful: 'This is how it often starts: friendly, but too vague. Spot the gaps?',
+    focus: 'Typical start: intent exists, structure doesn’t. That’s what we fix.',
+  },
+  'orb.speech.onboarding.proofCritique': {
+    playful: 'Quick check: goal, constraints, format — what’s missing?',
+    focus: 'Critique pass: name the missing pieces, don’t guess.',
+  },
+  'orb.speech.onboarding.proofRewrite': {
+    playful: 'Now the rewrite — same idea, real structure. Boom.',
+    focus: 'Rewrite: same intent, clear structure and constraints.',
+  },
+  'orb.speech.onboarding.proofCompare': {
+    playful: 'Before/after — the score rises because structure is measurable.',
+    focus: 'Compare: structure makes the difference visible.',
+  },
   'orb.speech.onboarding.proofDone': {
-    playful: 'Nice — you can spot a weak prompt and fix it now.',
+    playful: 'Nice — you can spot a weak prompt and fix it now. That’s the skill.',
     focus: 'You can turn a vague ask into a usable brief.',
   },
   'orb.speech.onboarding.dailyGoal': {
-    playful: 'Set a tiny daily goal — I’ll nudge you tomorrow.',
-    focus: 'Pick a daily orb goal so we keep the streak honest.',
+    playful: 'Set a tiny daily goal — I’ll nudge you, no stress.',
+    focus: 'Pick an honest daily orb goal. Keep the streak clean.',
   },
   'orb.speech.lessonComplete': {
     playful: 'Yes! That skill is yours — come back tomorrow and reuse it.',

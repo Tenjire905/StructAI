@@ -835,28 +835,52 @@ export const copyFr: CopyCatalog = {
     focus: 'Le voiceover exige un development build StructAI.',
   },
   'orb.speech.onboarding.welcome': {
-    playful: 'Salut ! Je suis ton Orb — on va rendre le prompting facile.',
-    focus: 'Je suis ton coach Orb. On va pratiquer des prompts clairs.',
+    playful: 'Salut ! Je suis ton Orb — ton coach prompt local. Court et clair, promis.',
+    focus: 'Je suis ton coach Orb. On pratique des prompts clairs — pas à pas.',
   },
   'orb.speech.onboarding.mode': {
-    playful: 'Choisis l’ambiance qui te va — je m’adapte.',
-    focus: 'Focus ou Playful — mêmes compétences, densité différente.',
+    playful: 'Choisis l’ambiance — j’adapte rythme et ton. Les skills restent les mêmes.',
+    focus: 'Focus ou Playful : mêmes compétences, densité différente. À toi de choisir.',
+  },
+  'orb.speech.onboarding.modePlayful': {
+    playful: 'Nice — Playful. Beats courts, plus d’énergie. Je reste avec toi.',
+    focus: 'Playful choisi : étapes plus courtes, mêmes objectifs.',
+  },
+  'orb.speech.onboarding.modeFocus': {
+    playful: 'Focus — net et dense. Je garde le bruit bas.',
+    focus: 'Focus choisi : tips sobres, profondeur au check.',
   },
   'orb.speech.onboarding.loop': {
-    playful: 'Petit loop : apprendre → pratiquer → progresser. Prêt ?',
+    playful: 'Le loop : apprendre → pratiquer → progresser. Prêt pour le premier skill ?',
     focus: 'Trois temps : apprendre, pratiquer, améliorer. Lance quand tu veux.',
   },
   'orb.speech.onboarding.proof': {
     playful: 'Regarde ce prompt vague s’améliorer — c’est le skill.',
     focus: 'Critique → rewrite → comparer. C’est la preuve.',
   },
+  'orb.speech.onboarding.proofWeak': {
+    playful: 'Souvent ça commence ainsi : sympa, mais trop vague. Tu vois les trous ?',
+    focus: 'Départ typique : l’intention est là, la structure manque. On corrige ça.',
+  },
+  'orb.speech.onboarding.proofCritique': {
+    playful: 'Check rapide : but, contraintes, format — qu’est-ce qui manque ?',
+    focus: 'Passe critique : nomme les pièces manquantes, ne devine pas.',
+  },
+  'orb.speech.onboarding.proofRewrite': {
+    playful: 'Maintenant le rewrite — même idée, vraie structure. Boom.',
+    focus: 'Rewrite : même intention, structure et contraintes claires.',
+  },
+  'orb.speech.onboarding.proofCompare': {
+    playful: 'Avant/après — le score monte parce que la structure se mesure.',
+    focus: 'Comparaison : la structure rend la différence visible.',
+  },
   'orb.speech.onboarding.proofDone': {
-    playful: 'Top — tu repères un prompt faible et tu le corriges.',
+    playful: 'Top — tu repères un prompt faible et tu le corriges. C’est le skill.',
     focus: 'Tu peux transformer une demande vague en brief utile.',
   },
   'orb.speech.onboarding.dailyGoal': {
-    playful: 'Fixe un petit objectif du jour — je te rappelle demain.',
-    focus: 'Choisis un objectif d’orbes quotidien pour un streak honnête.',
+    playful: 'Fixe un petit objectif du jour — je te rappelle, sans stress.',
+    focus: 'Choisis un objectif d’orbes honnête. Streak propre.',
   },
   'orb.speech.lessonComplete': {
     playful: 'Yes ! Ce skill est à toi — réutilise-le demain.',

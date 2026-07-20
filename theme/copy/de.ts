@@ -836,28 +836,52 @@ export const copyDe: CopyCatalog = {
     focus: 'Voiceover erfordert einen StructAI Development Build.',
   },
   'orb.speech.onboarding.welcome': {
-    playful: 'Hey! Ich bin dein Orb — lass uns Prompting leicht machen.',
-    focus: 'Ich bin dein Orb-Coach. Wir üben klare Prompts.',
+    playful: 'Hey! Ich bin dein Orb — dein lokaler Prompt-Coach. Kurz und klar, versprochen.',
+    focus: 'Ich bin dein Orb-Coach. Wir üben klare Prompts — Schritt für Schritt.',
   },
   'orb.speech.onboarding.mode': {
-    playful: 'Wähl den Vibe, der zu dir passt — ich passe mich an.',
-    focus: 'Focus oder Playful — gleiche Skills, andere Dichte.',
+    playful: 'Wähl den Vibe — ich passe Tempo und Ton an. Skills bleiben gleich.',
+    focus: 'Focus oder Playful: gleiche Skills, andere Dichte. Wähl was zu dir passt.',
+  },
+  'orb.speech.onboarding.modePlayful': {
+    playful: 'Nice — Playful. Kurze Beats, mehr Energie. Ich bleib an deiner Seite.',
+    focus: 'Playful gewählt: kürzere Schritte, gleiche Lernziele.',
+  },
+  'orb.speech.onboarding.modeFocus': {
+    playful: 'Focus — clean und dicht. Ich halte den Ballast klein.',
+    focus: 'Focus gewählt: knappe Tipps, volle Tiefe wenn du checkst.',
   },
   'orb.speech.onboarding.loop': {
-    playful: 'Kurzer Loop: lernen → üben → besser werden. Bereit?',
+    playful: 'So läuft’s: lernen → üben → besser werden. Bereit für den ersten Skill?',
     focus: 'Drei Schritte: lernen, üben, verbessern. Start wenn bereit.',
   },
   'orb.speech.onboarding.proof': {
     playful: 'Schau, wie der vage Prompt besser wird — das ist der Skill.',
     focus: 'Kritik → Rewrite → Vergleich. Das ist der Beweis.',
   },
+  'orb.speech.onboarding.proofWeak': {
+    playful: 'So startet’s oft: freundlich, aber zu vage. Merkst du die Lücken?',
+    focus: 'Typischer Start: Absicht da, Struktur fehlt. Genau das fixen wir.',
+  },
+  'orb.speech.onboarding.proofCritique': {
+    playful: 'Kurz checken: Ziel, Constraints, Format — was fehlt?',
+    focus: 'Kritik-Pass: fehlende Teile benennen, nicht raten.',
+  },
+  'orb.speech.onboarding.proofRewrite': {
+    playful: 'Jetzt der Rewrite — gleiche Idee, echte Struktur. Boom.',
+    focus: 'Rewrite: gleiche Absicht, klare Struktur und Constraints.',
+  },
+  'orb.speech.onboarding.proofCompare': {
+    playful: 'Vorher/nachher — der Score steigt, weil Struktur messbar ist.',
+    focus: 'Vergleich: Struktur macht den Unterschied sichtbar.',
+  },
   'orb.speech.onboarding.proofDone': {
-    playful: 'Stark — du erkennst schwache Prompts und kannst sie fixen.',
+    playful: 'Stark — du erkennst schwache Prompts und kannst sie fixen. Das ist der Skill.',
     focus: 'Du kannst aus einer vagen Bitte ein brauchbares Briefing machen.',
   },
   'orb.speech.onboarding.dailyGoal': {
-    playful: 'Setz ein kleines Tagesziel — ich erinner dich morgen.',
-    focus: 'Wähl ein tägliches Orb-Ziel, damit der Streak ehrlich bleibt.',
+    playful: 'Kleines Tagesziel setzen — ich erinner dich, ohne Stress.',
+    focus: 'Wähl ein ehrliches Orb-Tagesziel. Streak bleibt sauber.',
   },
   'orb.speech.lessonComplete': {
     playful: 'Yes! Der Skill gehört dir — morgen wieder einsetzen.',

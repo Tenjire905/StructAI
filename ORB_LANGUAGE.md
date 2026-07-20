@@ -1,7 +1,7 @@
 # ORB_LANGUAGE.md
 ### StructAI – Orb Language v1 (verbindlich). Cursor MUSS diese Zuordnung nutzen.
 
-Grundregel: **Der Orb ist ein lokaler Coach** — abstrakte Energie-Präsenz (kein Gesicht), echte Voiceover-Clips an den richtigen Momenten, erklärt nie die UI-Buttons.
+Grundregel: **Der Orb ist ein lokaler Coach** (Jimbo/Liftoff-Nähe) — abstrakte Präsenz, Speech-Bubbles mit Tips & Smalltalk, erklärt nie die UI-Buttons. **Kein Voiceover in v1.**
 
 ---
 
@@ -9,25 +9,21 @@ Grundregel: **Der Orb ist ein lokaler Coach** — abstrakte Energie-Präsenz (ke
 
 | Frage | Entscheidung |
 |---|---|
-| Look | **Abstrakt** — dunkler Kern + violette Corona / Wellen (Eclipse), kein menschliches Gesicht |
-| Assets | **SVG + Reanimated** (kein Rive-Abo) |
-| Ausdruck | Energie-Wellen (`lib/orbExpressions.ts`): Spin, Counter-Spin, Dash-Dichte, Ellipse-Form — Idle vs Calcul |
-| Voice (Dev) | **Lokale MP3-Clips** (`assets/orb-voice`) via `expo-audio` — **$0 Runtime**, Expo Go, Edge-TTS |
-| Voice (Release später) | Clips austauschen (Studio / bezahlte Stimme) — gleiche Keys, kein API-Umbau nötig |
-| Kein Runtime-Cloud-TTS | Keine ElevenLabs/OpenAI-API im Client (Kosten + Offline + Privacy) |
-| Playful | Bubbles + Audio an Lehr-Momenten (`soundEnabled`) |
-| Focus | Weniger Bubbles; **explizite `voiceKey`** (Onboarding) spielen Clip trotzdem |
-| Onboarding | Motion-first (keine Bubble-Stapel); `voiceKey` = paralleles Voiceover |
+| Look | **Abstrakt** — dunkler Kern + violette Corona / Wellen (kein Gesicht) |
+| Assets | **SVG + Reanimated** |
+| Stimme | **Text-Bubbles only** (kein Audio/TTS-Pfad in der UI) |
+| Onboarding | **Liftoff-Style:** Orb führt mit Bubble; UI-Copy kurz; eine Idee pro Screen |
+| Playful | Bubbles während Lesen / Üben / Feedback + Onboarding |
+| Focus | Weniger Bubbles in Lektionen (Tips nach Check); Onboarding trotzdem Orb-geführt |
+| Präsenz | Orb in aktiver Lektion + Onboarding-Hero |
 
-### State-Machine (visuell)
+### Onboarding (Liftoff-Muster)
 
-| App-State | Visuelles Verhalten |
-|---|---|
-| Entry (`interaction="enter"`) | Scale-In + Bloom + dichte Wellen |
-| Idle | Langsames Atmen + langsame Dual-Spin + weiche Ellipse-Morph |
-| Calcul (`think`) | Schneller Counter-Spin, mehr Segmente, gedrängte Form |
-| Happy / Celebrating | Helleres Bloom, schnellerer Pulse |
-| Worry / Low energy | Gedimmte Aura, wenige Wellen, langsame Rotation |
+1. Welcome — Orb-Bubble `orb.speech.onboarding.welcome` + Brand + CTA  
+2. Mode — Orb reagiert (`mode` → `modePlayful` / `modeFocus`)  
+3. Loop — Orb erklärt den Rhythmus  
+4. Proof — Orb-Bubble **pro Step** (`proofWeak` … `proofDone`)  
+5. Tagesziel — Orb-Bubble `dailyGoal`
 
 ---
 
@@ -41,20 +37,16 @@ Lektions-Momente → State: `reading_start`→attentive, `reading`→think, `pra
 
 ---
 
-## 3. Stimme (Copy + Audio)
+## 3. Stimme (Copy)
 
 - Copy nur über `orb.speech.*` in `theme/copy/*`.
-- Audio: `lib/orbVoiceAssets.ts` mappt Keys → MP3; Player: `lib/orbCoachVoice.ts`.
-- Generieren: `pip3 install --user edge-tts && node scripts/generate-orb-voice.mjs`
-- Fallback: Gerät-TTS nur wenn Clip fehlt **und** `ExpoSpeech` native existiert.
-- `voiceKey`: Audio ohne Bubble (Onboarding parallel zum Lesen).
+- UI: `OrbPresence` mit `showSpeech` + `speechKey` (Hero-Bubble im Onboarding).
+- Kein `voiceKey` / kein `expo-audio` Playback in der Coach-UI.
 
 ---
 
 ## 4. Technik
 
-1. **SVG-Coach:** `OrbSvgCompanion.tsx` + `lib/orbExpressions.ts` + `lib/orbChoreography.ts`.
-2. **Facade:** `OrbCompanion.tsx` → SVG only.
-3. **Präsenz:** `OrbPresence.tsx` — `layout="hero"`, `interaction`, `voiceKey`.
-4. **Audio:** `expo-audio` + bundled MP3s (probe `ExpoAudio` first).
-5. Verify: `scripts/verify-orb-coach.mjs`, `scripts/verify-orb-rich-presence.mjs`.
+1. **SVG-Coach:** `OrbSvgCompanion.tsx` + `lib/orbExpressions.ts`
+2. **Präsenz:** `OrbPresence.tsx` — `layout="hero" | "coach"`, `speechKey`, `interaction`
+3. Verify: `scripts/verify-orb-coach.mjs`, `scripts/verify-orb-rich-presence.mjs`

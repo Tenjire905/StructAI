@@ -80,10 +80,10 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
       <OrbPresence
         interaction="enter"
         layout="hero"
-        showSpeech={false}
+        showSpeech
         size={tokens.spacing.space8 * 1.1}
+        speechKey="orb.speech.onboarding.dailyGoal"
         state={companionState}
-        voiceKey="orb.speech.onboarding.dailyGoal"
       />
 
       <View style={{ gap: tokens.spacing.space3 }}>

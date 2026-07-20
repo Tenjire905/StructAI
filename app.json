@@ -60,8 +60,7 @@
             "com.google.android.googlequicksearchbox"
           ]
         }
-      ],
-      "expo-audio"
+      ]
     ],
     "experiments": {
       "typedRoutes": true

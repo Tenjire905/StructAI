@@ -8,11 +8,20 @@ import { Button } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { useThemeMode, type ThemeMode } from '@/theme';
 
+/**
+ * Mode pick — Orb coaches the choice (reacts when you select).
+ */
 export default function OnboardingModusScreen() {
   const { tokens, t, setMode } = useThemeMode();
   const router = useRouter();
   const [selectedMode, setSelectedMode] = useState<ThemeMode | null>(null);
   const companionState = useOrbCompanionState(selectedMode ? 'happy' : 'attentive');
+  const speechKey =
+    selectedMode === 'playful'
+      ? 'orb.speech.onboarding.modePlayful'
+      : selectedMode === 'focus'
+        ? 'orb.speech.onboarding.modeFocus'
+        : 'orb.speech.onboarding.mode';
 
   const handleConfirm = () => {
     if (!selectedMode) {
@@ -35,20 +44,21 @@ export default function OnboardingModusScreen() {
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <OrbPresence
-        interaction="enter"
+        interaction={selectedMode ? 'react' : 'enter'}
         layout="hero"
-        showSpeech={false}
+        showSpeech
         size={tokens.spacing.space8 * 1.25}
+        speechKey={speechKey}
         state={companionState}
-        voiceKey="orb.speech.onboarding.mode"
       />
 
       <Text
         style={{
           color: tokens.colors.text.primary,
           fontFamily: tokens.typography.fontFamily.display,
-          fontSize: tokens.typography.fontSize.displayLg,
-          lineHeight: tokens.typography.fontSize.displayLg * 1.2,
+          fontSize: tokens.typography.fontSize.headingLg,
+          lineHeight: tokens.typography.fontSize.headingLg * 1.25,
+          textAlign: 'center',
         }}>
         {t('onboarding.modeQuestion')}
       </Text>
@@ -67,16 +77,6 @@ export default function OnboardingModusScreen() {
           onSelect={() => setSelectedMode('focus')}
         />
       </View>
-
-      <Text
-        style={{
-          color: tokens.colors.text.secondary,
-          fontFamily: tokens.typography.fontFamily.body,
-          fontSize: tokens.typography.fontSize.bodyMd,
-          lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
-        }}>
-        {t('onboarding.modeHint')}
-      </Text>
 
       <Button
         disabled={selectedMode === null}

@@ -53,19 +53,19 @@ if (!orbSvg.includes('energyForState') || !orbSvg.includes('spin')) {
 }
 
 if (!orbPresence.includes('speechKey')) {
-  violations.push('OrbPresence must accept explicit speechKey for lesson voice');
+  violations.push('OrbPresence must accept explicit speechKey for coach bubbles');
 }
 
-if (!orbPresence.includes('voiceKey') || !orbPresence.includes('speakOrbCoachLine')) {
-  violations.push('OrbPresence must support parallel coach audio via voiceKey');
+if (orbPresence.includes('voiceKey') || orbPresence.includes('speakOrbCoachLine')) {
+  violations.push('OrbPresence must not use voiceover / voiceKey');
 }
 
 if (!lesson.includes('resolveLessonSpeechCopyKey') || !lesson.includes('OrbPresence')) {
   violations.push('Lesson screen must drive OrbPresence speech from lesson moments');
 }
 
-if (!doc.includes('Focus-Stimme') && !doc.includes('Focus')) {
-  violations.push('ORB_LANGUAGE.md must document Focus tip voice');
+if (!doc.includes('Liftoff') && !doc.includes('Jimbo')) {
+  violations.push('ORB_LANGUAGE.md must document Liftoff-style coach onboarding');
 }
 
 if (!doc.toLowerCase().includes('abstrakt') && !doc.toLowerCase().includes('abstract')) {

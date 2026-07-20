@@ -76,6 +76,17 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
             ? t('firstSessionProof.ctaCompare')
             : t('firstSessionProof.ctaSummary');
 
+  const proofSpeechKey =
+    step === 'weak'
+      ? 'orb.speech.onboarding.proofWeak'
+      : step === 'critique'
+        ? 'orb.speech.onboarding.proofCritique'
+        : step === 'rewrite'
+          ? 'orb.speech.onboarding.proofRewrite'
+          : step === 'compare'
+            ? 'orb.speech.onboarding.proofCompare'
+            : 'orb.speech.onboarding.proofDone';
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -90,15 +101,10 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
       <OrbPresence
         interaction={step === 'summary' ? 'react' : 'watch'}
         layout="hero"
-        showSpeech={step === 'summary'}
+        showSpeech
         size={tokens.spacing.space8 * 1.05}
-        speechKey={step === 'summary' ? 'orb.speech.onboarding.proofDone' : null}
+        speechKey={proofSpeechKey}
         state={companionState}
-        voiceKey={
-          step === 'summary'
-            ? 'orb.speech.onboarding.proofDone'
-            : 'orb.speech.onboarding.proof'
-        }
       />
 
       <View style={{ gap: tokens.spacing.space2 }}>
