@@ -1,7 +1,7 @@
 # ORB_LANGUAGE.md
 ### StructAI – Orb Language v1 (verbindlich). Cursor MUSS diese Zuordnung nutzen.
 
-Grundregel: **Der Orb ist ein lokaler Coach** — abstrakte Energie-Präsenz (kein Gesicht), sparsame Stimme, reagiert auf Lernmomente, erklärt nie die UI-Buttons.
+Grundregel: **Der Orb ist ein lokaler Coach** — abstrakte Energie-Präsenz (kein Gesicht), echte Voiceover-Clips an den richtigen Momenten, erklärt nie die UI-Buttons.
 
 ---
 
@@ -9,24 +9,25 @@ Grundregel: **Der Orb ist ein lokaler Coach** — abstrakte Energie-Präsenz (ke
 
 | Frage | Entscheidung |
 |---|---|
-| Look | **Abstrakt** — dunkler Kern + violette Corona / Rim (Eclipse), kein menschliches Gesicht |
-| Assets | **SVG + Reanimated** (kein Rive-Abo, kein Lottie in v1) |
-| Ausdruck | Energie-Profile (`lib/orbExpressions.ts`): Aura, Rim, Spin-Tempo (Idle vs Calcul), Bloom — **keine Mimik** |
-| Playful-Stimme | Text-Bubble + paralleles **Audio** (`expo-speech`) während Lesen / Üben / Feedback |
-| Focus-Stimme | **Schweigt** beim Lesen/Üben (`soundEnabled: false`); nach Check ein **kluger Tipp** als Text |
-| Onboarding | Motion-first (keine Bubble-Stapel); optional `voiceKey` für eine kurze Audio-Zeile parallel zum UI-Text |
-| Präsenz | Orb während der ganzen aktiven Lektion sichtbar |
+| Look | **Abstrakt** — dunkler Kern + violette Corona / Wellen (Eclipse), kein menschliches Gesicht |
+| Assets | **SVG + Reanimated** (kein Rive-Abo) |
+| Ausdruck | Energie-Wellen (`lib/orbExpressions.ts`): Spin, Counter-Spin, Dash-Dichte, Ellipse-Form — Idle vs Calcul |
+| Voice (Dev) | **Lokale MP3-Clips** (`assets/orb-voice`) via `expo-av` — **$0 Runtime**, generiert mit kostenlosem Edge-TTS |
+| Voice (Release später) | Clips austauschen (Studio / bezahlte Stimme) — gleiche Keys, kein API-Umbau nötig |
+| Kein Runtime-Cloud-TTS | Keine ElevenLabs/OpenAI-API im Client (Kosten + Offline + Privacy) |
+| Playful | Bubbles + Audio an Lehr-Momenten (`soundEnabled`) |
+| Focus | Weniger Bubbles; **explizite `voiceKey`** (Onboarding) spielen Clip trotzdem |
+| Onboarding | Motion-first (keine Bubble-Stapel); `voiceKey` = paralleles Voiceover |
 
 ### State-Machine (visuell)
 
 | App-State | Visuelles Verhalten |
 |---|---|
-| Entry (`interaction="enter"`) | Scale-In + Bloom-Punch |
-| Idle | Langsames Atmen + langsame Corona-Rotation |
-| Calcul (`think`) | Schneller Spin, schärferes Flackern |
+| Entry (`interaction="enter"`) | Scale-In + Bloom + dichte Wellen |
+| Idle | Langsames Atmen + langsame Dual-Spin + weiche Ellipse-Morph |
+| Calcul (`think`) | Schneller Counter-Spin, mehr Segmente, gedrängte Form |
 | Happy / Celebrating | Helleres Bloom, schnellerer Pulse |
-| Worry / Low energy | Gedimmte Aura, langsamer |
-| Exit | (Screen-Leave — Presence unmount / fade via Navigation) |
+| Worry / Low energy | Gedimmte Aura, wenige Wellen, langsame Rotation |
 
 ---
 
@@ -43,11 +44,9 @@ Lektions-Momente → State: `reading_start`→attentive, `reading`→think, `pra
 ## 3. Stimme (Copy + Audio)
 
 - Copy nur über `orb.speech.*` in `theme/copy/*`.
-- Varianten (a/b/c) rotieren über `stepIndex` / Seed.
-- Playful-Keys: `readingStart`, `reading`, `practicing`, `correct`, `wrong`, `celebrating`, `lowEnergy`.
-- Focus-Keys: `focus.correctTip`, `focus.wrongTip`, `focus.celebrating`, `focus.lowEnergy`.
-- Resolver: `lib/orbLanguage.ts` → `resolveLessonSpeechCopyKey(moment, mode, seed)`.
-- UI: `OrbPresence` — Bubble optional; Audio über `lib/orbCoachVoice.ts` (gated by `tokens.presentation.soundEnabled`).
+- Audio: `lib/orbVoiceAssets.ts` mappt Keys → MP3; Player: `lib/orbCoachVoice.ts`.
+- Generieren: `pip3 install --user edge-tts && node scripts/generate-orb-voice.mjs`
+- Fallback: Gerät-TTS nur wenn Clip fehlt **und** `ExpoSpeech` native existiert.
 - `voiceKey`: Audio ohne Bubble (Onboarding parallel zum Lesen).
 
 ---
@@ -55,7 +54,7 @@ Lektions-Momente → State: `reading_start`→attentive, `reading`→think, `pra
 ## 4. Technik
 
 1. **SVG-Coach:** `OrbSvgCompanion.tsx` + `lib/orbExpressions.ts` + `lib/orbChoreography.ts`.
-2. **Facade:** `OrbCompanion.tsx` → SVG only (kein Rive).
+2. **Facade:** `OrbCompanion.tsx` → SVG only.
 3. **Präsenz:** `OrbPresence.tsx` — `layout="hero"`, `interaction`, `voiceKey`.
-4. **Voice:** `expo-speech` via `speakOrbCoachLine` (Reduce-Motion respektieren).
+4. **Audio:** `expo-av` + bundled MP3s.
 5. Verify: `scripts/verify-orb-coach.mjs`, `scripts/verify-orb-rich-presence.mjs`.

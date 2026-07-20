@@ -91,8 +91,10 @@ export function OrbPresence({
     void speakOrbCoachLine(voiceSourceKey, {
       text: voiceLine,
       locale,
+      mode,
       soundEnabled: tokens.presentation.soundEnabled,
-      playful: mode === 'playful',
+      // Explicit voiceKey = intentional coach beat (onboarding) — play clip even in Focus.
+      force: voiceKey != null,
     });
 
     return () => {
@@ -103,6 +105,7 @@ export function OrbPresence({
     locale,
     mode,
     tokens.presentation.soundEnabled,
+    voiceKey,
     voiceLine,
     voiceSourceKey,
   ]);

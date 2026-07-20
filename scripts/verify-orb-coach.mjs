@@ -23,13 +23,13 @@ if (pkg.includes('@rive-app/react-native')) {
   violations.push('package.json must not depend on Rive');
 }
 if (!pkg.includes('expo-speech')) {
-  violations.push('package.json must include expo-speech for local coach voice');
+  violations.push('package.json must include expo-speech as optional TTS fallback');
 }
-if (existsSync(join(root, 'components/features/OrbRiveCompanion.tsx'))) {
-  violations.push('OrbRiveCompanion must be removed');
+if (!pkg.includes('expo-av')) {
+  violations.push('package.json must include expo-av for local voiceover');
 }
-if (!expressions.includes('energyForState') || !expressions.includes('spinMs')) {
-  violations.push('orbExpressions must define per-state energy (spin/aura/rim)');
+if (!expressions.includes('energyForState') || !expressions.includes('counterSpinMs') || !expressions.includes('waveSegments')) {
+  violations.push('orbExpressions must define dual-spin + wave segment energy');
 }
 if (!orb.includes('energyForState') || !orb.includes('corona') || orb.includes('browLeft')) {
   violations.push('OrbSvgCompanion must be abstract energy orb (no brows/face)');
@@ -43,11 +43,20 @@ if (!facade.includes('OrbSvgCompanion') || facade.includes('OrbRiveCompanion')) 
 if (!presence.includes('voiceKey') || !presence.includes('speakOrbCoachLine')) {
   violations.push('OrbPresence must support sparse coach voice');
 }
-if (!voice.includes('expo-speech') || !voice.includes('soundEnabled')) {
-  violations.push('orbCoachVoice must gate TTS on theme soundEnabled');
+if (!voice.includes('expo-av') || !voice.includes('soundEnabled')) {
+  violations.push('orbCoachVoice must play bundled clips via expo-av and respect soundEnabled');
 }
-if (!voice.includes('requireOptionalNativeModule') || voice.includes("from 'expo-speech'")) {
-  violations.push('orbCoachVoice must probe ExpoSpeech before importing (Expo Go safe)');
+if (!voice.includes('resolveOrbVoiceAsset') || !voice.includes('playBundledClip')) {
+  violations.push('orbCoachVoice must prefer local voiceover clips');
+}
+if (!pkg.includes('expo-av')) {
+  violations.push('package.json must include expo-av for local voiceover');
+}
+if (!existsSync(join(root, 'assets/orb-voice/de/onboarding.welcome.playful.mp3'))) {
+  violations.push('bundled DE onboarding welcome clip missing');
+}
+if (!orb.includes('counterSpin') || !orb.includes('waveDash')) {
+  violations.push('OrbSvgCompanion must use dual-spin wave layers');
 }
 if (!choreo.includes('IDLE_ENERGY_BEATS') || !choreo.includes('bodyOpacityForState')) {
   violations.push('orbChoreography must define abstract energy beats');
