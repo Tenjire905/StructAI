@@ -35,9 +35,10 @@ export default function OnboardingModusScreen() {
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <OrbPresence
-        showSpeech
-        size={tokens.spacing.space8}
-        speechKey="orb.speech.onboarding.mode"
+        interaction="enter"
+        layout="hero"
+        showSpeech={false}
+        size={tokens.spacing.space8 * 1.15}
         state={companionState}
       />
 

@@ -40,6 +40,6 @@ Lektions-Momente → State: `reading_start`→attentive, `reading`→think, `pra
 
 ## 4. Technik
 
-1. Gesicht/Motion: `OrbCompanion.tsx` — kein animiertes SVG-`cx` (Expo-Crash). Idle: Blick rechts/unten/links + Lächeln; Happy/Celebrating: Smile-Augen + Grin; Worry: Brauen + Frown.
-2. Präsenz: `OrbPresence.tsx` — Onboarding, Lektion, Completion, Retry, Proof, Tagesziel.
-3. Verify: `scripts/verify-orb-language.mjs`.
+1. Gesicht/Motion: `OrbCompanion.tsx` + `lib/orbChoreography.ts` — **kein Smiley-Mund**. Persönlichkeit über Gaze-Choreografie (View-Transform), Cyan-Iris, Energy-Ring, Squash/Tilt. Nie animiertes SVG-`cx`.
+2. Präsenz: `OrbPresence.tsx` — `layout="hero"` motion-first (Onboarding ohne Speech-Stapel); `coach` nur wenn eine Zeile wirklich hilft.
+3. Verify: `scripts/verify-orb-language.mjs` / `scripts/verify-orb-rich-presence.mjs`.

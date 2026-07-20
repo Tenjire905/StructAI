@@ -88,13 +88,11 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <OrbPresence
-        showSpeech
-        size={tokens.spacing.space8}
-        speechKey={
-          step === 'summary'
-            ? 'orb.speech.onboarding.proofDone'
-            : 'orb.speech.onboarding.proof'
-        }
+        interaction={step === 'summary' ? 'react' : 'watch'}
+        layout="hero"
+        showSpeech={step === 'summary'}
+        size={tokens.spacing.space8 * 1.05}
+        speechKey={step === 'summary' ? 'orb.speech.onboarding.proofDone' : null}
         state={companionState}
       />
 

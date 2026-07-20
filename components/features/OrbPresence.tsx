@@ -16,20 +16,23 @@ import { OrbCompanion } from './OrbCompanion';
 type OrbPresenceProps = {
   state: OrbCompanionState;
   size?: number;
-  /** When false, only the orb is shown (e.g. compact header slots). */
+  /** When false, only the orb is shown (motion carries the beat). */
   showSpeech?: boolean;
   /**
    * Explicit lesson/coach line. When set, wins over state-derived speech.
-   * Both Playful and Focus speak when a line is provided (character voice).
+   * Prefer sparse speech — especially in onboarding.
    */
   speechKey?: string | null;
   /** Rotates state-fallback lines when speechKey is omitted. */
   speechSeed?: number;
+  /** hero = centered presence (onboarding); coach = orb + optional bubble */
+  layout?: 'coach' | 'hero';
+  interaction?: 'none' | 'enter' | 'watch' | 'react';
 };
 
 /**
- * Orb + speech bubble — Duolingo/Mimo-style companion coach.
- * The bubble is the Orb's voice; Focus uses calmer copy, Playful warmer.
+ * Orb presence — motion-first. Speech is optional and should stay sparse
+ * so the companion doesn't drown the screen in copy.
  */
 export function OrbPresence({
   state,
@@ -37,6 +40,8 @@ export function OrbPresence({
   showSpeech = true,
   speechKey,
   speechSeed = 0,
+  layout = 'coach',
+  interaction = 'none',
 }: OrbPresenceProps) {
   const { tokens, t, mode } = useThemeMode();
   const resolvedKey = showSpeech
@@ -71,6 +76,36 @@ export function OrbPresence({
   const orbSize = size ?? tokens.spacing.space8 * 0.85;
   const isPlayful = tokens.presentation.orbStyle === 'illustrated';
 
+  if (layout === 'hero') {
+    return (
+      <View style={{ alignItems: 'center', gap: tokens.spacing.space3, width: '100%' }}>
+        <OrbCompanion interaction={interaction} size={orbSize} state={state} />
+        {hasLine ? (
+          <Animated.View
+            accessibilityRole="text"
+            style={[
+              speechStyle,
+              {
+                maxWidth: tokens.spacing.space8 * 4,
+                paddingHorizontal: tokens.spacing.space2,
+              },
+            ]}>
+            <Text
+              style={{
+                color: tokens.colors.text.secondary,
+                fontFamily: tokens.typography.fontFamily.body,
+                fontSize: tokens.typography.fontSize.bodyMd,
+                lineHeight: tokens.typography.fontSize.bodyMd * 1.4,
+                textAlign: 'center',
+              }}>
+              {line}
+            </Text>
+          </Animated.View>
+        ) : null}
+      </View>
+    );
+  }
+
   return (
     <View
       style={{
@@ -80,7 +115,7 @@ export function OrbPresence({
         width: '100%',
       }}>
       <View style={{ paddingTop: tokens.spacing.space1 }}>
-        <OrbCompanion size={orbSize} state={state} />
+        <OrbCompanion interaction={interaction} size={orbSize} state={state} />
       </View>
 
       {hasLine ? (

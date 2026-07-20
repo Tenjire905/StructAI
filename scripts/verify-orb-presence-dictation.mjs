@@ -22,11 +22,14 @@ const appJson = readFileSync(join(root, 'app.json'), 'utf8');
 const en = readFileSync(join(root, 'theme/copy/en.ts'), 'utf8');
 const pkg = readFileSync(join(root, 'package.json'), 'utf8');
 
-if (!orb.includes('GazeDirection') || !orb.includes('OrbMouth') || !orb.includes("'right'")) {
-  violations.push('OrbCompanion must cycle idle gaze and draw a mouth');
+if (!orb.includes('gazeX') || !orb.includes('ringPulse') || !orb.includes('accent.structure')) {
+  violations.push('OrbCompanion must use gaze transforms, energy ring, and structure iris');
 }
-if (!welcome.includes('OrbPresence') || !welcome.includes('orb.speech.onboarding.welcome')) {
-  violations.push('Welcome onboarding must lead with animated OrbPresence');
+if (orb.includes('OrbMouth') || /mood === 'smile'|mood === 'grin'/.test(orb)) {
+  violations.push('OrbCompanion must not use cartoon smile mouths');
+}
+if (!welcome.includes('OrbPresence') || !welcome.includes('showSpeech={false}')) {
+  violations.push('Welcome onboarding must lead with motion-first OrbPresence (no speech stack)');
 }
 if (!completion.includes("'celebrating'") || !completion.includes('orb.speech.lessonComplete')) {
   violations.push('Lesson completion must force celebrating/happy orb mimik');
