@@ -49,6 +49,12 @@ if (!voice.includes('expo-av') || !voice.includes('soundEnabled')) {
 if (!voice.includes('resolveOrbVoiceAsset') || !voice.includes('playBundledClip')) {
   violations.push('orbCoachVoice must prefer local voiceover clips');
 }
+if (!voice.includes('requireOptionalNativeModule') || !voice.includes('ExponentAV')) {
+  violations.push('orbCoachVoice must probe ExponentAV before importing expo-av');
+}
+if (voice.includes("from 'expo-av'") || voice.includes('from "expo-av"')) {
+  violations.push('orbCoachVoice must not top-level-import expo-av (Expo Go crash)');
+}
 if (!pkg.includes('expo-av')) {
   violations.push('package.json must include expo-av for local voiceover');
 }

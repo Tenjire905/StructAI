@@ -1,18 +1,15 @@
 /**
- * Local Orb coach voiceover.
+ * Local Orb coach voiceover — Expo-Go safe.
  *
- * Priority (cheap + offline):
- * 1. Bundled MP3 clips (`assets/orb-voice`) via expo-av — $0 runtime
- * 2. Optional device TTS (expo-speech) only if native module exists
+ * Never top-level-import `expo-av` / `expo-speech`: missing native modules
+ * crash route load (`Cannot find native module 'ExponentAV'`).
  *
- * No paid cloud TTS API at runtime. Regenerate clips with edge-tts (free).
+ * Priority:
+ * 1. Bundled MP3 via expo-av when ExponentAV exists ($0 runtime)
+ * 2. Device TTS when ExpoSpeech exists
+ * 3. Otherwise silent (visual coach still works)
  */
 
-import {
-  Audio,
-  InterruptionModeAndroid,
-  InterruptionModeIOS,
-} from 'expo-av';
 import { requireOptionalNativeModule } from 'expo-modules-core';
 import { AccessibilityInfo } from 'react-native';
 
@@ -32,13 +29,30 @@ export type OrbCoachVoiceOptions = {
   force?: boolean;
 };
 
+type AvModule = typeof import('expo-av');
 type SpeechModule = typeof import('expo-speech');
+type SoundInstance = {
+  stopAsync: () => Promise<void>;
+  unloadAsync: () => Promise<void>;
+  setOnPlaybackStatusUpdate: (
+    callback: (status: { isLoaded: boolean; didJustFinish?: boolean }) => void,
+  ) => void;
+};
 
+let avModulePromise: Promise<AvModule | null> | null = null;
 let speechModulePromise: Promise<SpeechModule | null> | null = null;
-let activeSound: Audio.Sound | null = null;
+let activeSound: SoundInstance | null = null;
 let audioModeReady = false;
 let lastSpokenKey = '';
 let reduceMotionCached: boolean | null = null;
+
+function canUseNativeAv(): boolean {
+  try {
+    return requireOptionalNativeModule('ExponentAV') != null;
+  } catch {
+    return false;
+  }
+}
 
 function canUseNativeSpeech(): boolean {
   try {
@@ -46,6 +60,20 @@ function canUseNativeSpeech(): boolean {
   } catch {
     return false;
   }
+}
+
+async function loadAvModule(): Promise<AvModule | null> {
+  if (!canUseNativeAv()) {
+    return null;
+  }
+
+  if (!avModulePromise) {
+    avModulePromise = import('expo-av')
+      .then((mod) => mod)
+      .catch(() => null);
+  }
+
+  return avModulePromise;
 }
 
 async function loadSpeechModule(): Promise<SpeechModule | null> {
@@ -74,23 +102,23 @@ async function isReduceMotion(): Promise<boolean> {
   return reduceMotionCached;
 }
 
-async function ensureAudioMode(): Promise<void> {
+async function ensureAudioMode(av: AvModule): Promise<void> {
   if (audioModeReady) {
     return;
   }
   try {
-    await Audio.setAudioModeAsync({
+    await av.Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
       playsInSilentModeIOS: true,
       staysActiveInBackground: false,
-      interruptionModeIOS: InterruptionModeIOS.DuckOthers,
-      interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
+      interruptionModeIOS: av.InterruptionModeIOS.DuckOthers,
+      interruptionModeAndroid: av.InterruptionModeAndroid.DuckOthers,
       shouldDuckAndroid: true,
       playThroughEarpieceAndroid: false,
     });
     audioModeReady = true;
   } catch {
-    // Expo Go / web may restrict audio mode — still try playback.
+    // Still attempt playback if mode setup fails.
   }
 }
 
@@ -124,10 +152,15 @@ export function stopOrbCoachVoice(): void {
 }
 
 async function playBundledClip(asset: number): Promise<boolean> {
+  const av = await loadAvModule();
+  if (!av) {
+    return false;
+  }
+
   try {
-    await ensureAudioMode();
+    await ensureAudioMode(av);
     await stopClip();
-    const { sound } = await Audio.Sound.createAsync(asset, {
+    const { sound } = await av.Audio.Sound.createAsync(asset, {
       shouldPlay: true,
       volume: 1,
     });
@@ -217,7 +250,6 @@ export async function speakOrbCoachLine(
     }
   }
 
-  // Fallback only when no clip / clip failed — still free (device TTS).
   await playDeviceTts(trimmed, options.locale, options.mode === 'playful');
 }
 
