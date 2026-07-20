@@ -14,7 +14,7 @@ export type OrbCompanionProps = {
 
 /**
  * Public Orb entry — premium SVG coach (Reanimated).
- * No Rive dependency: quality lives in expression choreography + voice.
+ * No Rive dependency: quality lives in expression choreography + speech bubbles.
  */
 export function OrbCompanion(props: OrbCompanionProps) {
   return <OrbSvgCompanion {...props} />;

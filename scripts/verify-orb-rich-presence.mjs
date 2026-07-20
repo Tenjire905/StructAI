@@ -13,7 +13,8 @@ const orb = readFileSync(join(root, 'components/features/OrbSvgCompanion.tsx'), 
 const facade = readFileSync(join(root, 'components/features/OrbCompanion.tsx'), 'utf8');
 const choreo = readFileSync(join(root, 'lib/orbChoreography.ts'), 'utf8');
 const presence = readFileSync(join(root, 'components/features/OrbPresence.tsx'), 'utf8');
-const welcome = readFileSync(join(root, 'app/onboarding/index.tsx'), 'utf8');
+const intro = readFileSync(join(root, 'app/onboarding/index.tsx'), 'utf8');
+const meet = readFileSync(join(root, 'app/onboarding/meet.tsx'), 'utf8');
 const modus = readFileSync(join(root, 'app/onboarding/modus.tsx'), 'utf8');
 const loop = readFileSync(join(root, 'app/onboarding/loop.tsx'), 'utf8');
 
@@ -35,8 +36,11 @@ if (!presence.includes("layout === 'hero'") || !presence.includes('speechKey')) 
 if (presence.includes('voiceKey')) {
   violations.push('OrbPresence must not use voiceKey');
 }
-if (!welcome.includes('showSpeech') || !welcome.includes('layout="hero"')) {
-  violations.push('Welcome must be Orb-led hero with speech bubble');
+if (!intro.includes('showBrand') || !intro.includes('OnboardingFeatureVisual')) {
+  violations.push('Intro carousel must show brand + feature visuals');
+}
+if (!meet.includes('showSpeech') || !meet.includes('layout="hero"')) {
+  violations.push('Meet must be Orb-led hero with speech bubble');
 }
 if (!modus.includes('showSpeech') || !loop.includes('showSpeech')) {
   violations.push('Mode + loop onboarding must show Orb coach bubbles');

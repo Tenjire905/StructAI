@@ -838,6 +838,10 @@ export const copyFr: CopyCatalog = {
     playful: 'Salut ! Je suis ton Orb — ton coach prompt local. Court et clair, promis.',
     focus: 'Je suis ton coach Orb. On pratique des prompts clairs — pas à pas.',
   },
+  'orb.speech.onboarding.meetReady': {
+    playful: 'Juste quelques questions — et on y va !',
+    focus: 'Quelques infos rapides — puis on commence.',
+  },
   'orb.speech.onboarding.mode': {
     playful: 'Choisis l’ambiance — j’adapte rythme et ton. Les skills restent les mêmes.',
     focus: 'Focus ou Playful : mêmes compétences, densité différente. À toi de choisir.',
@@ -1572,8 +1576,72 @@ export const copyFr: CopyCatalog = {
       'StructAI t apprend a ecrire de meilleurs prompts et a juger les reponses IA grace a de courtes lecons, un scoring en direct et un Prompt Lab BYOK.',
   },
   'onboarding.welcomeCta': {
-    playful: 'C est parti !',
-    focus: 'Demarrer',
+    playful: "C'est parti !",
+    focus: "C'est parti",
+  },
+  'onboarding.skip': {
+    playful: 'Passer',
+    focus: 'Passer',
+  },
+  'onboarding.introNext': {
+    playful: 'Continuer',
+    focus: 'Continuer',
+  },
+  'onboarding.introSignIn': {
+    playful: 'Se connecter',
+    focus: 'Se connecter',
+  },
+  'onboarding.introSlide1Value': {
+    playful: 'Ecris de meilleurs prompts — et vois le score monter.',
+    focus: 'Ecris de meilleurs prompts. Rends la structure mesurable.',
+  },
+  'onboarding.introSlide2Value': {
+    playful: 'Monte de niveau avec de courtes lecons et des Orbs.',
+    focus: 'Courtes lecons, Orbs, progression claire.',
+  },
+  'onboarding.introSlide3Value': {
+    playful: 'Ton coach Orb reste local a tes cotes.',
+    focus: 'Coach Orb local avec des conseils — sans voiceover.',
+  },
+  'onboarding.introVisual.scoreLabel': {
+    playful: 'Score prompt',
+    focus: 'Score prompt',
+  },
+  'onboarding.introVisual.scoreChip1': {
+    playful: 'Structure',
+    focus: 'Structure',
+  },
+  'onboarding.introVisual.scoreChip2': {
+    playful: 'Objectif',
+    focus: 'Objectif',
+  },
+  'onboarding.introVisual.scoreChip3': {
+    playful: 'Format',
+    focus: 'Format',
+  },
+  'onboarding.introVisual.pathTitle': {
+    playful: 'Ton parcours',
+    focus: 'Parcours',
+  },
+  'onboarding.introVisual.pathOrbs': {
+    playful: '+ Debloquer des Orbs',
+    focus: 'Debloquer des Orbs',
+  },
+  'onboarding.introVisual.coachBubble': {
+    playful: 'Petit conseil — je reste avec toi.',
+    focus: 'Conseil coach court a tes cotes.',
+  },
+  'onboarding.introVisual.coachCaption': {
+    playful: 'Orb · coach local',
+    focus: 'Orb · coach local',
+  },
+  'onboarding.meetCta': {
+    playful: 'Ca marche !',
+    focus: 'Continuer',
+  },
+  'onboarding.meetReadyCta': {
+    playful: "C'est parti !",
+    focus: 'Continuer',
   },
   'onboarding.modeQuestion': {
     playful: 'Comment veux-tu apprendre ?',
@@ -1584,8 +1652,8 @@ export const copyFr: CopyCatalog = {
     focus: 'Contenu et fonctions identiques. Modifiable a tout moment dans les reglages.',
   },
   'onboarding.modeCta': {
-    playful: 'Confirmer le choix',
-    focus: 'Confirmer',
+    playful: 'Continuer',
+    focus: 'Continuer',
   },
   'onboarding.loopTitle': {
     playful: 'Comment StructAI fonctionne',

@@ -13,9 +13,15 @@ const pkg = readFileSync(join(root, 'package.json'), 'utf8');
 const orb = readFileSync(join(root, 'components/features/OrbSvgCompanion.tsx'), 'utf8');
 const facade = readFileSync(join(root, 'components/features/OrbCompanion.tsx'), 'utf8');
 const presence = readFileSync(join(root, 'components/features/OrbPresence.tsx'), 'utf8');
-const welcome = readFileSync(join(root, 'app/onboarding/index.tsx'), 'utf8');
+const intro = readFileSync(join(root, 'app/onboarding/index.tsx'), 'utf8');
+const meet = readFileSync(join(root, 'app/onboarding/meet.tsx'), 'utf8');
 const modus = readFileSync(join(root, 'app/onboarding/modus.tsx'), 'utf8');
 const loop = readFileSync(join(root, 'app/onboarding/loop.tsx'), 'utf8');
+const chrome = readFileSync(
+  join(root, 'components/features/onboarding/OnboardingChrome.tsx'),
+  'utf8',
+);
+const sfx = readFileSync(join(root, 'lib/sfx.ts'), 'utf8');
 const proof = readFileSync(join(root, 'components/features/FirstSessionProofView.tsx'), 'utf8');
 const languageDoc = readFileSync(join(root, 'ORB_LANGUAGE.md'), 'utf8');
 const de = readFileSync(join(root, 'theme/copy/de.ts'), 'utf8');
@@ -35,10 +41,16 @@ if (presence.includes('voiceKey') || presence.includes('OrbCoachVoicePlayer') ||
 if (!presence.includes('speechKey') || !presence.includes("layout === 'hero'")) {
   violations.push('OrbPresence must support hero + speechKey bubbles');
 }
-if (!welcome.includes('showSpeech') || !welcome.includes('orb.speech.onboarding.welcome')) {
-  violations.push('Welcome must be Orb-led with welcome speech bubble');
+if (!intro.includes('OnboardingChrome') || !intro.includes('OnboardingFeatureVisual') || !intro.includes('showBrand')) {
+  violations.push('Intro must be Liftoff marketing carousel with brand + feature visuals');
 }
-if (welcome.includes('voiceKey') || modus.includes('voiceKey') || loop.includes('voiceKey')) {
+if (!chrome.includes('StructAI')) {
+  violations.push('OnboardingChrome must render StructAI brand mark');
+}
+if (!meet.includes('showSpeech') || !meet.includes('orb.speech.onboarding.welcome')) {
+  violations.push('Meet must be Orb-led with welcome speech bubble');
+}
+if (intro.includes('voiceKey') || meet.includes('voiceKey') || modus.includes('voiceKey') || loop.includes('voiceKey')) {
   violations.push('Onboarding must not use voiceKey');
 }
 if (!modus.includes('modePlayful') || !modus.includes('modeFocus')) {
@@ -47,10 +59,16 @@ if (!modus.includes('modePlayful') || !modus.includes('modeFocus')) {
 if (!loop.includes('orb.speech.onboarding.loop') || !loop.includes('showSpeech')) {
   violations.push('Loop must show Orb coach bubble');
 }
+if (!chrome.includes('OnboardingSegmentProgress') || !chrome.includes('skipLabel')) {
+  violations.push('OnboardingChrome must provide segment progress + skip');
+}
+if (!sfx.includes('playSfx') || !sfx.includes('ExpoAudio') || !sfx.includes('isRunningInExpoGo')) {
+  violations.push('lib/sfx.ts must probe ExpoAudio and stay Expo-Go safe');
+}
 if (!proof.includes('proofWeak') || !proof.includes('proofCritique') || !proof.includes('showSpeech')) {
   violations.push('Proof must coach each step with Orb bubbles');
 }
-if (!de.includes('orb.speech.onboarding.modePlayful') || !de.includes('orb.speech.onboarding.proofWeak')) {
+if (!de.includes('orb.speech.onboarding.modePlayful') || !de.includes('orb.speech.onboarding.meetReady')) {
   violations.push('de copy must include expanded onboarding coach lines');
 }
 if (!languageDoc.includes('Kein Voiceover') && !languageDoc.toLowerCase().includes('kein voiceover')) {

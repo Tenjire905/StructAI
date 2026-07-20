@@ -13,6 +13,10 @@ const violations = [];
 const theme = readFileSync(join(root, 'theme/theme.ts'), 'utf8');
 const card = readFileSync(join(root, 'components/ui/Card.tsx'), 'utf8');
 const onboarding = readFileSync(join(root, 'app/onboarding/index.tsx'), 'utf8');
+const onboardingChrome = readFileSync(
+  join(root, 'components/features/onboarding/OnboardingChrome.tsx'),
+  'utf8',
+);
 const home = readFileSync(join(root, 'app/(tabs)/index.tsx'), 'utf8');
 const en = readFileSync(join(root, 'theme/copy/en.ts'), 'utf8');
 const de = readFileSync(join(root, 'theme/copy/de.ts'), 'utf8');
@@ -31,7 +35,7 @@ if (!card.includes('preferredCardPadding')) {
 if (!home.includes('preferredSectionGap')) {
   violations.push('Home must use preferredSectionGap');
 }
-if (!onboarding.includes('StructAI')) {
+if (!onboarding.includes('showBrand') || !onboardingChrome.includes('StructAI')) {
   violations.push('Onboarding welcome must show StructAI brand hero');
 }
 

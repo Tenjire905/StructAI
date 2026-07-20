@@ -839,6 +839,10 @@ export const copyDe: CopyCatalog = {
     playful: 'Hey! Ich bin dein Orb — dein lokaler Prompt-Coach. Kurz und klar, versprochen.',
     focus: 'Ich bin dein Orb-Coach. Wir üben klare Prompts — Schritt für Schritt.',
   },
+  'orb.speech.onboarding.meetReady': {
+    playful: 'Nur ein paar Fragen — dann legen wir los!',
+    focus: 'Kurz ein paar Angaben — danach starten wir.',
+  },
   'orb.speech.onboarding.mode': {
     playful: 'Wähl den Vibe — ich passe Tempo und Ton an. Skills bleiben gleich.',
     focus: 'Focus oder Playful: gleiche Skills, andere Dichte. Wähl was zu dir passt.',
@@ -1573,8 +1577,72 @@ export const copyDe: CopyCatalog = {
       'StructAI bringt dir bei, bessere Prompts zu schreiben und KI-Antworten zu beurteilen – mit kurzen Lektionen, Live-Bewertung und einem BYOK Prompt Lab.',
   },
   'onboarding.welcomeCta': {
-    playful: 'Los geht es!',
-    focus: 'Starten',
+    playful: "Los geht's!",
+    focus: "Los geht's",
+  },
+  'onboarding.skip': {
+    playful: 'Überspringen',
+    focus: 'Überspringen',
+  },
+  'onboarding.introNext': {
+    playful: 'Weiter',
+    focus: 'Weiter',
+  },
+  'onboarding.introSignIn': {
+    playful: 'Anmelden',
+    focus: 'Anmelden',
+  },
+  'onboarding.introSlide1Value': {
+    playful: 'Schreibe bessere Prompts — und sieh den Score steigen.',
+    focus: 'Bessere Prompts schreiben. Struktur messbar verbessern.',
+  },
+  'onboarding.introSlide2Value': {
+    playful: 'Steige auf mit kurzen Lektionen und Orbs.',
+    focus: 'Kurze Lektionen, Orbs, klarer Fortschritt.',
+  },
+  'onboarding.introSlide3Value': {
+    playful: 'Dein Orb-Coach bleibt lokal an deiner Seite.',
+    focus: 'Lokaler Orb-Coach mit Tipps — ohne Voiceover.',
+  },
+  'onboarding.introVisual.scoreLabel': {
+    playful: 'Prompt-Score',
+    focus: 'Prompt-Score',
+  },
+  'onboarding.introVisual.scoreChip1': {
+    playful: 'Struktur',
+    focus: 'Struktur',
+  },
+  'onboarding.introVisual.scoreChip2': {
+    playful: 'Ziel',
+    focus: 'Ziel',
+  },
+  'onboarding.introVisual.scoreChip3': {
+    playful: 'Format',
+    focus: 'Format',
+  },
+  'onboarding.introVisual.pathTitle': {
+    playful: 'Dein Lernpfad',
+    focus: 'Lernpfad',
+  },
+  'onboarding.introVisual.pathOrbs': {
+    playful: '+ Orbs freischalten',
+    focus: 'Orbs freischalten',
+  },
+  'onboarding.introVisual.coachBubble': {
+    playful: 'Kurzer Tipp — ich bleib bei dir.',
+    focus: 'Kurzer Coach-Tipp an deiner Seite.',
+  },
+  'onboarding.introVisual.coachCaption': {
+    playful: 'Orb · lokaler Coach',
+    focus: 'Orb · lokaler Coach',
+  },
+  'onboarding.meetCta': {
+    playful: 'Klingt gut!',
+    focus: 'Weiter',
+  },
+  'onboarding.meetReadyCta': {
+    playful: 'Los geht\'s!',
+    focus: 'Weiter',
   },
   'onboarding.modeQuestion': {
     playful: 'Wie würdest du gerne lernen?',
@@ -1585,8 +1653,8 @@ export const copyDe: CopyCatalog = {
     focus: 'Identische Inhalte und Funktionen. Jederzeit in den Einstellungen änderbar.',
   },
   'onboarding.modeCta': {
-    playful: 'Auswahl bestätigen',
-    focus: 'Bestätigen',
+    playful: 'Weiter',
+    focus: 'Weiter',
   },
   'onboarding.loopTitle': {
     playful: 'So funktioniert StructAI',

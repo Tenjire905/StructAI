@@ -838,6 +838,10 @@ export const copyRu: CopyCatalog = {
     playful: 'Привет! Я твой Orb — локальный коуч по промптам. Коротко и ясно.',
     focus: 'Я твой Orb-коуч. Будем практиковать ясные промпты — шаг за шагом.',
   },
+  'orb.speech.onboarding.meetReady': {
+    playful: 'Всего пара вопросов — и поехали!',
+    focus: 'Коротко несколько деталей — затем старт.',
+  },
   'orb.speech.onboarding.mode': {
     playful: 'Выбери вайб — я подстрою темп и тон. Навыки те же.',
     focus: 'Focus или Playful: те же навыки, разная плотность. Выбери своё.',
@@ -1573,7 +1577,71 @@ export const copyRu: CopyCatalog = {
   },
   'onboarding.welcomeCta': {
     playful: 'Поехали!',
-    focus: 'Начать',
+    focus: 'Поехали',
+  },
+  'onboarding.skip': {
+    playful: 'Пропустить',
+    focus: 'Пропустить',
+  },
+  'onboarding.introNext': {
+    playful: 'Далее',
+    focus: 'Далее',
+  },
+  'onboarding.introSignIn': {
+    playful: 'Войти',
+    focus: 'Войти',
+  },
+  'onboarding.introSlide1Value': {
+    playful: 'Пиши лучшие промпты — и смотри, как растёт скор.',
+    focus: 'Пиши лучшие промпты. Делай структуру измеримой.',
+  },
+  'onboarding.introSlide2Value': {
+    playful: 'Расти с короткими уроками и Orbами.',
+    focus: 'Короткие уроки, Orbs, ясный прогресс.',
+  },
+  'onboarding.introSlide3Value': {
+    playful: 'Твой Orb-коуч остаётся локально рядом.',
+    focus: 'Локальный Orb-коуч с подсказками — без voiceover.',
+  },
+  'onboarding.introVisual.scoreLabel': {
+    playful: 'Скор промпта',
+    focus: 'Скор промпта',
+  },
+  'onboarding.introVisual.scoreChip1': {
+    playful: 'Структура',
+    focus: 'Структура',
+  },
+  'onboarding.introVisual.scoreChip2': {
+    playful: 'Цель',
+    focus: 'Цель',
+  },
+  'onboarding.introVisual.scoreChip3': {
+    playful: 'Формат',
+    focus: 'Формат',
+  },
+  'onboarding.introVisual.pathTitle': {
+    playful: 'Твой путь',
+    focus: 'Учебный путь',
+  },
+  'onboarding.introVisual.pathOrbs': {
+    playful: '+ Открывай Orbs',
+    focus: 'Открывай Orbs',
+  },
+  'onboarding.introVisual.coachBubble': {
+    playful: 'Короткий совет — я рядом.',
+    focus: 'Короткий совет коуча рядом.',
+  },
+  'onboarding.introVisual.coachCaption': {
+    playful: 'Orb · локальный коуч',
+    focus: 'Orb · локальный коуч',
+  },
+  'onboarding.meetCta': {
+    playful: 'Звучит хорошо!',
+    focus: 'Далее',
+  },
+  'onboarding.meetReadyCta': {
+    playful: 'Поехали!',
+    focus: 'Далее',
   },
   'onboarding.modeQuestion': {
     playful: 'Как тебе удобнее учиться?',
@@ -1584,8 +1652,8 @@ export const copyRu: CopyCatalog = {
     focus: 'Идентичный контент и функции. Можно изменить в настройках в любое время.',
   },
   'onboarding.modeCta': {
-    playful: 'Подтвердить выбор',
-    focus: 'Подтвердить',
+    playful: 'Далее',
+    focus: 'Далее',
   },
   'onboarding.loopTitle': {
     playful: 'Как устроен StructAI',

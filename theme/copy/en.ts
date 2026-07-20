@@ -837,6 +837,10 @@ export const copyEn: CopyCatalog = {
     playful: 'Hey! I’m your Orb — your local prompt coach. Short and clear, promise.',
     focus: 'I’m your Orb coach. We’ll practice clear prompts — step by step.',
   },
+  'orb.speech.onboarding.meetReady': {
+    playful: 'Just a few questions — then we start!',
+    focus: 'A few quick details — then we begin.',
+  },
   'orb.speech.onboarding.mode': {
     playful: 'Pick the vibe — I’ll match pace and tone. Skills stay the same.',
     focus: 'Focus or Playful: same skills, different density. Choose what fits.',
@@ -1572,7 +1576,71 @@ export const copyEn: CopyCatalog = {
   },
   'onboarding.welcomeCta': {
     playful: "Let's go!",
-    focus: 'Start',
+    focus: "Let's go",
+  },
+  'onboarding.skip': {
+    playful: 'Skip',
+    focus: 'Skip',
+  },
+  'onboarding.introNext': {
+    playful: 'Next',
+    focus: 'Next',
+  },
+  'onboarding.introSignIn': {
+    playful: 'Sign in',
+    focus: 'Sign in',
+  },
+  'onboarding.introSlide1Value': {
+    playful: 'Write better prompts — and watch the score climb.',
+    focus: 'Write better prompts. Make structure measurable.',
+  },
+  'onboarding.introSlide2Value': {
+    playful: 'Level up with short lessons and Orbs.',
+    focus: 'Short lessons, Orbs, clear progress.',
+  },
+  'onboarding.introSlide3Value': {
+    playful: 'Your Orb coach stays local by your side.',
+    focus: 'Local Orb coach with tips — no voiceover.',
+  },
+  'onboarding.introVisual.scoreLabel': {
+    playful: 'Prompt score',
+    focus: 'Prompt score',
+  },
+  'onboarding.introVisual.scoreChip1': {
+    playful: 'Structure',
+    focus: 'Structure',
+  },
+  'onboarding.introVisual.scoreChip2': {
+    playful: 'Goal',
+    focus: 'Goal',
+  },
+  'onboarding.introVisual.scoreChip3': {
+    playful: 'Format',
+    focus: 'Format',
+  },
+  'onboarding.introVisual.pathTitle': {
+    playful: 'Your learning path',
+    focus: 'Learning path',
+  },
+  'onboarding.introVisual.pathOrbs': {
+    playful: '+ Unlock Orbs',
+    focus: 'Unlock Orbs',
+  },
+  'onboarding.introVisual.coachBubble': {
+    playful: 'Quick tip — I’ve got you.',
+    focus: 'A short coach tip by your side.',
+  },
+  'onboarding.introVisual.coachCaption': {
+    playful: 'Orb · local coach',
+    focus: 'Orb · local coach',
+  },
+  'onboarding.meetCta': {
+    playful: 'Sounds good!',
+    focus: 'Continue',
+  },
+  'onboarding.meetReadyCta': {
+    playful: "Let's go!",
+    focus: 'Continue',
   },
   'onboarding.modeQuestion': {
     playful: 'How would you like to learn?',
@@ -1583,8 +1651,8 @@ export const copyEn: CopyCatalog = {
     focus: 'Identical content and features. Change anytime in settings.',
   },
   'onboarding.modeCta': {
-    playful: 'Confirm choice',
-    focus: 'Confirm',
+    playful: 'Next',
+    focus: 'Next',
   },
   'onboarding.loopTitle': {
     playful: 'How StructAI works',

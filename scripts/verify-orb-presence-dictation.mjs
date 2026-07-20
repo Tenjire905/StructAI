@@ -9,8 +9,10 @@ import { join } from 'node:path';
 const root = new URL('..', import.meta.url).pathname;
 const violations = [];
 
-const orb = readFileSync(join(root, 'components/features/OrbCompanion.tsx'), 'utf8');
-const welcome = readFileSync(join(root, 'app/onboarding/index.tsx'), 'utf8');
+const orb = readFileSync(join(root, 'components/features/OrbSvgCompanion.tsx'), 'utf8');
+const facade = readFileSync(join(root, 'components/features/OrbCompanion.tsx'), 'utf8');
+const intro = readFileSync(join(root, 'app/onboarding/index.tsx'), 'utf8');
+const meet = readFileSync(join(root, 'app/onboarding/meet.tsx'), 'utf8');
 const completion = readFileSync(join(root, 'app/lektion/[id].tsx'), 'utf8');
 const retry = readFileSync(
   join(root, 'components/features/lesson-steps/RetryPromptView.tsx'),
@@ -22,14 +24,20 @@ const appJson = readFileSync(join(root, 'app.json'), 'utf8');
 const en = readFileSync(join(root, 'theme/copy/en.ts'), 'utf8');
 const pkg = readFileSync(join(root, 'package.json'), 'utf8');
 
-if (!orb.includes('gazeX') || !orb.includes('ringPulse') || !orb.includes('accent.structure')) {
-  violations.push('OrbCompanion must use gaze transforms, energy ring, and structure iris');
+if (!facade.includes('OrbSvgCompanion')) {
+  violations.push('OrbCompanion must render OrbSvgCompanion');
+}
+if (!orb.includes('spin') || !orb.includes('auraPulse') || !orb.includes('accent.primary')) {
+  violations.push('OrbSvgCompanion must use brand glow + spin + aura pulse');
 }
 if (orb.includes('OrbMouth') || /mood === 'smile'|mood === 'grin'/.test(orb)) {
-  violations.push('OrbCompanion must not use cartoon smile mouths');
+  violations.push('Orb must not use cartoon smile mouths');
 }
-if (!welcome.includes('OrbPresence') || !welcome.includes('showSpeech={false}')) {
-  violations.push('Welcome onboarding must lead with motion-first OrbPresence (no speech stack)');
+if (!intro.includes('showBrand') || !intro.includes('OnboardingFeatureVisual')) {
+  violations.push('Intro onboarding must be Liftoff marketing carousel with brand + visuals');
+}
+if (!meet.includes('OrbPresence') || !meet.includes('showSpeech')) {
+  violations.push('Meet onboarding must lead with OrbPresence speech bubble');
 }
 if (!completion.includes("'celebrating'") || !completion.includes('orb.speech.lessonComplete')) {
   violations.push('Lesson completion must force celebrating/happy orb mimik');

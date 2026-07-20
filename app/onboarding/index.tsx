@@ -1,82 +1,124 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
-import { OrbPresence } from '@/components/features/OrbPresence';
-import { Button } from '@/components/ui';
-import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
+import { OnboardingChrome } from '@/components/features/onboarding/OnboardingChrome';
+import { OnboardingFeatureVisual } from '@/components/features/onboarding/OnboardingFeatureVisual';
+import { OnboardingPageDots } from '@/components/features/onboarding/OnboardingPageDots';
+import { playSfx } from '@/lib/sfx';
 import { useThemeMode } from '@/theme';
 
+const SLIDES = [
+  {
+    kind: 'score' as const,
+    valueKey: 'onboarding.introSlide1Value',
+  },
+  {
+    kind: 'path' as const,
+    valueKey: 'onboarding.introSlide2Value',
+  },
+  {
+    kind: 'coach' as const,
+    valueKey: 'onboarding.introSlide3Value',
+  },
+] as const;
+
 /**
- * Liftoff-style welcome: Orb leads with a coach bubble; brand + one CTA.
- * No voiceover — the bubble is the Jimbo beat.
+ * Liftoff-style marketing carousel: brand, feature visual, one value line,
+ * page dots, full-width CTA + Anmelden. Game start SFX once on mount.
  */
 export default function OnboardingWelcomeScreen() {
   const { tokens, t, mode } = useThemeMode();
   const router = useRouter();
-  const insets = useSafeAreaInsets();
-  const isFocus = mode === 'focus';
-  const companionState = useOrbCompanionState('attentive');
+  const [index, setIndex] = useState(0);
+  const slide = SLIDES[index];
+  const pulse = useSharedValue(1);
+  const soundEnabled = tokens.presentation.soundEnabled;
+
+  useEffect(() => {
+    playSfx('start', soundEnabled);
+  }, [soundEnabled]);
+
+  useEffect(() => {
+    pulse.value = withSpring(mode === 'playful' ? 1.02 : 1, tokens.motion.spring.default);
+  }, [index, mode, pulse, tokens.motion.spring.default]);
+
+  const visualStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pulse.value }],
+  }));
+
+  const advance = () => {
+    playSfx('tap', soundEnabled);
+    if (index < SLIDES.length - 1) {
+      setIndex((current) => current + 1);
+      return;
+    }
+    router.push('/onboarding/meet');
+  };
 
   return (
-    <LinearGradient
-      colors={tokens.gradients.heroBackground.colors}
-      end={tokens.gradients.heroBackground.end}
-      start={tokens.gradients.heroBackground.start}
-      style={{
-        flex: 1,
-        justifyContent: 'space-between',
-        paddingBottom: tokens.spacing.space7 + insets.bottom,
-        paddingHorizontal: tokens.spacing.screenPaddingHero,
-        paddingTop: insets.top + tokens.spacing.space6,
-      }}>
-      <View style={{ alignItems: 'center', gap: tokens.spacing.space4, paddingTop: tokens.spacing.space5 }}>
-        <Text
-          style={{
-            color: tokens.colors.accent.primary,
-            fontFamily: tokens.typography.fontFamily.display,
-            fontSize: tokens.typography.fontSize.displayXl,
-            letterSpacing: 1,
-            lineHeight: tokens.typography.fontSize.displayXl * 1.1,
-            textAlign: 'center',
-          }}>
-          StructAI
-        </Text>
+    <OnboardingChrome
+      ctaLabel={
+        index < SLIDES.length - 1
+          ? t('onboarding.introNext')
+          : t('onboarding.welcomeCta')
+      }
+      footerExtra={
+        <OnboardingPageDots count={SLIDES.length} index={index} />
+      }
+      onCta={advance}
+      onSecondary={() => {
+        playSfx('tap', soundEnabled);
+        router.push('/auth');
+      }}
+      onSkip={() => {
+        playSfx('tap', soundEnabled);
+        router.push('/onboarding/meet');
+      }}
+      secondaryLabel={t('onboarding.introSignIn')}
+      showBrand
+      skipLabel={t('onboarding.skip')}>
+      <View
+        style={{
+          alignItems: 'center',
+          flex: 1,
+          gap: tokens.spacing.space5,
+          justifyContent: 'center',
+        }}>
+        <Animated.View entering={FadeIn.duration(tokens.motion.duration.fast)} style={visualStyle}>
+          <OnboardingFeatureVisual kind={slide.kind} />
+        </Animated.View>
 
-        <OrbPresence
-          interaction="enter"
-          layout="hero"
-          showSpeech
-          size={tokens.spacing.space8 * 1.55}
-          speechKey="orb.speech.onboarding.welcome"
-          state={companionState}
-        />
+        <Animated.View
+          entering={FadeIn.duration(tokens.motion.duration.medium)}
+          exiting={FadeOut.duration(tokens.motion.duration.fast)}
+          key={slide.valueKey}
+          style={{ paddingHorizontal: tokens.spacing.space2 }}>
+          <Text
+            style={{
+              color: tokens.colors.text.primary,
+              fontFamily: tokens.typography.fontFamily.display,
+              fontSize:
+                mode === 'focus'
+                  ? tokens.typography.fontSize.headingMd
+                  : tokens.typography.fontSize.headingLg,
+              lineHeight:
+                (mode === 'focus'
+                  ? tokens.typography.fontSize.headingMd
+                  : tokens.typography.fontSize.headingLg) * 1.3,
+              textAlign: 'center',
+            }}>
+            {t(slide.valueKey)}
+          </Text>
+        </Animated.View>
       </View>
-
-      <View style={{ gap: isFocus ? tokens.spacing.space3 : tokens.spacing.space4 }}>
-        <Text
-          style={{
-            color: tokens.colors.text.primary,
-            fontFamily: tokens.typography.fontFamily.display,
-            fontSize: isFocus
-              ? tokens.typography.fontSize.headingMd
-              : tokens.typography.fontSize.headingLg,
-            lineHeight:
-              (isFocus
-                ? tokens.typography.fontSize.headingMd
-                : tokens.typography.fontSize.headingLg) * 1.25,
-            textAlign: 'center',
-          }}>
-          {t('onboarding.welcomeHeadline')}
-        </Text>
-
-        <Button
-          label={t('onboarding.welcomeCta')}
-          onPress={() => router.push('/onboarding/modus')}
-          variant="primary"
-        />
-      </View>
-    </LinearGradient>
+    </OnboardingChrome>
   );
 }
