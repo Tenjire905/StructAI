@@ -44,12 +44,12 @@ if (!orbCompanion.includes('OrbSvgCompanion')) {
   violations.push('OrbCompanion must render OrbSvgCompanion');
 }
 
-if (!orbSvg.includes('showFace')) {
-  violations.push('OrbSvgCompanion must show a face in Focus as well as Playful');
+if (orbSvg.includes('showFace') || orbSvg.includes('browLeft')) {
+  violations.push('OrbSvgCompanion must stay abstract (no face/brows)');
 }
 
-if (!orbSvg.includes('lid') && !orbSvg.includes('blink')) {
-  violations.push('OrbSvgCompanion must implement lid/blink choreography');
+if (!orbSvg.includes('energyForState') || !orbSvg.includes('spin')) {
+  violations.push('OrbSvgCompanion must implement abstract energy spin/pulse');
 }
 
 if (!orbPresence.includes('speechKey')) {
@@ -66,6 +66,10 @@ if (!lesson.includes('resolveLessonSpeechCopyKey') || !lesson.includes('OrbPrese
 
 if (!doc.includes('Focus-Stimme') && !doc.includes('Focus')) {
   violations.push('ORB_LANGUAGE.md must document Focus tip voice');
+}
+
+if (!doc.toLowerCase().includes('abstrakt') && !doc.toLowerCase().includes('abstract')) {
+  violations.push('ORB_LANGUAGE.md must document abstract (non-human) orb');
 }
 
 const requiredKeys = [

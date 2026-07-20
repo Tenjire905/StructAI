@@ -1,5 +1,5 @@
 /**
- * Orb coach quality: expression system + SVG presence + local voice (no Rive debt).
+ * Orb coach quality: abstract energy orb + local voice (no face, no Rive).
  */
 
 import assert from 'node:assert/strict';
@@ -19,8 +19,8 @@ const choreo = readFileSync(join(root, 'lib/orbChoreography.ts'), 'utf8');
 const languageDoc = readFileSync(join(root, 'ORB_LANGUAGE.md'), 'utf8');
 const welcome = readFileSync(join(root, 'app/onboarding/index.tsx'), 'utf8');
 
-if (pkg.includes('@rive-app/react-native') || pkg.includes('react-native-nitro-modules')) {
-  violations.push('package.json must not depend on Rive / nitro-modules (coach uses SVG + TTS)');
+if (pkg.includes('@rive-app/react-native')) {
+  violations.push('package.json must not depend on Rive');
 }
 if (!pkg.includes('expo-speech')) {
   violations.push('package.json must include expo-speech for local coach voice');
@@ -28,17 +28,14 @@ if (!pkg.includes('expo-speech')) {
 if (existsSync(join(root, 'components/features/OrbRiveCompanion.tsx'))) {
   violations.push('OrbRiveCompanion must be removed');
 }
-if (existsSync(join(root, 'lib/orbRiveContract.ts'))) {
-  violations.push('orbRiveContract must be removed');
+if (!expressions.includes('energyForState') || !expressions.includes('spinMs')) {
+  violations.push('orbExpressions must define per-state energy (spin/aura/rim)');
 }
-if (!expressions.includes('expressionForState') || !expressions.includes('browLeftDeg')) {
-  violations.push('orbExpressions must define per-state brow/eye/cheek palette');
+if (!orb.includes('energyForState') || !orb.includes('corona') || orb.includes('browLeft')) {
+  violations.push('OrbSvgCompanion must be abstract energy orb (no brows/face)');
 }
-if (!orb.includes('expressionForState') || !orb.includes('browLeft') || !orb.includes('cueProps')) {
-  violations.push('OrbSvgCompanion must drive brows + structure cue from expressions');
-}
-if (orb.includes('OrbMouth') || orb.includes("'smile'") || orb.includes("'grin'")) {
-  violations.push('OrbSvgCompanion must not use cartoon smile/grin mouths');
+if (orb.includes('OrbMouth') || orb.includes("'smile'") || orb.includes("'grin'") || orb.includes('showFace')) {
+  violations.push('OrbSvgCompanion must not use face / smile / showFace');
 }
 if (!facade.includes('OrbSvgCompanion') || facade.includes('OrbRiveCompanion')) {
   violations.push('OrbCompanion must render SVG coach only');
@@ -49,14 +46,14 @@ if (!presence.includes('voiceKey') || !presence.includes('speakOrbCoachLine')) {
 if (!voice.includes('expo-speech') || !voice.includes('soundEnabled')) {
   violations.push('orbCoachVoice must gate TTS on theme soundEnabled');
 }
-if (!choreo.includes('IDLE_CURIOSITY_BEATS')) {
-  violations.push('orbChoreography idle beats required');
+if (!choreo.includes('IDLE_ENERGY_BEATS') || !choreo.includes('bodyOpacityForState')) {
+  violations.push('orbChoreography must define abstract energy beats');
 }
 if (!welcome.includes('showSpeech={false}') || !welcome.includes('voiceKey=')) {
   violations.push('Welcome must stay bubble-quiet but allow parallel coach voice');
 }
-if (languageDoc.includes('@rive-app/react-native') && languageDoc.includes('Zielbild')) {
-  violations.push('ORB_LANGUAGE.md must not keep Rive as Zielbild');
+if (languageDoc.toLowerCase().includes('cartoon') && languageDoc.includes('Gesicht') && languageDoc.includes('Brauen')) {
+  violations.push('ORB_LANGUAGE.md must describe abstract orb, not facial mimik');
 }
 
 assert.equal(violations.length, 0, violations.join('\n'));

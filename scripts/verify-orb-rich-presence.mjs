@@ -1,5 +1,5 @@
 /**
- * Rich Orb presence: expression choreography + motion-first onboarding.
+ * Abstract Orb presence: energy choreography + motion-first onboarding.
  */
 
 import assert from 'node:assert/strict';
@@ -17,17 +17,17 @@ const welcome = readFileSync(join(root, 'app/onboarding/index.tsx'), 'utf8');
 const modus = readFileSync(join(root, 'app/onboarding/modus.tsx'), 'utf8');
 const loop = readFileSync(join(root, 'app/onboarding/loop.tsx'), 'utf8');
 
-if (!choreo.includes('IDLE_CURIOSITY_BEATS') || !choreo.includes('defaultGazeForState')) {
-  violations.push('orbChoreography must define idle curiosity beats + state gaze');
+if (!choreo.includes('IDLE_ENERGY_BEATS') || !choreo.includes('bodyOpacityForState')) {
+  violations.push('orbChoreography must define idle energy beats + opacity');
 }
-if (orb.includes('OrbMouth') || orb.includes("'smile'") || orb.includes("'grin'")) {
-  violations.push('OrbSvgCompanion must not use cartoon smile/grin mouths');
+if (orb.includes('OrbMouth') || orb.includes("'smile'") || orb.includes("'grin'") || orb.includes('showFace')) {
+  violations.push('OrbSvgCompanion must stay abstract (no face/smile)');
 }
-if (!orb.includes('accent.structure') || !orb.includes('gazeX') || !orb.includes('ringPulse')) {
-  violations.push('OrbSvgCompanion must use structure iris + gaze transforms + energy ring');
+if (!orb.includes('accent.primary') || !orb.includes('spin') || !orb.includes('auraPulse')) {
+  violations.push('OrbSvgCompanion must use brand glow + spin + aura pulse');
 }
-if (!orb.includes('browLeft') || !orb.includes('expressionForState')) {
-  violations.push('OrbSvgCompanion must use expression-driven brows');
+if (!orb.includes('energyForState')) {
+  violations.push('OrbSvgCompanion must drive motion from energy profiles');
 }
 if (!facade.includes('OrbSvgCompanion') || facade.includes('OrbRiveCompanion')) {
   violations.push('OrbCompanion must keep SVG coach only (no Rive facade)');

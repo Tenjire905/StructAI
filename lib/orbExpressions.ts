@@ -1,202 +1,152 @@
 /**
- * StructAI Orb expression palette — Liftoff-level mimik without cartoon mouths.
- * Values drive Reanimated SVG/View layers (brows, lids, cheeks, cue, ring).
+ * Abstract Orb energy profile — light/motion only (no face).
+ * Maps companion moods onto Entry / Idle / Calcul-style presence.
  */
 
 import type { OrbCompanionState } from '@/hooks/useOrbCompanionState';
 
-export type OrbExpression = {
-  /** Left brow rotation in degrees (negative = raised / curious). */
-  browLeftDeg: number;
-  browRightDeg: number;
-  /** Vertical offset for both brows (negative = higher). */
-  browY: number;
-  /** Lid openness multiplier (1 = normal, <1 = squint/sleepy). */
-  eyeOpen: number;
-  /** Horizontal sclera scale. */
-  eyeWidth: number;
-  irisScale: number;
-  cheekOpacity: number;
-  /** Soft structure cue under eyes (coach mark, not a smile). */
-  cueOpacity: number;
-  cueWidth: number;
-  ringEnergy: number;
-  bodyBreathPeak: number;
-  highlightPeak: number;
-  /** Warm vs cool body bias: 0 = structure, 1 = warning-leaning dim. */
+export type OrbEnergy = {
+  /** Outer aura breath peak scale. */
+  breathPeak: number;
+  /** Base aura opacity (0–1). */
+  auraOpacity: number;
+  /** Bright rim intensity. */
+  rimOpacity: number;
+  /** Hotspot / corona spin period in ms (lower = Calcul). */
+  spinMs: number;
+  /** Pulse period in ms. */
+  pulseMs: number;
+  /** Inner core opacity (dark disk). */
+  coreOpacity: number;
+  /** 0 = violet brand, 1 = warning-leaning dim states. */
   warmth: number;
+  /** Extra bloom punch for celebrate / enter. */
+  bloomBoost: number;
 };
 
-const BASE: OrbExpression = {
-  browLeftDeg: 0,
-  browRightDeg: 0,
-  browY: 0,
-  eyeOpen: 1,
-  eyeWidth: 1,
-  irisScale: 1,
-  cheekOpacity: 0,
-  cueOpacity: 0.35,
-  cueWidth: 1,
-  ringEnergy: 0.45,
-  bodyBreathPeak: 1.028,
-  highlightPeak: 0.32,
+const IDLE: OrbEnergy = {
+  breathPeak: 1.035,
+  auraOpacity: 0.55,
+  rimOpacity: 0.85,
+  spinMs: 12000,
+  pulseMs: 2200,
+  coreOpacity: 1,
   warmth: 0,
+  bloomBoost: 0,
 };
 
-export function expressionForState(state: OrbCompanionState): OrbExpression {
+export function energyForState(state: OrbCompanionState): OrbEnergy {
   switch (state) {
     case 'attentive':
       return {
-        ...BASE,
-        browLeftDeg: -8,
-        browRightDeg: -8,
-        browY: -0.35,
-        eyeOpen: 1.18,
-        eyeWidth: 1.06,
-        irisScale: 1.08,
-        cueOpacity: 0.5,
-        cueWidth: 1.05,
-        ringEnergy: 0.72,
-        bodyBreathPeak: 1.045,
-        highlightPeak: 0.4,
+        ...IDLE,
+        breathPeak: 1.05,
+        auraOpacity: 0.72,
+        rimOpacity: 1,
+        spinMs: 7000,
+        pulseMs: 1400,
+        bloomBoost: 0.15,
       };
     case 'think':
+      // Calcul — faster energy, tighter breath
       return {
-        ...BASE,
-        browLeftDeg: -12,
-        browRightDeg: 4,
-        browY: -0.2,
-        eyeOpen: 0.9,
-        eyeWidth: 0.96,
-        irisScale: 0.95,
-        cueOpacity: 0.28,
-        cueWidth: 0.85,
-        ringEnergy: 0.55,
-        bodyBreathPeak: 1.02,
-        highlightPeak: 0.26,
+        ...IDLE,
+        breathPeak: 1.028,
+        auraOpacity: 0.8,
+        rimOpacity: 1,
+        spinMs: 2800,
+        pulseMs: 900,
+        bloomBoost: 0.2,
       };
     case 'happy':
       return {
-        ...BASE,
-        browLeftDeg: -6,
-        browRightDeg: -6,
-        browY: -0.15,
-        eyeOpen: 1.05,
-        eyeWidth: 1.08,
-        irisScale: 1.04,
-        cheekOpacity: 0.35,
-        cueOpacity: 0.55,
-        cueWidth: 1.15,
-        ringEnergy: 0.7,
-        bodyBreathPeak: 1.06,
-        highlightPeak: 0.42,
+        ...IDLE,
+        breathPeak: 1.06,
+        auraOpacity: 0.78,
+        rimOpacity: 1,
+        spinMs: 5000,
+        pulseMs: 1100,
+        bloomBoost: 0.25,
       };
     case 'celebrating':
       return {
-        ...BASE,
-        browLeftDeg: -14,
-        browRightDeg: -14,
-        browY: -0.45,
-        eyeOpen: 1.2,
-        eyeWidth: 1.12,
-        irisScale: 1.1,
-        cheekOpacity: 0.45,
-        cueOpacity: 0.7,
-        cueWidth: 1.25,
-        ringEnergy: 1,
-        bodyBreathPeak: 1.1,
-        highlightPeak: 0.5,
+        ...IDLE,
+        breathPeak: 1.1,
+        auraOpacity: 0.95,
+        rimOpacity: 1,
+        spinMs: 1800,
+        pulseMs: 420,
+        bloomBoost: 0.45,
       };
     case 'worry':
       return {
-        ...BASE,
-        browLeftDeg: 10,
-        browRightDeg: 12,
-        browY: 0.25,
-        eyeOpen: 0.78,
-        eyeWidth: 0.92,
-        irisScale: 0.9,
-        cheekOpacity: 0.08,
-        cueOpacity: 0.18,
-        cueWidth: 0.7,
-        ringEnergy: 0.22,
-        bodyBreathPeak: 0.97,
-        highlightPeak: 0.18,
+        ...IDLE,
+        breathPeak: 1.015,
+        auraOpacity: 0.35,
+        rimOpacity: 0.45,
+        spinMs: 16000,
+        pulseMs: 2800,
         warmth: 0.55,
+        bloomBoost: 0,
       };
     case 'low_energy':
       return {
-        ...BASE,
-        browLeftDeg: 4,
-        browRightDeg: 4,
-        browY: 0.35,
-        eyeOpen: 0.5,
-        eyeWidth: 0.9,
-        irisScale: 0.88,
-        cueOpacity: 0.15,
-        cueWidth: 0.65,
-        ringEnergy: 0.18,
-        bodyBreathPeak: 1.012,
-        highlightPeak: 0.14,
+        ...IDLE,
+        breathPeak: 1.012,
+        auraOpacity: 0.28,
+        rimOpacity: 0.35,
+        spinMs: 18000,
+        pulseMs: 3200,
         warmth: 0.7,
+        bloomBoost: 0,
       };
     case 'sleepy':
       return {
-        ...BASE,
-        browLeftDeg: 2,
-        browRightDeg: 2,
-        browY: 0.4,
-        eyeOpen: 0.22,
-        eyeWidth: 1.05,
-        irisScale: 0.85,
-        cueOpacity: 0.1,
-        cueWidth: 0.55,
-        ringEnergy: 0.12,
-        bodyBreathPeak: 1.015,
-        highlightPeak: 0.1,
-        warmth: 0.35,
+        ...IDLE,
+        breathPeak: 1.01,
+        auraOpacity: 0.22,
+        rimOpacity: 0.28,
+        spinMs: 22000,
+        pulseMs: 3600,
+        warmth: 0.25,
+        bloomBoost: 0,
       };
     case 'idle':
     default:
-      return BASE;
+      return IDLE;
   }
 }
 
-/** Interaction overlays — brief beats on top of mood. */
-export function interactionExpressionBoost(
+export function energyForInteraction(
   interaction: 'none' | 'enter' | 'watch' | 'react',
-): Partial<OrbExpression> {
+): Partial<OrbEnergy> {
   switch (interaction) {
     case 'enter':
       return {
-        eyeOpen: 1.22,
-        irisScale: 1.12,
-        ringEnergy: 0.95,
-        browY: -0.5,
-        browLeftDeg: -10,
-        browRightDeg: -10,
+        breathPeak: 1.08,
+        auraOpacity: 0.9,
+        rimOpacity: 1,
+        bloomBoost: 0.5,
+        spinMs: 4000,
       };
     case 'watch':
       return {
-        eyeOpen: 1.08,
-        ringEnergy: 0.6,
-        cueOpacity: 0.45,
+        auraOpacity: 0.65,
+        rimOpacity: 0.92,
+        spinMs: 9000,
       };
     case 'react':
       return {
-        eyeOpen: 1.15,
-        cheekOpacity: 0.3,
-        ringEnergy: 0.85,
-        cueWidth: 1.2,
+        breathPeak: 1.09,
+        bloomBoost: 0.4,
+        spinMs: 2200,
+        pulseMs: 500,
       };
     default:
       return {};
   }
 }
 
-export function mergeExpression(
-  base: OrbExpression,
-  boost: Partial<OrbExpression>,
-): OrbExpression {
+export function mergeEnergy(base: OrbEnergy, boost: Partial<OrbEnergy>): OrbEnergy {
   return { ...base, ...boost };
 }

@@ -1,7 +1,7 @@
 # ORB_LANGUAGE.md
 ### StructAI – Orb Language v1 (verbindlich). Cursor MUSS diese Zuordnung nutzen.
 
-Grundregel: **Der Orb ist ein lokaler Coach** (Liftoff-Niveau: Mimik + sparsame Stimme) — er reagiert auf Lernmomente, erklärt aber nie die UI-Buttons.
+Grundregel: **Der Orb ist ein lokaler Coach** — abstrakte Energie-Präsenz (kein Gesicht), sparsame Stimme, reagiert auf Lernmomente, erklärt nie die UI-Buttons.
 
 ---
 
@@ -9,12 +9,24 @@ Grundregel: **Der Orb ist ein lokaler Coach** (Liftoff-Niveau: Mimik + sparsame 
 
 | Frage | Entscheidung |
 |---|---|
+| Look | **Abstrakt** — dunkler Kern + violette Corona / Rim (Eclipse), kein menschliches Gesicht |
 | Assets | **SVG + Reanimated** (kein Rive-Abo, kein Lottie in v1) |
-| Gesicht | Expression-System (`lib/orbExpressions.ts`): Brauen, Lider, Wangen, Structure-Cue, Dual-Rings — **kein Cartoon-Mund** |
+| Ausdruck | Energie-Profile (`lib/orbExpressions.ts`): Aura, Rim, Spin-Tempo (Idle vs Calcul), Bloom — **keine Mimik** |
 | Playful-Stimme | Text-Bubble + paralleles **Audio** (`expo-speech`) während Lesen / Üben / Feedback |
 | Focus-Stimme | **Schweigt** beim Lesen/Üben (`soundEnabled: false`); nach Check ein **kluger Tipp** als Text |
 | Onboarding | Motion-first (keine Bubble-Stapel); optional `voiceKey` für eine kurze Audio-Zeile parallel zum UI-Text |
 | Präsenz | Orb während der ganzen aktiven Lektion sichtbar |
+
+### State-Machine (visuell)
+
+| App-State | Visuelles Verhalten |
+|---|---|
+| Entry (`interaction="enter"`) | Scale-In + Bloom-Punch |
+| Idle | Langsames Atmen + langsame Corona-Rotation |
+| Calcul (`think`) | Schneller Spin, schärferes Flackern |
+| Happy / Celebrating | Helleres Bloom, schnellerer Pulse |
+| Worry / Low energy | Gedimmte Aura, langsamer |
+| Exit | (Screen-Leave — Presence unmount / fade via Navigation) |
 
 ---
 
