@@ -32,8 +32,8 @@ export type OrbCoachVoiceOptions = {
 type AvModule = typeof import('expo-av');
 type SpeechModule = typeof import('expo-speech');
 type SoundInstance = {
-  stopAsync: () => Promise<void>;
-  unloadAsync: () => Promise<void>;
+  stopAsync: () => Promise<unknown>;
+  unloadAsync: () => Promise<unknown>;
   setOnPlaybackStatusUpdate: (
     callback: (status: { isLoaded: boolean; didJustFinish?: boolean }) => void,
   ) => void;
@@ -164,14 +164,15 @@ async function playBundledClip(asset: number): Promise<boolean> {
       shouldPlay: true,
       volume: 1,
     });
-    activeSound = sound;
+    const clip: SoundInstance = sound;
+    activeSound = clip;
     sound.setOnPlaybackStatusUpdate((status) => {
       if (!status.isLoaded) {
         return;
       }
       if (status.didJustFinish) {
         void sound.unloadAsync().catch(() => undefined);
-        if (activeSound === sound) {
+        if (activeSound === clip) {
           activeSound = null;
         }
       }
