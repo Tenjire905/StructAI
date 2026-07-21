@@ -12,7 +12,7 @@ import { appStorage, hydrateAppStorage } from '@/lib/appStorage';
 
 import { getCatalogForLocale } from './copy/index';
 import { formatCopyText, type CopyCatalog } from './copy/types';
-import { DEFAULT_LOCALE, isLocale, type Locale } from './locale';
+import { isLocale, resolveLocaleFromDevice, type Locale } from './locale';
 import {
   resolveThemeTokens,
   type ResolvedThemeTokens,
@@ -47,19 +47,30 @@ function readStoredMode(): ThemeMode {
   return DEFAULT_MODE;
 }
 
-function readStoredLocale(): Locale {
+/**
+ * Prefer an explicit stored choice. On first launch (empty key), adopt the
+ * phone language mapped to de|en|fr|ru. Persist only after storage hydrate
+ * so Expo Go AsyncStorage values are not raced with a premature write.
+ */
+function resolveLocale(persistIfMissing: boolean): Locale {
   const stored = storage.getString(LOCALE_STORAGE_KEY);
 
   if (stored && isLocale(stored)) {
     return stored;
   }
 
-  return DEFAULT_LOCALE;
+  const deviceLocale = resolveLocaleFromDevice();
+
+  if (persistIfMissing) {
+    storage.set(LOCALE_STORAGE_KEY, deviceLocale);
+  }
+
+  return deviceLocale;
 }
 
 export function ThemeModeProvider({ children }: PropsWithChildren) {
   const [mode, setModeState] = useState<ThemeMode>(() => readStoredMode());
-  const [locale, setLocaleState] = useState<Locale>(() => readStoredLocale());
+  const [locale, setLocaleState] = useState<Locale>(() => resolveLocale(false));
 
   useEffect(() => {
     let cancelled = false;
@@ -70,7 +81,7 @@ export function ThemeModeProvider({ children }: PropsWithChildren) {
       }
 
       setModeState(readStoredMode());
-      setLocaleState(readStoredLocale());
+      setLocaleState(resolveLocale(true));
     });
 
     return () => {
