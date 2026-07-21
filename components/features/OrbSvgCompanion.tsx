@@ -46,6 +46,37 @@ function stopShared(value: SharedValue<number>, reset = 0) {
   value.value = reset;
 }
 
+/** Cancel every looping shared value — partial cleanup crashes Expo Go on unmount. */
+function stopAllOrbMotion(values: {
+  bodyScale: SharedValue<number>;
+  bodyOpacity: SharedValue<number>;
+  auraPulse: SharedValue<number>;
+  rimPulse: SharedValue<number>;
+  spin: SharedValue<number>;
+  counterSpin: SharedValue<number>;
+  flare: SharedValue<number>;
+  bloom: SharedValue<number>;
+  enterScale: SharedValue<number>;
+  waveRx: SharedValue<number>;
+  waveRy: SharedValue<number>;
+  lobe: SharedValue<number>;
+  dashPhase: SharedValue<number>;
+}) {
+  stopShared(values.bodyScale, 1);
+  stopShared(values.bodyOpacity, values.bodyOpacity.value);
+  stopShared(values.auraPulse, values.auraPulse.value);
+  stopShared(values.rimPulse, values.rimPulse.value);
+  stopShared(values.spin, 0);
+  stopShared(values.counterSpin, 0);
+  stopShared(values.flare, 0.4);
+  stopShared(values.bloom, 0);
+  stopShared(values.enterScale, 1);
+  stopShared(values.waveRx, values.waveRx.value);
+  stopShared(values.waveRy, values.waveRy.value);
+  stopShared(values.lobe, values.lobe.value);
+  stopShared(values.dashPhase, 0);
+}
+
 /**
  * Abstract StructAI Orb — multi-layer plasma waves (Rive-like), no face.
  * Situations change spin direction/speed, dash density, and ellipse form.
@@ -94,14 +125,24 @@ export function OrbSvgCompanion({
   }, []);
 
   useEffect(() => {
+    const motionValues = {
+      bodyScale,
+      bodyOpacity,
+      auraPulse,
+      rimPulse,
+      spin,
+      counterSpin,
+      flare,
+      bloom,
+      enterScale,
+      waveRx,
+      waveRy,
+      lobe,
+      dashPhase,
+    };
+
     if (!isFocused || reduceMotion) {
-      stopShared(bodyScale, 1);
-      stopShared(spin, 0);
-      stopShared(counterSpin, 0);
-      stopShared(flare, 0.4);
-      stopShared(bloom, 0);
-      stopShared(enterScale, 1);
-      stopShared(dashPhase, 0);
+      stopAllOrbMotion(motionValues);
       waveRx.value = withTiming(energy.waveRx, { duration: tokens.motion.duration.fast });
       waveRy.value = withTiming(energy.waveRy, { duration: tokens.motion.duration.fast });
       lobe.value = withTiming(energy.lobeStrength * 0.5, {
@@ -116,7 +157,9 @@ export function OrbSvgCompanion({
       bodyOpacity.value = withTiming(bodyOpacityForState(state), {
         duration: tokens.motion.duration.fast,
       });
-      return;
+      return () => {
+        stopAllOrbMotion(motionValues);
+      };
     }
 
     const fast = tokens.motion.duration.fast;
@@ -250,7 +293,7 @@ export function OrbSvgCompanion({
         if (timer) {
           clearTimeout(timer);
         }
-        stopShared(bodyScale, 1);
+        stopAllOrbMotion(motionValues);
       };
     }
 
@@ -304,7 +347,7 @@ export function OrbSvgCompanion({
     }
 
     return () => {
-      stopShared(bodyScale, 1);
+      stopAllOrbMotion(motionValues);
     };
   }, [
     amp,

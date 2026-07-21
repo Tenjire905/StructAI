@@ -10,6 +10,8 @@ export type OnboardingFeatureVisualKind = 'score' | 'path' | 'coach';
 
 type OnboardingFeatureVisualProps = {
   kind: OnboardingFeatureVisualKind;
+  /** Shrink phone crop on short viewports so caption stays visible. */
+  compact?: boolean;
 };
 
 /**
@@ -17,7 +19,10 @@ type OnboardingFeatureVisualProps = {
  * floating handset). Glow stays behind the device; nothing overlaps the
  * caption zone below.
  */
-export function OnboardingFeatureVisual({ kind }: OnboardingFeatureVisualProps) {
+export function OnboardingFeatureVisual({
+  kind,
+  compact = false,
+}: OnboardingFeatureVisualProps) {
   const { tokens, mode } = useThemeMode();
   const isPlayful = mode === 'playful';
 
@@ -26,6 +31,7 @@ export function OnboardingFeatureVisual({ kind }: OnboardingFeatureVisualProps) 
       style={{
         alignItems: 'center',
         flex: 1,
+        justifyContent: 'flex-start',
         overflow: 'hidden',
         width: '100%',
       }}>
@@ -52,15 +58,21 @@ export function OnboardingFeatureVisual({ kind }: OnboardingFeatureVisualProps) 
       {/*
         Full phone is taller than this viewport. Top-aligned + overflow hidden
         = Liftoff crop (bottom of the handset is intentionally cut off).
+        maxHeight: '100%' keeps the crop inside the carousel slot on short phones.
       */}
       <View
         style={{
           alignItems: 'center',
+          alignSelf: 'center',
           // Show ~top 68% of a full iPhone — bottom hardware disappears.
           aspectRatio: 9 / 13.2,
-          maxWidth: tokens.spacing.space8 * 3.55,
+          flexShrink: 1,
+          maxHeight: '100%',
+          maxWidth: compact
+            ? tokens.spacing.space8 * 3.1
+            : tokens.spacing.space8 * 3.55,
           overflow: 'hidden',
-          width: '82%',
+          width: compact ? '72%' : '82%',
         }}>
         <View
           style={{

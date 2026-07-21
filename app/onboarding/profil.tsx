@@ -23,6 +23,7 @@ import {
 } from '@/lib/appStorage';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
 import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
+import { beginRouteTransition } from '@/lib/routeTransitionLock';
 import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import {
   isPlayfulModeRecommended,
@@ -122,24 +123,33 @@ export default function OnboardingProfileScreen() {
       await setProfileAge(parsedAge);
       await setProfileOnboardingCompleted();
 
-      // Apply mode before leaving, then navigate after UI settles so the theme
-      // remount and route replace do not race (Expo Go Android crash guard).
-      setMode(selectedMode);
+      // Dismiss keyboard + lock AuthNav before replace. Apply theme AFTER
+      // navigation so Focus→Playful remount does not race router.replace
+      // (Expo Go Android crash guard).
       Keyboard.dismiss();
       navigationInFlightRef.current = true;
+      beginRouteTransition('profile-submit');
 
       const nextHref = !isDailyGoalSetupCompleted()
         ? '/onboarding/tagesziel'
         : resolveHomeRoute(completedLessons);
+      const modeToApply = selectedMode;
 
       runAfterUISettles(() => {
         try {
           router.replace(nextHref);
+          if (modeToApply !== currentMode) {
+            runAfterUISettles(() => {
+              setMode(modeToApply);
+            }, 220);
+          } else {
+            setMode(modeToApply);
+          }
         } catch {
           navigationInFlightRef.current = false;
           setIsSaving(false);
         }
-      }, 64);
+      }, 160);
     } catch {
       navigationInFlightRef.current = false;
       setValidationError(t('onboarding.profileSaveError'));

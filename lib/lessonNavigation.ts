@@ -1,6 +1,7 @@
 import type { Href } from 'expo-router';
 
 import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
+import { beginRouteTransition } from '@/lib/routeTransitionLock';
 import { runAfterUISettles } from '@/lib/runAfterUISettles';
 
 /** Query flag: lesson was opened from a path detail screen (stack has lernpfad below). */
@@ -49,10 +50,11 @@ export function openLesson(
   options?: { fromPath?: boolean },
 ): void {
   suppressHomeCelebrations();
+  beginRouteTransition('open-lesson');
 
   runAfterUISettles(() => {
     safeReplace(router, buildLessonHref(lessonId, options?.fromPath ?? false));
-  });
+  }, 96);
 }
 
 /**
@@ -60,10 +62,11 @@ export function openLesson(
  */
 export function leaveLesson(router: RouterLike, href: Href): void {
   suppressHomeCelebrations();
+  beginRouteTransition('leave-lesson');
 
   runAfterUISettles(() => {
     safeReplace(router, href);
-  }, 64);
+  }, 180);
 }
 
 /**
@@ -73,6 +76,7 @@ export function leaveLesson(router: RouterLike, href: Href): void {
  */
 export function returnToPath(router: RouterForPathReturn, pathId: string): void {
   suppressHomeCelebrations();
+  beginRouteTransition('return-path');
 
   const href = `/lernpfad/${pathId}` as Href;
 
@@ -92,5 +96,5 @@ export function returnToPath(router: RouterForPathReturn, pathId: string): void 
     } catch {
       // Ignore in-flight transition errors.
     }
-  }, 64);
+  }, 180);
 }

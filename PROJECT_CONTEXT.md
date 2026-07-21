@@ -74,6 +74,7 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 16. **Onboarding locale + glossary once:** Device-Locale beim Erststart (`resolveLocaleFromDevice`), dezenter Language-Chip oben rechts im Welcome; Glossary markiert jeden Term (`id`) nur einmal pro Textblock bzw. step-weit über `splitTextsWithGlossary` (Info-Titel/Body, Fill-Blank Prefix/Suffix, Coaching).
 17. **First-session skill-proof removed:** Der critique→rewrite→compare-Loop (`/onboarding/proof`) ist entfernt — nach der ersten Lektion geht’s direkt zu `/onboarding/profil`. Die kompakte `SessionSkillSummaryCard` am Lektionsende bleibt.
 18. **Lesson/profile nav crash guard:** `runAfterUISettles` ohne `requestIdleCallback`; First-Lesson-Handoff über Outcome `handoff_profile`; Profil-/Tagesziel-Submit mit Keyboard-dismiss + deferred `router.replace`.
+19. **Crash hardening + onboarding crop:** Orb bricht alle `withRepeat`-SharedValues beim Unmount ab (`stopAllOrbMotion`); globales `routeTransitionLock` blockiert konkurrierende AuthNav-Replaces; Profil wendet `setMode` erst nach `replace` an; Welcome-Carousel: Caption wrappt 3 Zeilen, Phone-Crop mit `maxHeight: '100%'` + Compact-Skalierung.
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 

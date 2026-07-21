@@ -6,6 +6,7 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   Text,
+  useWindowDimensions,
   View,
   type ViewToken,
 } from 'react-native';
@@ -47,6 +48,7 @@ const SLIDES: IntroSlide[] = [
 export default function OnboardingWelcomeScreen() {
   const { tokens, t, mode } = useThemeMode();
   const router = useRouter();
+  const { height: windowHeight } = useWindowDimensions();
   const listRef = useRef<FlatList<IntroSlide>>(null);
   const [index, setIndex] = useState(0);
   const [pageWidth, setPageWidth] = useState(0);
@@ -54,8 +56,10 @@ export default function OnboardingWelcomeScreen() {
   const lastIndexRef = useRef(0);
   const suppressSwipeSfxRef = useRef(false);
 
+  // Short phones: always headingMd so DE captions fit without ellipsis.
+  const isCompactHeight = windowHeight < tokens.spacing.space8 * 11;
   const captionSize =
-    mode === 'focus'
+    mode === 'focus' || isCompactHeight
       ? tokens.typography.fontSize.headingMd
       : tokens.typography.fontSize.headingLg;
   const captionLineHeight = captionSize * 1.3;
@@ -63,11 +67,6 @@ export default function OnboardingWelcomeScreen() {
   useEffect(() => {
     playSfx('start', soundEnabled);
   }, [soundEnabled]);
-
-  const goToMeet = useCallback(() => {
-    playSfx('tap', soundEnabled);
-    router.push('/onboarding/meet');
-  }, [router, soundEnabled]);
 
   const syncIndex = useCallback(
     (next: number, playSwipeSfx: boolean) => {
@@ -131,10 +130,11 @@ export default function OnboardingWelcomeScreen() {
     <View
       style={{
         height: '100%',
+        overflow: 'hidden',
         paddingHorizontal: tokens.spacing.space1,
         width: pageWidth || undefined,
       }}>
-      <OnboardingFeatureVisual kind={item.kind} />
+      <OnboardingFeatureVisual compact={isCompactHeight} kind={item.kind} />
     </View>
   );
 
@@ -147,15 +147,15 @@ export default function OnboardingWelcomeScreen() {
       }
       footerExtra={
         <View style={{ gap: tokens.spacing.space4 }}>
-          {/* Reserved caption band — never shares layout with the phone crop. */}
+          {/* Reserved caption band — wraps fully; no fixed height clip. */}
           <Text
-            numberOfLines={2}
+            numberOfLines={3}
             style={{
               color: tokens.colors.text.primary,
               fontFamily: tokens.typography.fontFamily.display,
               fontSize: captionSize,
-              height: captionLineHeight * 2,
               lineHeight: captionLineHeight,
+              minHeight: captionLineHeight * 2,
               textAlign: 'center',
             }}>
             {t(SLIDES[index].valueKey)}
@@ -181,7 +181,7 @@ export default function OnboardingWelcomeScreen() {
             setPageWidth(nextWidth);
           }
         }}
-        style={{ flex: 1, minHeight: tokens.spacing.space8 * 4 }}>
+        style={{ flex: 1, overflow: 'hidden' }}>
         {pageWidth > 0 ? (
           <FlatList
             ref={listRef}

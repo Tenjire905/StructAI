@@ -282,6 +282,8 @@ function LessonSessionScreenContent({
     navigationInFlightRef.current = true;
     dismissCelebration();
     suppressHomeCelebrations();
+    // leaveLesson begins the shared route lock + longer settle so Orb teardown
+    // and AuthNavigationController cannot race the profil replace.
     leaveLesson(router, '/onboarding/profil');
   }, [dismissCelebration, lessonOutcome, router]);
 

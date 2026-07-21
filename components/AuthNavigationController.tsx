@@ -10,9 +10,10 @@ import {
   setProfileOnboardingCompleted,
 } from '@/lib/appStorage';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
-import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import { isProgressSnapshotEmpty } from '@/lib/progressMerge';
 import { fetchProgressSnapshotForUser } from '@/lib/progressSync';
+import { isRouteTransitionLocked } from '@/lib/routeTransitionLock';
+import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
 
@@ -180,8 +181,13 @@ export function AuthNavigationController() {
     let cancelled = false;
     let navigationTimer: ReturnType<typeof setTimeout> | undefined;
 
+    // Hydrate first, then decide — but never compete with an in-flight handoff.
     void hydrateAppStorage().then(() => {
       if (cancelled || !isMountedRef.current) {
+        return;
+      }
+
+      if (isRouteTransitionLocked()) {
         return;
       }
 
@@ -190,6 +196,12 @@ export function AuthNavigationController() {
       const inOnboarding = rootSegment === 'onboarding';
 
       if (isDevRoute(rootSegment)) {
+        return;
+      }
+
+      // Mid-stack transitions (lesson → profil → tagesziel) can briefly report
+      // incomplete segments; never force a replace while that is happening.
+      if (inOnboarding && !onProfileRoute && !onDailyGoalRoute && segments.length < 2) {
         return;
       }
 
@@ -222,6 +234,7 @@ export function AuthNavigationController() {
         !onProfileRoute &&
         !onDailyGoalRoute
       ) {
+        // Leave explicit onboarding child screens alone; only kick stale intro routes.
         target = resolveHomeRoute(completedLessons);
       } else if (!rootSegment) {
         target = resolveAppEntryRoute(completedLessons);
@@ -234,17 +247,21 @@ export function AuthNavigationController() {
       lastTargetRef.current = target;
 
       navigationTimer = setTimeout(() => {
-        if (!isMountedRef.current) {
+        if (!isMountedRef.current || isRouteTransitionLocked()) {
           return;
         }
 
         runAfterUISettles(() => {
-          if (!isMountedRef.current) {
+          if (!isMountedRef.current || isRouteTransitionLocked()) {
             return;
           }
 
-          router.replace(target);
-        });
+          try {
+            router.replace(target);
+          } catch {
+            lastTargetRef.current = null;
+          }
+        }, 96);
       }, 0);
     });
 

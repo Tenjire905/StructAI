@@ -15,6 +15,7 @@ import {
   requestDailyGoalNotificationPermission,
 } from '@/lib/dailyGoalNotifications';
 import { DAILY_ORB_GOAL_PRESETS, DEFAULT_DAILY_ORB_GOAL } from '@/lib/dailyOrbGoal';
+import { beginRouteTransition } from '@/lib/routeTransitionLock';
 import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
@@ -61,17 +62,19 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
     }
 
     setIsSaving(true);
+    beginRouteTransition('daily-goal-submit');
 
     try {
       setDailyOrbGoal(selectedGoal, notificationsSupported ? notificationsEnabled : false);
       await setDailyGoalSetupCompleted();
+      // Hide Orb before replace so withRepeat loops are cancelled first.
       runAfterUISettles(() => {
         try {
           router.replace(returnTo);
         } catch {
           setIsSaving(false);
         }
-      }, 64);
+      }, 180);
     } catch {
       setIsSaving(false);
     }
@@ -88,14 +91,16 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
         paddingTop: tokens.spacing.space7,
       }}
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
-      <OrbPresence
-        interaction="enter"
-        layout="hero"
-        showSpeech
-        size={tokens.spacing.space8 * 1.1}
-        speechKey="orb.speech.onboarding.dailyGoal"
-        state={companionState}
-      />
+      {!isSaving ? (
+        <OrbPresence
+          interaction="enter"
+          layout="hero"
+          showSpeech
+          size={tokens.spacing.space8 * 1.1}
+          speechKey="orb.speech.onboarding.dailyGoal"
+          state={companionState}
+        />
+      ) : null}
 
       <View style={{ gap: tokens.spacing.space3 }}>
         <Text
