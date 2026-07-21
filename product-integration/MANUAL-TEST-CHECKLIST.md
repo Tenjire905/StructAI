@@ -1,6 +1,6 @@
 # StructAI — Manuelle Test-Checkliste (Expo)
 
-**Stand:** feature `cursor/week1-session-proof-fd20` (user-owned proof + Lab one-pattern + Daily Challenge proofReuse) · base develop `9cee37d98484f1e9b42f7ae4140af90175610257`  
+**Stand:** feature `cursor/week1-session-proof-fd20` @ `fcc19a3` (user-owned proof + Lab one-pattern + Daily Challenge proofReuse) · base develop `9cee37d98484f1e9b42f7ae4140af90175610257`  
 **Gerät:** Expo Go **SDK 57** (nicht Play Store SDK 56); Evening-Reminders nur im **dev build**  
 **Vorbereitung:** Guest-Modus (nicht eingeloggt), ggf. Progress löschen (Profil/Dev oder frische Install)
 
