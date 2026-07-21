@@ -5,6 +5,7 @@ import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryT
 import { Card, PressableScale } from '@/components/ui';
 import { getGlossaryTerms } from '@/data/glossary';
 import type { ResolvedLessonStep } from '@/data/mockLessons';
+import { withFillBlankJoinSpaces } from '@/lib/fillBlankJoin';
 import { splitTextsWithGlossary } from '@/lib/glossary';
 import { useThemeMode } from '@/theme';
 
@@ -22,9 +23,20 @@ export function FillBlankStepView({
   onSelect,
 }: FillBlankStepViewProps) {
   const { tokens, t, locale, mode } = useThemeMode();
+  const blank = selectedOption !== null ? step.options[selectedOption] : '___';
+  // Mode-agnostic: Focus authored copy and Playful shorteners both get safe gaps.
+  const joined = useMemo(
+    () => withFillBlankJoinSpaces(step.prefix, blank, step.suffix),
+    [blank, step.prefix, step.suffix],
+  );
   const [prefixSegments, suffixSegments] = useMemo(
-    () => splitTextsWithGlossary([step.prefix, step.suffix], getGlossaryTerms(locale), mode),
-    [locale, mode, step.prefix, step.suffix],
+    () =>
+      splitTextsWithGlossary(
+        [joined.prefix, joined.suffix],
+        getGlossaryTerms(locale),
+        mode,
+      ),
+    [joined.prefix, joined.suffix, locale, mode],
   );
 
   return (
@@ -45,7 +57,7 @@ export function FillBlankStepView({
             fontSize: tokens.typography.fontSize.bodyLg,
             lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
           }}>
-          <InlineGlossaryText nested segments={prefixSegments} text={step.prefix} />
+          <InlineGlossaryText nested segments={prefixSegments} text={joined.prefix} />
           <Text
             style={{
               color:
@@ -54,9 +66,9 @@ export function FillBlankStepView({
                   : tokens.colors.text.tertiary,
               fontFamily: tokens.typography.fontFamily.bodyMedium,
             }}>
-            {selectedOption !== null ? step.options[selectedOption] : '___'}
+            {joined.blank}
           </Text>
-          <InlineGlossaryText nested segments={suffixSegments} text={step.suffix} />
+          <InlineGlossaryText nested segments={suffixSegments} text={joined.suffix} />
         </Text>
       </Card>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.space2 }}>
