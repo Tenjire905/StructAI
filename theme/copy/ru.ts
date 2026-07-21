@@ -89,22 +89,6 @@ export const copyRu: CopyCatalog = {
     playful: 'Сделать урок дня',
     focus: 'Продолжить урок дня',
   },
-  'home.dailyChallenge.eyebrowProofReuse': {
-    playful: 'Повтори вчерашний навык',
-    focus: 'Повтори доказанный навык',
-  },
-  'home.dailyChallenge.titleProofReuse': {
-    playful: 'Примени паттерн переписывания',
-    focus: 'Примени паттерн переписывания',
-  },
-  'home.dailyChallenge.bodyProofReuse': {
-    playful: 'Используй «{{skill}}» на сегодняшнем шаге в {{path}} — тот же цикл критика → rewrite, реальная задача.',
-    focus: 'Примени «{{skill}}» к следующему шагу в {{path}}: критика → rewrite на реальном промпте.',
-  },
-  'home.dailyChallenge.ctaProofReuse': {
-    playful: 'Потренировать rewrite-навык',
-    focus: 'Потренировать rewrite-навык',
-  },
   'home.startHint': {
     playful: 'Начни с основ промптов — первый шаг к структурированному prompting.',
     focus: 'Начните с основ промптов — первый шаг к структурированному prompting.',
@@ -733,86 +717,6 @@ export const copyRu: CopyCatalog = {
     playful: 'Ты ловишь отсутствие цели, формата или ограничений до отправки.',
     focus: 'Ты ловишь отсутствие цели, формата или ограничений до отправки.',
   },
-  'firstSessionProof.brand': {
-    playful: 'Твоё первое доказательство навыка',
-    focus: 'Первое доказательство навыка',
-  },
-  'firstSessionProof.headline': {
-    playful: 'Отредактируй размытый черновик, перепиши сам — и смотри, как растёт оценка.',
-    focus: 'Твой черновик: критика, свой rewrite, сравнение оценок.',
-  },
-  'firstSessionProof.sub': {
-    playful: 'Твой до/после — только локальный coach, без API-ключа. Меньше минуты.',
-    focus: 'Твой черновик и rewrite. Только локальный coach — без BYOK.',
-  },
-  'firstSessionProof.weakLabel': {
-    playful: 'Твой размытый черновик',
-    focus: 'Твой размытый черновик',
-  },
-  'firstSessionProof.improvedLabel': {
-    playful: 'Твой rewrite',
-    focus: 'Твой rewrite',
-  },
-  'firstSessionProof.weakPlaceholder': {
-    playful: 'Напиши или подправь размытую просьбу…',
-    focus: 'Отредактируй этот размытый промпт…',
-  },
-  'firstSessionProof.rewritePlaceholder': {
-    playful: 'Перепиши с ролью, контекстом, форматом и лимитами…',
-    focus: 'Перепиши с ролью, контекстом, форматом и ограничениями…',
-  },
-  'firstSessionProof.applySuggestion': {
-    playful: 'Взять rewrite coach',
-    focus: 'Применить подсказку coach',
-  },
-  'firstSessionProof.honestNoGain': {
-    playful: 'Оценка ещё не выросла — добавь роль, контекст или жёсткие ограничения и попробуй позже в Lab.',
-    focus: 'Пока нет прироста. Добавь роль, контекст или ограничения — затем снова в Prompt Lab.',
-  },
-  'firstSessionProof.scoreLabel': {
-    playful: 'Оценка coach: {{score}}/100',
-    focus: 'Оценка: {{score}}/100',
-  },
-  'firstSessionProof.critiqueBody': {
-    playful: 'Слишком размыто: нет роли, аудитории, формата, длины. Модель вынуждена гадать.',
-    focus: 'Нет роли, аудитории, формата и длины — модель вынуждена гадать.',
-  },
-  'firstSessionProof.compareTitle': {
-    playful: '{{before}} → {{after}} ({{delta}})',
-    focus: '{{before}} → {{after}} ({{delta}})',
-  },
-  'firstSessionProof.skillName': {
-    playful: 'Превратить размытую просьбу в рабочий бриф',
-    focus: 'Превратить размытую просьбу в рабочий бриф',
-  },
-  'firstSessionProof.skillProof': {
-    playful: 'Изменение оценки — от твоего rewrite: структура, роль и ограничения теперь измеримы.',
-    focus: 'Ты можешь объяснить, почему роль, контекст и ограничения подняли твою оценку.',
-  },
-  'firstSessionProof.comeBackTomorrow': {
-    playful: 'Завтра: примени этот паттерн переписывания к реальной задаче — это твой win на день 2.',
-    focus: 'Завтра: примени этот паттерн переписывания к реальной задаче — это твой win на день 2.',
-  },
-  'firstSessionProof.ctaCritique': {
-    playful: 'Критиковать мой черновик',
-    focus: 'Критиковать мой черновик',
-  },
-  'firstSessionProof.ctaRewrite': {
-    playful: 'Я перепишу сам',
-    focus: 'Переписать самому',
-  },
-  'firstSessionProof.ctaCompare': {
-    playful: 'Сравнить мои оценки',
-    focus: 'Сравнить мои оценки',
-  },
-  'firstSessionProof.ctaSummary': {
-    playful: 'Назвать, чему я научился',
-    focus: 'Итог навыка',
-  },
-  'firstSessionProof.ctaDone': {
-    playful: 'Дальше — настроить профиль',
-    focus: 'Дальше к профилю',
-  },
   'promptLab.learnedEyebrow': {
     playful: 'Ты потренировал',
     focus: 'Отработанный навык',
@@ -909,30 +813,6 @@ export const copyRu: CopyCatalog = {
   'orb.speech.onboarding.loop': {
     playful: 'Цикл: учись → практикуй → становись лучше. Готов к первому навыку?',
     focus: 'Три шага: учиться, практиковать, улучшать. Начни, когда готов.',
-  },
-  'orb.speech.onboarding.proof': {
-    playful: 'Смотри, как слабый промпт становится сильнее — вот навык.',
-    focus: 'Критика → перепись → сравнение. Это доказательство.',
-  },
-  'orb.speech.onboarding.proofWeak': {
-    playful: 'Так часто начинается: мило, но слишком размыто. Видишь дыры?',
-    focus: 'Типичный старт: намерение есть, структуры нет. Это мы чиним.',
-  },
-  'orb.speech.onboarding.proofCritique': {
-    playful: 'Быстрый чек: цель, ограничения, формат — чего не хватает?',
-    focus: 'Критика: назови пробелы, не угадывай.',
-  },
-  'orb.speech.onboarding.proofRewrite': {
-    playful: 'Теперь rewrite — та же идея, реальная структура. Бум.',
-    focus: 'Rewrite: то же намерение, ясные структура и ограничения.',
-  },
-  'orb.speech.onboarding.proofCompare': {
-    playful: 'До/после — скор растёт, потому что структуру можно измерить.',
-    focus: 'Сравнение: структура делает разницу видимой.',
-  },
-  'orb.speech.onboarding.proofDone': {
-    playful: 'Круто — ты видишь слабый промпт и умеешь его чинить. Вот навык.',
-    focus: 'Ты можешь превратить размытую просьбу в рабочий бриф.',
   },
   'orb.speech.onboarding.dailyGoal': {
     playful: 'Поставь маленькую дневную цель — напомню без стресса.',

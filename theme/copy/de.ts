@@ -89,22 +89,6 @@ export const copyDe: CopyCatalog = {
     playful: 'Heutige Lektion machen',
     focus: 'Heutige Lektion fortsetzen',
   },
-  'home.dailyChallenge.eyebrowProofReuse': {
-    playful: 'Gestern geübten Skill nutzen',
-    focus: 'Proof-Skill wiederverwenden',
-  },
-  'home.dailyChallenge.titleProofReuse': {
-    playful: 'Dein Rewrite-Muster anwenden',
-    focus: 'Rewrite-Muster anwenden',
-  },
-  'home.dailyChallenge.bodyProofReuse': {
-    playful: 'Nutze „{{skill}}“ beim heutigen Schritt in {{path}} — gleiche Kritik→Rewrite-Schleife, echte Aufgabe.',
-    focus: 'Wende „{{skill}}“ auf den nächsten Schritt in {{path}} an: Kritik → Rewrite am echten Prompt.',
-  },
-  'home.dailyChallenge.ctaProofReuse': {
-    playful: 'Rewrite-Skill üben',
-    focus: 'Rewrite-Skill üben',
-  },
   'home.startHint': {
     playful: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
     focus: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
@@ -734,86 +718,6 @@ export const copyDe: CopyCatalog = {
     playful: 'Du erkennst fehlendes Ziel, Format oder Constraints, bevor du sendest.',
     focus: 'Du erkennst fehlendes Ziel, Format oder Constraints vor dem Senden.',
   },
-  'firstSessionProof.brand': {
-    playful: 'Dein erster Skill-Beweis',
-    focus: 'Erster Skill-Beweis',
-  },
-  'firstSessionProof.headline': {
-    playful: 'Editiere einen vagen Entwurf, schreib ihn selbst um, sieh deinen Score steigen.',
-    focus: 'Dein Entwurf: kritisieren, selbst umschreiben, Scores vergleichen.',
-  },
-  'firstSessionProof.sub': {
-    playful: 'Dein Vorher/Nachher — nur lokaler Coach, kein API-Key. Unter einer Minute.',
-    focus: 'Dein Entwurf und Rewrite. Nur lokaler Coach — kein BYOK nötig.',
-  },
-  'firstSessionProof.weakLabel': {
-    playful: 'Dein vager Entwurf',
-    focus: 'Dein vager Entwurf',
-  },
-  'firstSessionProof.improvedLabel': {
-    playful: 'Dein Rewrite',
-    focus: 'Dein Rewrite',
-  },
-  'firstSessionProof.weakPlaceholder': {
-    playful: 'Tippe oder passe eine vage Bitte an…',
-    focus: 'Editiere diesen vagen Prompt…',
-  },
-  'firstSessionProof.rewritePlaceholder': {
-    playful: 'Umschreiben mit Rolle, Kontext, Format und Limits…',
-    focus: 'Umschreiben mit Rolle, Kontext, Format und Constraints…',
-  },
-  'firstSessionProof.applySuggestion': {
-    playful: 'Coach-Rewrite übernehmen',
-    focus: 'Coach-Vorschlag übernehmen',
-  },
-  'firstSessionProof.honestNoGain': {
-    playful: 'Score noch nicht gestiegen — füge Rolle, Kontext oder harte Constraints hinzu und übe später im Lab.',
-    focus: 'Noch kein Score-Gewinn. Rolle, Kontext oder Constraints ergänzen — dann im Prompt Lab erneut.',
-  },
-  'firstSessionProof.scoreLabel': {
-    playful: 'Coach-Score: {{score}}/100',
-    focus: 'Score: {{score}}/100',
-  },
-  'firstSessionProof.critiqueBody': {
-    playful: 'Zu vage: keine Rolle, keine Zielgruppe, kein Format, keine Länge. Das Modell muss raten.',
-    focus: 'Rolle, Zielgruppe, Format und Länge fehlen — das Modell muss raten.',
-  },
-  'firstSessionProof.compareTitle': {
-    playful: '{{before}} → {{after}} ({{delta}})',
-    focus: '{{before}} → {{after}} ({{delta}})',
-  },
-  'firstSessionProof.skillName': {
-    playful: 'Aus einer vagen Bitte ein brauchbares Briefing machen',
-    focus: 'Aus einer vagen Bitte ein brauchbares Briefing machen',
-  },
-  'firstSessionProof.skillProof': {
-    playful: 'Die Score-Änderung kommt von deinem Rewrite — Struktur, Rolle und Constraints sind jetzt messbar.',
-    focus: 'Du kannst erklären, warum Rolle, Kontext und Constraints deinen eigenen Prompt-Score heben.',
-  },
-  'firstSessionProof.comeBackTomorrow': {
-    playful: 'Morgen: nutze dieses Rewrite-Muster an einer echten Aufgabe — das ist dein Tag-2-Win.',
-    focus: 'Morgen: wende dieses Rewrite-Muster an einer echten Aufgabe an.',
-  },
-  'firstSessionProof.ctaCritique': {
-    playful: 'Meinen Entwurf kritisieren',
-    focus: 'Meinen Entwurf kritisieren',
-  },
-  'firstSessionProof.ctaRewrite': {
-    playful: 'Ich schreibe ihn um',
-    focus: 'Selbst umschreiben',
-  },
-  'firstSessionProof.ctaCompare': {
-    playful: 'Meine Scores vergleichen',
-    focus: 'Meine Scores vergleichen',
-  },
-  'firstSessionProof.ctaSummary': {
-    playful: 'Benennen, was ich gelernt habe',
-    focus: 'Skill-Zusammenfassung',
-  },
-  'firstSessionProof.ctaDone': {
-    playful: 'Weiter — Profil einrichten',
-    focus: 'Weiter zum Profil',
-  },
   'promptLab.learnedEyebrow': {
     playful: 'Du hast geübt',
     focus: 'Geübter Skill',
@@ -910,30 +814,6 @@ export const copyDe: CopyCatalog = {
   'orb.speech.onboarding.loop': {
     playful: 'So läuft’s: lernen → üben → besser werden. Bereit für den ersten Skill?',
     focus: 'Drei Schritte: lernen, üben, verbessern. Start wenn bereit.',
-  },
-  'orb.speech.onboarding.proof': {
-    playful: 'Schau, wie der vage Prompt besser wird — das ist der Skill.',
-    focus: 'Kritik → Rewrite → Vergleich. Das ist der Beweis.',
-  },
-  'orb.speech.onboarding.proofWeak': {
-    playful: 'So startet’s oft: freundlich, aber zu vage. Merkst du die Lücken?',
-    focus: 'Typischer Start: Absicht da, Struktur fehlt. Genau das fixen wir.',
-  },
-  'orb.speech.onboarding.proofCritique': {
-    playful: 'Kurz checken: Ziel, Constraints, Format — was fehlt?',
-    focus: 'Kritik-Pass: fehlende Teile benennen, nicht raten.',
-  },
-  'orb.speech.onboarding.proofRewrite': {
-    playful: 'Jetzt der Rewrite — gleiche Idee, echte Struktur. Boom.',
-    focus: 'Rewrite: gleiche Absicht, klare Struktur und Constraints.',
-  },
-  'orb.speech.onboarding.proofCompare': {
-    playful: 'Vorher/nachher — der Score steigt, weil Struktur messbar ist.',
-    focus: 'Vergleich: Struktur macht den Unterschied sichtbar.',
-  },
-  'orb.speech.onboarding.proofDone': {
-    playful: 'Stark — du erkennst schwache Prompts und kannst sie fixen. Das ist der Skill.',
-    focus: 'Du kannst aus einer vagen Bitte ein brauchbares Briefing machen.',
   },
   'orb.speech.onboarding.dailyGoal': {
     playful: 'Kleines Tagesziel setzen — ich erinner dich, ohne Stress.',

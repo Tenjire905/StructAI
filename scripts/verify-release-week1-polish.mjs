@@ -1,34 +1,31 @@
 /**
- * Release polish: day-2 comeback, localized proof, honest paywall, Lab bridge.
+ * Release polish: day-2 comeback, honest paywall, Lab bridge (proof screen removed).
  */
 
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = new URL('..', import.meta.url).pathname;
 const violations = [];
 
 const scoring = readFileSync(join(root, 'lib/promptScoring.ts'), 'utf8');
-const proof = readFileSync(join(root, 'components/features/FirstSessionProofView.tsx'), 'utf8');
 const profil = readFileSync(join(root, 'app/onboarding/profil.tsx'), 'utf8');
 const notifications = readFileSync(join(root, 'lib/dailyGoalNotifications.ts'), 'utf8');
 const paywall = readFileSync(join(root, 'components/features/ProPaywallView.tsx'), 'utf8');
 const home = readFileSync(join(root, 'app/(tabs)/index.tsx'), 'utf8');
 const skills = readFileSync(join(root, 'lib/sessionSkillSummary.ts'), 'utf8');
+const lesson = readFileSync(join(root, 'app/lektion/[id].tsx'), 'utf8');
 const en = readFileSync(join(root, 'theme/copy/en.ts'), 'utf8');
 
+if (existsSync(join(root, 'components/features/FirstSessionProofView.tsx'))) {
+  violations.push('FirstSessionProofView must stay removed');
+}
 if (!scoring.includes('buildDemoWeakPrompt')) {
   violations.push('promptScoring must expose locale-aware buildDemoWeakPrompt');
 }
-if (!proof.includes('buildDemoWeakPrompt') || !proof.includes('getMissingHints')) {
-  violations.push('FirstSessionProofView must use localized weak prompt + live critique hints');
-}
-if (!proof.includes('PromptLabTextInput') || !proof.includes('setFirstSessionProofCompleted')) {
-  violations.push('FirstSessionProofView must be user-owned and persist proof completion');
-}
-if (!proof.includes('firstSessionProof.comeBackTomorrow')) {
-  violations.push('Proof summary must include day-2 comeback line');
+if (!lesson.includes("'/onboarding/profil'") || !lesson.includes('markProfileOnboardingRequired')) {
+  violations.push('First lesson must hand off to profile onboarding');
 }
 if (!profil.includes("/onboarding/tagesziel") || !profil.includes('isDailyGoalSetupCompleted')) {
   violations.push('Profile onboarding must route to daily goal setup when missing');

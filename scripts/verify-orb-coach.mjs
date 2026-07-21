@@ -26,7 +26,6 @@ const featureVisual = readFileSync(
   join(root, 'components/features/onboarding/OnboardingFeatureVisual.tsx'),
   'utf8',
 );
-const proof = readFileSync(join(root, 'components/features/FirstSessionProofView.tsx'), 'utf8');
 const languageDoc = readFileSync(join(root, 'ORB_LANGUAGE.md'), 'utf8');
 const de = readFileSync(join(root, 'theme/copy/de.ts'), 'utf8');
 
@@ -83,9 +82,6 @@ if (!chrome.includes('OnboardingSegmentProgress') || !chrome.includes('skipLabel
 }
 if (!sfx.includes('playSfx') || !sfx.includes('ExpoAudio') || !sfx.includes('isRunningInExpoGo')) {
   violations.push('lib/sfx.ts must probe ExpoAudio and stay Expo-Go safe');
-}
-if (!proof.includes('proofWeak') || !proof.includes('proofCritique') || !proof.includes('showSpeech')) {
-  violations.push('Proof must coach each step with Orb bubbles');
 }
 if (!de.includes('orb.speech.onboarding.modePlayful') || !de.includes('orb.speech.onboarding.meetReady')) {
   violations.push('de copy must include expanded onboarding coach lines');

@@ -89,22 +89,6 @@ export const copyFr: CopyCatalog = {
     playful: 'Faire la lecon du jour',
     focus: 'Continuer la lecon du jour',
   },
-  'home.dailyChallenge.eyebrowProofReuse': {
-    playful: 'Reutiliser le skill d hier',
-    focus: 'Reutiliser le skill prouve',
-  },
-  'home.dailyChallenge.titleProofReuse': {
-    playful: 'Appliquer ton schema de rewrite',
-    focus: 'Appliquer le schema de rewrite',
-  },
-  'home.dailyChallenge.bodyProofReuse': {
-    playful: 'Utilise « {{skill}} » sur l etape du jour dans {{path}} — meme boucle critique → rewrite, vraie tache.',
-    focus: 'Applique « {{skill}} » a la prochaine etape dans {{path}} : critique → rewrite sur un vrai prompt.',
-  },
-  'home.dailyChallenge.ctaProofReuse': {
-    playful: 'Pratiquer le skill de rewrite',
-    focus: 'Pratiquer le skill de rewrite',
-  },
   'home.startHint': {
     playful: 'Commence par les bases du prompt — ta premiere etape vers un prompting structure.',
     focus: 'Commencez par les bases du prompt — votre premiere etape vers un prompting structure.',
@@ -733,86 +717,6 @@ export const copyFr: CopyCatalog = {
     playful: 'Tu détectes l’objectif, le format ou les contraintes manquants avant d’envoyer.',
     focus: 'Tu détectes l’objectif, le format ou les contraintes manquants avant l’envoi.',
   },
-  'firstSessionProof.brand': {
-    playful: 'Ta premiere preuve de skill',
-    focus: 'Premiere preuve de skill',
-  },
-  'firstSessionProof.headline': {
-    playful: 'Edite un brouillon vague, reecris-le toi-meme, vois ton score monter.',
-    focus: 'Ton brouillon : critique, rewrite perso, compare tes scores.',
-  },
-  'firstSessionProof.sub': {
-    playful: 'Ton avant/apres — coach local seulement, pas de cle API. Moins d une minute.',
-    focus: 'Ton brouillon et rewrite. Coach local seulement — pas de BYOK.',
-  },
-  'firstSessionProof.weakLabel': {
-    playful: 'Ton brouillon vague',
-    focus: 'Ton brouillon vague',
-  },
-  'firstSessionProof.improvedLabel': {
-    playful: 'Ton rewrite',
-    focus: 'Ton rewrite',
-  },
-  'firstSessionProof.weakPlaceholder': {
-    playful: 'Ecris ou ajuste une demande vague…',
-    focus: 'Edite ce prompt vague…',
-  },
-  'firstSessionProof.rewritePlaceholder': {
-    playful: 'Reecris avec role, contexte, format et limites…',
-    focus: 'Reecris avec role, contexte, format et contraintes…',
-  },
-  'firstSessionProof.applySuggestion': {
-    playful: 'Appliquer le rewrite coach',
-    focus: 'Appliquer la suggestion coach',
-  },
-  'firstSessionProof.honestNoGain': {
-    playful: 'Le score n a pas encore monte — ajoute role, contexte ou contraintes dures, puis reessaie au Lab.',
-    focus: 'Pas encore de gain. Ajoute role, contexte ou contraintes — puis reessaie dans Prompt Lab.',
-  },
-  'firstSessionProof.scoreLabel': {
-    playful: 'Score coach : {{score}}/100',
-    focus: 'Score : {{score}}/100',
-  },
-  'firstSessionProof.critiqueBody': {
-    playful: 'Trop vague : pas de role, pas d audience, pas de format, pas de longueur. Le modele doit deviner.',
-    focus: 'Role, audience, format et longueur manquent — le modele doit deviner.',
-  },
-  'firstSessionProof.compareTitle': {
-    playful: '{{before}} → {{after}} ({{delta}})',
-    focus: '{{before}} → {{after}} ({{delta}})',
-  },
-  'firstSessionProof.skillName': {
-    playful: 'Transformer une demande vague en brief utilisable',
-    focus: 'Transformer une demande vague en brief utilisable',
-  },
-  'firstSessionProof.skillProof': {
-    playful: 'Ce changement de score vient de ton rewrite — structure, role et contraintes sont maintenant mesurables.',
-    focus: 'Tu peux expliquer pourquoi role, contexte et contraintes ont leve ton propre score.',
-  },
-  'firstSessionProof.comeBackTomorrow': {
-    playful: 'Demain : réutilise ce schéma de rewrite sur une vraie tâche — c’est ton win du jour 2.',
-    focus: 'Demain : réutilise ce schéma de rewrite sur une vraie tâche — c’est ton win du jour 2.',
-  },
-  'firstSessionProof.ctaCritique': {
-    playful: 'Critiquer mon brouillon',
-    focus: 'Critiquer mon brouillon',
-  },
-  'firstSessionProof.ctaRewrite': {
-    playful: 'Je le reecris',
-    focus: 'Le reecrire moi-meme',
-  },
-  'firstSessionProof.ctaCompare': {
-    playful: 'Comparer mes scores',
-    focus: 'Comparer mes scores',
-  },
-  'firstSessionProof.ctaSummary': {
-    playful: 'Nommer ce que j ai appris',
-    focus: 'Resume du skill',
-  },
-  'firstSessionProof.ctaDone': {
-    playful: 'Continuer — configurer mon profil',
-    focus: 'Continuer vers le profil',
-  },
   'promptLab.learnedEyebrow': {
     playful: 'Tu as pratique',
     focus: 'Skill pratique',
@@ -909,30 +813,6 @@ export const copyFr: CopyCatalog = {
   'orb.speech.onboarding.loop': {
     playful: 'Le loop : apprendre → pratiquer → progresser. Prêt pour le premier skill ?',
     focus: 'Trois temps : apprendre, pratiquer, améliorer. Lance quand tu veux.',
-  },
-  'orb.speech.onboarding.proof': {
-    playful: 'Regarde ce prompt vague s’améliorer — c’est le skill.',
-    focus: 'Critique → rewrite → comparer. C’est la preuve.',
-  },
-  'orb.speech.onboarding.proofWeak': {
-    playful: 'Souvent ça commence ainsi : sympa, mais trop vague. Tu vois les trous ?',
-    focus: 'Départ typique : l’intention est là, la structure manque. On corrige ça.',
-  },
-  'orb.speech.onboarding.proofCritique': {
-    playful: 'Check rapide : but, contraintes, format — qu’est-ce qui manque ?',
-    focus: 'Passe critique : nomme les pièces manquantes, ne devine pas.',
-  },
-  'orb.speech.onboarding.proofRewrite': {
-    playful: 'Maintenant le rewrite — même idée, vraie structure. Boom.',
-    focus: 'Rewrite : même intention, structure et contraintes claires.',
-  },
-  'orb.speech.onboarding.proofCompare': {
-    playful: 'Avant/après — le score monte parce que la structure se mesure.',
-    focus: 'Comparaison : la structure rend la différence visible.',
-  },
-  'orb.speech.onboarding.proofDone': {
-    playful: 'Top — tu repères un prompt faible et tu le corriges. C’est le skill.',
-    focus: 'Tu peux transformer une demande vague en brief utile.',
   },
   'orb.speech.onboarding.dailyGoal': {
     playful: 'Fixe un petit objectif du jour — je te rappelle, sans stress.',

@@ -1,6 +1,6 @@
 # StructAI — Manuelle Test-Checkliste (Expo)
 
-**Stand:** feature `cursor/week1-session-proof-fd20` @ `f512c53` (user-owned proof + Lab one-pattern + Daily Challenge proofReuse) · base develop `9cee37d98484f1e9b42f7ae4140af90175610257`  
+**Stand:** feature `cursor/week1-session-proof-fd20` (proof screen removed; first lesson → profil) · base develop `9cee37d98484f1e9b42f7ae4140af90175610257`  
 **Gerät:** Expo Go **SDK 57** (nicht Play Store SDK 56); Evening-Reminders nur im **dev build**  
 **Vorbereitung:** Guest-Modus (nicht eingeloggt), ggf. Progress löschen (Profil/Dev oder frische Install)
 
@@ -92,14 +92,13 @@ Erwartung: paths pass, tsc grün, Week-1 verify ok.
 
 | # | Schritt | Erwartung | ✓ |
 |---|---|---|---|
-| J1 | pb-1 bestehen (erster Abschluss) | Completion zeigt **Skill-Card** („You can do this now“) + Come-back-Zeile | |
-| J2 | Weiter nach erstem Abschluss | **`/onboarding/proof`**: **editierbarer** Vague-Draft → Kritik auf *deinen* Text → eigener Rewrite (optional Coach-Suggestion) → Compare *deiner* Scores → Summary; Locale = App-Sprache | |
-| J3 | Proof fertig | Persistiert Proof-Completed; → Profil (`/onboarding/profil`) | |
-| J4 | Profil speichern | → **Tagesziel** (`/onboarding/tagesziel`), Reminder-Toggle default ON (dev build) | |
-| J5 | Tagesziel speichern | → Home; Daily Challenge mit **proofReuse**-Framing (Skill-Name + Rewrite-Muster) + **Prompt Lab** CTA | |
-| J6 | Prompt Lab Demo (weak) | Weak-Prompt in App-Locale; Score-Ergebnis = **ein** Next-Pattern + kurzes Example (kein Secondary-Tip, keine Note-Liste) | |
-| J7 | Paywall öffnen | CTA = **Pro preview** (kein „Unlock · €…“); Footnote: keine Store-Zahlung | |
-| J8 | Evening reminder (dev build) | Body nennt zuletzt geübten Skill (nicht nur Orbs) | |
+| J1 | pb-1 bestehen (erster Abschluss) | Completion zeigt **Skill-Card** („You can do this now“) | |
+| J2 | Weiter nach erstem Abschluss | **direkt** `/onboarding/profil` (kein Proof-Screen) | |
+| J3 | Profil speichern | → **Tagesziel** (`/onboarding/tagesziel`), Reminder-Toggle default ON (dev build) | |
+| J4 | Tagesziel speichern | → Home; Daily Challenge + **Prompt Lab** CTA sichtbar | |
+| J5 | Prompt Lab Demo (weak) | Weak-Prompt in App-Locale; Score-Ergebnis = **ein** Next-Pattern + kurzes Example | |
+| J6 | Paywall öffnen | CTA = **Pro preview** (kein „Unlock · €…“); Footnote: keine Store-Zahlung | |
+| J7 | Evening reminder (dev build) | Body nennt zuletzt geübten Skill (nicht nur Orbs) | |
 
 ---
 

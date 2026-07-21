@@ -89,22 +89,6 @@ export const copyEn: CopyCatalog = {
     playful: 'Do today’s lesson',
     focus: 'Continue today’s lesson',
   },
-  'home.dailyChallenge.eyebrowProofReuse': {
-    playful: 'Reuse yesterday’s skill',
-    focus: 'Reuse your proof skill',
-  },
-  'home.dailyChallenge.titleProofReuse': {
-    playful: 'Apply your rewrite pattern',
-    focus: 'Apply the rewrite pattern',
-  },
-  'home.dailyChallenge.bodyProofReuse': {
-    playful: 'Use “{{skill}}” on today’s step in {{path}} — same critique → rewrite loop, real task.',
-    focus: 'Apply “{{skill}}” to the next step in {{path}}: critique → rewrite on a real prompt.',
-  },
-  'home.dailyChallenge.ctaProofReuse': {
-    playful: 'Practice the rewrite skill',
-    focus: 'Practice the rewrite skill',
-  },
   'home.startHint': {
     playful: 'Start with Prompt Basics — your first step toward structured prompting.',
     focus: 'Start with Prompt Basics — your first step toward structured prompting.',
@@ -732,86 +716,6 @@ export const copyEn: CopyCatalog = {
     playful: 'You can catch missing goal, format, or constraints before you hit send.',
     focus: 'You can catch missing goal, format, or constraints before sending.',
   },
-  'firstSessionProof.brand': {
-    playful: 'Your first skill proof',
-    focus: 'First skill proof',
-  },
-  'firstSessionProof.headline': {
-    playful: 'Edit a vague draft, rewrite it yourself, then watch your score climb.',
-    focus: 'Own the draft: critique your text, rewrite it, compare your scores.',
-  },
-  'firstSessionProof.sub': {
-    playful: 'Your before and after — local coach only, no API key. Under a minute.',
-    focus: 'Your draft and rewrite. Local coach only — no BYOK required.',
-  },
-  'firstSessionProof.weakLabel': {
-    playful: 'Your vague draft',
-    focus: 'Your vague draft',
-  },
-  'firstSessionProof.improvedLabel': {
-    playful: 'Your rewrite',
-    focus: 'Your rewrite',
-  },
-  'firstSessionProof.weakPlaceholder': {
-    playful: 'Type or tweak a vague ask…',
-    focus: 'Edit this vague prompt…',
-  },
-  'firstSessionProof.rewritePlaceholder': {
-    playful: 'Rewrite with role, context, format, and limits…',
-    focus: 'Rewrite with role, context, format, and constraints…',
-  },
-  'firstSessionProof.applySuggestion': {
-    playful: 'Apply coach rewrite',
-    focus: 'Apply coach suggestion',
-  },
-  'firstSessionProof.honestNoGain': {
-    playful: 'Score did not rise yet — add role, context, or hard constraints and try again later in Lab.',
-    focus: 'No score gain yet. Add role, context, or constraints — then retry in Prompt Lab.',
-  },
-  'firstSessionProof.scoreLabel': {
-    playful: 'Coach score: {{score}}/100',
-    focus: 'Score: {{score}}/100',
-  },
-  'firstSessionProof.critiqueBody': {
-    playful: 'Too vague: no role, no audience, no format, no length. The model has to guess.',
-    focus: 'Missing role, audience, format, and length — the model must guess.',
-  },
-  'firstSessionProof.compareTitle': {
-    playful: '{{before}} → {{after}} ({{delta}})',
-    focus: '{{before}} → {{after}} ({{delta}})',
-  },
-  'firstSessionProof.skillName': {
-    playful: 'Turn a vague ask into a usable brief',
-    focus: 'Turn a vague ask into a usable brief',
-  },
-  'firstSessionProof.skillProof': {
-    playful: 'That score change came from your rewrite — structure, role, and constraints are now measurable.',
-    focus: 'You can explain why role, context, and constraints raised your own prompt score.',
-  },
-  'firstSessionProof.comeBackTomorrow': {
-    playful: 'Tomorrow: reuse this rewrite pattern on one real task — that is your day-2 win.',
-    focus: 'Tomorrow: apply this rewrite pattern on one real task.',
-  },
-  'firstSessionProof.ctaCritique': {
-    playful: 'Critique my draft',
-    focus: 'Critique my draft',
-  },
-  'firstSessionProof.ctaRewrite': {
-    playful: 'I’ll rewrite it',
-    focus: 'Rewrite it myself',
-  },
-  'firstSessionProof.ctaCompare': {
-    playful: 'Compare my scores',
-    focus: 'Compare my scores',
-  },
-  'firstSessionProof.ctaSummary': {
-    playful: 'Name what I learned',
-    focus: 'Show skill summary',
-  },
-  'firstSessionProof.ctaDone': {
-    playful: 'Continue — set up my profile',
-    focus: 'Continue to profile',
-  },
   'promptLab.learnedEyebrow': {
     playful: 'You practiced',
     focus: 'Skill practiced',
@@ -908,30 +812,6 @@ export const copyEn: CopyCatalog = {
   'orb.speech.onboarding.loop': {
     playful: 'Here’s the loop: learn → practice → get better. Ready for skill one?',
     focus: 'Three beats: learn, practice, improve. Start when ready.',
-  },
-  'orb.speech.onboarding.proof': {
-    playful: 'Watch this vague prompt level up — that’s the skill.',
-    focus: 'Critique → rewrite → compare. That’s the proof.',
-  },
-  'orb.speech.onboarding.proofWeak': {
-    playful: 'This is how it often starts: friendly, but too vague. Spot the gaps?',
-    focus: 'Typical start: intent exists, structure doesn’t. That’s what we fix.',
-  },
-  'orb.speech.onboarding.proofCritique': {
-    playful: 'Quick check: goal, constraints, format — what’s missing?',
-    focus: 'Critique pass: name the missing pieces, don’t guess.',
-  },
-  'orb.speech.onboarding.proofRewrite': {
-    playful: 'Now the rewrite — same idea, real structure. Boom.',
-    focus: 'Rewrite: same intent, clear structure and constraints.',
-  },
-  'orb.speech.onboarding.proofCompare': {
-    playful: 'Before/after — the score rises because structure is measurable.',
-    focus: 'Compare: structure makes the difference visible.',
-  },
-  'orb.speech.onboarding.proofDone': {
-    playful: 'Nice — you can spot a weak prompt and fix it now. That’s the skill.',
-    focus: 'You can turn a vague ask into a usable brief.',
   },
   'orb.speech.onboarding.dailyGoal': {
     playful: 'Set a tiny daily goal — I’ll nudge you, no stress.',

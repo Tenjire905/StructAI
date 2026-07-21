@@ -19,11 +19,7 @@ import {
   SkillRankStrip,
 } from '@/components/features';
 import { Avatar, Button, Card } from '@/components/ui';
-import {
-  hydrateAppStorage,
-  isDailyGoalSetupCompleted,
-  isFirstSessionProofCompleted,
-} from '@/lib/appStorage';
+import { hydrateAppStorage, isDailyGoalSetupCompleted } from '@/lib/appStorage';
 import { resolveDailyChallenge } from '@/lib/dailyChallenge';
 import { buildLessonHref } from '@/lib/lessonNavigation';
 import { resolveSkillRankProgress } from '@/lib/skillRank';
@@ -70,11 +66,7 @@ export default function HomeScreen() {
     () => useProgressStore.getState().getActivePaths(),
     [pathProgress],
   );
-  const proofCompleted = isFirstSessionProofCompleted();
-  const dailyChallenge = useMemo(
-    () => resolveDailyChallenge(pathProgress, { proofCompleted }),
-    [pathProgress, proofCompleted],
-  );
+  const dailyChallenge = useMemo(() => resolveDailyChallenge(pathProgress), [pathProgress]);
   const skillRank = useMemo(
     () =>
       resolveSkillRankProgress({
