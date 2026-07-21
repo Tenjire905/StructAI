@@ -57,6 +57,9 @@ if (!chrome.includes('StructAI')) {
 if (!featureVisual.includes('StatusBarMock') || !featureVisual.includes('9:41')) {
   violations.push('Feature visuals must use iPhone-style phone mock frames');
 }
+if (!featureVisual.includes('DynamicIsland') || !featureVisual.includes('HardwareButton')) {
+  violations.push('Phone mocks must include Dynamic Island + hardware buttons');
+}
 if (!meet.includes('showSpeech') || !meet.includes('orb.speech.onboarding.welcome')) {
   violations.push('Meet must be Orb-led with welcome speech bubble');
 }

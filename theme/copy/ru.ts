@@ -1651,6 +1651,10 @@ export const copyRu: CopyCatalog = {
     playful: 'Оценка ответов',
     focus: 'Оценка ответов',
   },
+  'onboarding.introVisual.pathCard3': {
+    playful: 'Практика Prompt Lab',
+    focus: 'Практика Prompt Lab',
+  },
   'onboarding.introVisual.pathMeta': {
     playful: 'Глава 3 из 6',
     focus: 'Глава 3 из 6',

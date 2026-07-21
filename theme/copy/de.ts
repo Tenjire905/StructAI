@@ -1652,6 +1652,10 @@ export const copyDe: CopyCatalog = {
     playful: 'Antworten beurteilen',
     focus: 'Antworten beurteilen',
   },
+  'onboarding.introVisual.pathCard3': {
+    playful: 'Prompt Lab Praxis',
+    focus: 'Prompt Lab Praxis',
+  },
   'onboarding.introVisual.pathMeta': {
     playful: 'Kapitel 3 von 6',
     focus: 'Kapitel 3 von 6',
