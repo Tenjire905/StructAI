@@ -119,7 +119,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 
 Aligned with Perplexity Week-1 retention (Jul 2026):
 
-1. ~~First-session proof loop~~ **done** (P1.2b)  
+1. ~~First-session proof loop~~ **removed** (was overwhelming; first lesson → profil)  
 2. ~~Session closure names a skill gain~~ **done** (P1.2; curated pb-1…pb-12)  
 3. ~~Prompt Lab “you learned X” + home Lab bridge~~ **done** (P1.2c)  
 4. ~~Day-2 comeback cue~~ **done** (skill-named evening reminder + post-profile tagesziel + session “come back tomorrow”)  
