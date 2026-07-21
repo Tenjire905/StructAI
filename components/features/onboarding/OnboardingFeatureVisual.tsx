@@ -13,48 +13,67 @@ type OnboardingFeatureVisualProps = {
 };
 
 /**
- * Liftoff-grade device reveal: realistic iPhone chassis + glow + in-app UI.
- * Token colors only — no remote screenshot assets.
+ * Liftoff product reveal: iPhone chassis cropped at the bottom (not a full
+ * floating handset). Glow stays behind the device; nothing overlaps the
+ * caption zone below.
  */
 export function OnboardingFeatureVisual({ kind }: OnboardingFeatureVisualProps) {
   const { tokens, mode } = useThemeMode();
   const isPlayful = mode === 'playful';
 
   return (
-    <View style={{ alignItems: 'center', width: '100%' }}>
+    <View
+      style={{
+        alignItems: 'center',
+        flex: 1,
+        overflow: 'hidden',
+        width: '100%',
+      }}>
+      {/* Soft brand glow — clipped with the phone, never under the caption. */}
+      <LinearGradient
+        colors={[
+          tokens.colors.accent.primary,
+          tokens.colors.accent.primaryDim,
+          tokens.colors.background.base,
+        ]}
+        end={{ x: 0.5, y: 1 }}
+        start={{ x: 0.5, y: 0 }}
+        style={{
+          borderRadius: tokens.radius.pill,
+          bottom: '18%',
+          left: '4%',
+          opacity: isPlayful ? 0.28 : 0.16,
+          position: 'absolute',
+          right: '4%',
+          top: '4%',
+        }}
+      />
+
+      {/*
+        Full phone is taller than this viewport. Top-aligned + overflow hidden
+        = Liftoff crop (bottom of the handset is intentionally cut off).
+      */}
       <View
         style={{
           alignItems: 'center',
-          aspectRatio: 9 / 19.5,
-          justifyContent: 'center',
-          maxHeight: tokens.spacing.space8 * 6.75,
-          maxWidth: tokens.spacing.space8 * 3.35,
-          width: '72%',
+          // Show ~top 68% of a full iPhone — bottom hardware disappears.
+          aspectRatio: 9 / 13.2,
+          maxWidth: tokens.spacing.space8 * 3.55,
+          overflow: 'hidden',
+          width: '82%',
         }}>
-        {/* Ambient brand glow behind the device (Liftoff radial pop). */}
-        <LinearGradient
-          colors={[
-            tokens.colors.accent.primary,
-            tokens.colors.accent.primaryDim,
-            tokens.colors.background.base,
-          ]}
-          end={{ x: 0.5, y: 1 }}
-          start={{ x: 0.5, y: 0 }}
+        <View
           style={{
-            borderRadius: tokens.radius.pill,
-            bottom: '6%',
-            left: '-18%',
-            opacity: isPlayful ? 0.32 : 0.18,
-            position: 'absolute',
-            right: '-18%',
-            top: '8%',
-          }}
-        />
-        <PhoneMockFrame>
-          {kind === 'score' ? <ScoreScreenMock /> : null}
-          {kind === 'path' ? <PathScreenMock /> : null}
-          {kind === 'coach' ? <CoachScreenMock /> : null}
-        </PhoneMockFrame>
+            aspectRatio: 9 / 19.5,
+            top: 0,
+            width: '100%',
+          }}>
+          <PhoneMockFrame>
+            {kind === 'score' ? <ScoreScreenMock /> : null}
+            {kind === 'path' ? <PathScreenMock /> : null}
+            {kind === 'coach' ? <CoachScreenMock /> : null}
+          </PhoneMockFrame>
+        </View>
       </View>
     </View>
   );
@@ -76,7 +95,6 @@ function PhoneMockFrame({ children }: { children: ReactNode }) {
         ...getShadow(2),
         ...(isPlayful ? getShadow('glow') : {}),
       }}>
-      {/* Hardware buttons */}
       <HardwareButton side="left" style={{ top: tokens.spacing.space7 }} tall={tokens.spacing.space3} />
       <HardwareButton side="left" style={{ top: tokens.spacing.space8 }} tall={tokens.spacing.space5} />
       <HardwareButton
@@ -90,7 +108,6 @@ function PhoneMockFrame({ children }: { children: ReactNode }) {
         tall={tokens.spacing.space7}
       />
 
-      {/* Metallic outer rim */}
       <LinearGradient
         colors={[
           tokens.colors.border.strong,
@@ -106,7 +123,6 @@ function PhoneMockFrame({ children }: { children: ReactNode }) {
           flex: 1,
           padding: lip,
         }}>
-        {/* Chassis body */}
         <View
           style={{
             backgroundColor: tokens.colors.background.elevated,
@@ -115,7 +131,6 @@ function PhoneMockFrame({ children }: { children: ReactNode }) {
             overflow: 'hidden',
             padding: tokens.spacing.space1,
           }}>
-          {/* Screen well */}
           <View
             style={{
               backgroundColor: tokens.colors.background.base,
@@ -128,22 +143,6 @@ function PhoneMockFrame({ children }: { children: ReactNode }) {
             <DynamicIsland />
             <StatusBarMock />
             <View style={{ flex: 1, paddingBottom: tokens.spacing.space1 }}>{children}</View>
-            <View
-              style={{
-                alignItems: 'center',
-                paddingBottom: tokens.spacing.space2,
-                paddingTop: tokens.spacing.space1,
-              }}>
-              <View
-                style={{
-                  backgroundColor: tokens.colors.text.primary,
-                  borderRadius: tokens.radius.pill,
-                  height: tokens.spacing.space1,
-                  opacity: 0.35,
-                  width: tokens.spacing.space7,
-                }}
-              />
-            </View>
           </View>
         </View>
       </LinearGradient>
@@ -252,7 +251,7 @@ function StatusBarMock() {
         }}>
         9:41
       </Text>
-      <View style={{ flexDirection: 'row', gap: tokens.spacing.space1, alignItems: 'center' }}>
+      <View style={{ alignItems: 'center', flexDirection: 'row', gap: tokens.spacing.space1 }}>
         <View
           style={{
             backgroundColor: tokens.colors.text.primary,
@@ -320,108 +319,105 @@ function ScoreScreenMock() {
       style={{
         flex: 1,
         gap: tokens.spacing.space2,
-        justifyContent: 'space-between',
         paddingHorizontal: tokens.spacing.space3,
         paddingTop: tokens.spacing.space2,
       }}>
-      <View style={{ gap: tokens.spacing.space2 }}>
-        <View
+      <View
+        style={{
+          alignItems: 'center',
+          alignSelf: 'center',
+          backgroundColor: tokens.colors.surface.card,
+          borderRadius: tokens.radius.pill,
+          paddingHorizontal: tokens.spacing.space3,
+          paddingVertical: tokens.spacing.space1,
+        }}>
+        <Text
           style={{
-            alignItems: 'center',
-            alignSelf: 'center',
-            backgroundColor: tokens.colors.surface.card,
-            borderRadius: tokens.radius.pill,
-            paddingHorizontal: tokens.spacing.space3,
-            paddingVertical: tokens.spacing.space1,
+            color: tokens.colors.text.secondary,
+            fontFamily: tokens.typography.fontFamily.bodyMedium,
+            fontSize: tokens.typography.fontSize.bodySm,
           }}>
+          {t('onboarding.introVisual.scoreNav')}
+        </Text>
+      </View>
+
+      <View
+        style={{
+          backgroundColor: tokens.colors.surface.card,
+          borderRadius: cardRadius,
+          gap: tokens.spacing.space2,
+          padding: pad,
+          ...getShadow(1),
+        }}>
+        <Text
+          style={{
+            color: tokens.colors.text.secondary,
+            fontFamily: tokens.typography.fontFamily.body,
+            fontSize: tokens.typography.fontSize.bodySm,
+          }}>
+          {t('onboarding.introVisual.scoreLabel')}
+        </Text>
+        <View style={{ alignItems: 'baseline', flexDirection: 'row', gap: tokens.spacing.space1 }}>
           <Text
             style={{
-              color: tokens.colors.text.secondary,
-              fontFamily: tokens.typography.fontFamily.bodyMedium,
-              fontSize: tokens.typography.fontSize.bodySm,
+              color: tokens.colors.accent.structure,
+              fontFamily: tokens.typography.fontFamily.display,
+              fontSize: tokens.typography.fontSize.displayLg,
+              lineHeight: tokens.typography.fontSize.displayLg * 1.05,
             }}>
-            {t('onboarding.introVisual.scoreNav')}
+            87
+          </Text>
+          <Text
+            style={{
+              color: tokens.colors.text.tertiary,
+              fontFamily: tokens.typography.fontFamily.mono,
+              fontSize: tokens.typography.fontSize.bodyMd,
+            }}>
+            /100
           </Text>
         </View>
-
-        <View
+        <Text
           style={{
-            backgroundColor: tokens.colors.surface.card,
-            borderRadius: cardRadius,
-            gap: tokens.spacing.space2,
-            padding: pad,
-            ...getShadow(1),
+            color: tokens.colors.text.primary,
+            fontFamily:
+              mode === 'playful'
+                ? tokens.typography.fontFamily.bodyMedium
+                : tokens.typography.fontFamily.body,
+            fontSize: tokens.typography.fontSize.bodySm,
+            lineHeight: tokens.typography.fontSize.bodySm * 1.35,
           }}>
-          <Text
-            style={{
-              color: tokens.colors.text.secondary,
-              fontFamily: tokens.typography.fontFamily.body,
-              fontSize: tokens.typography.fontSize.bodySm,
-            }}>
-            {t('onboarding.introVisual.scoreLabel')}
-          </Text>
-          <View style={{ alignItems: 'baseline', flexDirection: 'row', gap: tokens.spacing.space1 }}>
-            <Text
-              style={{
-                color: tokens.colors.accent.structure,
-                fontFamily: tokens.typography.fontFamily.display,
-                fontSize: tokens.typography.fontSize.displayLg,
-                lineHeight: tokens.typography.fontSize.displayLg * 1.05,
-              }}>
-              87
-            </Text>
-            <Text
-              style={{
-                color: tokens.colors.text.tertiary,
-                fontFamily: tokens.typography.fontFamily.mono,
-                fontSize: tokens.typography.fontSize.bodyMd,
-              }}>
-              /100
-            </Text>
-          </View>
-          <Text
-            style={{
-              color: tokens.colors.text.primary,
-              fontFamily:
-                mode === 'playful'
-                  ? tokens.typography.fontFamily.bodyMedium
-                  : tokens.typography.fontFamily.body,
-              fontSize: tokens.typography.fontSize.bodySm,
-              lineHeight: tokens.typography.fontSize.bodySm * 1.35,
-            }}>
-            {t('onboarding.introVisual.scoreFeedback')}
-          </Text>
+          {t('onboarding.introVisual.scoreFeedback')}
+        </Text>
 
-          {(
-            [
-              ['onboarding.introVisual.scoreChip1', 0.92],
-              ['onboarding.introVisual.scoreChip2', 0.84],
-              ['onboarding.introVisual.scoreChip3', 0.78],
-            ] as const
-          ).map(([key, value]) => (
-            <View key={key} style={{ gap: tokens.spacing.space1 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text
-                  style={{
-                    color: tokens.colors.text.secondary,
-                    fontFamily: tokens.typography.fontFamily.body,
-                    fontSize: tokens.typography.fontSize.bodySm,
-                  }}>
-                  {t(key)}
-                </Text>
-                <Text
-                  style={{
-                    color: tokens.colors.accent.structure,
-                    fontFamily: tokens.typography.fontFamily.mono,
-                    fontSize: tokens.typography.fontSize.bodySm,
-                  }}>
-                  {Math.round(value * 100)}
-                </Text>
-              </View>
-              <MiniBar color="structure" progress={value} />
+        {(
+          [
+            ['onboarding.introVisual.scoreChip1', 0.92],
+            ['onboarding.introVisual.scoreChip2', 0.84],
+            ['onboarding.introVisual.scoreChip3', 0.78],
+          ] as const
+        ).map(([key, value]) => (
+          <View key={key} style={{ gap: tokens.spacing.space1 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text
+                style={{
+                  color: tokens.colors.text.secondary,
+                  fontFamily: tokens.typography.fontFamily.body,
+                  fontSize: tokens.typography.fontSize.bodySm,
+                }}>
+                {t(key)}
+              </Text>
+              <Text
+                style={{
+                  color: tokens.colors.accent.structure,
+                  fontFamily: tokens.typography.fontFamily.mono,
+                  fontSize: tokens.typography.fontSize.bodySm,
+                }}>
+                {Math.round(value * 100)}
+              </Text>
             </View>
-          ))}
-        </View>
+            <MiniBar color="structure" progress={value} />
+          </View>
+        ))}
       </View>
 
       <LinearGradient
@@ -431,6 +427,7 @@ function ScoreScreenMock() {
         style={{
           alignItems: 'center',
           borderRadius: tokens.radius.pill,
+          marginTop: tokens.spacing.space1,
           paddingVertical: tokens.spacing.space3,
         }}>
         <Text
@@ -463,93 +460,91 @@ function PathScreenMock() {
     <View
       style={{
         flex: 1,
-        justifyContent: 'space-between',
+        gap: tokens.spacing.space2,
         paddingHorizontal: tokens.spacing.space3,
         paddingTop: tokens.spacing.space2,
       }}>
-      <View style={{ gap: tokens.spacing.space2 }}>
+      <View
+        style={{
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Text
+          style={{
+            color: tokens.colors.text.primary,
+            fontFamily: tokens.typography.fontFamily.display,
+            fontSize: tokens.typography.fontSize.headingMd,
+          }}>
+          {t('onboarding.introVisual.pathHome')}
+        </Text>
         <View
           style={{
             alignItems: 'center',
+            backgroundColor: tokens.colors.surface.card,
+            borderRadius: tokens.radius.pill,
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            gap: tokens.spacing.space1,
+            paddingHorizontal: tokens.spacing.space2,
+            paddingVertical: tokens.spacing.space1,
+          }}>
+          <View
+            style={{
+              backgroundColor: tokens.colors.accent.primary,
+              borderRadius: tokens.radius.pill,
+              height: tokens.spacing.space3,
+              width: tokens.spacing.space3,
+            }}
+          />
+          <Text
+            style={{
+              color: tokens.colors.text.primary,
+              fontFamily: tokens.typography.fontFamily.mono,
+              fontSize: tokens.typography.fontSize.bodySm,
+            }}>
+            24
+          </Text>
+        </View>
+      </View>
+
+      <Text
+        style={{
+          color: tokens.colors.text.secondary,
+          fontFamily: tokens.typography.fontFamily.body,
+          fontSize: tokens.typography.fontSize.bodySm,
+        }}>
+        {t('onboarding.introVisual.pathSection')}
+      </Text>
+
+      {paths.map((path) => (
+        <View
+          key={path.titleKey}
+          style={{
+            backgroundColor: tokens.colors.surface.card,
+            borderRadius: cardRadius,
+            gap: tokens.spacing.space2,
+            padding: pad,
+            ...getShadow(1),
           }}>
           <Text
             style={{
               color: tokens.colors.text.primary,
-              fontFamily: tokens.typography.fontFamily.display,
-              fontSize: tokens.typography.fontSize.headingMd,
+              fontFamily: tokens.typography.fontFamily.heading,
+              fontSize: tokens.typography.fontSize.bodyMd,
             }}>
-            {t('onboarding.introVisual.pathHome')}
+            {t(path.titleKey)}
           </Text>
-          <View
+          <Text
             style={{
-              alignItems: 'center',
-              backgroundColor: tokens.colors.surface.card,
-              borderRadius: tokens.radius.pill,
-              flexDirection: 'row',
-              gap: tokens.spacing.space1,
-              paddingHorizontal: tokens.spacing.space2,
-              paddingVertical: tokens.spacing.space1,
+              color: tokens.colors.text.tertiary,
+              fontFamily: tokens.typography.fontFamily.body,
+              fontSize: tokens.typography.fontSize.bodySm,
             }}>
-            <View
-              style={{
-                backgroundColor: tokens.colors.accent.primary,
-                borderRadius: tokens.radius.pill,
-                height: tokens.spacing.space3,
-                width: tokens.spacing.space3,
-              }}
-            />
-            <Text
-              style={{
-                color: tokens.colors.text.primary,
-                fontFamily: tokens.typography.fontFamily.mono,
-                fontSize: tokens.typography.fontSize.bodySm,
-              }}>
-              24
-            </Text>
-          </View>
+            {t('onboarding.introVisual.pathMeta')}
+          </Text>
+          <MiniBar color="structure" progress={path.progress} />
         </View>
-
-        <Text
-          style={{
-            color: tokens.colors.text.secondary,
-            fontFamily: tokens.typography.fontFamily.body,
-            fontSize: tokens.typography.fontSize.bodySm,
-          }}>
-          {t('onboarding.introVisual.pathSection')}
-        </Text>
-
-        {paths.map((path) => (
-          <View
-            key={path.titleKey}
-            style={{
-              backgroundColor: tokens.colors.surface.card,
-              borderRadius: cardRadius,
-              gap: tokens.spacing.space2,
-              padding: pad,
-              ...getShadow(1),
-            }}>
-            <Text
-              style={{
-                color: tokens.colors.text.primary,
-                fontFamily: tokens.typography.fontFamily.heading,
-                fontSize: tokens.typography.fontSize.bodyMd,
-              }}>
-              {t(path.titleKey)}
-            </Text>
-            <Text
-              style={{
-                color: tokens.colors.text.tertiary,
-                fontFamily: tokens.typography.fontFamily.body,
-                fontSize: tokens.typography.fontSize.bodySm,
-              }}>
-              {t('onboarding.introVisual.pathMeta')}
-            </Text>
-            <MiniBar color="structure" progress={path.progress} />
-          </View>
-        ))}
-      </View>
+      ))}
 
       <View
         style={{
@@ -558,7 +553,7 @@ function PathScreenMock() {
           borderRadius: tokens.radius.lg,
           flexDirection: 'row',
           justifyContent: 'space-around',
-          marginTop: tokens.spacing.space2,
+          marginTop: 'auto',
           paddingVertical: tokens.spacing.space2,
         }}>
         {(
@@ -594,99 +589,80 @@ function CoachScreenMock() {
       style={{
         flex: 1,
         gap: tokens.spacing.space3,
-        justifyContent: 'space-between',
         paddingHorizontal: tokens.spacing.space3,
         paddingTop: tokens.spacing.space2,
       }}>
-      <View style={{ gap: tokens.spacing.space3 }}>
-        <View style={{ gap: tokens.spacing.space2 }}>
-          <Text
-            style={{
-              color: tokens.colors.text.tertiary,
-              fontFamily: tokens.typography.fontFamily.mono,
-              fontSize: tokens.typography.fontSize.bodySm,
-            }}>
-            {t('onboarding.introVisual.coachStep')}
-          </Text>
-          <MiniBar progress={0.45} />
-        </View>
-
-        <View
+      <View style={{ gap: tokens.spacing.space2 }}>
+        <Text
           style={{
-            alignItems: 'flex-start',
-            flexDirection: 'row',
-            gap: tokens.spacing.space2,
+            color: tokens.colors.text.tertiary,
+            fontFamily: tokens.typography.fontFamily.mono,
+            fontSize: tokens.typography.fontSize.bodySm,
           }}>
-          <OrbCompanion interaction="watch" size={tokens.spacing.space7} state="attentive" />
-          <View
-            style={{
-              backgroundColor: tokens.colors.surface.card,
-              borderColor: isPlayful
-                ? tokens.colors.border.strong
-                : tokens.colors.border.subtle,
-              borderRadius: tokens.radius.lg,
-              borderWidth: 1,
-              flex: 1,
-              paddingHorizontal: tokens.spacing.space3,
-              paddingVertical: tokens.spacing.space2,
-              ...getShadow(1),
-            }}>
-            <Text
-              style={{
-                color: tokens.colors.text.primary,
-                fontFamily: isPlayful
-                  ? tokens.typography.fontFamily.bodyMedium
-                  : tokens.typography.fontFamily.body,
-                fontSize: tokens.typography.fontSize.bodySm,
-                lineHeight: tokens.typography.fontSize.bodySm * 1.35,
-              }}>
-              {t('onboarding.introVisual.coachBubble')}
-            </Text>
-          </View>
-        </View>
+          {t('onboarding.introVisual.coachStep')}
+        </Text>
+        <MiniBar progress={0.45} />
+      </View>
 
+      <View
+        style={{
+          alignItems: 'flex-start',
+          flexDirection: 'row',
+          gap: tokens.spacing.space2,
+        }}>
+        <OrbCompanion interaction="watch" size={tokens.spacing.space7} state="attentive" />
         <View
           style={{
             backgroundColor: tokens.colors.surface.card,
-            borderRadius: cardRadius,
-            gap: tokens.spacing.space2,
-            padding: pad,
+            borderColor: isPlayful
+              ? tokens.colors.border.strong
+              : tokens.colors.border.subtle,
+            borderRadius: tokens.radius.lg,
+            borderWidth: 1,
+            flex: 1,
+            paddingHorizontal: tokens.spacing.space3,
+            paddingVertical: tokens.spacing.space2,
             ...getShadow(1),
           }}>
           <Text
             style={{
-              color: tokens.colors.text.secondary,
-              fontFamily: tokens.typography.fontFamily.bodyMedium,
-              fontSize: tokens.typography.fontSize.bodySm,
-            }}>
-            {t('onboarding.introVisual.coachPromptLabel')}
-          </Text>
-          <Text
-            style={{
               color: tokens.colors.text.primary,
-              fontFamily: tokens.typography.fontFamily.body,
+              fontFamily: isPlayful
+                ? tokens.typography.fontFamily.bodyMedium
+                : tokens.typography.fontFamily.body,
               fontSize: tokens.typography.fontSize.bodySm,
-              lineHeight: tokens.typography.fontSize.bodySm * 1.4,
+              lineHeight: tokens.typography.fontSize.bodySm * 1.35,
             }}>
-            {t('onboarding.introVisual.coachPromptBody')}
+            {t('onboarding.introVisual.coachBubble')}
           </Text>
-          <View
-            style={{
-              backgroundColor: tokens.colors.background.elevated,
-              borderRadius: tokens.radius.md,
-              minHeight: tokens.spacing.space7,
-              padding: tokens.spacing.space2,
-            }}>
-            <Text
-              style={{
-                color: tokens.colors.text.tertiary,
-                fontFamily: tokens.typography.fontFamily.body,
-                fontSize: tokens.typography.fontSize.bodySm,
-              }}>
-              …
-            </Text>
-          </View>
         </View>
+      </View>
+
+      <View
+        style={{
+          backgroundColor: tokens.colors.surface.card,
+          borderRadius: cardRadius,
+          gap: tokens.spacing.space2,
+          padding: pad,
+          ...getShadow(1),
+        }}>
+        <Text
+          style={{
+            color: tokens.colors.text.secondary,
+            fontFamily: tokens.typography.fontFamily.bodyMedium,
+            fontSize: tokens.typography.fontSize.bodySm,
+          }}>
+          {t('onboarding.introVisual.coachPromptLabel')}
+        </Text>
+        <Text
+          style={{
+            color: tokens.colors.text.primary,
+            fontFamily: tokens.typography.fontFamily.body,
+            fontSize: tokens.typography.fontSize.bodySm,
+            lineHeight: tokens.typography.fontSize.bodySm * 1.4,
+          }}>
+          {t('onboarding.introVisual.coachPromptBody')}
+        </Text>
       </View>
 
       <View
@@ -697,6 +673,7 @@ function CoachScreenMock() {
           flexDirection: 'row',
           gap: tokens.spacing.space1,
           justifyContent: 'center',
+          marginTop: 'auto',
           paddingVertical: tokens.spacing.space3,
         }}>
         <Check

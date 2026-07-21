@@ -40,18 +40,25 @@ const SLIDES: IntroSlide[] = [
 ];
 
 /**
- * Liftoff-style marketing carousel: swipeable iPhone mocks + value lines,
- * page dots, full-width CTA + Anmelden. Start SFX once on mount.
+ * Liftoff marketing carousel:
+ * - Swipeable cropped phone reveals (not full handsets)
+ * - Caption + dots sit in a reserved band — no overlaps with the device
  */
 export default function OnboardingWelcomeScreen() {
   const { tokens, t, mode } = useThemeMode();
   const router = useRouter();
   const listRef = useRef<FlatList<IntroSlide>>(null);
   const [index, setIndex] = useState(0);
-  const [pageSize, setPageSize] = useState({ width: 0, height: 0 });
+  const [pageWidth, setPageWidth] = useState(0);
   const soundEnabled = tokens.presentation.soundEnabled;
   const lastIndexRef = useRef(0);
   const suppressSwipeSfxRef = useRef(false);
+
+  const captionSize =
+    mode === 'focus'
+      ? tokens.typography.fontSize.headingMd
+      : tokens.typography.fontSize.headingLg;
+  const captionLineHeight = captionSize * 1.3;
 
   useEffect(() => {
     playSfx('start', soundEnabled);
@@ -80,12 +87,9 @@ export default function OnboardingWelcomeScreen() {
   const onViewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
       const first = viewableItems.find((item) => item.isViewable && item.index != null);
-      if (first?.index != null) {
-        // Dots follow mid-swipe; SFX fires from momentum end only.
-        if (first.index !== lastIndexRef.current) {
-          lastIndexRef.current = first.index;
-          setIndex(first.index);
-        }
+      if (first?.index != null && first.index !== lastIndexRef.current) {
+        lastIndexRef.current = first.index;
+        setIndex(first.index);
       }
     },
   ).current;
@@ -94,24 +98,31 @@ export default function OnboardingWelcomeScreen() {
     itemVisiblePercentThreshold: 60,
   }).current;
 
-  const advance = () => {
-    playSfx('tap', soundEnabled);
-    if (index < SLIDES.length - 1) {
-      const next = index + 1;
-      suppressSwipeSfxRef.current = true;
-      lastIndexRef.current = next;
-      setIndex(next);
-      listRef.current?.scrollToIndex({ animated: true, index: next });
+  const jumpTo = (next: number) => {
+    if (next === index || next < 0 || next >= SLIDES.length) {
       return;
     }
+    playSfx('tap', soundEnabled);
+    suppressSwipeSfxRef.current = true;
+    lastIndexRef.current = next;
+    setIndex(next);
+    listRef.current?.scrollToIndex({ animated: true, index: next });
+  };
+
+  const advance = () => {
+    if (index < SLIDES.length - 1) {
+      jumpTo(index + 1);
+      return;
+    }
+    playSfx('tap', soundEnabled);
     router.push('/onboarding/meet');
   };
 
   const onScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (pageSize.width <= 0) {
+    if (pageWidth <= 0) {
       return;
     }
-    const next = Math.round(event.nativeEvent.contentOffset.x / pageSize.width);
+    const next = Math.round(event.nativeEvent.contentOffset.x / pageWidth);
     const clamped = Math.min(SLIDES.length - 1, Math.max(0, next));
     syncIndex(clamped, true);
   };
@@ -119,31 +130,11 @@ export default function OnboardingWelcomeScreen() {
   const renderItem: ListRenderItem<IntroSlide> = ({ item }) => (
     <View
       style={{
-        alignItems: 'center',
-        gap: tokens.spacing.space4,
-        height: pageSize.height || undefined,
-        justifyContent: 'center',
+        height: '100%',
         paddingHorizontal: tokens.spacing.space1,
-        width: pageSize.width || undefined,
+        width: pageWidth || undefined,
       }}>
       <OnboardingFeatureVisual kind={item.kind} />
-      <Text
-        style={{
-          color: tokens.colors.text.primary,
-          fontFamily: tokens.typography.fontFamily.display,
-          fontSize:
-            mode === 'focus'
-              ? tokens.typography.fontSize.headingMd
-              : tokens.typography.fontSize.headingLg,
-          lineHeight:
-            (mode === 'focus'
-              ? tokens.typography.fontSize.headingMd
-              : tokens.typography.fontSize.headingLg) * 1.3,
-          paddingHorizontal: tokens.spacing.space2,
-          textAlign: 'center',
-        }}>
-        {t(item.valueKey)}
-      </Text>
     </View>
   );
 
@@ -155,52 +146,51 @@ export default function OnboardingWelcomeScreen() {
           : t('onboarding.welcomeCta')
       }
       footerExtra={
-        <OnboardingPageDots
-          count={SLIDES.length}
-          index={index}
-          onSelect={(next) => {
-            if (next === index) {
-              return;
-            }
-            playSfx('tap', soundEnabled);
-            suppressSwipeSfxRef.current = true;
-            lastIndexRef.current = next;
-            setIndex(next);
-            listRef.current?.scrollToIndex({ animated: true, index: next });
-          }}
-        />
+        <View style={{ gap: tokens.spacing.space4 }}>
+          {/* Reserved caption band — never shares layout with the phone crop. */}
+          <Text
+            numberOfLines={2}
+            style={{
+              color: tokens.colors.text.primary,
+              fontFamily: tokens.typography.fontFamily.display,
+              fontSize: captionSize,
+              height: captionLineHeight * 2,
+              lineHeight: captionLineHeight,
+              textAlign: 'center',
+            }}>
+            {t(SLIDES[index].valueKey)}
+          </Text>
+          <OnboardingPageDots
+            count={SLIDES.length}
+            index={index}
+            onSelect={jumpTo}
+          />
+        </View>
       }
       onCta={advance}
       onSecondary={() => {
         playSfx('tap', soundEnabled);
         router.push('/auth');
       }}
-      onSkip={goToMeet}
       secondaryLabel={t('onboarding.introSignIn')}
-      showBrand
-      skipLabel={t('onboarding.skip')}>
+      showBrand>
       <View
         onLayout={(event) => {
-          const { width, height } = event.nativeEvent.layout;
-          const next = { width: Math.round(width), height: Math.round(height) };
-          if (
-            next.width > 0 &&
-            next.height > 0 &&
-            (next.width !== pageSize.width || next.height !== pageSize.height)
-          ) {
-            setPageSize(next);
+          const nextWidth = Math.round(event.nativeEvent.layout.width);
+          if (nextWidth > 0 && nextWidth !== pageWidth) {
+            setPageWidth(nextWidth);
           }
         }}
-        style={{ flex: 1 }}>
-        {pageSize.width > 0 && pageSize.height > 0 ? (
+        style={{ flex: 1, minHeight: tokens.spacing.space8 * 4 }}>
+        {pageWidth > 0 ? (
           <FlatList
             ref={listRef}
             data={SLIDES}
             decelerationRate="fast"
             getItemLayout={(_, itemIndex) => ({
               index: itemIndex,
-              length: pageSize.width,
-              offset: pageSize.width * itemIndex,
+              length: pageWidth,
+              offset: pageWidth * itemIndex,
             })}
             horizontal
             keyExtractor={(item) => item.kind}

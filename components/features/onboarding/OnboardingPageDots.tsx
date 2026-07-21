@@ -8,7 +8,7 @@ type OnboardingPageDotsProps = {
   onSelect?: (index: number) => void;
 };
 
-/** Carousel page dots — active = accent-primary; optional tap to jump. */
+/** Liftoff-style equal dots — active = accent-primary (same size). */
 export function OnboardingPageDots({
   count,
   index,
@@ -35,8 +35,8 @@ export function OnboardingPageDots({
                 : tokens.colors.border.strong,
               borderRadius: tokens.radius.pill,
               height: tokens.spacing.space2,
-              opacity: active ? 1 : 0.55,
-              width: active ? tokens.spacing.space4 : tokens.spacing.space2,
+              opacity: active ? 1 : 0.5,
+              width: tokens.spacing.space2,
             }}
           />
         );

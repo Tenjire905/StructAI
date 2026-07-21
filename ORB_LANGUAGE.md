@@ -20,7 +20,7 @@ Grundregel: **Der Orb ist ein lokaler Coach** (Jimbo/Liftoff-Nähe) — abstrakt
 
 ### Onboarding (Liftoff-Muster)
 
-**A — Marketing-Carousel** (`/onboarding`): Brand, **swipebare** iPhone-Mocks (Prompt Lab / Home-Pfade / Lektion+Orb), eine Value-Line, Page-Dots (tippbar), CTA, Anmelden/Skip  
+**A — Marketing-Carousel** (`/onboarding`): Brand, **unten abgeschnittene** iPhone-Mocks (Prompt Lab / Home / Lektion+Orb), Caption + Dots in eigener Zone (keine Overlaps), CTA + Anmelden; swipebar  
 **B — Coach-Q&A** (Segment-Progress + Skip + vollbreite CTA):
 
 1. Meet — Orb-Bubble `orb.speech.onboarding.welcome` → `meetReady`  

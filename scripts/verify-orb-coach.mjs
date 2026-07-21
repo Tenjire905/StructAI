@@ -60,6 +60,12 @@ if (!featureVisual.includes('StatusBarMock') || !featureVisual.includes('9:41'))
 if (!featureVisual.includes('DynamicIsland') || !featureVisual.includes('HardwareButton')) {
   violations.push('Phone mocks must include Dynamic Island + hardware buttons');
 }
+if (!featureVisual.includes('overflow: \'hidden\'') && !featureVisual.includes('overflow: "hidden"')) {
+  violations.push('Phone mocks must crop with overflow hidden (Liftoff crop)');
+}
+if (!intro.includes('numberOfLines={2}') || !intro.includes('OnboardingPageDots')) {
+  violations.push('Intro caption + dots must sit in a reserved non-overlapping band');
+}
 if (!meet.includes('showSpeech') || !meet.includes('orb.speech.onboarding.welcome')) {
   violations.push('Meet must be Orb-led with welcome speech bubble');
 }
