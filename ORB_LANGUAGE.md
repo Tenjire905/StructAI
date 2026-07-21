@@ -16,7 +16,7 @@ Grundregel: **Der Orb ist ein lokaler Coach** (Jimbo/Liftoff-Nähe) — abstrakt
 | Playful | Bubbles während Lesen / Üben / Feedback + Onboarding |
 | Focus | Weniger Bubbles in Lektionen (Tips nach Check); Onboarding trotzdem Orb-geführt |
 | Präsenz | Orb in aktiver Lektion + Onboarding-Hero |
-| SFX | Kurze Game-UI-Sounds (`lib/sfx.ts`: start/tap/success) — **kein** Coach-Voiceover |
+| SFX | Kurze Game-UI-Sounds (`lib/sfx.ts`: start/tap/success) — **kein** Coach-Voiceover; **kein** Fail-Sound. Playful an / Focus aus |
 
 ### Onboarding (Liftoff-Muster)
 
@@ -47,6 +47,7 @@ Lektions-Momente → State: `reading_start`→attentive, `reading`→think, `pra
 - UI: `OrbPresence` mit `showSpeech` + `speechKey` (Hero-Bubble im Onboarding).
 - Kein `voiceKey` / kein `expo-audio` Playback in der Coach-UI.
 - Game-SFX laufen separat über `playSfx` und respektieren `presentation.soundEnabled` (Focus standardmäßig aus).
+- Mapping: `start` = Session-Beginn (Onboarding, Daily Challenge); `tap` = Primary-Weiter; `success` = richtige Antwort + Meilensteine / Lab / BYOK. Falsche Antworten: still.
 
 ---
 

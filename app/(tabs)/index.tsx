@@ -22,6 +22,7 @@ import { Avatar, Button, Card } from '@/components/ui';
 import { hydrateAppStorage, isDailyGoalSetupCompleted } from '@/lib/appStorage';
 import { resolveDailyChallenge } from '@/lib/dailyChallenge';
 import { buildLessonHref } from '@/lib/lessonNavigation';
+import { playSfx } from '@/lib/sfx';
 import { resolveSkillRankProgress } from '@/lib/skillRank';
 import {
   computePathProgressBarModel,
@@ -41,6 +42,7 @@ const SCROLL_BOTTOM_INSET = 120;
 
 export default function HomeScreen() {
   const { tokens, t } = useThemeMode();
+  const soundEnabled = tokens.presentation.soundEnabled;
   const router = useRouter();
   const { height: windowHeight } = useWindowDimensions();
   const scrollViewRef = useRef<ScrollView>(null);
@@ -197,7 +199,10 @@ export default function HomeScreen() {
       {dailyChallenge ? (
         <HomeDailyChallengeCard
           challenge={dailyChallenge}
-          onStart={() => router.push(buildLessonHref(dailyChallenge.lessonId))}
+          onStart={() => {
+            playSfx('start', soundEnabled);
+            router.push(buildLessonHref(dailyChallenge.lessonId));
+          }}
         />
       ) : null}
 
@@ -214,7 +219,10 @@ export default function HomeScreen() {
           </Text>
           <Button
             label={t('home.labPracticeCta')}
-            onPress={() => router.push('/(tabs)/prompt-lab')}
+            onPress={() => {
+              playSfx('tap', soundEnabled);
+              router.push('/(tabs)/prompt-lab');
+            }}
             variant="ghost"
           />
         </View>
@@ -252,7 +260,10 @@ export default function HomeScreen() {
               </Text>
               <Button
                 label={t('home.startCta')}
-                onPress={() => router.push(`/lernpfad/${DEFAULT_START_PATH_ID}`)}
+                onPress={() => {
+                  playSfx('tap', soundEnabled);
+                  router.push(`/lernpfad/${DEFAULT_START_PATH_ID}`);
+                }}
                 variant="primary"
               />
             </View>

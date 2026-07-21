@@ -25,6 +25,7 @@ import {
   scorePromptRemote,
 } from '@/lib/aiScoring';
 import { canUseProFeature } from '@/lib/entitlements';
+import { playSfx } from '@/lib/sfx';
 import { listApiKeys, type ByokKeyEntry } from '@/lib/secureKeyStore';
 import {
   attachLocalFeedbackSignals,
@@ -58,6 +59,7 @@ type PromptLabMode = 'score' | 'compare';
 
 export default function PromptLabScreen() {
   const { tokens, t, locale } = useThemeMode();
+  const soundEnabled = tokens.presentation.soundEnabled;
   const router = useRouter();
   const [labMode, setLabMode] = useState<PromptLabMode>('score');
   const history = useProgressStore((state) => state.promptScoreHistory);
@@ -124,6 +126,7 @@ export default function PromptLabScreen() {
       return;
     }
 
+    playSfx('tap', soundEnabled);
     setIsScoring(true);
     setFallbackNotice(null);
 
@@ -154,6 +157,7 @@ export default function PromptLabScreen() {
     }
 
     setScore(result);
+    playSfx('success', soundEnabled);
 
     if (baselineScore && baselinePrompt && baselinePrompt !== promptInput.trim()) {
       setComparison(comparePromptScores(baselineScore, result));
