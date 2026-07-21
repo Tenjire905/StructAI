@@ -36,10 +36,6 @@ function isOnDailyGoalSetupRoute(segments: readonly string[]): boolean {
   return segments[0] === 'onboarding' && segments[1] === 'tagesziel';
 }
 
-function isOnFirstSessionProofRoute(segments: readonly string[]): boolean {
-  return segments[0] === 'onboarding' && segments[1] === 'proof';
-}
-
 function isInLessonFlowRoute(segments: readonly string[]): boolean {
   const root = segments[0];
   return root === 'lektion' || root === 'lernpfad';
@@ -94,7 +90,6 @@ export function AuthNavigationController() {
   const profilePending = isProfileOnboardingPending();
   const onProfileRoute = isOnProfileOnboardingRoute(segments);
   const onDailyGoalRoute = isOnDailyGoalSetupRoute(segments);
-  const onProofRoute = isOnFirstSessionProofRoute(segments);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -216,8 +211,7 @@ export function AuthNavigationController() {
         }
       } else if (profilePending) {
         // Allow finishing the active lesson/path transition before forcing the profile screen.
-        // Also allow the Week-1 proof loop that runs before profile onboarding.
-        if (!onProfileRoute && !onProofRoute && !isInLessonFlowRoute(segments)) {
+        if (!onProfileRoute && !isInLessonFlowRoute(segments)) {
           target = PROFILE_ONBOARDING_ROUTE;
         }
       } else if (!isOnboardingCompleted() && !inOnboarding) {
@@ -226,8 +220,7 @@ export function AuthNavigationController() {
         isOnboardingCompleted() &&
         inOnboarding &&
         !onProfileRoute &&
-        !onDailyGoalRoute &&
-        !onProofRoute
+        !onDailyGoalRoute
       ) {
         target = resolveHomeRoute(completedLessons);
       } else if (!rootSegment) {
@@ -267,7 +260,6 @@ export function AuthNavigationController() {
     isLoading,
     onDailyGoalRoute,
     onProfileRoute,
-    onProofRoute,
     profilePending,
     returningUserCheck,
     router,

@@ -1,5 +1,5 @@
 /**
- * Release polish: day-2 comeback, localized proof, honest paywall, Lab bridge.
+ * Release polish: day-2 comeback, honest paywall, Lab bridge (proof loop removed).
  */
 
 import assert from 'node:assert/strict';
@@ -10,27 +10,27 @@ const root = new URL('..', import.meta.url).pathname;
 const violations = [];
 
 const scoring = readFileSync(join(root, 'lib/promptScoring.ts'), 'utf8');
-const proof = readFileSync(join(root, 'components/features/FirstSessionProofView.tsx'), 'utf8');
 const profil = readFileSync(join(root, 'app/onboarding/profil.tsx'), 'utf8');
 const notifications = readFileSync(join(root, 'lib/dailyGoalNotifications.ts'), 'utf8');
 const paywall = readFileSync(join(root, 'components/features/ProPaywallView.tsx'), 'utf8');
 const home = readFileSync(join(root, 'app/(tabs)/index.tsx'), 'utf8');
 const skills = readFileSync(join(root, 'lib/sessionSkillSummary.ts'), 'utf8');
+const lesson = readFileSync(join(root, 'app/lektion/[id].tsx'), 'utf8');
 const en = readFileSync(join(root, 'theme/copy/en.ts'), 'utf8');
 
 if (!scoring.includes('buildDemoWeakPrompt')) {
   violations.push('promptScoring must expose locale-aware buildDemoWeakPrompt');
 }
-if (!proof.includes('buildDemoWeakPrompt') || !proof.includes('getMissingHints')) {
-  violations.push('FirstSessionProofView must use localized weak prompt + live critique hints');
+if (lesson.includes('/onboarding/proof')) {
+  violations.push('First lesson must not route through removed proof loop');
 }
-if (!proof.includes('firstSessionProof.comeBackTomorrow')) {
-  violations.push('Proof summary must include day-2 comeback line');
-}
-if (!profil.includes("/onboarding/tagesziel") || !profil.includes('isDailyGoalSetupCompleted')) {
+if (!profil.includes('/onboarding/tagesziel') || !profil.includes('isDailyGoalSetupCompleted')) {
   violations.push('Profile onboarding must route to daily goal setup when missing');
 }
-if (!notifications.includes('notificationBodySkill') || !notifications.includes('resolveSessionSkillSummary')) {
+if (
+  !notifications.includes('notificationBodySkill') ||
+  !notifications.includes('resolveSessionSkillSummary')
+) {
   violations.push('Daily goal reminders must name the last practiced skill');
 }
 if (paywall.includes("pro.paywall.cta', { price")) {

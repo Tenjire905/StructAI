@@ -38,18 +38,6 @@ export const ORB_VOICE_ASSETS: Record<string, LocaleClips> = {
       focus: require('../assets/orb-voice/de/onboarding.loop.focus.mp3'),
     },
   },
-  'orb.speech.onboarding.proof': {
-    de: {
-      playful: require('../assets/orb-voice/de/onboarding.proof.playful.mp3'),
-      focus: require('../assets/orb-voice/de/onboarding.proof.focus.mp3'),
-    },
-  },
-  'orb.speech.onboarding.proofDone': {
-    de: {
-      playful: require('../assets/orb-voice/de/onboarding.proofDone.playful.mp3'),
-      focus: require('../assets/orb-voice/de/onboarding.proofDone.focus.mp3'),
-    },
-  },
   'orb.speech.onboarding.dailyGoal': {
     de: {
       playful: require('../assets/orb-voice/de/onboarding.dailyGoal.playful.mp3'),

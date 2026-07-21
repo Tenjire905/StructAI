@@ -717,70 +717,6 @@ export const copyFr: CopyCatalog = {
     playful: 'Tu détectes l’objectif, le format ou les contraintes manquants avant d’envoyer.',
     focus: 'Tu détectes l’objectif, le format ou les contraintes manquants avant l’envoi.',
   },
-  'firstSessionProof.brand': {
-    playful: 'Ta premiere preuve de skill',
-    focus: 'Premiere preuve de skill',
-  },
-  'firstSessionProof.headline': {
-    playful: 'Vois un prompt vague s ameliorer — puis nomme ce que tu as appris.',
-    focus: 'Critique, rewrite, compare — puis nomme le skill.',
-  },
-  'firstSessionProof.sub': {
-    playful: 'Pas de cle API. Le coach local montre qualite → critique → rewrite en moins d une minute.',
-    focus: 'Coach local seulement. Qualite, critique, rewrite — pas de BYOK.',
-  },
-  'firstSessionProof.weakLabel': {
-    playful: 'Prompt vague',
-    focus: 'Prompt vague',
-  },
-  'firstSessionProof.improvedLabel': {
-    playful: 'Prompt reecrit',
-    focus: 'Prompt reecrit',
-  },
-  'firstSessionProof.scoreLabel': {
-    playful: 'Score coach : {{score}}/100',
-    focus: 'Score : {{score}}/100',
-  },
-  'firstSessionProof.critiqueBody': {
-    playful: 'Trop vague : pas de role, pas d audience, pas de format, pas de longueur. Le modele doit deviner.',
-    focus: 'Role, audience, format et longueur manquent — le modele doit deviner.',
-  },
-  'firstSessionProof.compareTitle': {
-    playful: '{{before}} → {{after}} (+{{delta}})',
-    focus: '{{before}} → {{after}} (+{{delta}})',
-  },
-  'firstSessionProof.skillName': {
-    playful: 'Transformer une demande vague en brief utilisable',
-    focus: 'Transformer une demande vague en brief utilisable',
-  },
-  'firstSessionProof.skillProof': {
-    playful: 'Il y a dix minutes c etait « ecris quelque chose ». Maintenant tu vois pourquoi structure, role et contraintes changent le score.',
-    focus: 'Tu peux expliquer pourquoi role, contexte et contraintes ameliorent la qualite du prompt.',
-  },
-  'firstSessionProof.comeBackTomorrow': {
-    playful: 'Demain : réutilise ce schéma de rewrite sur une vraie tâche — c’est ton win du jour 2.',
-    focus: 'Demain : réutilise ce schéma de rewrite sur une vraie tâche — c’est ton win du jour 2.',
-  },
-  'firstSessionProof.ctaCritique': {
-    playful: 'Montrer la critique',
-    focus: 'Montrer la critique',
-  },
-  'firstSessionProof.ctaRewrite': {
-    playful: 'Montrer un rewrite',
-    focus: 'Montrer le rewrite',
-  },
-  'firstSessionProof.ctaCompare': {
-    playful: 'Comparer les scores',
-    focus: 'Comparer les scores',
-  },
-  'firstSessionProof.ctaSummary': {
-    playful: 'Nommer ce que j ai appris',
-    focus: 'Resume du skill',
-  },
-  'firstSessionProof.ctaDone': {
-    playful: 'Continuer — configurer mon profil',
-    focus: 'Continuer vers le profil',
-  },
   'promptLab.learnedEyebrow': {
     playful: 'Tu as pratique',
     focus: 'Skill pratique',
@@ -857,30 +793,6 @@ export const copyFr: CopyCatalog = {
   'orb.speech.onboarding.loop': {
     playful: 'Le loop : apprendre → pratiquer → progresser. Prêt pour le premier skill ?',
     focus: 'Trois temps : apprendre, pratiquer, améliorer. Lance quand tu veux.',
-  },
-  'orb.speech.onboarding.proof': {
-    playful: 'Regarde ce prompt vague s’améliorer — c’est le skill.',
-    focus: 'Critique → rewrite → comparer. C’est la preuve.',
-  },
-  'orb.speech.onboarding.proofWeak': {
-    playful: 'Souvent ça commence ainsi : sympa, mais trop vague. Tu vois les trous ?',
-    focus: 'Départ typique : l’intention est là, la structure manque. On corrige ça.',
-  },
-  'orb.speech.onboarding.proofCritique': {
-    playful: 'Check rapide : but, contraintes, format — qu’est-ce qui manque ?',
-    focus: 'Passe critique : nomme les pièces manquantes, ne devine pas.',
-  },
-  'orb.speech.onboarding.proofRewrite': {
-    playful: 'Maintenant le rewrite — même idée, vraie structure. Boom.',
-    focus: 'Rewrite : même intention, structure et contraintes claires.',
-  },
-  'orb.speech.onboarding.proofCompare': {
-    playful: 'Avant/après — le score monte parce que la structure se mesure.',
-    focus: 'Comparaison : la structure rend la différence visible.',
-  },
-  'orb.speech.onboarding.proofDone': {
-    playful: 'Top — tu repères un prompt faible et tu le corriges. C’est le skill.',
-    focus: 'Tu peux transformer une demande vague en brief utile.',
   },
   'orb.speech.onboarding.dailyGoal': {
     playful: 'Fixe un petit objectif du jour — je te rappelle, sans stress.',

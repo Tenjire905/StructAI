@@ -718,70 +718,6 @@ export const copyDe: CopyCatalog = {
     playful: 'Du erkennst fehlendes Ziel, Format oder Constraints, bevor du sendest.',
     focus: 'Du erkennst fehlendes Ziel, Format oder Constraints vor dem Senden.',
   },
-  'firstSessionProof.brand': {
-    playful: 'Dein erster Skill-Beweis',
-    focus: 'Erster Skill-Beweis',
-  },
-  'firstSessionProof.headline': {
-    playful: 'Sieh zu, wie ein vager Prompt besser wird — und benenne, was du gelernt hast.',
-    focus: 'Kritik, Rewrite, Vergleich — dann den Skill benennen.',
-  },
-  'firstSessionProof.sub': {
-    playful: 'Kein API-Key nötig. Der lokale Coach zeigt Qualität → Kritik → Rewrite in unter einer Minute.',
-    focus: 'Nur lokaler Coach. Qualität, Kritik, Rewrite — kein BYOK nötig.',
-  },
-  'firstSessionProof.weakLabel': {
-    playful: 'Vager Prompt',
-    focus: 'Vager Prompt',
-  },
-  'firstSessionProof.improvedLabel': {
-    playful: 'Umschriebener Prompt',
-    focus: 'Umschriebener Prompt',
-  },
-  'firstSessionProof.scoreLabel': {
-    playful: 'Coach-Score: {{score}}/100',
-    focus: 'Score: {{score}}/100',
-  },
-  'firstSessionProof.critiqueBody': {
-    playful: 'Zu vage: keine Rolle, keine Zielgruppe, kein Format, keine Länge. Das Modell muss raten.',
-    focus: 'Rolle, Zielgruppe, Format und Länge fehlen — das Modell muss raten.',
-  },
-  'firstSessionProof.compareTitle': {
-    playful: '{{before}} → {{after}} (+{{delta}})',
-    focus: '{{before}} → {{after}} (+{{delta}})',
-  },
-  'firstSessionProof.skillName': {
-    playful: 'Aus einer vagen Bitte ein brauchbares Briefing machen',
-    focus: 'Aus einer vagen Bitte ein brauchbares Briefing machen',
-  },
-  'firstSessionProof.skillProof': {
-    playful: 'Vor zehn Minuten hieß es „schreib etwas“. Jetzt siehst du, warum Struktur, Rolle und Constraints den Score ändern.',
-    focus: 'Du kannst erklären, warum Rolle, Kontext und Constraints die Prompt-Qualität heben.',
-  },
-  'firstSessionProof.comeBackTomorrow': {
-    playful: 'Morgen: nutze dieses Rewrite-Muster an einer echten Aufgabe — das ist dein Tag-2-Win.',
-    focus: 'Morgen: wende dieses Rewrite-Muster an einer echten Aufgabe an.',
-  },
-  'firstSessionProof.ctaCritique': {
-    playful: 'Kritik zeigen',
-    focus: 'Kritik zeigen',
-  },
-  'firstSessionProof.ctaRewrite': {
-    playful: 'Rewrite zeigen',
-    focus: 'Rewrite zeigen',
-  },
-  'firstSessionProof.ctaCompare': {
-    playful: 'Scores vergleichen',
-    focus: 'Scores vergleichen',
-  },
-  'firstSessionProof.ctaSummary': {
-    playful: 'Benennen, was ich gelernt habe',
-    focus: 'Skill-Zusammenfassung',
-  },
-  'firstSessionProof.ctaDone': {
-    playful: 'Weiter — Profil einrichten',
-    focus: 'Weiter zum Profil',
-  },
   'promptLab.learnedEyebrow': {
     playful: 'Du hast geübt',
     focus: 'Geübter Skill',
@@ -858,30 +794,6 @@ export const copyDe: CopyCatalog = {
   'orb.speech.onboarding.loop': {
     playful: 'So läuft’s: lernen → üben → besser werden. Bereit für den ersten Skill?',
     focus: 'Drei Schritte: lernen, üben, verbessern. Start wenn bereit.',
-  },
-  'orb.speech.onboarding.proof': {
-    playful: 'Schau, wie der vage Prompt besser wird — das ist der Skill.',
-    focus: 'Kritik → Rewrite → Vergleich. Das ist der Beweis.',
-  },
-  'orb.speech.onboarding.proofWeak': {
-    playful: 'So startet’s oft: freundlich, aber zu vage. Merkst du die Lücken?',
-    focus: 'Typischer Start: Absicht da, Struktur fehlt. Genau das fixen wir.',
-  },
-  'orb.speech.onboarding.proofCritique': {
-    playful: 'Kurz checken: Ziel, Constraints, Format — was fehlt?',
-    focus: 'Kritik-Pass: fehlende Teile benennen, nicht raten.',
-  },
-  'orb.speech.onboarding.proofRewrite': {
-    playful: 'Jetzt der Rewrite — gleiche Idee, echte Struktur. Boom.',
-    focus: 'Rewrite: gleiche Absicht, klare Struktur und Constraints.',
-  },
-  'orb.speech.onboarding.proofCompare': {
-    playful: 'Vorher/nachher — der Score steigt, weil Struktur messbar ist.',
-    focus: 'Vergleich: Struktur macht den Unterschied sichtbar.',
-  },
-  'orb.speech.onboarding.proofDone': {
-    playful: 'Stark — du erkennst schwache Prompts und kannst sie fixen. Das ist der Skill.',
-    focus: 'Du kannst aus einer vagen Bitte ein brauchbares Briefing machen.',
   },
   'orb.speech.onboarding.dailyGoal': {
     playful: 'Kleines Tagesziel setzen — ich erinner dich, ohne Stress.',
