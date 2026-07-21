@@ -34,6 +34,7 @@ import { LearningBeatStrip } from '@/components/features/lesson/LearningBeatStri
 import { WrongAnswerCoachingBlock } from '@/components/features/lesson/WrongAnswerCoachingBlock';
 import {
   LessonGlossaryProvider,
+  GlossaryHighlightPass,
   useLessonGlossary,
 } from '@/components/features/lesson/LessonGlossaryContext';
 import { Button, Card, ProgressBar } from '@/components/ui';
@@ -812,6 +813,7 @@ function LessonSessionScreenContent({
             />
           </View>
 
+          <GlossaryHighlightPass>
           {step.type === 'info' ? (
             <Card variant="solid">
               <View style={{ gap: tokens.spacing.space3 }}>
@@ -919,6 +921,7 @@ function LessonSessionScreenContent({
               isCorrect={isAnswerCorrect}
             />
           ) : null}
+          </GlossaryHighlightPass>
         </ScrollView>
 
         <View

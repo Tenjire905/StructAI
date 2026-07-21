@@ -16,6 +16,15 @@ const fillView = readFileSync(
 );
 const glossary = readFileSync(join(root, 'lib/glossary.ts'), 'utf8');
 const playful = readFileSync(join(root, 'lib/simplifyPlayfulCopy.ts'), 'utf8');
+const context = readFileSync(
+  join(root, 'components/features/lesson/LessonGlossaryContext.tsx'),
+  'utf8',
+);
+const inline = readFileSync(
+  join(root, 'components/features/lesson/InlineGlossaryText.tsx'),
+  'utf8',
+);
+const lesson = readFileSync(join(root, 'app/lektion/[id].tsx'), 'utf8');
 const de = readFileSync(join(root, 'data/glossary/de.ts'), 'utf8');
 const en = readFileSync(join(root, 'data/glossary/en.ts'), 'utf8');
 const fr = readFileSync(join(root, 'data/glossary/fr.ts'), 'utf8');
@@ -29,6 +38,19 @@ if (!fillView.includes('withFillBlankJoinSpaces')) {
 }
 if (!glossary.includes('alreadyHighlighted') || !glossary.includes('existing.id === candidate.id')) {
   violations.push('findGlossaryMatches must dedupe by term id (first highlight only)');
+}
+if (
+  !context.includes('beginHighlightPass') ||
+  !context.includes('claimHighlightTerm') ||
+  !context.includes('GlossaryHighlightPass')
+) {
+  violations.push('Lesson glossary must claim highlights once per step pass');
+}
+if (!inline.includes('claimHighlightTerm')) {
+  violations.push('InlineGlossaryText must claim term ids via lesson glossary pass');
+}
+if (!lesson.includes('GlossaryHighlightPass')) {
+  violations.push('Lesson screen must wrap step content in GlossaryHighlightPass');
 }
 if (!playful.includes("'fill_edge'") || !playful.includes('withPreservedEdges')) {
   violations.push('Playful simplify must preserve prefix/suffix edge whitespace');
