@@ -141,7 +141,8 @@ type LessonOutcome =
   | 'path_complete'
   | 'capstone_incomplete'
   | 'section_milestone'
-  | 'failed';
+  | 'failed'
+  | 'handoff_profile';
 
 export function LessonSessionScreen({
   lessonId,
@@ -268,6 +269,21 @@ function LessonSessionScreenContent({
     setDepthInfoPeek((current) => ({ ...current, visible: false }));
     dismissTerm();
   }, [dismissTerm, stepIndex]);
+
+  useEffect(() => {
+    if (lessonOutcome !== 'handoff_profile') {
+      return;
+    }
+
+    if (navigationInFlightRef.current) {
+      return;
+    }
+
+    navigationInFlightRef.current = true;
+    dismissCelebration();
+    suppressHomeCelebrations();
+    leaveLesson(router, '/onboarding/profil');
+  }, [dismissCelebration, lessonOutcome, router]);
 
   useEffect(() => {
     setReadingSettled(false);
@@ -525,11 +541,11 @@ function LessonSessionScreenContent({
         useProgressStore.getState().completedLessons === 1 &&
         !isProfileOnboardingCompleted()
       ) {
-        // First lesson → profile onboarding (no separate skill-proof loop).
+        // Defer navigation to a dedicated outcome so completeLesson/store updates
+        // and Reanimated trees can settle before unmount (Expo Go crash guard).
         dismissCelebration();
-        void markProfileOnboardingRequired().then(() => {
-          leaveLesson(router, '/onboarding/profil');
-        });
+        void markProfileOnboardingRequired();
+        setLessonOutcome('handoff_profile');
         return;
       }
 
@@ -634,6 +650,32 @@ function LessonSessionScreenContent({
 
   const primaryLabel = gradedStep && !isChecked ? t('lesson.check') : t('lesson.next');
   const primaryDisabled = gradedStep !== null && !isChecked && !hasSelection;
+
+  if (lessonOutcome === 'handoff_profile') {
+    return (
+      <>
+        <Stack.Screen options={headerOptions} />
+        <View
+          style={{
+            alignItems: 'center',
+            backgroundColor: tokens.colors.background.base,
+            flex: 1,
+            justifyContent: 'center',
+            paddingHorizontal: tokens.spacing.screenPadding,
+          }}>
+          <Text
+            style={{
+              color: tokens.colors.text.secondary,
+              fontFamily: tokens.typography.fontFamily.bodyMedium,
+              fontSize: tokens.typography.fontSize.bodyMd,
+              textAlign: 'center',
+            }}>
+            {t('lesson.completeTitle')}
+          </Text>
+        </View>
+      </>
+    );
+  }
 
   if (lessonOutcome === 'path_complete' && completedPathId) {
     const nextPathId = getNextPathId(completedPathId);

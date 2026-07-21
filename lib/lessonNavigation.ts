@@ -31,6 +31,14 @@ export function isLessonOpenedFromPath(fromParam: string | string[] | undefined)
   return fromParam === 'path';
 }
 
+function safeReplace(router: RouterLike, href: Href): void {
+  try {
+    router.replace(href);
+  } catch {
+    // Expo Router can throw if a transition is already in flight; ignore.
+  }
+}
+
 /**
  * Opens a lesson with deferred navigation so route transitions do not race
  * UI animations (onboarding loop, path cards, continue-next, etc.).
@@ -43,7 +51,7 @@ export function openLesson(
   suppressHomeCelebrations();
 
   runAfterUISettles(() => {
-    router.replace(buildLessonHref(lessonId, options?.fromPath ?? false));
+    safeReplace(router, buildLessonHref(lessonId, options?.fromPath ?? false));
   });
 }
 
@@ -54,8 +62,8 @@ export function leaveLesson(router: RouterLike, href: Href): void {
   suppressHomeCelebrations();
 
   runAfterUISettles(() => {
-    router.replace(href);
-  });
+    safeReplace(router, href);
+  }, 64);
 }
 
 /**
@@ -69,16 +77,20 @@ export function returnToPath(router: RouterForPathReturn, pathId: string): void 
   const href = `/lernpfad/${pathId}` as Href;
 
   runAfterUISettles(() => {
-    if (router.dismissTo) {
-      router.dismissTo(href);
-      return;
-    }
+    try {
+      if (router.dismissTo) {
+        router.dismissTo(href);
+        return;
+      }
 
-    if (router.navigate) {
-      router.navigate(href);
-      return;
-    }
+      if (router.navigate) {
+        router.navigate(href);
+        return;
+      }
 
-    router.replace(href);
-  });
+      router.replace(href);
+    } catch {
+      // Ignore in-flight transition errors.
+    }
+  }, 64);
 }

@@ -15,6 +15,7 @@ import {
   requestDailyGoalNotificationPermission,
 } from '@/lib/dailyGoalNotifications';
 import { DAILY_ORB_GOAL_PRESETS, DEFAULT_DAILY_ORB_GOAL } from '@/lib/dailyOrbGoal';
+import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
@@ -55,13 +56,23 @@ export function DailyGoalScreen({ returnTo = '/(tabs)' }: DailyGoalScreenProps) 
   };
 
   const handleSave = async () => {
+    if (isSaving) {
+      return;
+    }
+
     setIsSaving(true);
 
     try {
       setDailyOrbGoal(selectedGoal, notificationsSupported ? notificationsEnabled : false);
       await setDailyGoalSetupCompleted();
-      router.replace(returnTo);
-    } finally {
+      runAfterUISettles(() => {
+        try {
+          router.replace(returnTo);
+        } catch {
+          setIsSaving(false);
+        }
+      }, 64);
+    } catch {
       setIsSaving(false);
     }
   };

@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -22,6 +23,7 @@ import {
 } from '@/lib/appStorage';
 import { resolveHomeRoute } from '@/lib/homeNavigation';
 import { resolveProfileDisplayName } from '@/lib/profileDisplayName';
+import { runAfterUISettles } from '@/lib/runAfterUISettles';
 import {
   isPlayfulModeRecommended,
   isValidProfileAge,
@@ -44,6 +46,7 @@ export default function OnboardingProfileScreen() {
   const [isSaving, setIsSaving] = useState(false);
   const userPickedModeRef = useRef(false);
   const didHydrateFieldsRef = useRef(false);
+  const navigationInFlightRef = useRef(false);
 
   useEffect(() => {
     if (didHydrateFieldsRef.current) {
@@ -100,7 +103,7 @@ export default function OnboardingProfileScreen() {
     !isSaving;
 
   const handleConfirm = async () => {
-    if (!canSubmit) {
+    if (!canSubmit || navigationInFlightRef.current) {
       return;
     }
 
@@ -117,17 +120,29 @@ export default function OnboardingProfileScreen() {
       }
 
       await setProfileAge(parsedAge);
-      setMode(selectedMode);
       await setProfileOnboardingCompleted();
-      // Day-2 retention: set daily goal + reminder before home — otherwise most guests never opt in.
-      if (!isDailyGoalSetupCompleted()) {
-        router.replace('/onboarding/tagesziel');
-      } else {
-        router.replace(resolveHomeRoute(completedLessons));
-      }
+
+      // Apply mode before leaving, then navigate after UI settles so the theme
+      // remount and route replace do not race (Expo Go Android crash guard).
+      setMode(selectedMode);
+      Keyboard.dismiss();
+      navigationInFlightRef.current = true;
+
+      const nextHref = !isDailyGoalSetupCompleted()
+        ? '/onboarding/tagesziel'
+        : resolveHomeRoute(completedLessons);
+
+      runAfterUISettles(() => {
+        try {
+          router.replace(nextHref);
+        } catch {
+          navigationInFlightRef.current = false;
+          setIsSaving(false);
+        }
+      }, 64);
     } catch {
+      navigationInFlightRef.current = false;
       setValidationError(t('onboarding.profileSaveError'));
-    } finally {
       setIsSaving(false);
     }
   };

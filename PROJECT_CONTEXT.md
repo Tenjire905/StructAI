@@ -73,6 +73,7 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 15. **Free vs Pro framing (P3.2):** Soft-Gates ohne IAP — Free: Lektionen + lokaler Lab-Coach; Pro: Live-Lab-Grades + Zertifikat-Export (`lib/entitlements.ts`, `ProPlanStrip`, lokaler Preview-Unlock).
 16. **Onboarding locale + glossary once:** Device-Locale beim Erststart (`resolveLocaleFromDevice`), dezenter Language-Chip oben rechts im Welcome; Glossary markiert jeden Term (`id`) nur einmal pro Textblock bzw. step-weit über `splitTextsWithGlossary` (Info-Titel/Body, Fill-Blank Prefix/Suffix, Coaching).
 17. **First-session skill-proof removed:** Der critique→rewrite→compare-Loop (`/onboarding/proof`) ist entfernt — nach der ersten Lektion geht’s direkt zu `/onboarding/profil`. Die kompakte `SessionSkillSummaryCard` am Lektionsende bleibt.
+18. **Lesson/profile nav crash guard:** `runAfterUISettles` ohne `requestIdleCallback`; First-Lesson-Handoff über Outcome `handoff_profile`; Profil-/Tagesziel-Submit mit Keyboard-dismiss + deferred `router.replace`.
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 
