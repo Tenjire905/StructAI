@@ -58,7 +58,7 @@ import {
 import { resolveLessonLearningBeat } from '@/lib/lessonLearningBeat';
 import { resolveWrongAnswerCoaching } from '@/lib/lessonWrongAnswerCoaching';
 import { trackEvent } from '@/lib/analytics';
-import { isProfileOnboardingCompleted } from '@/lib/appStorage';
+import { isProfileOnboardingCompleted, markProfileOnboardingRequired } from '@/lib/appStorage';
 import {
   hapticCorrectAnswer,
   hapticLessonComplete,
@@ -525,9 +525,11 @@ function LessonSessionScreenContent({
         useProgressStore.getState().completedLessons === 1 &&
         !isProfileOnboardingCompleted()
       ) {
-        // Week-1 proof loop before profile onboarding (critique → rewrite → compare).
+        // First lesson → profile onboarding (no separate skill-proof loop).
         dismissCelebration();
-        leaveLesson(router, '/onboarding/proof');
+        void markProfileOnboardingRequired().then(() => {
+          leaveLesson(router, '/onboarding/profil');
+        });
         return;
       }
 

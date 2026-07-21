@@ -1,5 +1,6 @@
 /**
- * Week-1 retention: session skill summary + first-session proof loop + Lab learned framing.
+ * Week-1 retention leftovers without the removed first-session proof loop:
+ * session skill summary card + Lab learned framing still ship.
  */
 
 import assert from 'node:assert/strict';
@@ -9,34 +10,29 @@ import { join } from 'node:path';
 const root = new URL('..', import.meta.url).pathname;
 const violations = [];
 
-const skill = readFileSync(join(root, 'lib/sessionSkillSummary.ts'), 'utf8');
+const summary = readFileSync(join(root, 'lib/sessionSkillSummary.ts'), 'utf8');
 const card = readFileSync(join(root, 'components/features/SessionSkillSummaryCard.tsx'), 'utf8');
-const proof = readFileSync(join(root, 'components/features/FirstSessionProofView.tsx'), 'utf8');
-const proofRoute = readFileSync(join(root, 'app/onboarding/proof.tsx'), 'utf8');
 const lesson = readFileSync(join(root, 'app/lektion/[id].tsx'), 'utf8');
 const lab = readFileSync(join(root, 'app/(tabs)/prompt-lab.tsx'), 'utf8');
 const en = readFileSync(join(root, 'theme/copy/en.ts'), 'utf8');
 
-if (!skill.includes('resolveSessionSkillSummary') || !skill.includes("'pb-1'")) {
-  violations.push('sessionSkillSummary must curate pb-1 skill claim');
+if (!summary.includes('resolveSessionSkillSummary') || !summary.includes("'pb-1'")) {
+  violations.push('sessionSkillSummary must resolve curated early-path skills');
 }
-if (!card.includes('sessionSkill.eyebrow')) {
+if (!card.includes('summary.proofKey') || !card.includes('sessionSkill')) {
   violations.push('SessionSkillSummaryCard must show skill eyebrow');
 }
-if (!proof.includes('comparePromptScores') || !proof.includes('buildDemoWeakPrompt')) {
-  violations.push('FirstSessionProofView must critique/rewrite/compare locally');
+if (lesson.includes("'/onboarding/proof'")) {
+  violations.push('Lesson must not route to removed proof screen');
 }
-if (!proofRoute.includes('/onboarding/profil')) {
-  violations.push('proof route must continue to profile onboarding');
+if (!lesson.includes('SessionSkillSummaryCard')) {
+  violations.push('Lesson completion should still show skill summary card');
 }
-if (!lesson.includes("'/onboarding/proof'") || !lesson.includes('SessionSkillSummaryCard')) {
-  violations.push('Lesson completion must route first session to proof and show skill card');
+if (!lab.includes('promptLab.learned') && !en.includes("'promptLab.learnedEyebrow'")) {
+  violations.push('Lab learned framing copy must remain');
 }
-if (!lab.includes('promptLab.learnedEyebrow')) {
-  violations.push('Prompt Lab must frame score result as learned skill');
-}
-if (!en.includes("'firstSessionProof.skillProof'") || !en.includes("'sessionSkill.pb-1.proof'")) {
-  violations.push('EN copy must define first-session proof and pb-1 skill');
+if (!en.includes("'sessionSkill.pb-1.proof'")) {
+  violations.push('EN copy must define pb-1 skill proof line for the summary card');
 }
 
 assert.equal(violations.length, 0, violations.join('\n'));

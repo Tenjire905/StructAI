@@ -70,7 +70,7 @@ We do **not** need to match content volume to win — feedback loops + session c
 |---|------------|---------|--------|
 | **P1.1** | Post-check **Learning Beat** | Pattern to remember under feedback | **Shipped** |
 | **P1.2** | End-of-lesson **named skill summary** | Curated “you can do this now” (not glossary heuristics) | **Shipped** (pb-1…pb-6 + generic) |
-| **P1.2b** | First-session proof loop | Critique → rewrite → compare → summarize | **Shipped** (`/onboarding/proof`) |
+| **P1.2b** | First-session proof loop | Critique → rewrite → compare → summarize | **Removed** (overwhelming after first lesson; handoff → profil) |
 | **P1.2c** | Prompt Lab “you learned X” | Score result framed as skill practiced | **Shipped** |
 | ~~P1.2-old~~ | Glossary-heuristic Skill Card | Auto tags | **Removed** (noisy / inaccurate) |
 | **P1.3** | Home **Daily Challenge** CTA | One clear job today | **Shipped** |
@@ -127,7 +127,7 @@ Aligned with Perplexity Week-1 retention (Jul 2026):
 
 Shipped recently: Week-1 proof, day-2 comeback, paywall honesty, P3.1 store-line, P3.2 paywall framing, pm-4…pm-35, soft XP/ranks, certificates, Orb Language.  
 P2.3 evening reminders verified on Android development build.  
-Next for release review: cold-install device pass (guest → proof → profil → tagesziel → home → Lab). Defer social / widgets / Block H IAP.
+Next for release review: cold-install device pass (guest → first lesson → profil → tagesziel → home → Lab). Defer social / widgets / Block H IAP.
 
 ---
 

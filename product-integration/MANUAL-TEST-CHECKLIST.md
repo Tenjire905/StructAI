@@ -93,8 +93,8 @@ Erwartung: paths pass, tsc grün, Week-1 verify ok.
 | # | Schritt | Erwartung | ✓ |
 |---|---|---|---|
 | J1 | pb-1 bestehen (erster Abschluss) | Completion zeigt **Skill-Card** („You can do this now“) + Come-back-Zeile | |
-| J2 | Weiter nach erstem Abschluss | **`/onboarding/proof`** (vague → critique → rewrite → compare → summary), Prompt-Sprache = App-Locale | |
-| J3 | Proof fertig | → Profil (`/onboarding/profil`) | |
+| J2 | Weiter nach erstem Abschluss | **`/onboarding/profil`** (kein Skill-Proof-Loop mehr) | |
+| J3 | Profil fertig | → Tagesziel / Home je nach Setup | |
 | J4 | Profil speichern | → **Tagesziel** (`/onboarding/tagesziel`), Reminder-Toggle default ON (dev build) | |
 | J5 | Tagesziel speichern | → Home; Daily Challenge + **Prompt Lab** CTA sichtbar | |
 | J6 | Prompt Lab Demo (weak) | Weak-Prompt in App-Locale; Score-Ergebnis mit „you practiced / learned“ | |

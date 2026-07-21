@@ -26,7 +26,7 @@ Grundregel: **Der Orb ist ein lokaler Coach** (Jimbo/Liftoff-Nähe) — abstrakt
 1. Meet — Orb-Bubble `orb.speech.onboarding.welcome` → `meetReady`  
 2. Mode — Orb reagiert (`mode` → `modePlayful` / `modeFocus`)  
 3. Loop — Orb erklärt den Rhythmus  
-4. Proof — Orb-Bubble **pro Step** (`proofWeak` … `proofDone`)  
+4. Erste Lektion → Profil-Onboarding (kein separater Skill-Proof-Loop)  
 5. Tagesziel — Orb-Bubble `dailyGoal`
 
 ---
