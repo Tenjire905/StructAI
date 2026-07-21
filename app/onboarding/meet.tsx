@@ -10,6 +10,7 @@ import { useThemeMode } from '@/theme';
 
 /**
  * Jimbo/Liftoff coach meet: Orb + speech bubble, one affirmative CTA.
+ * Keeps one idea per beat (hello → ready) before mode pick.
  */
 export default function OnboardingMeetScreen() {
   const { tokens, t } = useThemeMode();

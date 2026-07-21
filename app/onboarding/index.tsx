@@ -1,67 +1,151 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
-import Animated, {
-  FadeIn,
-  FadeOut,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  FlatList,
+  type ListRenderItem,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+  Text,
+  View,
+  type ViewToken,
+} from 'react-native';
 
 import { OnboardingChrome } from '@/components/features/onboarding/OnboardingChrome';
-import { OnboardingFeatureVisual } from '@/components/features/onboarding/OnboardingFeatureVisual';
+import {
+  OnboardingFeatureVisual,
+  type OnboardingFeatureVisualKind,
+} from '@/components/features/onboarding/OnboardingFeatureVisual';
 import { OnboardingPageDots } from '@/components/features/onboarding/OnboardingPageDots';
 import { playSfx } from '@/lib/sfx';
 import { useThemeMode } from '@/theme';
 
-const SLIDES = [
+type IntroSlide = {
+  kind: OnboardingFeatureVisualKind;
+  valueKey: string;
+};
+
+const SLIDES: IntroSlide[] = [
   {
-    kind: 'score' as const,
+    kind: 'score',
     valueKey: 'onboarding.introSlide1Value',
   },
   {
-    kind: 'path' as const,
+    kind: 'path',
     valueKey: 'onboarding.introSlide2Value',
   },
   {
-    kind: 'coach' as const,
+    kind: 'coach',
     valueKey: 'onboarding.introSlide3Value',
   },
-] as const;
+];
 
 /**
- * Liftoff-style marketing carousel: brand, feature visual, one value line,
- * page dots, full-width CTA + Anmelden. Game start SFX once on mount.
+ * Liftoff-style marketing carousel: swipeable iPhone mocks + value lines,
+ * page dots, full-width CTA + Anmelden. Start SFX once on mount.
  */
 export default function OnboardingWelcomeScreen() {
   const { tokens, t, mode } = useThemeMode();
   const router = useRouter();
+  const listRef = useRef<FlatList<IntroSlide>>(null);
   const [index, setIndex] = useState(0);
-  const slide = SLIDES[index];
-  const pulse = useSharedValue(1);
+  const [pageSize, setPageSize] = useState({ width: 0, height: 0 });
   const soundEnabled = tokens.presentation.soundEnabled;
+  const lastIndexRef = useRef(0);
+  const suppressSwipeSfxRef = useRef(false);
 
   useEffect(() => {
     playSfx('start', soundEnabled);
   }, [soundEnabled]);
 
-  useEffect(() => {
-    pulse.value = withSpring(mode === 'playful' ? 1.02 : 1, tokens.motion.spring.default);
-  }, [index, mode, pulse, tokens.motion.spring.default]);
+  const goToMeet = useCallback(() => {
+    playSfx('tap', soundEnabled);
+    router.push('/onboarding/meet');
+  }, [router, soundEnabled]);
 
-  const visualStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }],
-  }));
+  const syncIndex = useCallback(
+    (next: number, playSwipeSfx: boolean) => {
+      if (next === lastIndexRef.current) {
+        return;
+      }
+      lastIndexRef.current = next;
+      setIndex(next);
+      if (playSwipeSfx && !suppressSwipeSfxRef.current) {
+        playSfx('tap', soundEnabled);
+      }
+      suppressSwipeSfxRef.current = false;
+    },
+    [soundEnabled],
+  );
+
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      const first = viewableItems.find((item) => item.isViewable && item.index != null);
+      if (first?.index != null) {
+        // Dots follow mid-swipe; SFX fires from momentum end only.
+        if (first.index !== lastIndexRef.current) {
+          lastIndexRef.current = first.index;
+          setIndex(first.index);
+        }
+      }
+    },
+  ).current;
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 60,
+  }).current;
 
   const advance = () => {
     playSfx('tap', soundEnabled);
     if (index < SLIDES.length - 1) {
-      setIndex((current) => current + 1);
+      const next = index + 1;
+      suppressSwipeSfxRef.current = true;
+      lastIndexRef.current = next;
+      setIndex(next);
+      listRef.current?.scrollToIndex({ animated: true, index: next });
       return;
     }
     router.push('/onboarding/meet');
   };
+
+  const onScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (pageSize.width <= 0) {
+      return;
+    }
+    const next = Math.round(event.nativeEvent.contentOffset.x / pageSize.width);
+    const clamped = Math.min(SLIDES.length - 1, Math.max(0, next));
+    syncIndex(clamped, true);
+  };
+
+  const renderItem: ListRenderItem<IntroSlide> = ({ item }) => (
+    <View
+      style={{
+        alignItems: 'center',
+        gap: tokens.spacing.space4,
+        height: pageSize.height || undefined,
+        justifyContent: 'center',
+        paddingHorizontal: tokens.spacing.space1,
+        width: pageSize.width || undefined,
+      }}>
+      <OnboardingFeatureVisual kind={item.kind} />
+      <Text
+        style={{
+          color: tokens.colors.text.primary,
+          fontFamily: tokens.typography.fontFamily.display,
+          fontSize:
+            mode === 'focus'
+              ? tokens.typography.fontSize.headingMd
+              : tokens.typography.fontSize.headingLg,
+          lineHeight:
+            (mode === 'focus'
+              ? tokens.typography.fontSize.headingMd
+              : tokens.typography.fontSize.headingLg) * 1.3,
+          paddingHorizontal: tokens.spacing.space2,
+          textAlign: 'center',
+        }}>
+        {t(item.valueKey)}
+      </Text>
+    </View>
+  );
 
   return (
     <OnboardingChrome
@@ -71,53 +155,64 @@ export default function OnboardingWelcomeScreen() {
           : t('onboarding.welcomeCta')
       }
       footerExtra={
-        <OnboardingPageDots count={SLIDES.length} index={index} />
+        <OnboardingPageDots
+          count={SLIDES.length}
+          index={index}
+          onSelect={(next) => {
+            if (next === index) {
+              return;
+            }
+            playSfx('tap', soundEnabled);
+            suppressSwipeSfxRef.current = true;
+            lastIndexRef.current = next;
+            setIndex(next);
+            listRef.current?.scrollToIndex({ animated: true, index: next });
+          }}
+        />
       }
       onCta={advance}
       onSecondary={() => {
         playSfx('tap', soundEnabled);
         router.push('/auth');
       }}
-      onSkip={() => {
-        playSfx('tap', soundEnabled);
-        router.push('/onboarding/meet');
-      }}
+      onSkip={goToMeet}
       secondaryLabel={t('onboarding.introSignIn')}
       showBrand
       skipLabel={t('onboarding.skip')}>
       <View
-        style={{
-          alignItems: 'center',
-          flex: 1,
-          gap: tokens.spacing.space5,
-          justifyContent: 'center',
-        }}>
-        <Animated.View entering={FadeIn.duration(tokens.motion.duration.fast)} style={visualStyle}>
-          <OnboardingFeatureVisual kind={slide.kind} />
-        </Animated.View>
-
-        <Animated.View
-          entering={FadeIn.duration(tokens.motion.duration.medium)}
-          exiting={FadeOut.duration(tokens.motion.duration.fast)}
-          key={slide.valueKey}
-          style={{ paddingHorizontal: tokens.spacing.space2 }}>
-          <Text
-            style={{
-              color: tokens.colors.text.primary,
-              fontFamily: tokens.typography.fontFamily.display,
-              fontSize:
-                mode === 'focus'
-                  ? tokens.typography.fontSize.headingMd
-                  : tokens.typography.fontSize.headingLg,
-              lineHeight:
-                (mode === 'focus'
-                  ? tokens.typography.fontSize.headingMd
-                  : tokens.typography.fontSize.headingLg) * 1.3,
-              textAlign: 'center',
-            }}>
-            {t(slide.valueKey)}
-          </Text>
-        </Animated.View>
+        onLayout={(event) => {
+          const { width, height } = event.nativeEvent.layout;
+          const next = { width: Math.round(width), height: Math.round(height) };
+          if (
+            next.width > 0 &&
+            next.height > 0 &&
+            (next.width !== pageSize.width || next.height !== pageSize.height)
+          ) {
+            setPageSize(next);
+          }
+        }}
+        style={{ flex: 1 }}>
+        {pageSize.width > 0 && pageSize.height > 0 ? (
+          <FlatList
+            ref={listRef}
+            data={SLIDES}
+            decelerationRate="fast"
+            getItemLayout={(_, itemIndex) => ({
+              index: itemIndex,
+              length: pageSize.width,
+              offset: pageSize.width * itemIndex,
+            })}
+            horizontal
+            keyExtractor={(item) => item.kind}
+            onMomentumScrollEnd={onScrollEnd}
+            onViewableItemsChanged={onViewableItemsChanged}
+            pagingEnabled
+            renderItem={renderItem}
+            showsHorizontalScrollIndicator={false}
+            style={{ flex: 1 }}
+            viewabilityConfig={viewabilityConfig}
+          />
+        ) : null}
       </View>
     </OnboardingChrome>
   );

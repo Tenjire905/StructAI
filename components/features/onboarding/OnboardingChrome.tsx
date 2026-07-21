@@ -28,6 +28,9 @@ type OnboardingChromeProps = {
 /**
  * Shared Liftoff onboarding chrome: dark hero gradient, optional segments,
  * bottom skip + full-width primary CTA + optional secondary text link.
+ *
+ * Design: brand/progress stay above the fold; CTA stack is sticky at the bottom
+ * so swipe content never fights the primary action (Liftoff pattern).
  */
 export function OnboardingChrome({
   children,

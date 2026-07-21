@@ -1606,6 +1606,18 @@ export const copyEn: CopyCatalog = {
     playful: 'Prompt score',
     focus: 'Prompt score',
   },
+  'onboarding.introVisual.scoreNav': {
+    playful: 'Prompt Lab',
+    focus: 'Prompt Lab',
+  },
+  'onboarding.introVisual.scoreFeedback': {
+    playful: 'Strong structure — goal and format land clean.',
+    focus: 'Structure and goal are clear. Format is precise.',
+  },
+  'onboarding.introVisual.scoreCta': {
+    playful: 'Score again',
+    focus: 'Score again',
+  },
   'onboarding.introVisual.scoreChip1': {
     playful: 'Structure',
     focus: 'Structure',
@@ -1622,17 +1634,53 @@ export const copyEn: CopyCatalog = {
     playful: 'Your learning path',
     focus: 'Learning path',
   },
+  'onboarding.introVisual.pathHome': {
+    playful: 'Home',
+    focus: 'Home',
+  },
+  'onboarding.introVisual.pathSection': {
+    playful: 'Keep learning',
+    focus: 'Current paths',
+  },
+  'onboarding.introVisual.pathCard1': {
+    playful: 'Prompt basics',
+    focus: 'Prompt basics',
+  },
+  'onboarding.introVisual.pathCard2': {
+    playful: 'Judge AI answers',
+    focus: 'Judge AI answers',
+  },
+  'onboarding.introVisual.pathMeta': {
+    playful: 'Chapter 3 of 6',
+    focus: 'Chapter 3 of 6',
+  },
   'onboarding.introVisual.pathOrbs': {
     playful: '+ Unlock Orbs',
     focus: 'Unlock Orbs',
   },
   'onboarding.introVisual.coachBubble': {
-    playful: 'Quick tip — I’ve got you.',
-    focus: 'A short coach tip by your side.',
+    playful: 'Quick check: what is the prompt still missing?',
+    focus: 'Check goal, constraints, and format.',
   },
   'onboarding.introVisual.coachCaption': {
     playful: 'Orb · local coach',
     focus: 'Orb · local coach',
+  },
+  'onboarding.introVisual.coachStep': {
+    playful: 'Step 2 of 4',
+    focus: '2/4',
+  },
+  'onboarding.introVisual.coachPromptLabel': {
+    playful: 'Your prompt',
+    focus: 'Prompt',
+  },
+  'onboarding.introVisual.coachPromptBody': {
+    playful: 'Write a clear prompt with goal and format…',
+    focus: 'State goal, constraints, and output format.',
+  },
+  'onboarding.introVisual.coachCheck': {
+    playful: 'Check',
+    focus: 'Check',
   },
   'onboarding.meetCta': {
     playful: 'Sounds good!',

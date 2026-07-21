@@ -22,6 +22,10 @@ const chrome = readFileSync(
   'utf8',
 );
 const sfx = readFileSync(join(root, 'lib/sfx.ts'), 'utf8');
+const featureVisual = readFileSync(
+  join(root, 'components/features/onboarding/OnboardingFeatureVisual.tsx'),
+  'utf8',
+);
 const proof = readFileSync(join(root, 'components/features/FirstSessionProofView.tsx'), 'utf8');
 const languageDoc = readFileSync(join(root, 'ORB_LANGUAGE.md'), 'utf8');
 const de = readFileSync(join(root, 'theme/copy/de.ts'), 'utf8');
@@ -44,8 +48,14 @@ if (!presence.includes('speechKey') || !presence.includes("layout === 'hero'")) 
 if (!intro.includes('OnboardingChrome') || !intro.includes('OnboardingFeatureVisual') || !intro.includes('showBrand')) {
   violations.push('Intro must be Liftoff marketing carousel with brand + feature visuals');
 }
+if (!intro.includes('FlatList') || !intro.includes('pagingEnabled')) {
+  violations.push('Intro carousel must be swipeable (FlatList paging)');
+}
 if (!chrome.includes('StructAI')) {
   violations.push('OnboardingChrome must render StructAI brand mark');
+}
+if (!featureVisual.includes('StatusBarMock') || !featureVisual.includes('9:41')) {
+  violations.push('Feature visuals must use iPhone-style phone mock frames');
 }
 if (!meet.includes('showSpeech') || !meet.includes('orb.speech.onboarding.welcome')) {
   violations.push('Meet must be Orb-led with welcome speech bubble');

@@ -1607,6 +1607,18 @@ export const copyRu: CopyCatalog = {
     playful: 'Скор промпта',
     focus: 'Скор промпта',
   },
+  'onboarding.introVisual.scoreNav': {
+    playful: 'Prompt Lab',
+    focus: 'Prompt Lab',
+  },
+  'onboarding.introVisual.scoreFeedback': {
+    playful: 'Сильная структура — цель и формат на месте.',
+    focus: 'Структура и цель ясны. Формат точен.',
+  },
+  'onboarding.introVisual.scoreCta': {
+    playful: 'Оценить снова',
+    focus: 'Оценить снова',
+  },
   'onboarding.introVisual.scoreChip1': {
     playful: 'Структура',
     focus: 'Структура',
@@ -1623,17 +1635,53 @@ export const copyRu: CopyCatalog = {
     playful: 'Твой путь',
     focus: 'Учебный путь',
   },
+  'onboarding.introVisual.pathHome': {
+    playful: 'Главная',
+    focus: 'Главная',
+  },
+  'onboarding.introVisual.pathSection': {
+    playful: 'Продолжить',
+    focus: 'Текущие пути',
+  },
+  'onboarding.introVisual.pathCard1': {
+    playful: 'Основы промптов',
+    focus: 'Основы промптов',
+  },
+  'onboarding.introVisual.pathCard2': {
+    playful: 'Оценка ответов',
+    focus: 'Оценка ответов',
+  },
+  'onboarding.introVisual.pathMeta': {
+    playful: 'Глава 3 из 6',
+    focus: 'Глава 3 из 6',
+  },
   'onboarding.introVisual.pathOrbs': {
     playful: '+ Открывай Orbs',
     focus: 'Открывай Orbs',
   },
   'onboarding.introVisual.coachBubble': {
-    playful: 'Короткий совет — я рядом.',
-    focus: 'Короткий совет коуча рядом.',
+    playful: 'Быстрый чек: чего ещё не хватает?',
+    focus: 'Проверь цель, ограничения и формат.',
   },
   'onboarding.introVisual.coachCaption': {
     playful: 'Orb · локальный коуч',
     focus: 'Orb · локальный коуч',
+  },
+  'onboarding.introVisual.coachStep': {
+    playful: 'Шаг 2 из 4',
+    focus: '2/4',
+  },
+  'onboarding.introVisual.coachPromptLabel': {
+    playful: 'Твой промпт',
+    focus: 'Промпт',
+  },
+  'onboarding.introVisual.coachPromptBody': {
+    playful: 'Напиши ясный промпт с целью и форматом…',
+    focus: 'Укажи цель, ограничения и формат вывода.',
+  },
+  'onboarding.introVisual.coachCheck': {
+    playful: 'Проверить',
+    focus: 'Проверить',
   },
   'onboarding.meetCta': {
     playful: 'Звучит хорошо!',

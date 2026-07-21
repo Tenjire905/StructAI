@@ -1608,6 +1608,18 @@ export const copyDe: CopyCatalog = {
     playful: 'Prompt-Score',
     focus: 'Prompt-Score',
   },
+  'onboarding.introVisual.scoreNav': {
+    playful: 'Prompt Lab',
+    focus: 'Prompt Lab',
+  },
+  'onboarding.introVisual.scoreFeedback': {
+    playful: 'Starke Struktur — Ziel und Format sitzen.',
+    focus: 'Struktur und Zieldefinition klar. Format präzise.',
+  },
+  'onboarding.introVisual.scoreCta': {
+    playful: 'Nochmal scoren',
+    focus: 'Erneut bewerten',
+  },
   'onboarding.introVisual.scoreChip1': {
     playful: 'Struktur',
     focus: 'Struktur',
@@ -1624,17 +1636,53 @@ export const copyDe: CopyCatalog = {
     playful: 'Dein Lernpfad',
     focus: 'Lernpfad',
   },
+  'onboarding.introVisual.pathHome': {
+    playful: 'Home',
+    focus: 'Home',
+  },
+  'onboarding.introVisual.pathSection': {
+    playful: 'Weiterlernen',
+    focus: 'Aktuelle Pfade',
+  },
+  'onboarding.introVisual.pathCard1': {
+    playful: 'Prompt-Grundlagen',
+    focus: 'Prompt-Grundlagen',
+  },
+  'onboarding.introVisual.pathCard2': {
+    playful: 'Antworten beurteilen',
+    focus: 'Antworten beurteilen',
+  },
+  'onboarding.introVisual.pathMeta': {
+    playful: 'Kapitel 3 von 6',
+    focus: 'Kapitel 3 von 6',
+  },
   'onboarding.introVisual.pathOrbs': {
     playful: '+ Orbs freischalten',
     focus: 'Orbs freischalten',
   },
   'onboarding.introVisual.coachBubble': {
-    playful: 'Kurzer Tipp — ich bleib bei dir.',
-    focus: 'Kurzer Coach-Tipp an deiner Seite.',
+    playful: 'Kurz checken: Was fehlt dem Prompt noch?',
+    focus: 'Prüfe Ziel, Constraints und Format.',
   },
   'onboarding.introVisual.coachCaption': {
     playful: 'Orb · lokaler Coach',
     focus: 'Orb · lokaler Coach',
+  },
+  'onboarding.introVisual.coachStep': {
+    playful: 'Schritt 2 von 4',
+    focus: '2/4',
+  },
+  'onboarding.introVisual.coachPromptLabel': {
+    playful: 'Dein Prompt',
+    focus: 'Prompt',
+  },
+  'onboarding.introVisual.coachPromptBody': {
+    playful: 'Schreib einen klaren Prompt mit Ziel und Format…',
+    focus: 'Ziel, Constraints und Ausgabeformat angeben.',
+  },
+  'onboarding.introVisual.coachCheck': {
+    playful: 'Prüfen',
+    focus: 'Prüfen',
   },
   'onboarding.meetCta': {
     playful: 'Klingt gut!',

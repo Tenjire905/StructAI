@@ -1607,6 +1607,18 @@ export const copyFr: CopyCatalog = {
     playful: 'Score prompt',
     focus: 'Score prompt',
   },
+  'onboarding.introVisual.scoreNav': {
+    playful: 'Prompt Lab',
+    focus: 'Prompt Lab',
+  },
+  'onboarding.introVisual.scoreFeedback': {
+    playful: 'Structure solide — objectif et format tiennent.',
+    focus: 'Structure et objectif clairs. Format precis.',
+  },
+  'onboarding.introVisual.scoreCta': {
+    playful: 'Scorer a nouveau',
+    focus: 'Reevaluer',
+  },
   'onboarding.introVisual.scoreChip1': {
     playful: 'Structure',
     focus: 'Structure',
@@ -1623,17 +1635,53 @@ export const copyFr: CopyCatalog = {
     playful: 'Ton parcours',
     focus: 'Parcours',
   },
+  'onboarding.introVisual.pathHome': {
+    playful: 'Accueil',
+    focus: 'Accueil',
+  },
+  'onboarding.introVisual.pathSection': {
+    playful: 'Continuer',
+    focus: 'Parcours actifs',
+  },
+  'onboarding.introVisual.pathCard1': {
+    playful: 'Bases du prompt',
+    focus: 'Bases du prompt',
+  },
+  'onboarding.introVisual.pathCard2': {
+    playful: 'Juger les reponses',
+    focus: 'Juger les reponses',
+  },
+  'onboarding.introVisual.pathMeta': {
+    playful: 'Chapitre 3 sur 6',
+    focus: 'Chapitre 3 sur 6',
+  },
   'onboarding.introVisual.pathOrbs': {
     playful: '+ Debloquer des Orbs',
     focus: 'Debloquer des Orbs',
   },
   'onboarding.introVisual.coachBubble': {
-    playful: 'Petit conseil — je reste avec toi.',
-    focus: 'Conseil coach court a tes cotes.',
+    playful: 'Check rapide : que manque-t-il encore ?',
+    focus: 'Verifie objectif, contraintes et format.',
   },
   'onboarding.introVisual.coachCaption': {
     playful: 'Orb · coach local',
     focus: 'Orb · coach local',
+  },
+  'onboarding.introVisual.coachStep': {
+    playful: 'Etape 2 sur 4',
+    focus: '2/4',
+  },
+  'onboarding.introVisual.coachPromptLabel': {
+    playful: 'Ton prompt',
+    focus: 'Prompt',
+  },
+  'onboarding.introVisual.coachPromptBody': {
+    playful: 'Ecris un prompt clair avec objectif et format…',
+    focus: 'Indique objectif, contraintes et format.',
+  },
+  'onboarding.introVisual.coachCheck': {
+    playful: 'Verifier',
+    focus: 'Verifier',
   },
   'onboarding.meetCta': {
     playful: 'Ca marche !',

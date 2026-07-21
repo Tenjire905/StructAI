@@ -1,14 +1,19 @@
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { useThemeMode } from '@/theme';
 
 type OnboardingPageDotsProps = {
   count: number;
   index: number;
+  onSelect?: (index: number) => void;
 };
 
-/** Carousel page dots — active = accent-primary. */
-export function OnboardingPageDots({ count, index }: OnboardingPageDotsProps) {
+/** Carousel page dots — active = accent-primary; optional tap to jump. */
+export function OnboardingPageDots({
+  count,
+  index,
+  onSelect,
+}: OnboardingPageDotsProps) {
   const { tokens } = useThemeMode();
 
   return (
@@ -22,9 +27,8 @@ export function OnboardingPageDots({ count, index }: OnboardingPageDotsProps) {
       }}>
       {Array.from({ length: count }, (_, i) => {
         const active = i === index;
-        return (
+        const dot = (
           <View
-            key={`dot-${i}`}
             style={{
               backgroundColor: active
                 ? tokens.colors.accent.primary
@@ -35,6 +39,20 @@ export function OnboardingPageDots({ count, index }: OnboardingPageDotsProps) {
               width: active ? tokens.spacing.space4 : tokens.spacing.space2,
             }}
           />
+        );
+
+        if (!onSelect) {
+          return <View key={`dot-${i}`}>{dot}</View>;
+        }
+
+        return (
+          <Pressable
+            key={`dot-${i}`}
+            accessibilityRole="button"
+            hitSlop={tokens.spacing.space2}
+            onPress={() => onSelect(i)}>
+            {dot}
+          </Pressable>
         );
       })}
     </View>
