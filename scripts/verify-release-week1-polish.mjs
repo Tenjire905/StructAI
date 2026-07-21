@@ -24,6 +24,9 @@ if (!scoring.includes('buildDemoWeakPrompt')) {
 if (!proof.includes('buildDemoWeakPrompt') || !proof.includes('getMissingHints')) {
   violations.push('FirstSessionProofView must use localized weak prompt + live critique hints');
 }
+if (!proof.includes('PromptLabTextInput') || !proof.includes('setFirstSessionProofCompleted')) {
+  violations.push('FirstSessionProofView must be user-owned and persist proof completion');
+}
 if (!proof.includes('firstSessionProof.comeBackTomorrow')) {
   violations.push('Proof summary must include day-2 comeback line');
 }

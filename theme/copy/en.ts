@@ -89,6 +89,22 @@ export const copyEn: CopyCatalog = {
     playful: 'Do today’s lesson',
     focus: 'Continue today’s lesson',
   },
+  'home.dailyChallenge.eyebrowProofReuse': {
+    playful: 'Reuse yesterday’s skill',
+    focus: 'Reuse your proof skill',
+  },
+  'home.dailyChallenge.titleProofReuse': {
+    playful: 'Apply your rewrite pattern',
+    focus: 'Apply the rewrite pattern',
+  },
+  'home.dailyChallenge.bodyProofReuse': {
+    playful: 'Use “{{skill}}” on today’s step in {{path}} — same critique → rewrite loop, real task.',
+    focus: 'Apply “{{skill}}” to the next step in {{path}}: critique → rewrite on a real prompt.',
+  },
+  'home.dailyChallenge.ctaProofReuse': {
+    playful: 'Practice the rewrite skill',
+    focus: 'Practice the rewrite skill',
+  },
   'home.startHint': {
     playful: 'Start with Prompt Basics — your first step toward structured prompting.',
     focus: 'Start with Prompt Basics — your first step toward structured prompting.',
@@ -721,20 +737,36 @@ export const copyEn: CopyCatalog = {
     focus: 'First skill proof',
   },
   'firstSessionProof.headline': {
-    playful: 'Watch a vague prompt get better — then name what you learned.',
-    focus: 'Critique, rewrite, compare — then name the skill.',
+    playful: 'Edit a vague draft, rewrite it yourself, then watch your score climb.',
+    focus: 'Own the draft: critique your text, rewrite it, compare your scores.',
   },
   'firstSessionProof.sub': {
-    playful: 'No API key needed. Local coach shows quality → critique → rewrite in under a minute.',
-    focus: 'Local coach only. Quality, critique, rewrite — no BYOK required.',
+    playful: 'Your before and after — local coach only, no API key. Under a minute.',
+    focus: 'Your draft and rewrite. Local coach only — no BYOK required.',
   },
   'firstSessionProof.weakLabel': {
-    playful: 'Vague prompt',
-    focus: 'Vague prompt',
+    playful: 'Your vague draft',
+    focus: 'Your vague draft',
   },
   'firstSessionProof.improvedLabel': {
-    playful: 'Rewritten prompt',
-    focus: 'Rewritten prompt',
+    playful: 'Your rewrite',
+    focus: 'Your rewrite',
+  },
+  'firstSessionProof.weakPlaceholder': {
+    playful: 'Type or tweak a vague ask…',
+    focus: 'Edit this vague prompt…',
+  },
+  'firstSessionProof.rewritePlaceholder': {
+    playful: 'Rewrite with role, context, format, and limits…',
+    focus: 'Rewrite with role, context, format, and constraints…',
+  },
+  'firstSessionProof.applySuggestion': {
+    playful: 'Apply coach rewrite',
+    focus: 'Apply coach suggestion',
+  },
+  'firstSessionProof.honestNoGain': {
+    playful: 'Score did not rise yet — add role, context, or hard constraints and try again later in Lab.',
+    focus: 'No score gain yet. Add role, context, or constraints — then retry in Prompt Lab.',
   },
   'firstSessionProof.scoreLabel': {
     playful: 'Coach score: {{score}}/100',
@@ -745,32 +777,32 @@ export const copyEn: CopyCatalog = {
     focus: 'Missing role, audience, format, and length — the model must guess.',
   },
   'firstSessionProof.compareTitle': {
-    playful: '{{before}} → {{after}} (+{{delta}})',
-    focus: '{{before}} → {{after}} (+{{delta}})',
+    playful: '{{before}} → {{after}} ({{delta}})',
+    focus: '{{before}} → {{after}} ({{delta}})',
   },
   'firstSessionProof.skillName': {
     playful: 'Turn a vague ask into a usable brief',
     focus: 'Turn a vague ask into a usable brief',
   },
   'firstSessionProof.skillProof': {
-    playful: 'Ten minutes ago that was “write something.” Now you can see why structure, role, and constraints change the score.',
-    focus: 'You can explain why role, context, and constraints raise prompt quality.',
+    playful: 'That score change came from your rewrite — structure, role, and constraints are now measurable.',
+    focus: 'You can explain why role, context, and constraints raised your own prompt score.',
   },
   'firstSessionProof.comeBackTomorrow': {
     playful: 'Tomorrow: reuse this rewrite pattern on one real task — that is your day-2 win.',
     focus: 'Tomorrow: apply this rewrite pattern on one real task.',
   },
   'firstSessionProof.ctaCritique': {
-    playful: 'Critique it',
-    focus: 'Show critique',
+    playful: 'Critique my draft',
+    focus: 'Critique my draft',
   },
   'firstSessionProof.ctaRewrite': {
-    playful: 'Show a rewrite',
-    focus: 'Show rewrite',
+    playful: 'I’ll rewrite it',
+    focus: 'Rewrite it myself',
   },
   'firstSessionProof.ctaCompare': {
-    playful: 'Compare scores',
-    focus: 'Compare scores',
+    playful: 'Compare my scores',
+    focus: 'Compare my scores',
   },
   'firstSessionProof.ctaSummary': {
     playful: 'Name what I learned',
@@ -795,6 +827,26 @@ export const copyEn: CopyCatalog = {
   'promptLab.learnedComplete': {
     playful: 'You hit the core pillars — role, context, format, constraints.',
     focus: 'Core pillars present: role, context, format, constraints.',
+  },
+  'promptLab.nextPatternTitle': {
+    playful: 'One next pattern',
+    focus: 'One next pattern',
+  },
+  'promptLab.nextPattern.example.role': {
+    playful: 'Example: Role: You are a clear teaching assistant.',
+    focus: 'Example: Role: You are a clear teaching assistant.',
+  },
+  'promptLab.nextPattern.example.context': {
+    playful: 'Example: Context: Beginner audience, no jargon.',
+    focus: 'Example: Context: Beginner audience, no jargon.',
+  },
+  'promptLab.nextPattern.example.format': {
+    playful: 'Example: Format: 3 bullet points, friendly tone.',
+    focus: 'Example: Format: 3 bullet points, friendly tone.',
+  },
+  'promptLab.nextPattern.example.constraints': {
+    playful: 'Example: Constraints: max 80 words, no hype.',
+    focus: 'Example: Constraints: max 80 words, no hype.',
   },
 
   'promptLab.dictationStart': {

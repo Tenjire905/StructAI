@@ -1,6 +1,6 @@
 # StructAI — Manuelle Test-Checkliste (Expo)
 
-**Stand:** develop `5191436e9defdff35a0bf460cb09c37b01505ce2` (Week-1 proof + day-2 polish)  
+**Stand:** feature `cursor/week1-session-proof-fd20` (user-owned proof + Lab one-pattern + Daily Challenge proofReuse) · base develop `9cee37d98484f1e9b42f7ae4140af90175610257`  
 **Gerät:** Expo Go **SDK 57** (nicht Play Store SDK 56); Evening-Reminders nur im **dev build**  
 **Vorbereitung:** Guest-Modus (nicht eingeloggt), ggf. Progress löschen (Profil/Dev oder frische Install)
 
@@ -93,11 +93,11 @@ Erwartung: paths pass, tsc grün, Week-1 verify ok.
 | # | Schritt | Erwartung | ✓ |
 |---|---|---|---|
 | J1 | pb-1 bestehen (erster Abschluss) | Completion zeigt **Skill-Card** („You can do this now“) + Come-back-Zeile | |
-| J2 | Weiter nach erstem Abschluss | **`/onboarding/proof`** (vague → critique → rewrite → compare → summary), Prompt-Sprache = App-Locale | |
-| J3 | Proof fertig | → Profil (`/onboarding/profil`) | |
+| J2 | Weiter nach erstem Abschluss | **`/onboarding/proof`**: **editierbarer** Vague-Draft → Kritik auf *deinen* Text → eigener Rewrite (optional Coach-Suggestion) → Compare *deiner* Scores → Summary; Locale = App-Sprache | |
+| J3 | Proof fertig | Persistiert Proof-Completed; → Profil (`/onboarding/profil`) | |
 | J4 | Profil speichern | → **Tagesziel** (`/onboarding/tagesziel`), Reminder-Toggle default ON (dev build) | |
-| J5 | Tagesziel speichern | → Home; Daily Challenge + **Prompt Lab** CTA sichtbar | |
-| J6 | Prompt Lab Demo (weak) | Weak-Prompt in App-Locale; Score-Ergebnis mit „you practiced / learned“ | |
+| J5 | Tagesziel speichern | → Home; Daily Challenge mit **proofReuse**-Framing (Skill-Name + Rewrite-Muster) + **Prompt Lab** CTA | |
+| J6 | Prompt Lab Demo (weak) | Weak-Prompt in App-Locale; Score-Ergebnis = **ein** Next-Pattern + kurzes Example (kein Secondary-Tip, keine Note-Liste) | |
 | J7 | Paywall öffnen | CTA = **Pro preview** (kein „Unlock · €…“); Footnote: keine Store-Zahlung | |
 | J8 | Evening reminder (dev build) | Body nennt zuletzt geübten Skill (nicht nur Orbs) | |
 

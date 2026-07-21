@@ -89,6 +89,22 @@ export const copyDe: CopyCatalog = {
     playful: 'Heutige Lektion machen',
     focus: 'Heutige Lektion fortsetzen',
   },
+  'home.dailyChallenge.eyebrowProofReuse': {
+    playful: 'Gestern geübten Skill nutzen',
+    focus: 'Proof-Skill wiederverwenden',
+  },
+  'home.dailyChallenge.titleProofReuse': {
+    playful: 'Dein Rewrite-Muster anwenden',
+    focus: 'Rewrite-Muster anwenden',
+  },
+  'home.dailyChallenge.bodyProofReuse': {
+    playful: 'Nutze „{{skill}}“ beim heutigen Schritt in {{path}} — gleiche Kritik→Rewrite-Schleife, echte Aufgabe.',
+    focus: 'Wende „{{skill}}“ auf den nächsten Schritt in {{path}} an: Kritik → Rewrite am echten Prompt.',
+  },
+  'home.dailyChallenge.ctaProofReuse': {
+    playful: 'Rewrite-Skill üben',
+    focus: 'Rewrite-Skill üben',
+  },
   'home.startHint': {
     playful: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
     focus: 'Starte mit den Prompt-Grundlagen — dein erster Schritt zum strukturierten Prompting.',
@@ -723,20 +739,36 @@ export const copyDe: CopyCatalog = {
     focus: 'Erster Skill-Beweis',
   },
   'firstSessionProof.headline': {
-    playful: 'Sieh zu, wie ein vager Prompt besser wird — und benenne, was du gelernt hast.',
-    focus: 'Kritik, Rewrite, Vergleich — dann den Skill benennen.',
+    playful: 'Editiere einen vagen Entwurf, schreib ihn selbst um, sieh deinen Score steigen.',
+    focus: 'Dein Entwurf: kritisieren, selbst umschreiben, Scores vergleichen.',
   },
   'firstSessionProof.sub': {
-    playful: 'Kein API-Key nötig. Der lokale Coach zeigt Qualität → Kritik → Rewrite in unter einer Minute.',
-    focus: 'Nur lokaler Coach. Qualität, Kritik, Rewrite — kein BYOK nötig.',
+    playful: 'Dein Vorher/Nachher — nur lokaler Coach, kein API-Key. Unter einer Minute.',
+    focus: 'Dein Entwurf und Rewrite. Nur lokaler Coach — kein BYOK nötig.',
   },
   'firstSessionProof.weakLabel': {
-    playful: 'Vager Prompt',
-    focus: 'Vager Prompt',
+    playful: 'Dein vager Entwurf',
+    focus: 'Dein vager Entwurf',
   },
   'firstSessionProof.improvedLabel': {
-    playful: 'Umschriebener Prompt',
-    focus: 'Umschriebener Prompt',
+    playful: 'Dein Rewrite',
+    focus: 'Dein Rewrite',
+  },
+  'firstSessionProof.weakPlaceholder': {
+    playful: 'Tippe oder passe eine vage Bitte an…',
+    focus: 'Editiere diesen vagen Prompt…',
+  },
+  'firstSessionProof.rewritePlaceholder': {
+    playful: 'Umschreiben mit Rolle, Kontext, Format und Limits…',
+    focus: 'Umschreiben mit Rolle, Kontext, Format und Constraints…',
+  },
+  'firstSessionProof.applySuggestion': {
+    playful: 'Coach-Rewrite übernehmen',
+    focus: 'Coach-Vorschlag übernehmen',
+  },
+  'firstSessionProof.honestNoGain': {
+    playful: 'Score noch nicht gestiegen — füge Rolle, Kontext oder harte Constraints hinzu und übe später im Lab.',
+    focus: 'Noch kein Score-Gewinn. Rolle, Kontext oder Constraints ergänzen — dann im Prompt Lab erneut.',
   },
   'firstSessionProof.scoreLabel': {
     playful: 'Coach-Score: {{score}}/100',
@@ -747,32 +779,32 @@ export const copyDe: CopyCatalog = {
     focus: 'Rolle, Zielgruppe, Format und Länge fehlen — das Modell muss raten.',
   },
   'firstSessionProof.compareTitle': {
-    playful: '{{before}} → {{after}} (+{{delta}})',
-    focus: '{{before}} → {{after}} (+{{delta}})',
+    playful: '{{before}} → {{after}} ({{delta}})',
+    focus: '{{before}} → {{after}} ({{delta}})',
   },
   'firstSessionProof.skillName': {
     playful: 'Aus einer vagen Bitte ein brauchbares Briefing machen',
     focus: 'Aus einer vagen Bitte ein brauchbares Briefing machen',
   },
   'firstSessionProof.skillProof': {
-    playful: 'Vor zehn Minuten hieß es „schreib etwas“. Jetzt siehst du, warum Struktur, Rolle und Constraints den Score ändern.',
-    focus: 'Du kannst erklären, warum Rolle, Kontext und Constraints die Prompt-Qualität heben.',
+    playful: 'Die Score-Änderung kommt von deinem Rewrite — Struktur, Rolle und Constraints sind jetzt messbar.',
+    focus: 'Du kannst erklären, warum Rolle, Kontext und Constraints deinen eigenen Prompt-Score heben.',
   },
   'firstSessionProof.comeBackTomorrow': {
     playful: 'Morgen: nutze dieses Rewrite-Muster an einer echten Aufgabe — das ist dein Tag-2-Win.',
     focus: 'Morgen: wende dieses Rewrite-Muster an einer echten Aufgabe an.',
   },
   'firstSessionProof.ctaCritique': {
-    playful: 'Kritik zeigen',
-    focus: 'Kritik zeigen',
+    playful: 'Meinen Entwurf kritisieren',
+    focus: 'Meinen Entwurf kritisieren',
   },
   'firstSessionProof.ctaRewrite': {
-    playful: 'Rewrite zeigen',
-    focus: 'Rewrite zeigen',
+    playful: 'Ich schreibe ihn um',
+    focus: 'Selbst umschreiben',
   },
   'firstSessionProof.ctaCompare': {
-    playful: 'Scores vergleichen',
-    focus: 'Scores vergleichen',
+    playful: 'Meine Scores vergleichen',
+    focus: 'Meine Scores vergleichen',
   },
   'firstSessionProof.ctaSummary': {
     playful: 'Benennen, was ich gelernt habe',
@@ -797,6 +829,26 @@ export const copyDe: CopyCatalog = {
   'promptLab.learnedComplete': {
     playful: 'Du triffst die Kern-Säulen — Rolle, Kontext, Format, Constraints.',
     focus: 'Kern-Säulen vorhanden: Rolle, Kontext, Format, Constraints.',
+  },
+  'promptLab.nextPatternTitle': {
+    playful: 'Ein nächstes Muster',
+    focus: 'Ein nächstes Muster',
+  },
+  'promptLab.nextPattern.example.role': {
+    playful: 'Beispiel: Rolle: Du bist ein klarer Lern-Coach.',
+    focus: 'Beispiel: Rolle: Du bist ein klarer Lern-Coach.',
+  },
+  'promptLab.nextPattern.example.context': {
+    playful: 'Beispiel: Kontext: Zielgruppe Einsteiger, kein Fachjargon.',
+    focus: 'Beispiel: Kontext: Zielgruppe Einsteiger, kein Fachjargon.',
+  },
+  'promptLab.nextPattern.example.format': {
+    playful: 'Beispiel: Format: 3 Stichpunkte, freundlicher Ton.',
+    focus: 'Beispiel: Format: 3 Stichpunkte, freundlicher Ton.',
+  },
+  'promptLab.nextPattern.example.constraints': {
+    playful: 'Beispiel: Constraints: maximal 80 Wörter, kein Hype.',
+    focus: 'Beispiel: Constraints: maximal 80 Wörter, kein Hype.',
   },
 
   'promptLab.dictationStart': {

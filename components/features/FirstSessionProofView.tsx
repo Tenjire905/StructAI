@@ -3,8 +3,13 @@ import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { OrbPresence } from '@/components/features/OrbPresence';
+import { PromptLabTextInput } from '@/components/features/PromptLabTextInput';
 import { Button, Card, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
+import {
+  FIRST_SESSION_PROOF_SKILL_COPY_KEY,
+  setFirstSessionProofCompleted,
+} from '@/lib/appStorage';
 import {
   buildDemoImprovedPrompt,
   buildDemoWeakPrompt,
@@ -20,14 +25,22 @@ type FirstSessionProofViewProps = {
   onContinue: () => void;
 };
 
+const MIN_DRAFT_LENGTH = 8;
+
 /**
- * Week-1 first-session proof: vague prompt → critique → rewrite → compare → skill summary.
+ * Week-1 first-session proof: user-owned vague draft → critique → rewrite → compare → skill summary.
  * Local heuristic only — no BYOK hurdle.
+ *
+ * Design: ownership over demo walkthrough — scores and critique always bind to the user's text,
+ * with an optional coach suggestion so the rewrite step never stalls.
  */
 export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps) {
   const { tokens, t, locale } = useThemeMode();
   const insets = useSafeAreaInsets();
   const [step, setStep] = useState<ProofStep>('weak');
+  const [weakDraft, setWeakDraft] = useState(() => buildDemoWeakPrompt(locale));
+  const [rewriteDraft, setRewriteDraft] = useState('');
+
   const orbOverride =
     step === 'critique' || step === 'compare'
       ? 'think'
@@ -38,13 +51,8 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
           : 'attentive';
   const companionState = useOrbCompanionState(orbOverride);
 
-  const weakPrompt = useMemo(() => buildDemoWeakPrompt(locale), [locale]);
-  const improvedPrompt = useMemo(() => buildDemoImprovedPrompt(locale), [locale]);
-  const beforeScore = useMemo(() => scorePrompt(weakPrompt, locale), [locale, weakPrompt]);
-  const afterScore = useMemo(
-    () => scorePrompt(improvedPrompt, locale),
-    [improvedPrompt, locale],
-  );
+  const beforeScore = useMemo(() => scorePrompt(weakDraft, locale), [locale, weakDraft]);
+  const afterScore = useMemo(() => scorePrompt(rewriteDraft, locale), [locale, rewriteDraft]);
   const comparison = useMemo(
     () => comparePromptScores(beforeScore, afterScore),
     [afterScore, beforeScore],
@@ -55,14 +63,36 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
       ? critiqueHints.join(' ')
       : t('firstSessionProof.critiqueBody');
 
+  const deltaLabel =
+    comparison.totalDelta > 0
+      ? `+${comparison.totalDelta}`
+      : String(comparison.totalDelta);
+
+  const canAdvanceFromWeak = weakDraft.trim().length >= MIN_DRAFT_LENGTH;
+  const canAdvanceFromRewrite = rewriteDraft.trim().length >= MIN_DRAFT_LENGTH;
+
   const advance = () => {
+    if (step === 'weak' && !canAdvanceFromWeak) {
+      return;
+    }
+    if (step === 'rewrite' && !canAdvanceFromRewrite) {
+      return;
+    }
+
     const order: ProofStep[] = ['weak', 'critique', 'rewrite', 'compare', 'summary'];
     const index = order.indexOf(step);
     if (index < order.length - 1) {
       setStep(order[index + 1]);
       return;
     }
-    onContinue();
+
+    void setFirstSessionProofCompleted(FIRST_SESSION_PROOF_SKILL_COPY_KEY).then(() => {
+      onContinue();
+    });
+  };
+
+  const applyCoachSuggestion = () => {
+    setRewriteDraft(buildDemoImprovedPrompt(locale));
   };
 
   const ctaLabel =
@@ -75,6 +105,10 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
           : step === 'rewrite'
             ? t('firstSessionProof.ctaCompare')
             : t('firstSessionProof.ctaSummary');
+
+  const ctaDisabled =
+    (step === 'weak' && !canAdvanceFromWeak) ||
+    (step === 'rewrite' && !canAdvanceFromRewrite);
 
   const proofSpeechKey =
     step === 'weak'
@@ -97,6 +131,7 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
         paddingHorizontal: tokens.spacing.screenPadding,
         paddingTop: insets.top + tokens.spacing.space5,
       }}
+      keyboardShouldPersistTaps="handled"
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <OrbPresence
         interaction={step === 'summary' ? 'react' : 'watch'}
@@ -148,15 +183,23 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
               }}>
               {t('firstSessionProof.weakLabel')}
             </Text>
-            <Text
-              style={{
-                color: tokens.colors.text.primary,
-                fontFamily: tokens.typography.fontFamily.body,
-                fontSize: tokens.typography.fontSize.bodyLg,
-                lineHeight: tokens.typography.fontSize.bodyLg * 1.4,
-              }}>
-              {weakPrompt}
-            </Text>
+            {step === 'weak' ? (
+              <PromptLabTextInput
+                onChangeText={setWeakDraft}
+                placeholder={t('firstSessionProof.weakPlaceholder')}
+                value={weakDraft}
+              />
+            ) : (
+              <Text
+                style={{
+                  color: tokens.colors.text.primary,
+                  fontFamily: tokens.typography.fontFamily.body,
+                  fontSize: tokens.typography.fontSize.bodyLg,
+                  lineHeight: tokens.typography.fontSize.bodyLg * 1.4,
+                }}>
+                {weakDraft}
+              </Text>
+            )}
             {step === 'critique' ? (
               <View style={{ gap: tokens.spacing.space2 }}>
                 <Text
@@ -183,7 +226,33 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
         </Card>
       ) : null}
 
-      {step === 'rewrite' || step === 'compare' || step === 'summary' ? (
+      {step === 'rewrite' ? (
+        <Card variant="solid">
+          <View style={{ gap: tokens.spacing.space3 }}>
+            <Text
+              style={{
+                color: tokens.colors.text.tertiary,
+                fontFamily: tokens.typography.fontFamily.bodyMedium,
+                fontSize: tokens.typography.fontSize.bodySm,
+                textTransform: 'uppercase',
+              }}>
+              {t('firstSessionProof.improvedLabel')}
+            </Text>
+            <PromptLabTextInput
+              onChangeText={setRewriteDraft}
+              placeholder={t('firstSessionProof.rewritePlaceholder')}
+              value={rewriteDraft}
+            />
+            <Button
+              label={t('firstSessionProof.applySuggestion')}
+              onPress={applyCoachSuggestion}
+              variant="ghost"
+            />
+          </View>
+        </Card>
+      ) : null}
+
+      {step === 'compare' || step === 'summary' ? (
         <Card variant="solid">
           <View style={{ gap: tokens.spacing.space3 }}>
             <Text
@@ -202,7 +271,7 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
                 fontSize: tokens.typography.fontSize.bodyMd,
                 lineHeight: tokens.typography.fontSize.bodyMd * 1.45,
               }}>
-              {improvedPrompt}
+              {rewriteDraft}
             </Text>
           </View>
         </Card>
@@ -220,21 +289,33 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
               {t('firstSessionProof.compareTitle', {
                 before: beforeScore.total,
                 after: afterScore.total,
-                delta: comparison.totalDelta,
+                delta: deltaLabel,
               })}
             </Text>
-            {comparison.improvementNotes.slice(0, 2).map((note) => (
+            {comparison.totalDelta > 0 ? (
+              comparison.improvementNotes.slice(0, 2).map((note) => (
+                <Text
+                  key={note}
+                  style={{
+                    color: tokens.colors.text.secondary,
+                    fontFamily: tokens.typography.fontFamily.body,
+                    fontSize: tokens.typography.fontSize.bodySm,
+                    lineHeight: tokens.typography.fontSize.bodySm * 1.45,
+                  }}>
+                  {note}
+                </Text>
+              ))
+            ) : (
               <Text
-                key={note}
                 style={{
                   color: tokens.colors.text.secondary,
                   fontFamily: tokens.typography.fontFamily.body,
                   fontSize: tokens.typography.fontSize.bodySm,
                   lineHeight: tokens.typography.fontSize.bodySm * 1.45,
                 }}>
-                {note}
+                {t('firstSessionProof.honestNoGain')}
               </Text>
-            ))}
+            )}
           </View>
         </Card>
       ) : null}
@@ -281,7 +362,7 @@ export function FirstSessionProofView({ onContinue }: FirstSessionProofViewProps
         </Card>
       ) : null}
 
-      <Button label={ctaLabel} onPress={advance} variant="primary" />
+      <Button disabled={ctaDisabled} label={ctaLabel} onPress={advance} variant="primary" />
     </ScrollView>
   );
 }

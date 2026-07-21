@@ -2,6 +2,7 @@ import { Text, View } from 'react-native';
 
 import { Button, Card } from '@/components/ui';
 import type { DailyChallenge } from '@/lib/dailyChallenge';
+import { FIRST_SESSION_PROOF_SKILL_COPY_KEY, getFirstSessionProofSkillKey } from '@/lib/appStorage';
 import { useThemeMode } from '@/theme';
 
 type HomeDailyChallengeCardProps = {
@@ -12,10 +13,33 @@ type HomeDailyChallengeCardProps = {
 /**
  * One clear job today — primary Home CTA above path browsing.
  * Reuses Card + Button; no new card system.
+ * Week-1 proofReuse framing ties the CTA to the first-session skill claim.
  */
 export function HomeDailyChallengeCard({ challenge, onStart }: HomeDailyChallengeCardProps) {
   const { tokens, t } = useThemeMode();
   const isFocus = tokens.presentation.orbStyle === 'minimal';
+  const isProofReuse = challenge.framing === 'proofReuse';
+  const skillKey = getFirstSessionProofSkillKey() ?? FIRST_SESSION_PROOF_SKILL_COPY_KEY;
+
+  const eyebrow = isProofReuse
+    ? t('home.dailyChallenge.eyebrowProofReuse')
+    : t('home.dailyChallenge.eyebrow');
+  const title = isProofReuse
+    ? t('home.dailyChallenge.titleProofReuse')
+    : t('home.dailyChallenge.title');
+  const body = isProofReuse
+    ? t('home.dailyChallenge.bodyProofReuse', {
+        path: t(challenge.pathTitleKey),
+        skill: t(skillKey),
+      })
+    : challenge.isFreshStart
+      ? t('home.dailyChallenge.bodyFresh', { path: t(challenge.pathTitleKey) })
+      : t('home.dailyChallenge.bodyContinue', { path: t(challenge.pathTitleKey) });
+  const cta = isProofReuse
+    ? t('home.dailyChallenge.ctaProofReuse')
+    : challenge.isFreshStart
+      ? t('home.dailyChallenge.ctaFresh')
+      : t('home.dailyChallenge.ctaContinue');
 
   return (
     <Card variant="solid">
@@ -26,7 +50,7 @@ export function HomeDailyChallengeCard({ challenge, onStart }: HomeDailyChalleng
             fontFamily: tokens.typography.fontFamily.bodyMedium,
             fontSize: tokens.typography.fontSize.bodySm,
           }}>
-          {t('home.dailyChallenge.eyebrow')}
+          {eyebrow}
         </Text>
 
         <Text
@@ -35,7 +59,7 @@ export function HomeDailyChallengeCard({ challenge, onStart }: HomeDailyChalleng
             fontFamily: tokens.typography.fontFamily.heading,
             fontSize: tokens.typography.fontSize.headingMd,
           }}>
-          {t('home.dailyChallenge.title')}
+          {title}
         </Text>
 
         <Text
@@ -45,20 +69,10 @@ export function HomeDailyChallengeCard({ challenge, onStart }: HomeDailyChalleng
             fontSize: tokens.typography.fontSize.bodyMd,
             lineHeight: tokens.typography.fontSize.bodyMd * 1.5,
           }}>
-          {challenge.isFreshStart
-            ? t('home.dailyChallenge.bodyFresh', { path: t(challenge.pathTitleKey) })
-            : t('home.dailyChallenge.bodyContinue', { path: t(challenge.pathTitleKey) })}
+          {body}
         </Text>
 
-        <Button
-          label={
-            challenge.isFreshStart
-              ? t('home.dailyChallenge.ctaFresh')
-              : t('home.dailyChallenge.ctaContinue')
-          }
-          onPress={onStart}
-          variant="primary"
-        />
+        <Button label={cta} onPress={onStart} variant="primary" />
       </View>
     </Card>
   );

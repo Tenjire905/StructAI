@@ -89,6 +89,22 @@ export const copyFr: CopyCatalog = {
     playful: 'Faire la lecon du jour',
     focus: 'Continuer la lecon du jour',
   },
+  'home.dailyChallenge.eyebrowProofReuse': {
+    playful: 'Reutiliser le skill d hier',
+    focus: 'Reutiliser le skill prouve',
+  },
+  'home.dailyChallenge.titleProofReuse': {
+    playful: 'Appliquer ton schema de rewrite',
+    focus: 'Appliquer le schema de rewrite',
+  },
+  'home.dailyChallenge.bodyProofReuse': {
+    playful: 'Utilise « {{skill}} » sur l etape du jour dans {{path}} — meme boucle critique → rewrite, vraie tache.',
+    focus: 'Applique « {{skill}} » a la prochaine etape dans {{path}} : critique → rewrite sur un vrai prompt.',
+  },
+  'home.dailyChallenge.ctaProofReuse': {
+    playful: 'Pratiquer le skill de rewrite',
+    focus: 'Pratiquer le skill de rewrite',
+  },
   'home.startHint': {
     playful: 'Commence par les bases du prompt — ta premiere etape vers un prompting structure.',
     focus: 'Commencez par les bases du prompt — votre premiere etape vers un prompting structure.',
@@ -722,20 +738,36 @@ export const copyFr: CopyCatalog = {
     focus: 'Premiere preuve de skill',
   },
   'firstSessionProof.headline': {
-    playful: 'Vois un prompt vague s ameliorer — puis nomme ce que tu as appris.',
-    focus: 'Critique, rewrite, compare — puis nomme le skill.',
+    playful: 'Edite un brouillon vague, reecris-le toi-meme, vois ton score monter.',
+    focus: 'Ton brouillon : critique, rewrite perso, compare tes scores.',
   },
   'firstSessionProof.sub': {
-    playful: 'Pas de cle API. Le coach local montre qualite → critique → rewrite en moins d une minute.',
-    focus: 'Coach local seulement. Qualite, critique, rewrite — pas de BYOK.',
+    playful: 'Ton avant/apres — coach local seulement, pas de cle API. Moins d une minute.',
+    focus: 'Ton brouillon et rewrite. Coach local seulement — pas de BYOK.',
   },
   'firstSessionProof.weakLabel': {
-    playful: 'Prompt vague',
-    focus: 'Prompt vague',
+    playful: 'Ton brouillon vague',
+    focus: 'Ton brouillon vague',
   },
   'firstSessionProof.improvedLabel': {
-    playful: 'Prompt reecrit',
-    focus: 'Prompt reecrit',
+    playful: 'Ton rewrite',
+    focus: 'Ton rewrite',
+  },
+  'firstSessionProof.weakPlaceholder': {
+    playful: 'Ecris ou ajuste une demande vague…',
+    focus: 'Edite ce prompt vague…',
+  },
+  'firstSessionProof.rewritePlaceholder': {
+    playful: 'Reecris avec role, contexte, format et limites…',
+    focus: 'Reecris avec role, contexte, format et contraintes…',
+  },
+  'firstSessionProof.applySuggestion': {
+    playful: 'Appliquer le rewrite coach',
+    focus: 'Appliquer la suggestion coach',
+  },
+  'firstSessionProof.honestNoGain': {
+    playful: 'Le score n a pas encore monte — ajoute role, contexte ou contraintes dures, puis reessaie au Lab.',
+    focus: 'Pas encore de gain. Ajoute role, contexte ou contraintes — puis reessaie dans Prompt Lab.',
   },
   'firstSessionProof.scoreLabel': {
     playful: 'Score coach : {{score}}/100',
@@ -746,32 +778,32 @@ export const copyFr: CopyCatalog = {
     focus: 'Role, audience, format et longueur manquent — le modele doit deviner.',
   },
   'firstSessionProof.compareTitle': {
-    playful: '{{before}} → {{after}} (+{{delta}})',
-    focus: '{{before}} → {{after}} (+{{delta}})',
+    playful: '{{before}} → {{after}} ({{delta}})',
+    focus: '{{before}} → {{after}} ({{delta}})',
   },
   'firstSessionProof.skillName': {
     playful: 'Transformer une demande vague en brief utilisable',
     focus: 'Transformer une demande vague en brief utilisable',
   },
   'firstSessionProof.skillProof': {
-    playful: 'Il y a dix minutes c etait « ecris quelque chose ». Maintenant tu vois pourquoi structure, role et contraintes changent le score.',
-    focus: 'Tu peux expliquer pourquoi role, contexte et contraintes ameliorent la qualite du prompt.',
+    playful: 'Ce changement de score vient de ton rewrite — structure, role et contraintes sont maintenant mesurables.',
+    focus: 'Tu peux expliquer pourquoi role, contexte et contraintes ont leve ton propre score.',
   },
   'firstSessionProof.comeBackTomorrow': {
     playful: 'Demain : réutilise ce schéma de rewrite sur une vraie tâche — c’est ton win du jour 2.',
     focus: 'Demain : réutilise ce schéma de rewrite sur une vraie tâche — c’est ton win du jour 2.',
   },
   'firstSessionProof.ctaCritique': {
-    playful: 'Montrer la critique',
-    focus: 'Montrer la critique',
+    playful: 'Critiquer mon brouillon',
+    focus: 'Critiquer mon brouillon',
   },
   'firstSessionProof.ctaRewrite': {
-    playful: 'Montrer un rewrite',
-    focus: 'Montrer le rewrite',
+    playful: 'Je le reecris',
+    focus: 'Le reecrire moi-meme',
   },
   'firstSessionProof.ctaCompare': {
-    playful: 'Comparer les scores',
-    focus: 'Comparer les scores',
+    playful: 'Comparer mes scores',
+    focus: 'Comparer mes scores',
   },
   'firstSessionProof.ctaSummary': {
     playful: 'Nommer ce que j ai appris',
@@ -796,6 +828,26 @@ export const copyFr: CopyCatalog = {
   'promptLab.learnedComplete': {
     playful: 'Tu touches les piliers cles — role, contexte, format, contraintes.',
     focus: 'Piliers cles presents : role, contexte, format, contraintes.',
+  },
+  'promptLab.nextPatternTitle': {
+    playful: 'Un prochain schema',
+    focus: 'Un prochain schema',
+  },
+  'promptLab.nextPattern.example.role': {
+    playful: 'Exemple : Role : Tu es un assistant pedagogique clair.',
+    focus: 'Exemple : Role : Tu es un assistant pedagogique clair.',
+  },
+  'promptLab.nextPattern.example.context': {
+    playful: 'Exemple : Contexte : public debutant, sans jargon.',
+    focus: 'Exemple : Contexte : public debutant, sans jargon.',
+  },
+  'promptLab.nextPattern.example.format': {
+    playful: 'Exemple : Format : 3 puces, ton amical.',
+    focus: 'Exemple : Format : 3 puces, ton amical.',
+  },
+  'promptLab.nextPattern.example.constraints': {
+    playful: 'Exemple : Contraintes : max 80 mots, pas de hype.',
+    focus: 'Exemple : Contraintes : max 80 mots, pas de hype.',
   },
 
   'promptLab.dictationStart': {

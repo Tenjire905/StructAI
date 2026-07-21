@@ -332,6 +332,32 @@ export async function clearProPreviewUnlocked(): Promise<void> {
   await deleteAppStorageValue(PRO_PREVIEW_UNLOCKED_KEY);
 }
 
+/** Week-1 first-session proof completion (user-owned before/after). */
+const FIRST_SESSION_PROOF_COMPLETED_KEY = 'structai.first-session-proof-completed';
+const FIRST_SESSION_PROOF_SKILL_KEY = 'structai.first-session-proof-skill-key';
+export const FIRST_SESSION_PROOF_SKILL_COPY_KEY = 'firstSessionProof.skillName';
+
+export function isFirstSessionProofCompleted(): boolean {
+  return appStorage.getString(FIRST_SESSION_PROOF_COMPLETED_KEY) === 'true';
+}
+
+export function getFirstSessionProofSkillKey(): string | undefined {
+  const value = appStorage.getString(FIRST_SESSION_PROOF_SKILL_KEY)?.trim();
+  return value && value.length > 0 ? value : undefined;
+}
+
+export async function setFirstSessionProofCompleted(
+  skillKey: string = FIRST_SESSION_PROOF_SKILL_COPY_KEY,
+): Promise<void> {
+  await persistAppStorageValue(FIRST_SESSION_PROOF_COMPLETED_KEY, 'true');
+  await persistAppStorageValue(FIRST_SESSION_PROOF_SKILL_KEY, skillKey);
+}
+
+export async function clearFirstSessionProofCompleted(): Promise<void> {
+  await deleteAppStorageValue(FIRST_SESSION_PROOF_COMPLETED_KEY);
+  await deleteAppStorageValue(FIRST_SESSION_PROOF_SKILL_KEY);
+}
+
 /** Clears onboarding + profile prefs so the next launch starts at welcome. */
 export async function clearAllOnboardingAndProfilePrefs(): Promise<void> {
   await clearOnboardingCompleted();
@@ -340,4 +366,5 @@ export async function clearAllOnboardingAndProfilePrefs(): Promise<void> {
   await clearProfileAge();
   await clearDailyGoalSetupCompleted();
   await clearProPreviewUnlocked();
+  await clearFirstSessionProofCompleted();
 }
