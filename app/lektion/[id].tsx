@@ -77,7 +77,7 @@ import { prepareLessonSteps } from '@/lib/lessonSession';
 import { matchReorderHint } from '@/lib/reorderHints';
 import { useProgressStore } from '@/store/progressStore';
 import { useAuth } from '@/providers/AuthProvider';
-import { getShadow, useCelebration, useThemeMode } from '@/theme';
+import { useCelebration, useThemeMode } from '@/theme';
 
 type GradedStep = Exclude<ResolvedLessonStep, { type: 'info' }>;
 
@@ -1064,7 +1064,6 @@ function CompletionView({
   const { session } = useAuth();
   const completedLessons = useProgressStore((state) => state.completedLessons);
   const companionState = useOrbCompanionState(orbsReward > 0 ? 'celebrating' : 'happy');
-  const isPlayful = tokens.presentation.orbStyle === 'illustrated';
   const nextLessonId = pathId ? getNextLessonId(pathId, lessonId) : undefined;
 
   return (
@@ -1077,26 +1076,15 @@ function CompletionView({
         justifyContent: 'center',
         paddingHorizontal: tokens.spacing.screenPadding,
       }}>
-      <View
-        style={[
-          isPlayful ? getShadow('glow') : undefined,
-          {
-            alignItems: 'center',
-            backgroundColor: tokens.colors.surface.card,
-            borderRadius: tokens.radius.pill,
-            height: tokens.spacing.space8,
-            justifyContent: 'center',
-            width: tokens.spacing.space8,
-          },
-        ]}>
-        <OrbPresence
-          showSpeech
-          size={tokens.spacing.space8 * 0.75}
-          speechKey={orbsReward > 0 ? 'orb.speech.lessonComplete' : 'orb.speech.celebrating.a'}
-          speechSeed={lessonId.length}
-          state={companionState}
-        />
-      </View>
+      <OrbPresence
+        interaction="react"
+        layout="hero"
+        showSpeech
+        size={tokens.spacing.space8 * 1.15}
+        speechKey={orbsReward > 0 ? 'orb.speech.lessonComplete' : 'orb.speech.celebrating.a'}
+        speechSeed={lessonId.length}
+        state={companionState}
+      />
 
       <Text
         style={{

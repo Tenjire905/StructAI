@@ -42,6 +42,13 @@ if (!meet.includes('OrbPresence') || !meet.includes('showSpeech')) {
 if (!completion.includes("'celebrating'") || !completion.includes('orb.speech.lessonComplete')) {
   violations.push('Lesson completion must force celebrating/happy orb mimik');
 }
+if (!completion.includes('layout="hero"') || completion.includes('borderRadius: tokens.radius.pill')) {
+  // Completion previously wrapped OrbPresence in a pill card → phantom tile beside orb.
+  violations.push('Lesson completion OrbPresence must be hero-centered without pill tile wrapper');
+}
+if (orb.includes('accent.structure')) {
+  violations.push('OrbSvgCompanion must not use accent-structure (scoring-only; causes green flecks)');
+}
 if (!retry.includes("'worry'") || !retry.includes('orb.speech.lessonRetry')) {
   violations.push('Retry prompt must show worry orb mimik with speech');
 }

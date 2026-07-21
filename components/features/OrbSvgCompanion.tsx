@@ -382,13 +382,14 @@ export function OrbSvgCompanion({
 
   const primary = tokens.colors.accent.primary;
   const primaryDim = tokens.colors.accent.primaryDim;
-  const structure = tokens.colors.accent.structure;
   const warning = tokens.colors.accent.warning;
   const core = tokens.colors.background.base;
   const onAccent = tokens.colors.text.onAccent;
 
+  // Warmth (worry/low_energy) → warning only. Never accent-structure here —
+  // cyan is scoring-only and read as a stray “green particle” on orange orbs.
   const glowColor = energy.warmth > 0.4 ? warning : primary;
-  const coronaInner = energy.warmth > 0.4 ? warning : structure;
+  const coronaInner = energy.warmth > 0.4 ? warning : primaryDim;
   const glowStyle = isPlayful ? getShadow('glow') : getShadow(1);
   const strokeW = energy.waveStroke * (isPlayful ? 1 : 0.75);
 
@@ -525,8 +526,8 @@ export function OrbSvgCompanion({
               animatedProps={flareProps}
               cx="3.5"
               cy="9"
-              fill={structure}
-              opacity={0.55}
+              fill={glowColor}
+              opacity={0.45}
               rx={1.6}
               ry={1.1}
             />
