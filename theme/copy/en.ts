@@ -716,70 +716,6 @@ export const copyEn: CopyCatalog = {
     playful: 'You can catch missing goal, format, or constraints before you hit send.',
     focus: 'You can catch missing goal, format, or constraints before sending.',
   },
-  'firstSessionProof.brand': {
-    playful: 'Your first skill proof',
-    focus: 'First skill proof',
-  },
-  'firstSessionProof.headline': {
-    playful: 'Watch a vague prompt get better — then name what you learned.',
-    focus: 'Critique, rewrite, compare — then name the skill.',
-  },
-  'firstSessionProof.sub': {
-    playful: 'No API key needed. Local coach shows quality → critique → rewrite in under a minute.',
-    focus: 'Local coach only. Quality, critique, rewrite — no BYOK required.',
-  },
-  'firstSessionProof.weakLabel': {
-    playful: 'Vague prompt',
-    focus: 'Vague prompt',
-  },
-  'firstSessionProof.improvedLabel': {
-    playful: 'Rewritten prompt',
-    focus: 'Rewritten prompt',
-  },
-  'firstSessionProof.scoreLabel': {
-    playful: 'Coach score: {{score}}/100',
-    focus: 'Score: {{score}}/100',
-  },
-  'firstSessionProof.critiqueBody': {
-    playful: 'Too vague: no role, no audience, no format, no length. The model has to guess.',
-    focus: 'Missing role, audience, format, and length — the model must guess.',
-  },
-  'firstSessionProof.compareTitle': {
-    playful: '{{before}} → {{after}} (+{{delta}})',
-    focus: '{{before}} → {{after}} (+{{delta}})',
-  },
-  'firstSessionProof.skillName': {
-    playful: 'Turn a vague ask into a usable brief',
-    focus: 'Turn a vague ask into a usable brief',
-  },
-  'firstSessionProof.skillProof': {
-    playful: 'Ten minutes ago that was “write something.” Now you can see why structure, role, and constraints change the score.',
-    focus: 'You can explain why role, context, and constraints raise prompt quality.',
-  },
-  'firstSessionProof.comeBackTomorrow': {
-    playful: 'Tomorrow: reuse this rewrite pattern on one real task — that is your day-2 win.',
-    focus: 'Tomorrow: apply this rewrite pattern on one real task.',
-  },
-  'firstSessionProof.ctaCritique': {
-    playful: 'Critique it',
-    focus: 'Show critique',
-  },
-  'firstSessionProof.ctaRewrite': {
-    playful: 'Show a rewrite',
-    focus: 'Show rewrite',
-  },
-  'firstSessionProof.ctaCompare': {
-    playful: 'Compare scores',
-    focus: 'Compare scores',
-  },
-  'firstSessionProof.ctaSummary': {
-    playful: 'Name what I learned',
-    focus: 'Show skill summary',
-  },
-  'firstSessionProof.ctaDone': {
-    playful: 'Continue — set up my profile',
-    focus: 'Continue to profile',
-  },
   'promptLab.learnedEyebrow': {
     playful: 'You practiced',
     focus: 'Skill practiced',
@@ -795,6 +731,26 @@ export const copyEn: CopyCatalog = {
   'promptLab.learnedComplete': {
     playful: 'You hit the core pillars — role, context, format, constraints.',
     focus: 'Core pillars present: role, context, format, constraints.',
+  },
+  'promptLab.nextPatternTitle': {
+    playful: 'One next pattern',
+    focus: 'One next pattern',
+  },
+  'promptLab.nextPattern.example.role': {
+    playful: 'Example: Role: You are a clear teaching assistant.',
+    focus: 'Example: Role: You are a clear teaching assistant.',
+  },
+  'promptLab.nextPattern.example.context': {
+    playful: 'Example: Context: Beginner audience, no jargon.',
+    focus: 'Example: Context: Beginner audience, no jargon.',
+  },
+  'promptLab.nextPattern.example.format': {
+    playful: 'Example: Format: 3 bullet points, friendly tone.',
+    focus: 'Example: Format: 3 bullet points, friendly tone.',
+  },
+  'promptLab.nextPattern.example.constraints': {
+    playful: 'Example: Constraints: max 80 words, no hype.',
+    focus: 'Example: Constraints: max 80 words, no hype.',
   },
 
   'promptLab.dictationStart': {
@@ -856,30 +812,6 @@ export const copyEn: CopyCatalog = {
   'orb.speech.onboarding.loop': {
     playful: 'Here’s the loop: learn → practice → get better. Ready for skill one?',
     focus: 'Three beats: learn, practice, improve. Start when ready.',
-  },
-  'orb.speech.onboarding.proof': {
-    playful: 'Watch this vague prompt level up — that’s the skill.',
-    focus: 'Critique → rewrite → compare. That’s the proof.',
-  },
-  'orb.speech.onboarding.proofWeak': {
-    playful: 'This is how it often starts: friendly, but too vague. Spot the gaps?',
-    focus: 'Typical start: intent exists, structure doesn’t. That’s what we fix.',
-  },
-  'orb.speech.onboarding.proofCritique': {
-    playful: 'Quick check: goal, constraints, format — what’s missing?',
-    focus: 'Critique pass: name the missing pieces, don’t guess.',
-  },
-  'orb.speech.onboarding.proofRewrite': {
-    playful: 'Now the rewrite — same idea, real structure. Boom.',
-    focus: 'Rewrite: same intent, clear structure and constraints.',
-  },
-  'orb.speech.onboarding.proofCompare': {
-    playful: 'Before/after — the score rises because structure is measurable.',
-    focus: 'Compare: structure makes the difference visible.',
-  },
-  'orb.speech.onboarding.proofDone': {
-    playful: 'Nice — you can spot a weak prompt and fix it now. That’s the skill.',
-    focus: 'You can turn a vague ask into a usable brief.',
   },
   'orb.speech.onboarding.dailyGoal': {
     playful: 'Set a tiny daily goal — I’ll nudge you, no stress.',

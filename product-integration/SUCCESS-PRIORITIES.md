@@ -63,14 +63,14 @@ We do **not** need to match content volume to win — feedback loops + session c
 |---|------------|--------|
 | **P0.1** | Finish prompt-mastery pm-4…pm-35 | **Done** — pm-4…pm-12 shipped; pm-13…pm-35 shipped (path complete) |
 | **P0.2** | Expo Go retest A–H | **Done** (founder verified A–H) |
-| P0.3 | Crash/nav + home UX on develop | **Done** on develop (lesson exit/continue/back-path + onboarding nav); retest on device with proof flow |
+| P0.3 | Crash/nav + home UX on develop | **Done** on develop (lesson exit/continue/back-path + onboarding nav); retest on device |
 
 ### P1 — “I learned something” every session
 | # | Initiative | Feeling | Status |
 |---|------------|---------|--------|
 | **P1.1** | Post-check **Learning Beat** | Pattern to remember under feedback | **Shipped** |
 | **P1.2** | End-of-lesson **named skill summary** | Curated “you can do this now” (not glossary heuristics) | **Shipped** (pb-1…pb-6 + generic) |
-| **P1.2b** | First-session proof loop | Critique → rewrite → compare → summarize | **Shipped** (`/onboarding/proof`) |
+| **P1.2b** | First-session proof loop | Critique → rewrite → compare → summarize | **Removed** (überfordernd ohne Vorwissen; Flow geht nach erster Lektion direkt zu Profil) |
 | **P1.2c** | Prompt Lab “you learned X” | Score result framed as skill practiced | **Shipped** |
 | ~~P1.2-old~~ | Glossary-heuristic Skill Card | Auto tags | **Removed** (noisy / inaccurate) |
 | **P1.3** | Home **Daily Challenge** CTA | One clear job today | **Shipped** |
