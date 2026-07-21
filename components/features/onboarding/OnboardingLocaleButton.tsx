@@ -20,11 +20,8 @@ import {
 } from '@/theme';
 
 /**
- * Liftoff-style language control for onboarding: accent square top-right,
- * opens an anchored list of the four app locales (endonyms, no flags/emoji).
- *
- * Design: compact icon-only trigger keeps the brand hero centered; the menu
- * uses elevated surface + shared shadow so it reads as a sheet, not a card cluster.
+ * Quiet edge language control for onboarding — small, low-contrast chip so the
+ * brand stays hero and the picker reads as an optional rim affordance (not a CTA).
  */
 export function OnboardingLocaleButton() {
   const { tokens, mode, locale, setLocale, t } = useThemeMode();
@@ -34,10 +31,8 @@ export function OnboardingLocaleButton() {
   const menuOpacity = useSharedValue(0);
   const menuScale = useSharedValue(0.96);
   const isFocus = mode === 'focus';
-  const iconSize = isFocus ? tokens.icons.sizes.md : tokens.icons.sizes.lg;
-  const buttonSize = isFocus
-    ? tokens.spacing.space7 - tokens.spacing.space1
-    : tokens.spacing.space7;
+  const iconSize = tokens.icons.sizes.sm;
+  const buttonSize = isFocus ? tokens.spacing.space5 + tokens.spacing.space1 : tokens.spacing.space6;
 
   const menuStyle = useAnimatedStyle(() => ({
     opacity: menuOpacity.value,
@@ -68,19 +63,20 @@ export function OnboardingLocaleButton() {
       <PressableScale
         accessibilityLabel={t('onboarding.languagePickerA11y')}
         accessibilityRole="button"
-        hitSlop={tokens.spacing.space2}
+        hitSlop={tokens.spacing.space3}
         onPress={openMenu}
         style={{
           alignItems: 'center',
-          backgroundColor: tokens.colors.accent.primary,
-          borderRadius: tokens.radius.md,
+          backgroundColor: tokens.colors.surface.card,
+          borderColor: tokens.colors.border.subtle,
+          borderRadius: tokens.radius.sm,
+          borderWidth: 1,
           height: buttonSize,
           justifyContent: 'center',
           width: buttonSize,
-          ...getShadow(1),
         }}>
         <Languages
-          color={tokens.colors.text.onAccent}
+          color={tokens.colors.text.secondary}
           size={iconSize}
           strokeWidth={tokens.icons.strokeWidth}
         />
