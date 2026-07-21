@@ -1,7 +1,7 @@
 import { Text, type StyleProp, type TextStyle } from 'react-native';
 
 import { getGlossaryTerms } from '@/data/glossary';
-import { splitTextWithGlossary } from '@/lib/glossary';
+import { findGlossaryMatches, splitTextWithGlossaryMatches } from '@/lib/glossary';
 import { useThemeMode } from '@/theme';
 
 import { getGlossaryTermHighlightStyle } from './glossaryHighlightStyle';
@@ -17,6 +17,7 @@ type InlineGlossaryTextProps = {
 /**
  * Renders lesson prose with tappable glossary highlights for uncommon AI terms.
  * Works in Focus and Playful via theme tokens + mode-aware definitions.
+ * Within a GlossaryHighlightPass, each term id is marked at most once (title wins over body).
  */
 export function InlineGlossaryText({ text, style, nested = false }: InlineGlossaryTextProps) {
   const { tokens, mode, locale, t } = useThemeMode();
@@ -30,7 +31,10 @@ export function InlineGlossaryText({ text, style, nested = false }: InlineGlossa
     return <Text style={style}>{text}</Text>;
   }
 
-  const segments = splitTextWithGlossary(text, getGlossaryTerms(locale), mode);
+  const matches = findGlossaryMatches(text, getGlossaryTerms(locale), mode).filter((match) =>
+    glossary.claimHighlightTerm(match.id),
+  );
+  const segments = splitTextWithGlossaryMatches(text, matches);
 
   const content = segments.map((segment, index) => {
     if (segment.type === 'text') {

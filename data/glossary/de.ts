@@ -44,7 +44,7 @@ export const GLOSSARY_DE: GlossaryTerm[] = [
   },
   {
     id: 'model',
-    aliases: ['Sprachmodell', 'Sprachmodelle', 'Modell', 'Modelle'],
+    aliases: ['Sprachmodell', 'Sprachmodelle', 'Modell', 'Modelle', 'KI'],
     definition: {
       focus:
         'Das KI-System, das Text versteht und erzeugt (z. B. ein großes Sprachmodell / LLM).',
@@ -187,6 +187,24 @@ export const GLOSSARY_DE: GlossaryTerm[] = [
       focus:
         'Schnittstelle, über die Programme (z. B. Apps) mit einer KI oder einem Dienst sprechen.',
       playful: 'Die Tür, durch die Apps mit der KI reden.',
+    },
+  },
+  {
+    id: 'layperson',
+    aliases: ['Laien', 'Laie'],
+    definition: {
+      focus:
+        'Menschen ohne Fachwissen zum Thema — brauchen einfachere Worte und mehr Erklärung als Experten.',
+      playful: 'Leute, die das Thema noch nicht kennen — also keine Experten.',
+    },
+  },
+  {
+    id: 'audience',
+    aliases: ['Zielgruppe', 'Zielgruppenangabe', 'Zielgruppen'],
+    definition: {
+      focus:
+        'Für wen die Antwort gedacht ist (z. B. Anfänger, Expert:innen). Steuert Wortwahl, Tiefe und Ton.',
+      playful: 'Für wen die KI schreiben soll — z. B. Anfänger oder Profis.',
     },
   },
 ];

@@ -83,8 +83,10 @@ export function findGlossaryMatches(
     const overlaps = selected.some(
       (existing) => candidate.start < existing.end && candidate.end > existing.start,
     );
+    const alreadyHighlighted = selected.some((existing) => existing.id === candidate.id);
 
-    if (!overlaps) {
+    // One highlight per term id per text block — repeats feel noisy.
+    if (!overlaps && !alreadyHighlighted) {
       selected.push(candidate);
     }
   }
@@ -92,21 +94,20 @@ export function findGlossaryMatches(
   return selected.sort((left, right) => left.start - right.start);
 }
 
-export function splitTextWithGlossary(
+/** Build segments from pre-selected matches (e.g. after step-wide claim filtering). */
+export function splitTextWithGlossaryMatches(
   text: string,
-  terms: GlossaryTerm[],
-  mode: ThemeMode,
+  matches: GlossaryMatch[],
 ): GlossarySegment[] {
-  const matches = findGlossaryMatches(text, terms, mode);
-
   if (matches.length === 0) {
     return [{ type: 'text', value: text }];
   }
 
+  const ordered = [...matches].sort((left, right) => left.start - right.start);
   const segments: GlossarySegment[] = [];
   let cursor = 0;
 
-  for (const match of matches) {
+  for (const match of ordered) {
     if (match.start > cursor) {
       segments.push({ type: 'text', value: text.slice(cursor, match.start) });
     }
@@ -124,6 +125,14 @@ export function splitTextWithGlossary(
   }
 
   return segments;
+}
+
+export function splitTextWithGlossary(
+  text: string,
+  terms: GlossaryTerm[],
+  mode: ThemeMode,
+): GlossarySegment[] {
+  return splitTextWithGlossaryMatches(text, findGlossaryMatches(text, terms, mode));
 }
 
 export function getGlossaryDefinition(

@@ -36,7 +36,7 @@ export const GLOSSARY_EN: GlossaryTerm[] = [
   },
   {
     id: 'model',
-    aliases: ['language model', 'language models', 'model', 'models'],
+    aliases: ['language model', 'language models', 'model', 'models', 'AI'],
     definition: {
       focus: 'The AI system that understands and generates text (e.g. a large language model).',
       playful: 'The AI behind the answers — the “brain” you’re talking to.',
@@ -160,6 +160,24 @@ export const GLOSSARY_EN: GlossaryTerm[] = [
     definition: {
       focus: 'An interface apps use to talk to an AI or other service.',
       playful: 'The door apps use to talk to the AI.',
+    },
+  },
+  {
+    id: 'layperson',
+    aliases: ['laypeople', 'layperson', 'lay people'],
+    definition: {
+      focus:
+        'People without topic expertise — they need simpler words and more explanation than experts.',
+      playful: 'People who don’t know the topic yet — not experts.',
+    },
+  },
+  {
+    id: 'audience',
+    aliases: ['audience', 'target audience'],
+    definition: {
+      focus:
+        'Who the answer is for (e.g. beginners, experts). Steers word choice, depth, and tone.',
+      playful: 'Who the AI should write for — beginners or pros.',
     },
   },
 ];

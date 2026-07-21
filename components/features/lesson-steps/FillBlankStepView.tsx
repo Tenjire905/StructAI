@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
 import { Card, PressableScale } from '@/components/ui';
 import type { ResolvedLessonStep } from '@/data/mockLessons';
+import { withFillBlankJoinSpaces } from '@/lib/fillBlankJoin';
 import { useThemeMode } from '@/theme';
 
 export type FillBlankStepViewProps = {
@@ -19,6 +20,8 @@ export function FillBlankStepView({
   onSelect,
 }: FillBlankStepViewProps) {
   const { tokens, t } = useThemeMode();
+  const blank = selectedOption !== null ? step.options[selectedOption] : '___';
+  const joined = withFillBlankJoinSpaces(step.prefix, blank, step.suffix);
 
   return (
     <View style={{ gap: tokens.spacing.space3 }}>
@@ -38,7 +41,7 @@ export function FillBlankStepView({
             fontSize: tokens.typography.fontSize.bodyLg,
             lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
           }}>
-          <InlineGlossaryText nested text={step.prefix} />
+          <InlineGlossaryText nested text={joined.prefix} />
           <Text
             style={{
               color:
@@ -47,9 +50,9 @@ export function FillBlankStepView({
                   : tokens.colors.text.tertiary,
               fontFamily: tokens.typography.fontFamily.bodyMedium,
             }}>
-            {selectedOption !== null ? step.options[selectedOption] : '___'}
+            {joined.blank}
           </Text>
-          <InlineGlossaryText nested text={step.suffix} />
+          <InlineGlossaryText nested text={joined.suffix} />
         </Text>
       </Card>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.space2 }}>
