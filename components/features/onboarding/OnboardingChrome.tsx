@@ -89,7 +89,7 @@ export function OnboardingChrome({
               letterSpacing: 1.2,
               lineHeight: tokens.typography.fontSize.displayLg * 1.1,
               paddingHorizontal: localePickerVisible
-                ? tokens.spacing.space7
+                ? tokens.spacing.space6
                 : 0,
               textAlign: 'center',
             }}>

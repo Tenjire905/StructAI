@@ -71,6 +71,7 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 13. **Soft XP / Ranks (P2.2):** Abgeleiteter XP aus Lektionen+Orbs+Pfadabschlüssen, Level/Rang-Strip auf Home+Profil, XP-Hinweis nach Lektion (`lib/skillRank.ts`, `SkillRankStrip`).
 14. **App Store one-liner + Focus density (P3.1):** Welcome trägt die kanonische Store-Zeile (DE/EN/FR/RU) mit StructAI als Brand-Hero; Focus bekommt dichtere Presentation-Tokens (`preferredCardPadding`, `preferredSectionGap`, kleinerer Card-Radius) gemäß `THEME_MODES.md` §7 — erster systematischer Density-Schritt, kein Full Redesign.
 15. **Free vs Pro framing (P3.2):** Soft-Gates ohne IAP — Free: Lektionen + lokaler Lab-Coach; Pro: Live-Lab-Grades + Zertifikat-Export (`lib/entitlements.ts`, `ProPlanStrip`, lokaler Preview-Unlock).
+16. **Onboarding locale + glossary once:** Device-Locale beim Erststart (`resolveLocaleFromDevice`), dezenter Language-Chip oben rechts im Welcome; Glossary markiert jeden Term (`id`) nur einmal pro Textblock bzw. step-weit über `splitTextsWithGlossary` (Info-Titel/Body, Fill-Blank Prefix/Suffix, Coaching).
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 

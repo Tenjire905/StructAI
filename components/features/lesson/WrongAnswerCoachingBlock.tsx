@@ -1,8 +1,11 @@
+import { useMemo } from 'react';
 import { Text, View } from 'react-native';
 
 import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
 import { LearningBeatStrip } from '@/components/features/lesson/LearningBeatStrip';
+import { getGlossaryTerms } from '@/data/glossary';
 import type { WrongAnswerCoaching } from '@/lib/lessonWrongAnswerCoaching';
+import { splitTextsWithGlossary } from '@/lib/glossary';
 import { useThemeMode } from '@/theme';
 
 type WrongAnswerCoachingBlockProps = {
@@ -11,15 +14,29 @@ type WrongAnswerCoachingBlockProps = {
 
 /**
  * Why this fails + what to do next — the coaching layer beyond a plain hint.
+ * Glossary marks share one claim set across why + next so a term lights once.
  */
 export function WrongAnswerCoachingBlock({ coaching }: WrongAnswerCoachingBlockProps) {
-  const { tokens, t } = useThemeMode();
+  const { tokens, t, locale, mode } = useThemeMode();
 
   const nextBody = coaching.nextHint
     ? coaching.nextHint
     : coaching.beat
       ? t('lesson.coachingNextFromBeat', { term: coaching.beat.term })
       : t('lesson.coachingNextFallback');
+
+  const [whySegments, nextSegments] = useMemo(() => {
+    if (!coaching.nextHint) {
+      return [undefined, undefined] as const;
+    }
+
+    const [why, next] = splitTextsWithGlossary(
+      [coaching.why, nextBody],
+      getGlossaryTerms(locale),
+      mode,
+    );
+    return [why, next] as const;
+  }, [coaching.nextHint, coaching.why, locale, mode, nextBody]);
 
   return (
     <View style={{ gap: tokens.spacing.space3 }}>
@@ -33,6 +50,7 @@ export function WrongAnswerCoachingBlock({ coaching }: WrongAnswerCoachingBlockP
           {t('lesson.coachingWhyLabel')}
         </Text>
         <InlineGlossaryText
+          segments={whySegments}
           style={{
             color: tokens.colors.text.secondary,
             fontFamily: tokens.typography.fontFamily.body,
@@ -63,6 +81,7 @@ export function WrongAnswerCoachingBlock({ coaching }: WrongAnswerCoachingBlockP
         </Text>
         {coaching.nextHint ? (
           <InlineGlossaryText
+            segments={nextSegments}
             style={{
               color: tokens.colors.text.primary,
               fontFamily: tokens.typography.fontFamily.body,

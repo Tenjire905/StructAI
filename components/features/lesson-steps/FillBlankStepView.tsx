@@ -1,8 +1,11 @@
+import { useMemo } from 'react';
 import { Text, View } from 'react-native';
 
 import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
 import { Card, PressableScale } from '@/components/ui';
+import { getGlossaryTerms } from '@/data/glossary';
 import type { ResolvedLessonStep } from '@/data/mockLessons';
+import { splitTextsWithGlossary } from '@/lib/glossary';
 import { useThemeMode } from '@/theme';
 
 export type FillBlankStepViewProps = {
@@ -18,7 +21,11 @@ export function FillBlankStepView({
   isChecked,
   onSelect,
 }: FillBlankStepViewProps) {
-  const { tokens, t } = useThemeMode();
+  const { tokens, t, locale, mode } = useThemeMode();
+  const [prefixSegments, suffixSegments] = useMemo(
+    () => splitTextsWithGlossary([step.prefix, step.suffix], getGlossaryTerms(locale), mode),
+    [locale, mode, step.prefix, step.suffix],
+  );
 
   return (
     <View style={{ gap: tokens.spacing.space3 }}>
@@ -38,7 +45,7 @@ export function FillBlankStepView({
             fontSize: tokens.typography.fontSize.bodyLg,
             lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
           }}>
-          <InlineGlossaryText nested text={step.prefix} />
+          <InlineGlossaryText nested segments={prefixSegments} text={step.prefix} />
           <Text
             style={{
               color:
@@ -49,7 +56,7 @@ export function FillBlankStepView({
             }}>
             {selectedOption !== null ? step.options[selectedOption] : '___'}
           </Text>
-          <InlineGlossaryText nested text={step.suffix} />
+          <InlineGlossaryText nested segments={suffixSegments} text={step.suffix} />
         </Text>
       </Card>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.space2 }}>

@@ -77,15 +77,22 @@ export function findGlossaryMatches(
     return right.end - right.start - (left.end - left.start);
   });
 
+  // First hit per term id only — never light the same concept twice in one block.
   const selected: GlossaryMatch[] = [];
+  const seenTermIds = new Set<string>();
 
   for (const candidate of candidates) {
+    if (seenTermIds.has(candidate.id)) {
+      continue;
+    }
+
     const overlaps = selected.some(
       (existing) => candidate.start < existing.end && candidate.end > existing.start,
     );
 
     if (!overlaps) {
       selected.push(candidate);
+      seenTermIds.add(candidate.id);
     }
   }
 
@@ -96,8 +103,20 @@ export function splitTextWithGlossary(
   text: string,
   terms: GlossaryTerm[],
   mode: ThemeMode,
+  claimedTermIds?: Set<string>,
 ): GlossarySegment[] {
-  const matches = findGlossaryMatches(text, terms, mode);
+  const matches = findGlossaryMatches(text, terms, mode).filter((match) => {
+    if (!claimedTermIds) {
+      return true;
+    }
+
+    if (claimedTermIds.has(match.id)) {
+      return false;
+    }
+
+    claimedTermIds.add(match.id);
+    return true;
+  });
 
   if (matches.length === 0) {
     return [{ type: 'text', value: text }];
@@ -124,6 +143,16 @@ export function splitTextWithGlossary(
   }
 
   return segments;
+}
+
+/** Split several prose blocks with one shared “first mark wins” claim set. */
+export function splitTextsWithGlossary(
+  texts: string[],
+  terms: GlossaryTerm[],
+  mode: ThemeMode,
+): GlossarySegment[][] {
+  const claimedTermIds = new Set<string>();
+  return texts.map((text) => splitTextWithGlossary(text, terms, mode, claimedTermIds));
 }
 
 export function getGlossaryDefinition(

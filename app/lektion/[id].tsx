@@ -29,7 +29,7 @@ import {
   LessonDepthInfoPeek,
 } from '@/components/features/lesson/LessonDepthBadgeButton';
 import { GlossaryTermPeek } from '@/components/features/lesson/GlossaryTermPeek';
-import { InlineGlossaryText } from '@/components/features/lesson/InlineGlossaryText';
+import { InlineGlossaryText, StepGlossaryTexts } from '@/components/features/lesson/InlineGlossaryText';
 import { LearningBeatStrip } from '@/components/features/lesson/LearningBeatStrip';
 import { WrongAnswerCoachingBlock } from '@/components/features/lesson/WrongAnswerCoachingBlock';
 import {
@@ -815,22 +815,21 @@ function LessonSessionScreenContent({
           {step.type === 'info' ? (
             <Card variant="solid">
               <View style={{ gap: tokens.spacing.space3 }}>
-                <InlineGlossaryText
-                  style={{
-                    color: tokens.colors.text.primary,
-                    fontFamily: tokens.typography.fontFamily.heading,
-                    fontSize: tokens.typography.fontSize.headingLg,
-                  }}
-                  text={step.title}
-                />
-                <InlineGlossaryText
-                  style={{
-                    color: tokens.colors.text.secondary,
-                    fontFamily: tokens.typography.fontFamily.body,
-                    fontSize: tokens.typography.fontSize.bodyLg,
-                    lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
-                  }}
-                  text={step.body}
+                <StepGlossaryTexts
+                  styles={[
+                    {
+                      color: tokens.colors.text.primary,
+                      fontFamily: tokens.typography.fontFamily.heading,
+                      fontSize: tokens.typography.fontSize.headingLg,
+                    },
+                    {
+                      color: tokens.colors.text.secondary,
+                      fontFamily: tokens.typography.fontFamily.body,
+                      fontSize: tokens.typography.fontSize.bodyLg,
+                      lineHeight: tokens.typography.fontSize.bodyLg * 1.5,
+                    },
+                  ]}
+                  texts={[step.title, step.body]}
                 />
               </View>
             </Card>
