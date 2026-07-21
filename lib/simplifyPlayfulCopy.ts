@@ -147,7 +147,24 @@ function simplifyStatement(text: string, locale: Locale): string {
   return shortenClause(applyReplacements(text, locale), 130);
 }
 
-function keyKind(key: string): 'title' | 'body' | 'question' | 'option' | 'explanation' | 'instruction' | 'statement' | 'other' {
+function withPreservedEdges(original: string, next: string): string {
+  const lead = original.match(/^\s*/u)?.[0] ?? '';
+  const trail = original.match(/\s*$/u)?.[0] ?? '';
+  return `${lead}${next.trim()}${trail}`;
+}
+
+function keyKind(
+  key: string,
+):
+  | 'title'
+  | 'body'
+  | 'question'
+  | 'option'
+  | 'explanation'
+  | 'instruction'
+  | 'statement'
+  | 'fill_edge'
+  | 'other' {
   if (key.endsWith('.title') || key.match(/\.s\d+\.title$/)) {
     return 'title';
   }
@@ -169,8 +186,9 @@ function keyKind(key: string): 'title' | 'body' | 'question' | 'option' | 'expla
   if (key.includes('.statement')) {
     return 'statement';
   }
+  // Keep leading/trailing spaces — fill-blank joins depend on them.
   if (key.includes('.prefix') || key.includes('.suffix')) {
-    return 'instruction';
+    return 'fill_edge';
   }
   if (key.includes('.term') || key.includes('.definition') || key.includes('.segment')) {
     return 'option';
@@ -202,6 +220,11 @@ export function simplifyForPlayful(baseText: string, locale: Locale, baseKey: st
       return simplifyInstruction(baseText, locale);
     case 'statement':
       return simplifyStatement(baseText, locale);
+    case 'fill_edge':
+      return withPreservedEdges(
+        baseText,
+        shortenClause(applyReplacements(baseText, locale), 160),
+      );
     default:
       return shortenClause(applyReplacements(baseText, locale), 160);
   }

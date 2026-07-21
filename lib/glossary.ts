@@ -83,8 +83,10 @@ export function findGlossaryMatches(
     const overlaps = selected.some(
       (existing) => candidate.start < existing.end && candidate.end > existing.start,
     );
+    const alreadyHighlighted = selected.some((existing) => existing.id === candidate.id);
 
-    if (!overlaps) {
+    // One highlight per term id per text block — repeats feel noisy.
+    if (!overlaps && !alreadyHighlighted) {
       selected.push(candidate);
     }
   }

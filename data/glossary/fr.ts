@@ -114,4 +114,22 @@ export const GLOSSARY_FR: GlossaryTerm[] = [
       playful: 'La porte par laquelle les apps parlent à l’IA.',
     },
   },
+  {
+    id: 'layperson',
+    aliases: ['novices', 'novice'],
+    definition: {
+      focus:
+        'Personnes sans expertise sur le sujet — elles ont besoin de mots plus simples et de plus d’explications que les experts.',
+      playful: 'Les gens qui ne connaissent pas encore le sujet — pas des experts.',
+    },
+  },
+  {
+    id: 'audience',
+    aliases: ['public précisé', 'public'],
+    definition: {
+      focus:
+        'Pour qui la réponse est destinée (débutants, experts…). Oriente le vocabulaire, la profondeur et le ton.',
+      playful: 'Pour qui l’IA doit écrire — débutants ou pros.',
+    },
+  },
 ];
