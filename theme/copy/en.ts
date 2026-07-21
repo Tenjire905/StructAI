@@ -1586,6 +1586,18 @@ export const copyEn: CopyCatalog = {
     playful: 'Next',
     focus: 'Next',
   },
+  'onboarding.languagePickerA11y': {
+    playful: 'Choose language',
+    focus: 'Choose language',
+  },
+  'onboarding.languagePickerCloseA11y': {
+    playful: 'Close language menu',
+    focus: 'Close language menu',
+  },
+  'onboarding.languagePickerTitle': {
+    playful: 'Language',
+    focus: 'Language',
+  },
   'onboarding.introSignIn': {
     playful: 'Sign in',
     focus: 'Sign in',

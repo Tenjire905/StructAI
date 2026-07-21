@@ -5,7 +5,7 @@ import { isBelowDailyGoal } from '@/lib/dailyOrbGoal';
 import { resolveSessionSkillSummary } from '@/lib/sessionSkillSummary';
 import { getCatalogForLocale } from '@/theme/copy/index';
 import { formatCopyText, getCopyText } from '@/theme/copy/types';
-import { DEFAULT_LOCALE, isLocale } from '@/theme/locale';
+import { isLocale, resolveLocaleFromDevice } from '@/theme/locale';
 import type { ThemeMode } from '@/theme/theme';
 
 const DAILY_GOAL_REMINDER_ID = 'structai-daily-goal-reminder';
@@ -70,7 +70,7 @@ async function ensureNotificationHandler(Notifications: NotificationsModule): Pr
 
 function readStoredLocale() {
   const stored = appStorage.getString(LOCALE_STORAGE_KEY);
-  return stored && isLocale(stored) ? stored : DEFAULT_LOCALE;
+  return stored && isLocale(stored) ? stored : resolveLocaleFromDevice();
 }
 
 function readStoredMode(): ThemeMode {

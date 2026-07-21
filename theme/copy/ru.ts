@@ -1587,6 +1587,18 @@ export const copyRu: CopyCatalog = {
     playful: 'Далее',
     focus: 'Далее',
   },
+  'onboarding.languagePickerA11y': {
+    playful: 'Выбрать язык',
+    focus: 'Выбрать язык',
+  },
+  'onboarding.languagePickerCloseA11y': {
+    playful: 'Закрыть меню языка',
+    focus: 'Закрыть меню языка',
+  },
+  'onboarding.languagePickerTitle': {
+    playful: 'Язык',
+    focus: 'Язык',
+  },
   'onboarding.introSignIn': {
     playful: 'Войти',
     focus: 'Войти',

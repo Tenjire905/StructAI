@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui';
 import { useThemeMode } from '@/theme';
 
+import { OnboardingLocaleButton } from './OnboardingLocaleButton';
 import { OnboardingSegmentProgress } from './OnboardingSegmentProgress';
 
 type OnboardingChromeProps = {
@@ -15,6 +16,11 @@ type OnboardingChromeProps = {
   progressTotal?: number;
   /** Brand mark above content (marketing slides). */
   showBrand?: boolean;
+  /**
+   * Top-right language control (Liftoff pattern). Defaults on when brand
+   * is shown so the welcome screen always exposes locale switching.
+   */
+  showLocalePicker?: boolean;
   ctaLabel: string;
   onCta: () => void;
   ctaDisabled?: boolean;
@@ -31,12 +37,14 @@ type OnboardingChromeProps = {
  *
  * Design: brand/progress stay above the fold; CTA stack is sticky at the bottom
  * so swipe content never fights the primary action (Liftoff pattern).
+ * Language sits top-right so the centered brand stays the hero signal.
  */
 export function OnboardingChrome({
   children,
   progressStep,
   progressTotal = 4,
   showBrand = false,
+  showLocalePicker,
   ctaLabel,
   onCta,
   ctaDisabled = false,
@@ -50,6 +58,7 @@ export function OnboardingChrome({
   const insets = useSafeAreaInsets();
   const isFocus = mode === 'focus';
   const footerGap = isFocus ? tokens.spacing.space3 : tokens.spacing.space4;
+  const localePickerVisible = showLocalePicker ?? showBrand;
 
   return (
     <LinearGradient
@@ -62,7 +71,12 @@ export function OnboardingChrome({
         paddingHorizontal: tokens.spacing.screenPaddingHero,
         paddingTop: insets.top + tokens.spacing.space4,
       }}>
-      <View style={{ gap: tokens.spacing.space4, marginBottom: tokens.spacing.space4 }}>
+      <View
+        style={{
+          gap: tokens.spacing.space4,
+          marginBottom: tokens.spacing.space4,
+          position: 'relative',
+        }}>
         {progressStep != null ? (
           <OnboardingSegmentProgress step={progressStep} total={progressTotal} />
         ) : null}
@@ -74,10 +88,24 @@ export function OnboardingChrome({
               fontSize: tokens.typography.fontSize.displayLg,
               letterSpacing: 1.2,
               lineHeight: tokens.typography.fontSize.displayLg * 1.1,
+              paddingHorizontal: localePickerVisible
+                ? tokens.spacing.space7
+                : 0,
               textAlign: 'center',
             }}>
             StructAI
           </Text>
+        ) : null}
+        {localePickerVisible ? (
+          <View
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              zIndex: 2,
+            }}>
+            <OnboardingLocaleButton />
+          </View>
         ) : null}
       </View>
 
