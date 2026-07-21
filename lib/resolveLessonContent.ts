@@ -1,4 +1,4 @@
-import { getLocalizedLessonText } from '@/data/lessonContent/index';
+import { getLocalizedLessonText, hasOwnLessonText } from '@/data/lessonContent/index';
 import { simplifyForPlayful } from '@/lib/simplifyPlayfulCopy';
 import type {
   LessonCatalogStep,
@@ -28,13 +28,13 @@ import type { Locale } from '@/theme/locale';
 import type { ThemeMode } from '@/theme/theme';
 
 function lessonTextExists(key: string, locale: Locale): boolean {
-  const localized = getLocalizedLessonText(key, locale);
-  return localized !== key;
+  return hasOwnLessonText(key, locale);
 }
 
 /**
  * Resolves a catalog key to localized, mode-aware lesson copy.
  * Resolution order: explicit override key → `{baseKey}.{mode}` suffix → legacy base key.
+ * Mode-suffix / overrides must exist in the requested locale — never borrow DE playful into FR UI.
  */
 export function resolveLessonText(
   baseKey: string,
