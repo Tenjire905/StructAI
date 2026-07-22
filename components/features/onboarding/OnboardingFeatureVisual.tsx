@@ -156,8 +156,8 @@ function PhoneMockFrame({ children }: { children: ReactNode }) {
       style={{
         flex: 1,
         width: '100%',
-        ...getShadow(2),
-        ...(isPlayful ? getShadow('glow') : {}),
+        ...getShadow(2, tokens.appearance),
+        ...(isPlayful ? getShadow('glow', tokens.appearance) : {}),
       }}>
       <HardwareButton side="left" style={{ top: tokens.spacing.space7 }} tall={tokens.spacing.space3} />
       <HardwareButton side="left" style={{ top: tokens.spacing.space8 }} tall={tokens.spacing.space5} />
@@ -411,7 +411,7 @@ function ScoreScreenMock() {
           borderRadius: cardRadius,
           gap: tokens.spacing.space2,
           padding: pad,
-          ...getShadow(1),
+          ...getShadow(1, tokens.appearance),
         }}>
         <Text
           style={{
@@ -588,7 +588,7 @@ function PathScreenMock() {
             borderRadius: cardRadius,
             gap: tokens.spacing.space2,
             padding: pad,
-            ...getShadow(1),
+            ...getShadow(1, tokens.appearance),
           }}>
           <Text
             style={{
@@ -686,7 +686,7 @@ function CoachScreenMock() {
             flex: 1,
             paddingHorizontal: tokens.spacing.space3,
             paddingVertical: tokens.spacing.space2,
-            ...getShadow(1),
+            ...getShadow(1, tokens.appearance),
           }}>
           <Text
             style={{
@@ -708,7 +708,7 @@ function CoachScreenMock() {
           borderRadius: cardRadius,
           gap: tokens.spacing.space2,
           padding: pad,
-          ...getShadow(1),
+          ...getShadow(1, tokens.appearance),
         }}>
         <Text
           style={{
@@ -741,13 +741,13 @@ function CoachScreenMock() {
           paddingVertical: tokens.spacing.space3,
         }}>
         <Check
-          color={tokens.colors.background.base}
+          color={tokens.colors.text.onAccent}
           size={tokens.icons.sizes.sm}
           strokeWidth={tokens.icons.strokeWidth}
         />
         <Text
           style={{
-            color: tokens.colors.background.base,
+            color: tokens.colors.text.onAccent,
             fontFamily: tokens.typography.fontFamily.bodyMedium,
             fontSize: tokens.typography.fontSize.bodySm,
           }}>

@@ -865,6 +865,24 @@ export const copyRu: CopyCatalog = {
     focus:
       'Игривый: меньше оцениваемых шагов. Фокус: больше глубины — та же цель обучения.',
   },
+  'profile.appearanceSection': {
+    playful: 'Светлая или тёмная?',
+    focus: 'Оформление',
+  },
+  'profile.appearanceDark': {
+    playful: 'Тёмная',
+    focus: 'Тёмная',
+  },
+  'profile.appearanceLight': {
+    playful: 'Светлая',
+    focus: 'Светлая',
+  },
+  'profile.appearanceDescription': {
+    playful:
+      'Светлый режим: холодная лаванда и сбалансированный фиолетовый — по всему приложению, отдельно от Игривый/Фокус.',
+    focus:
+      'Светлая или тёмная тема. Независимо от режима отображения (Игривый/Фокус).',
+  },
   'profile.languageSection': {
     playful: 'Язык',
     focus: 'Язык',
@@ -1510,6 +1528,10 @@ export const copyRu: CopyCatalog = {
   'onboarding.languagePickerTitle': {
     playful: 'Язык',
     focus: 'Язык',
+  },
+  'onboarding.appearanceToggleA11y': {
+    playful: 'Переключить светлую или тёмную тему',
+    focus: 'Переключить оформление',
   },
   'onboarding.introSignIn': {
     playful: 'Войти',

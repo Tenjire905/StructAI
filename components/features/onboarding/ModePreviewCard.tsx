@@ -36,7 +36,7 @@ export function ModePreviewCard({
       style={{ flex: 1, gap: outerTokens.spacing.space2 }}>
       <View
         style={[
-          showRecommendation ? getShadow('glow') : undefined,
+          showRecommendation ? getShadow('glow', outerTokens.appearance) : undefined,
           {
             borderColor: isSelected
               ? outerTokens.colors.accent.primary

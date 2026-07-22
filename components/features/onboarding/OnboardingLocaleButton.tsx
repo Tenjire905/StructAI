@@ -103,7 +103,7 @@ export function OnboardingLocaleButton() {
                 position: 'absolute',
                 right: tokens.spacing.screenPaddingHero,
                 top: insets.top + tokens.spacing.space4 + buttonSize + tokens.spacing.space2,
-                ...getShadow(2),
+                ...getShadow(2, tokens.appearance),
               },
               menuStyle,
             ]}>

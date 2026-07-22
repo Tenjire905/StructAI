@@ -11,4 +11,5 @@ export {
   type Locale,
 } from './locale';
 export * from './theme';
+export type { ThemeAppearance } from './theme';
 export { ThemeModeProvider, ThemeModeScope, useThemeMode } from './ThemeModeContext';

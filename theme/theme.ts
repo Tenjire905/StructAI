@@ -1,12 +1,14 @@
 import { Platform, type TextStyle, type ViewStyle } from 'react-native';
 
 export type ThemeMode = 'playful' | 'focus';
+export type ThemeAppearance = 'dark' | 'light';
 
 export type ShadowLevel = 1 | 2 | 'glow';
 
 export type SpringPreset = 'default' | 'bouncy';
 
-export const colors = {
+/** Dark appearance — canonical StructAI night palette. */
+export const darkColors = {
   background: {
     base: '#0A0612',
     elevated: '#120B1E',
@@ -36,6 +38,41 @@ export const colors = {
     onAccent: '#FFFFFF',
   },
 } as const;
+
+/** Light appearance — cool lavender surfaces, deeper violet accents for balance. */
+export const lightColors = {
+  background: {
+    base: '#F5F2FA',
+    elevated: '#FFFFFF',
+  },
+  surface: {
+    card: '#FFFFFF',
+    cardHover: '#EDE6F8',
+    glass: 'rgba(91,33,182,0.06)',
+  },
+  border: {
+    subtle: 'rgba(26,18,37,0.08)',
+    strong: 'rgba(26,18,37,0.16)',
+  },
+  accent: {
+    primary: '#7C3AED',
+    primaryDim: '#6D28D9',
+    structure: '#0891B2',
+    structureDim: '#0E7490',
+    warning: '#D97706',
+    danger: '#DC2626',
+    success: '#059669',
+  },
+  text: {
+    primary: '#1A1225',
+    secondary: '#5B5270',
+    tertiary: '#8B849C',
+    onAccent: '#FFFFFF',
+  },
+} as const;
+
+/** @deprecated Use tokens.colors from useThemeMode(); kept as dark default for boot. */
+export const colors = darkColors;
 
 export const typography = {
   fontFamily: {
@@ -104,29 +141,6 @@ export const blur = {
   glassIntensity: 40,
 } as const;
 
-export const gradients = {
-  primaryButton: {
-    colors: [colors.accent.primary, colors.accent.primaryDim] as const,
-    start: { x: 0, y: 0 },
-    end: { x: 1, y: 1 },
-  },
-  heroBackground: {
-    colors: ['#1A1225', '#0A0612'] as const,
-    start: { x: 0, y: 0 },
-    end: { x: 0, y: 1 },
-  },
-  orbActive: {
-    colors: [colors.accent.structure, colors.accent.primary] as const,
-  },
-  cardOverlay: {
-    colors: ['transparent', 'rgba(0,0,0,0.4)'] as const,
-    start: { x: 0, y: 0 },
-    end: { x: 0, y: 1 },
-  },
-} as const;
-
-export type BaseColors = typeof colors;
-
 export type ColorPalette = {
   background: {
     base: string;
@@ -157,13 +171,36 @@ export type ColorPalette = {
     onAccent: string;
   };
 };
+
+export type ThemeGradients = {
+  primaryButton: {
+    colors: readonly [string, string];
+    start: { x: number; y: number };
+    end: { x: number; y: number };
+  };
+  heroBackground: {
+    colors: readonly [string, string];
+    start: { x: number; y: number };
+    end: { x: number; y: number };
+  };
+  orbActive: {
+    colors: readonly [string, string];
+  };
+  cardOverlay: {
+    colors: readonly [string, string];
+    start: { x: number; y: number };
+    end: { x: number; y: number };
+  };
+};
+
 export type BaseTypography = typeof typography;
 export type BaseSpacing = typeof spacing;
 export type BaseRadius = typeof radius;
 export type BaseMotion = typeof motion;
 export type BaseIcons = typeof icons;
 export type BaseBlur = typeof blur;
-export type BaseGradients = typeof gradients;
+/** @deprecated Prefer ThemeGradients from resolved tokens. */
+export type BaseGradients = ThemeGradients;
 
 export type ThemePresentation = {
   preferredCardRadius: number;
@@ -180,6 +217,7 @@ export type ThemePresentation = {
 };
 
 export type ResolvedThemeTokens = {
+  appearance: ThemeAppearance;
   colors: ColorPalette;
   typography: BaseTypography;
   spacing: BaseSpacing;
@@ -187,19 +225,8 @@ export type ResolvedThemeTokens = {
   motion: BaseMotion;
   icons: BaseIcons;
   blur: BaseBlur;
-  gradients: BaseGradients;
+  gradients: ThemeGradients;
   presentation: ThemePresentation;
-};
-
-export const BASE_TOKENS: Omit<ResolvedThemeTokens, 'presentation'> = {
-  colors,
-  typography,
-  spacing,
-  radius,
-  motion,
-  icons,
-  blur,
-  gradients,
 };
 
 const MODE_PRESENTATION: Record<ThemeMode, ThemePresentation> = {
@@ -215,7 +242,6 @@ const MODE_PRESENTATION: Record<ThemeMode, ThemePresentation> = {
     orbStyle: 'illustrated',
   },
   focus: {
-    // THEME_MODES §7: Focus keeps radius-md (not lg/xl) for core layout density.
     preferredCardRadius: radius.md,
     preferredCardPadding: spacing.space3,
     preferredSectionGap: spacing.space4,
@@ -281,24 +307,77 @@ function resolveFocusColors(base: ColorPalette): ColorPalette {
   };
 }
 
-export function resolveThemeTokens(mode: ThemeMode): ResolvedThemeTokens {
+function resolveGradients(
+  palette: ColorPalette,
+  appearance: ThemeAppearance,
+): ThemeGradients {
+  return {
+    primaryButton: {
+      colors: [palette.accent.primary, palette.accent.primaryDim],
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 1 },
+    },
+    heroBackground: {
+      colors:
+        appearance === 'light'
+          ? [palette.background.elevated, palette.background.base]
+          : [palette.surface.card, palette.background.base],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
+    },
+    orbActive: {
+      colors: [palette.accent.structure, palette.accent.primary],
+    },
+    cardOverlay: {
+      colors:
+        appearance === 'light'
+          ? ['transparent', 'rgba(26,18,37,0.12)']
+          : ['transparent', 'rgba(0,0,0,0.4)'],
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 1 },
+    },
+  };
+}
+
+/** Boot-time dark gradients (pre-hydrate). Prefer tokens.gradients. */
+export const gradients: ThemeGradients = resolveGradients(darkColors, 'dark');
+
+export function resolveThemeTokens(
+  mode: ThemeMode,
+  appearance: ThemeAppearance = 'dark',
+): ResolvedThemeTokens {
+  const basePalette: ColorPalette =
+    appearance === 'light' ? { ...lightColors } : { ...darkColors };
   const resolvedColors =
-    mode === 'focus' ? resolveFocusColors(BASE_TOKENS.colors) : BASE_TOKENS.colors;
+    mode === 'focus' ? resolveFocusColors(basePalette) : basePalette;
 
   return {
-    ...BASE_TOKENS,
+    appearance,
     colors: resolvedColors,
+    typography,
+    spacing,
+    radius,
+    motion,
+    icons,
+    blur,
+    gradients: resolveGradients(resolvedColors, appearance),
     presentation: MODE_PRESENTATION[mode],
   };
 }
 
-export function getShadow(level: ShadowLevel): ViewStyle {
+export function getShadow(
+  level: ShadowLevel,
+  appearance: ThemeAppearance = 'dark',
+): ViewStyle {
+  const isLight = appearance === 'light';
+  const shadowInk = isLight ? '#1A1225' : '#000000';
+
   switch (level) {
     case 1:
       return Platform.select({
         ios: {
-          shadowColor: '#000000',
-          shadowOpacity: 0.2,
+          shadowColor: shadowInk,
+          shadowOpacity: isLight ? 0.08 : 0.2,
           shadowRadius: 8,
           shadowOffset: { width: 0, height: 2 },
         },
@@ -308,8 +387,8 @@ export function getShadow(level: ShadowLevel): ViewStyle {
     case 2:
       return Platform.select({
         ios: {
-          shadowColor: '#000000',
-          shadowOpacity: 0.3,
+          shadowColor: shadowInk,
+          shadowOpacity: isLight ? 0.12 : 0.3,
           shadowRadius: 16,
           shadowOffset: { width: 0, height: 6 },
         },
@@ -319,8 +398,8 @@ export function getShadow(level: ShadowLevel): ViewStyle {
     case 'glow':
       return Platform.select({
         ios: {
-          shadowColor: colors.accent.primary,
-          shadowOpacity: 0.45,
+          shadowColor: isLight ? lightColors.accent.primary : darkColors.accent.primary,
+          shadowOpacity: isLight ? 0.28 : 0.45,
           shadowRadius: 20,
           shadowOffset: { width: 0, height: 0 },
         },
@@ -339,6 +418,6 @@ export function getTypographyStyle(
   return {
     fontFamily: typography.fontFamily[family],
     fontSize: typography.fontSize[variant],
-    color: colors.text.primary,
+    color: darkColors.text.primary,
   };
 }

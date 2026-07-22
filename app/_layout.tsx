@@ -2,13 +2,14 @@ import 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { AuthNavigationController } from '@/components/AuthNavigationController';
 import { hydrateAppStorage } from '@/lib/appStorage';
 import { AuthProvider } from '@/providers/AuthProvider';
-import { ThemeModeProvider, CelebrationProvider, colors } from '@/theme';
+import { ThemeModeProvider, CelebrationProvider, useThemeMode } from '@/theme';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -49,22 +50,33 @@ export default function RootLayout() {
     <AuthProvider>
       <ThemeModeProvider>
         <CelebrationProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: colors.background.base },
-            }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="auth/index" />
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="onboarding" />
-            <Stack.Screen name="tagesziel" />
-            <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
-            {__DEV__ ? <Stack.Screen name="(dev)" options={{ headerShown: false }} /> : null}
-          </Stack>
+          <ThemedRootNavigation />
           <AuthNavigationController />
         </CelebrationProvider>
       </ThemeModeProvider>
     </AuthProvider>
+  );
+}
+
+function ThemedRootNavigation() {
+  const { tokens, appearance } = useThemeMode();
+
+  return (
+    <>
+      <StatusBar style={appearance === 'light' ? 'dark' : 'light'} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: tokens.colors.background.base },
+        }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="auth/index" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="tagesziel" />
+        <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
+        {__DEV__ ? <Stack.Screen name="(dev)" options={{ headerShown: false }} /> : null}
+      </Stack>
+    </>
   );
 }

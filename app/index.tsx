@@ -1,22 +1,23 @@
 import { ActivityIndicator, View } from 'react-native';
 
 import { useAuth } from '@/providers/AuthProvider';
-import { colors } from '@/theme';
+import { useThemeMode } from '@/theme';
 
 /** Entry route – routing is handled by AuthNavigationController. */
 export default function AppEntryScreen() {
   const { isLoading } = useAuth();
+  const { tokens } = useThemeMode();
 
   if (isLoading) {
     return (
       <View
         style={{
           alignItems: 'center',
-          backgroundColor: colors.background.base,
+          backgroundColor: tokens.colors.background.base,
           flex: 1,
           justifyContent: 'center',
         }}>
-        <ActivityIndicator color={colors.accent.primary} size="large" />
+        <ActivityIndicator color={tokens.colors.accent.primary} size="large" />
       </View>
     );
   }

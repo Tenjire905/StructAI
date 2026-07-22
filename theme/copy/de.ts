@@ -866,6 +866,24 @@ export const copyDe: CopyCatalog = {
     focus:
       'Verspielt: kürzere Texte, weniger bewertete Schritte. Fokussiert: mehr Vertiefung – gleiches Lernziel.',
   },
+  'profile.appearanceSection': {
+    playful: 'Hell oder Dunkel?',
+    focus: 'Erscheinungsbild',
+  },
+  'profile.appearanceDark': {
+    playful: 'Dunkel',
+    focus: 'Dunkel',
+  },
+  'profile.appearanceLight': {
+    playful: 'Hell',
+    focus: 'Hell',
+  },
+  'profile.appearanceDescription': {
+    playful:
+      'Heller Modus mit kühlem Lavendel und kräftigem Violett – überall in der App, unabhängig von Verspielt/Fokussiert.',
+    focus:
+      'Hell oder Dunkel. Orthogonal zum Darstellungsmodus (Verspielt/Fokussiert).',
+  },
   'profile.languageSection': {
     playful: 'Sprache',
     focus: 'Sprache',
@@ -1511,6 +1529,10 @@ export const copyDe: CopyCatalog = {
   'onboarding.languagePickerTitle': {
     playful: 'Sprache',
     focus: 'Sprache',
+  },
+  'onboarding.appearanceToggleA11y': {
+    playful: 'Hell- oder Dunkelmodus umschalten',
+    focus: 'Erscheinungsbild umschalten',
   },
   'onboarding.introSignIn': {
     playful: 'Anmelden',

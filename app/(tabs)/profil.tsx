@@ -17,11 +17,21 @@ import {
   LOCALE_LABEL_KEYS,
   LOCALES,
   useThemeMode,
+  type ThemeAppearance,
   type ThemeMode,
 } from '@/theme';
 
 export default function ProfilScreen() {
-  const { tokens, t, mode, setMode, locale, setLocale } = useThemeMode();
+  const {
+    tokens,
+    t,
+    mode,
+    setMode,
+    appearance,
+    setAppearance,
+    locale,
+    setLocale,
+  } = useThemeMode();
   const { user, session, signOut } = useAuth();
   const router = useRouter();
   const completedLessons = useProgressStore((state) => state.completedLessons);
@@ -163,6 +173,45 @@ export default function ProfilScreen() {
             fontFamily: tokens.typography.fontFamily.heading,
             fontSize: tokens.typography.fontSize.headingMd,
           }}>
+          {t('profile.appearanceSection')}
+        </Text>
+
+        <Card variant="solid">
+          <View style={{ gap: tokens.spacing.space3 }}>
+            <View style={{ flexDirection: 'row', gap: tokens.spacing.space2 }}>
+              <AppearanceOption
+                isActive={appearance === 'dark'}
+                label={t('profile.appearanceDark')}
+                onSelect={() => setAppearance('dark')}
+                targetAppearance="dark"
+              />
+              <AppearanceOption
+                isActive={appearance === 'light'}
+                label={t('profile.appearanceLight')}
+                onSelect={() => setAppearance('light')}
+                targetAppearance="light"
+              />
+            </View>
+            <Text
+              style={{
+                color: tokens.colors.text.secondary,
+                fontFamily: tokens.typography.fontFamily.body,
+                fontSize: tokens.typography.fontSize.bodySm,
+                lineHeight: tokens.typography.fontSize.bodySm * 1.5,
+              }}>
+              {t('profile.appearanceDescription')}
+            </Text>
+          </View>
+        </Card>
+      </View>
+
+      <View style={{ gap: tokens.spacing.space3 }}>
+        <Text
+          style={{
+            color: tokens.colors.text.primary,
+            fontFamily: tokens.typography.fontFamily.heading,
+            fontSize: tokens.typography.fontSize.headingMd,
+          }}>
           {t('profile.languageSection')}
         </Text>
 
@@ -283,6 +332,25 @@ type LocaleOptionProps = {
 function LocaleOption({ label, isActive, onSelect }: LocaleOptionProps) {
   return (
     <View style={{ minWidth: '47%' }}>
+      <Button
+        label={label}
+        onPress={onSelect}
+        variant={isActive ? 'primary' : 'ghost'}
+      />
+    </View>
+  );
+}
+
+type AppearanceOptionProps = {
+  label: string;
+  targetAppearance: ThemeAppearance;
+  isActive: boolean;
+  onSelect: () => void;
+};
+
+function AppearanceOption({ label, isActive, onSelect }: AppearanceOptionProps) {
+  return (
+    <View style={{ flex: 1 }}>
       <Button
         label={label}
         onPress={onSelect}

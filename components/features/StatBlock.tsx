@@ -14,7 +14,7 @@ export function StatBlock({ copyKey, value, embedded = false }: StatBlockProps) 
   return (
     <View
       style={[
-        embedded ? undefined : getShadow(1),
+        embedded ? undefined : getShadow(1, tokens.appearance),
         {
           backgroundColor: embedded
             ? tokens.colors.background.elevated

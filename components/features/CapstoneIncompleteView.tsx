@@ -45,7 +45,7 @@ export function CapstoneIncompleteView({
       style={{ backgroundColor: tokens.colors.background.base, flex: 1 }}>
       <View
         style={[
-          isPlayful ? getShadow('glow') : undefined,
+          isPlayful ? getShadow('glow', tokens.appearance) : undefined,
           {
             alignItems: 'center',
             alignSelf: 'stretch',

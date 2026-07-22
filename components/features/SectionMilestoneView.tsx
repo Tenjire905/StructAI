@@ -34,7 +34,7 @@ export function SectionMilestoneView({
       }}>
       <View
         style={[
-          isPlayful ? getShadow('glow') : undefined,
+          isPlayful ? getShadow('glow', tokens.appearance) : undefined,
           {
             alignItems: 'center',
             alignSelf: 'stretch',

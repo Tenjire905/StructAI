@@ -5,7 +5,9 @@
 
 ## 1. Farben
 
-### Basis (beide Modi gemeinsam – niemals verändern)
+Appearance (`dark` | `light`) steuert die Flächen/Text-Palette. Playful/Focus bleibt orthogonal dazu (Stil/Density). Akzent-Violett bleibt die Markenfarbe in beiden Appearances — Kontraste sind so kalibriert, dass Lila auf hellen Flächen nicht „beißt“ und Text/WCAG-tauglich bleibt.
+
+### Dark Appearance (Default)
 ```
 background-base:      #0A0612
 background-elevated:   #120B1E
@@ -16,28 +18,58 @@ border-subtle:         rgba(255,255,255,0.08)
 border-strong:         rgba(255,255,255,0.16)
 ```
 
-### Akzentfarben
+### Light Appearance (verbindlich — keine eigenen Hell-Werte erfinden)
 ```
-accent-primary:         #8B5CF6   // Violett – Marken-Kernfarbe, für primäre Buttons/aktive Zustände
-accent-primary-dim:     #6D28D9   // gedimmte Variante für Gradient-Enden
-accent-structure:       #22D3EE   // Cyan – Signature-Zweitfarbe, exklusiv für Scoring/Erfolg/Struktur-Feedback
+background-base:      #F5F2FA   // kühles Lavendel-Weiß (kein Cream, kein Flach-Weiß)
+background-elevated:   #FFFFFF
+surface-card:          #FFFFFF
+surface-card-hover:    #EDE6F8   // dezente Violett-Wäsche für Hover/Selected
+surface-glass:         rgba(91,33,182,0.06)
+border-subtle:         rgba(26,18,37,0.08)
+border-strong:         rgba(26,18,37,0.16)
+```
+
+### Akzentfarben — Dark (unverändert)
+```
+accent-primary:         #8B5CF6   // Violett – Marken-Kernfarbe
+accent-primary-dim:     #6D28D9
+accent-structure:       #22D3EE   // Cyan – nur Scoring/Erfolg/Struktur
 accent-structure-dim:   #0E7490
-accent-warning:         #F59E0B   // niedrige Orb-Energie, Achtung-Zustände
-accent-danger:          #EF4444   // Fehler, kritische Zustände (sparsam einsetzen)
-accent-success:         #34D399   // erfolgreicher Abschluss, richtige Antwort
+accent-warning:         #F59E0B
+accent-danger:          #EF4444
+accent-success:         #34D399
+```
+
+### Akzentfarben — Light (Kontrast auf Hellflächen)
+```
+accent-primary:         #7C3AED   // etwas tieferes Violett → klar auf Weiß, ohne Neon-Biss
+accent-primary-dim:     #6D28D9
+accent-structure:       #0891B2   // tieferes Cyan für Lesbarkeit auf Hell
+accent-structure-dim:   #0E7490
+accent-warning:         #D97706
+accent-danger:          #DC2626
+accent-success:         #059669
 ```
 
 ### Text
 ```
+// Dark
 text-primary:    #F5F3FA
 text-secondary:  #9B93AA
 text-tertiary:   #635B75
-text-on-accent:  #FFFFFF   // Text auf gefüllten Buttons/Gradients
+text-on-accent:  #FFFFFF
+
+// Light
+text-primary:    #1A1225
+text-secondary:  #5B5270
+text-tertiary:   #8B849C
+text-on-accent:  #FFFFFF
 ```
 
 ### Regel für Cursor
 > "accent-structure (Cyan) wird AUSSCHLIESSLICH für Prompt-Scoring, Erfolgs-Feedback im Prompt Lab und Fortschrittsanzeigen verwendet – niemals für generische UI-Elemente. Das ist das visuelle Signal 'hier passiert echte Bewertung', es darf nicht verwässert werden."
-
+>
+> "Appearance-Werte kommen ausschließlich aus dieser Datei / `theme/theme.ts`. Niemals ad-hoc Hellgrau oder Cream (#F4F1EA) einführen. Light muss überall über `tokens.colors.*` laufen — kein Screen darf Dark-Hex hardcoden."
 ---
 
 ## 2. Typografie
@@ -145,7 +177,23 @@ spring-bouncy:   { damping: 10, stiffness: 120 }   // NUR für Celebration-Momen
 
 ```
 gradient-primary-button:  linear-gradient(135deg, accent-primary → accent-primary-dim)
-gradient-hero-bg:         linear-gradient(180deg, #1A1225 0%, #0A0612 100%)
+
+// Dark hero
+gradient-hero-bg-dark:    linear-gradient(180deg, #1A1225 0%, #0A0612 100%)
+// Light hero
+gradient-hero-bg-light:   linear-gradient(180deg, #FFFFFF 0%, #F5F2FA 100%)
+
 gradient-orb-active:      radial-gradient(accent-structure → accent-primary)
-gradient-card-overlay:    linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%)  // für Bild-Karten, Lesbarkeit von Text
+
+// Dark overlay
+gradient-card-overlay-dark:  linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%)
+// Light overlay
+gradient-card-overlay-light: linear-gradient(180deg, transparent 0%, rgba(26,18,37,0.12) 100%)
+```
+
+### Light Elevation
+```
+elevation-1 light:  iOS shadowColor #1A1225, opacity 0.08, radius 8,  offset {0,2}
+elevation-2 light:  iOS shadowColor #1A1225, opacity 0.12, radius 16, offset {0,6}
+elevation-glow:     unverändert accent-primary (beide Appearances)
 ```
