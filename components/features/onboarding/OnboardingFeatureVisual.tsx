@@ -13,65 +13,72 @@ type OnboardingFeatureVisualProps = {
   kind: OnboardingFeatureVisualKind;
 };
 
-/** Crop window aspect — shows ~top 68% of a full iPhone (Liftoff cut). */
-const CROP_ASPECT = 9 / 13.2;
+/** Crop window — shows ~top 86% of a full iPhone (soft Liftoff cut, not a stub). */
+const CROP_ASPECT = 9 / 16.8;
 /** Full chassis aspect inside the crop. */
 const PHONE_ASPECT = 9 / 19.5;
 
 /**
- * Liftoff product reveal: iPhone chassis cropped at the bottom (not a full
- * floating handset). Glow stays behind the device; nothing overlaps the
- * caption zone below.
- *
- * Size is measured from the carousel slot once and locked — never flips on
- * refresh via window-height heuristics.
+ * Liftoff product reveal: iPhone chassis with a mild bottom crop.
+ * Fills the carousel slot (height-first) so the device never looks like a
+ * tiny truncated stub with empty void underneath.
  */
 export function OnboardingFeatureVisual({ kind }: OnboardingFeatureVisualProps) {
   const { tokens, mode } = useThemeMode();
   const isPlayful = mode === 'playful';
-  const [phoneWidth, setPhoneWidth] = useState(0);
-  const lockedSizeRef = useRef(0);
+  const [phoneSize, setPhoneSize] = useState<{ width: number; height: number } | null>(
+    null,
+  );
+  const lockedKeyRef = useRef('');
 
   return (
     <View
       onLayout={(event) => {
         const { width: slotW, height: slotH } = event.nativeEvent.layout;
-        if (slotW < 1 || slotH < 1) {
+        // Wait until the slot has real height — early 0/tiny layouts caused undersized crops.
+        const minSlotH = tokens.spacing.space8 * 4;
+        if (slotW < tokens.spacing.space8 || slotH < minSlotH) {
           return;
         }
 
-        const maxW = tokens.spacing.space8 * 3.55;
-        // Fit crop inside the measured slot (width-first, then clamp by height).
-        let nextW = Math.min(slotW * 0.82, maxW);
-        let nextH = nextW / CROP_ASPECT;
-        if (nextH > slotH) {
-          nextH = slotH;
-          nextW = nextH * CROP_ASPECT;
+        const maxW = tokens.spacing.space8 * 3.7;
+        // Height-first: consume the carousel slot so no large empty gap under the phone.
+        let nextH = slotH;
+        let nextW = nextH * CROP_ASPECT;
+        const widthCap = Math.min(slotW * 0.9, maxW);
+        if (nextW > widthCap) {
+          nextW = widthCap;
+          nextH = nextW / CROP_ASPECT;
         }
-        const rounded = Math.round(nextW);
-        if (rounded < 1) {
+
+        const width = Math.round(nextW);
+        const height = Math.round(nextH);
+        if (width < 1 || height < 1) {
           return;
         }
 
-        // Lock after first stable size; ignore shrink jitter from safe-area refresh.
-        if (lockedSizeRef.current > 0) {
-          if (rounded < lockedSizeRef.current) {
+        const key = `${width}x${height}`;
+        if (lockedKeyRef.current) {
+          // Only accept growth (safe-area jitter may shrink once); never shrink the crop.
+          const [lockedW, lockedH] = lockedKeyRef.current.split('x').map(Number);
+          if (width < lockedW || height < lockedH) {
             return;
           }
-          if (Math.abs(rounded - lockedSizeRef.current) < tokens.spacing.space2) {
+          if (
+            Math.abs(width - lockedW) < tokens.spacing.space2 &&
+            Math.abs(height - lockedH) < tokens.spacing.space2
+          ) {
             return;
           }
         }
 
-        lockedSizeRef.current = rounded;
-        if (rounded !== phoneWidth) {
-          setPhoneWidth(rounded);
-        }
+        lockedKeyRef.current = key;
+        setPhoneSize({ width, height });
       }}
       style={{
         alignItems: 'center',
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         overflow: 'hidden',
         width: '100%',
       }}>
@@ -86,23 +93,23 @@ export function OnboardingFeatureVisual({ kind }: OnboardingFeatureVisualProps) 
         start={{ x: 0.5, y: 0 }}
         style={{
           borderRadius: tokens.radius.pill,
-          bottom: '18%',
-          left: '4%',
+          bottom: '8%',
+          left: '2%',
           opacity: isPlayful ? 0.28 : 0.16,
           position: 'absolute',
-          right: '4%',
-          top: '4%',
+          right: '2%',
+          top: '2%',
         }}
       />
 
-      {phoneWidth > 0 ? (
+      {phoneSize ? (
         <View
           style={{
             alignItems: 'center',
             alignSelf: 'center',
-            aspectRatio: CROP_ASPECT,
+            height: phoneSize.height,
             overflow: 'hidden',
-            width: phoneWidth,
+            width: phoneSize.width,
           }}>
           <View
             style={{
@@ -116,6 +123,20 @@ export function OnboardingFeatureVisual({ kind }: OnboardingFeatureVisualProps) 
               {kind === 'coach' ? <CoachScreenMock /> : null}
             </PhoneMockFrame>
           </View>
+          {/* Soft fade at the crop edge — reads as intentional, not a hard clip. */}
+          <LinearGradient
+            colors={['transparent', tokens.colors.background.base]}
+            end={{ x: 0.5, y: 1 }}
+            pointerEvents="none"
+            start={{ x: 0.5, y: 0 }}
+            style={{
+              bottom: 0,
+              height: tokens.spacing.space6,
+              left: 0,
+              position: 'absolute',
+              right: 0,
+            }}
+          />
         </View>
       ) : null}
     </View>

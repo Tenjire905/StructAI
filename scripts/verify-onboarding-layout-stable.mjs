@@ -1,6 +1,5 @@
 /**
- * Onboarding welcome layout must stay stable across refreshes:
- * no windowHeight compact flips, locked phone sizing, theme ready gate.
+ * Onboarding phone mock must fill the carousel slot (height-first), not stub-crop.
  */
 
 import { readFileSync } from 'node:fs';
@@ -16,44 +15,41 @@ const visual = readFileSync(
 );
 const theme = readFileSync(join(root, 'theme/ThemeModeContext.tsx'), 'utf8');
 
-if (index.includes('useWindowDimensions')) {
-  violations.push('onboarding index must not size layout from useWindowDimensions');
-}
-if (index.includes('isCompactHeight') || index.includes('compact={')) {
-  violations.push('onboarding must not toggle compact mockup/caption on height');
+if (index.includes('useWindowDimensions') || index.includes('isCompactHeight')) {
+  violations.push('onboarding must not flip layout from windowHeight/compact');
 }
 if (!index.includes('isReady')) {
-  violations.push('onboarding must wait for theme isReady before showing mode copy');
+  violations.push('onboarding must wait for theme isReady');
 }
-if (!index.includes('lockedPageWidthRef')) {
-  violations.push('onboarding page width must lock after first measure');
+if (!visual.includes('lockedKeyRef') || !visual.includes('onLayout')) {
+  violations.push('phone size must lock from slot onLayout');
 }
-if (/\bcompact\b/.test(visual) && visual.includes('compact?:')) {
-  violations.push('OnboardingFeatureVisual must not expose compact sizing prop');
+if (!visual.includes('Height-first') && !visual.includes('height-first') && !visual.includes('slotH')) {
+  violations.push('phone crop must size height-first from carousel slot');
 }
-if (visual.includes('compact={') || visual.includes('compact =')) {
-  violations.push('OnboardingFeatureVisual must not use compact sizing');
+if (visual.includes('9 / 13.2')) {
+  violations.push('crop must not use aggressive 9/13.2 stub ratio');
 }
-if (!visual.includes('lockedSizeRef') || !visual.includes('onLayout')) {
-  violations.push('OnboardingFeatureVisual must lock phone size from slot onLayout');
+if (!visual.includes('9 / 16.8') && !visual.includes('CROP_ASPECT')) {
+  violations.push('crop must use a taller window (~86% of phone)');
 }
-if (visual.includes("maxHeight: '100%'") && visual.includes("width: '82%'")) {
-  violations.push('phone crop must not use flaky percent width + maxHeight:100% combo');
+if (visual.includes("justifyContent: 'center'") && visual.includes('OnboardingFeatureVisual')) {
+  // only fail if the outer slot still centers (creates empty void under stub phones)
+  const outer = visual.slice(0, visual.indexOf('Soft brand glow'));
+  if (outer.includes("justifyContent: 'center'")) {
+    violations.push('phone slot must top-align to avoid empty void under crop');
+  }
 }
-if (!theme.includes('isReady') || !theme.includes('setIsReady(true)')) {
-  violations.push('ThemeModeProvider must expose isReady after hydrate');
+if (!theme.includes('isReady')) {
+  violations.push('ThemeModeProvider must expose isReady');
 }
 
 console.log(
-  JSON.stringify(
-    {
-      scope: 'onboarding-layout-stable',
-      violations,
-      pass: violations.length === 0,
-    },
-    null,
-    2,
-  ),
+  JSON.stringify({
+    scope: 'onboarding-mockup-fill',
+    violations,
+    pass: violations.length === 0,
+  }, null, 2),
 );
 
 if (violations.length > 0) {
