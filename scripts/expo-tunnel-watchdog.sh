@@ -119,7 +119,12 @@ health_ok() {
   return 0
 }
 
-start_stack || true
+if health_ok; then
+  log "adopting healthy existing stack $(cat "$URL_FILE" 2>/dev/null || echo unknown)"
+  date +%s > /tmp/expo-ready-at
+else
+  start_stack || true
+fi
 FAILS=0
 while true; do
   if health_ok; then
@@ -128,7 +133,7 @@ while true; do
   else
     FAILS=$((FAILS + 1))
     log "health fail count=$FAILS"
-    if [ "$FAILS" -ge 2 ]; then
+    if [ "$FAILS" -ge 3 ]; then
       start_stack || true
       FAILS=0
     fi
