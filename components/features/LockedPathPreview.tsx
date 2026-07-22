@@ -14,7 +14,7 @@ export function LockedPathPreview({ pathId }: LockedPathPreviewProps) {
   return (
     <View
       style={[
-        getShadow(1),
+        getShadow(1, tokens.appearance),
         {
           backgroundColor: tokens.colors.surface.card,
           borderRadius: tokens.presentation.preferredCardRadius,

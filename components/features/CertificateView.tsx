@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { forwardRef } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { Text, View, type ViewStyle } from 'react-native';
 
 import { formatCertificateDate } from '@/lib/certificateFormat';
@@ -7,8 +7,12 @@ import {
   CERTIFICATE_LAYOUT_HEIGHT,
   CERTIFICATE_LAYOUT_WIDTH,
 } from '@/lib/certificateExport';
-import { getShadow, type ThemeMode } from '@/theme';
-import { colors, gradients, radius, spacing, typography } from '@/theme/theme';
+import {
+  getShadow,
+  resolveThemeTokens,
+  useThemeMode,
+  type ThemeMode,
+} from '@/theme';
 
 export type CertificateViewProps = {
   pathTitle: string;
@@ -52,6 +56,12 @@ export const CertificateView = forwardRef<View, CertificateViewProps>(function C
   },
   ref,
 ) {
+  const { appearance } = useThemeMode();
+  const tokens = useMemo(
+    () => resolveThemeTokens(mode, appearance),
+    [appearance, mode],
+  );
+  const { colors, gradients, radius, spacing, typography } = tokens;
   const isPlayful = mode === 'playful';
   const formattedDate = formatCertificateDate(completedAt, locale);
 
@@ -60,7 +70,7 @@ export const CertificateView = forwardRef<View, CertificateViewProps>(function C
       collapsable={false}
       ref={ref}
       style={[
-        isPlayful ? getShadow('glow') : getShadow(2),
+        isPlayful ? getShadow('glow', appearance) : getShadow(2, appearance),
         {
           borderColor: isPlayful ? colors.accent.primary : colors.border.strong,
           borderRadius: radius.xl,
@@ -109,7 +119,7 @@ export const CertificateView = forwardRef<View, CertificateViewProps>(function C
           }}>
           <View
             style={{
-              backgroundColor: isPlayful ? colors.surface.glass : colors.surface.glass,
+              backgroundColor: colors.surface.glass,
               borderColor: isPlayful ? colors.accent.structure : colors.border.subtle,
               borderRadius: radius.pill,
               borderWidth: 1,

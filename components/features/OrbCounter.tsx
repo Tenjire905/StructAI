@@ -98,7 +98,7 @@ export function OrbCounter({
         <Animated.View
           style={[
             orbAnimatedStyle,
-            isPlayful ? getShadow('glow') : undefined,
+            isPlayful ? getShadow('glow', tokens.appearance) : undefined,
             {
               alignItems: 'center',
               backgroundColor: tokens.colors.surface.card,

@@ -864,6 +864,24 @@ export const copyEn: CopyCatalog = {
     focus:
       'Playful: shorter text, fewer graded steps. Focus: more depth — same learning goal.',
   },
+  'profile.appearanceSection': {
+    playful: 'Light or dark?',
+    focus: 'Appearance',
+  },
+  'profile.appearanceDark': {
+    playful: 'Dark',
+    focus: 'Dark',
+  },
+  'profile.appearanceLight': {
+    playful: 'Light',
+    focus: 'Light',
+  },
+  'profile.appearanceDescription': {
+    playful:
+      'Light mode uses cool lavender surfaces and balanced violet accents — app-wide, separate from Playful/Focus.',
+    focus:
+      'Light or dark. Orthogonal to display mode (Playful/Focus).',
+  },
   'profile.languageSection': {
     playful: 'Language',
     focus: 'Language',
@@ -1509,6 +1527,10 @@ export const copyEn: CopyCatalog = {
   'onboarding.languagePickerTitle': {
     playful: 'Language',
     focus: 'Language',
+  },
+  'onboarding.appearanceToggleA11y': {
+    playful: 'Switch light or dark appearance',
+    focus: 'Toggle appearance',
   },
   'onboarding.introSignIn': {
     playful: 'Sign in',

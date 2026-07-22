@@ -865,6 +865,24 @@ export const copyFr: CopyCatalog = {
     focus:
       'Mode ludique : moins d etapes notees. Mode concentre : plus de profondeur — meme objectif.',
   },
+  'profile.appearanceSection': {
+    playful: 'Clair ou sombre ?',
+    focus: 'Apparence',
+  },
+  'profile.appearanceDark': {
+    playful: 'Sombre',
+    focus: 'Sombre',
+  },
+  'profile.appearanceLight': {
+    playful: 'Clair',
+    focus: 'Clair',
+  },
+  'profile.appearanceDescription': {
+    playful:
+      'Le mode clair utilise un lavande froid et un violet equilibre — partout dans l app, separe de Ludique/Concentre.',
+    focus:
+      'Clair ou sombre. Orthogonal au mode d affichage (Ludique/Concentre).',
+  },
   'profile.languageSection': {
     playful: 'Langue',
     focus: 'Langue',
@@ -1510,6 +1528,10 @@ export const copyFr: CopyCatalog = {
   'onboarding.languagePickerTitle': {
     playful: 'Langue',
     focus: 'Langue',
+  },
+  'onboarding.appearanceToggleA11y': {
+    playful: 'Basculer apparence claire ou sombre',
+    focus: 'Changer l apparence',
   },
   'onboarding.introSignIn': {
     playful: 'Se connecter',

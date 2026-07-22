@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui';
 import { useThemeMode } from '@/theme';
 
+import { OnboardingAppearanceButton } from './OnboardingAppearanceButton';
 import { OnboardingLocaleButton } from './OnboardingLocaleButton';
 import { OnboardingSegmentProgress } from './OnboardingSegmentProgress';
 
@@ -21,6 +22,11 @@ type OnboardingChromeProps = {
    * is shown so the welcome screen always exposes locale switching.
    */
   showLocalePicker?: boolean;
+  /**
+   * Top-left appearance control (light/dark). Defaults on with the locale
+   * picker so welcome always exposes both rim affordances.
+   */
+  showAppearanceToggle?: boolean;
   ctaLabel: string;
   onCta: () => void;
   ctaDisabled?: boolean;
@@ -32,12 +38,13 @@ type OnboardingChromeProps = {
 };
 
 /**
- * Shared Liftoff onboarding chrome: dark hero gradient, optional segments,
+ * Shared Liftoff onboarding chrome: hero gradient, optional segments,
  * bottom skip + full-width primary CTA + optional secondary text link.
  *
  * Design: brand/progress stay above the fold; CTA stack is sticky at the bottom
  * so swipe content never fights the primary action (Liftoff pattern).
- * Language sits top-right so the centered brand stays the hero signal.
+ * Appearance sits top-left and language top-right so the centered brand stays
+ * the hero signal.
  */
 export function OnboardingChrome({
   children,
@@ -45,6 +52,7 @@ export function OnboardingChrome({
   progressTotal = 4,
   showBrand = false,
   showLocalePicker,
+  showAppearanceToggle,
   ctaLabel,
   onCta,
   ctaDisabled = false,
@@ -59,6 +67,10 @@ export function OnboardingChrome({
   const isFocus = mode === 'focus';
   const footerGap = isFocus ? tokens.spacing.space3 : tokens.spacing.space4;
   const localePickerVisible = showLocalePicker ?? showBrand;
+  /** Mirrors locale: rim chips on welcome so brand stays centered hero. */
+  const appearanceToggleVisible = showAppearanceToggle ?? localePickerVisible;
+  const brandSidePad =
+    localePickerVisible || appearanceToggleVisible ? tokens.spacing.space6 : 0;
 
   return (
     <LinearGradient
@@ -88,13 +100,22 @@ export function OnboardingChrome({
               fontSize: tokens.typography.fontSize.displayLg,
               letterSpacing: 1.2,
               lineHeight: tokens.typography.fontSize.displayLg * 1.1,
-              paddingHorizontal: localePickerVisible
-                ? tokens.spacing.space6
-                : 0,
+              paddingHorizontal: brandSidePad,
               textAlign: 'center',
             }}>
             StructAI
           </Text>
+        ) : null}
+        {appearanceToggleVisible ? (
+          <View
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              zIndex: 2,
+            }}>
+            <OnboardingAppearanceButton />
+          </View>
         ) : null}
         {localePickerVisible ? (
           <View

@@ -8,13 +8,18 @@ Grundprinzip für Cursor: **Es gibt nur EINEN Datenzustand pro Screen.** Der Mod
 ## 1. Architektur-Vorgabe
 
 ```
-ThemeModeContext liefert: { mode: 'playful' | 'focus', tokens: ResolvedTokens, copy: ResolvedCopy }
+ThemeModeContext liefert: {
+  mode: 'playful' | 'focus',
+  appearance: 'dark' | 'light',
+  tokens: ResolvedTokens,
+  copy: ResolvedCopy
+}
 
-ResolvedTokens = merge(BASE_TOKENS, MODE_OVERRIDES[mode])
+ResolvedTokens = merge(APPEARANCE_PALETTE[appearance], MODE_OVERRIDES[mode])
 ResolvedCopy   = merge(BASE_COPY, MODE_COPY[mode])
 ```
 
-Jede Komponente liest NUR aus `useThemeMode()`, nie direkt aus DESIGN_TOKENS.md-Werten fest verdrahtet. So bleibt ein Umschalten zur Laufzeit (Einstellungen) möglich, ohne App-Neustart.
+**Appearance (Hell/Dunkel) ist orthogonal zu Playful/Focus:** Appearance steuert Flächen/Text/Schatten; Mode steuert Density, Motion, Copy-Tonalität und Orb-Stil. Jede Komponente liest NUR aus `useThemeMode()`, nie direkt aus DESIGN_TOKENS.md-Werten fest verdrahtet. So bleibt ein Umschalten zur Laufzeit (Onboarding-Chip links, Profil-Umschalter) möglich, ohne App-Neustart.
 
 ---
 

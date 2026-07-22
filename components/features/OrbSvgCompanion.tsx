@@ -433,7 +433,7 @@ export function OrbSvgCompanion({
   // cyan is scoring-only and read as a stray “green particle” on orange orbs.
   const glowColor = energy.warmth > 0.4 ? warning : primary;
   const coronaInner = energy.warmth > 0.4 ? warning : primaryDim;
-  const glowStyle = isPlayful ? getShadow('glow') : getShadow(1);
+  const glowStyle = isPlayful ? getShadow('glow', tokens.appearance) : getShadow(1, tokens.appearance);
   const strokeW = energy.waveStroke * (isPlayful ? 1 : 0.75);
 
   return (

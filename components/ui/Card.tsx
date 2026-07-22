@@ -18,7 +18,7 @@ export function Card({ children, variant = 'solid', style }: CardProps) {
     borderRadius: tokens.presentation.preferredCardRadius,
     overflow: 'hidden' as const,
     padding: tokens.presentation.preferredCardPadding,
-    ...getShadow(1),
+    ...getShadow(1, tokens.appearance),
   };
 
   if (variant === 'glass') {
@@ -31,7 +31,7 @@ export function Card({ children, variant = 'solid', style }: CardProps) {
               StyleSheet.absoluteFill,
               { backgroundColor: tokens.colors.surface.glass },
             ]}
-            tint="dark"
+            tint={tokens.appearance === 'light' ? 'light' : 'dark'}
           />
         ) : (
           <View

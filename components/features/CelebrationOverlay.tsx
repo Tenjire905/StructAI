@@ -36,14 +36,6 @@ type CelebrationOverlayProps = {
 
 const CONFETTI_COUNT = 24;
 
-const CONFETTI_COLORS = [
-  '#8B5CF6',
-  '#22D3EE',
-  '#34D399',
-  '#F59E0B',
-  '#6D28D9',
-] as const;
-
 type ConfettiParticle = {
   id: number;
   left: number;
@@ -53,13 +45,17 @@ type ConfettiParticle = {
   drift: number;
 };
 
-function createParticles(width: number, count: number): ConfettiParticle[] {
+function createParticles(
+  width: number,
+  count: number,
+  palette: readonly string[],
+): ConfettiParticle[] {
   return Array.from({ length: count }, (_, index) => ({
     id: index,
     left: Math.random() * width,
     delay: Math.random() * 120,
     size: 6 + Math.random() * 6,
-    color: CONFETTI_COLORS[index % CONFETTI_COLORS.length],
+    color: palette[index % palette.length] ?? palette[0],
     drift: (Math.random() - 0.5) * 80,
   }));
 }
@@ -132,14 +128,16 @@ function PlayfulConfetti({
   height,
   width,
   particleCount,
+  palette,
 }: {
   height: number;
   width: number;
   particleCount: number;
+  palette: readonly string[];
 }) {
   const particles = useMemo(
-    () => createParticles(width, particleCount),
-    [particleCount, width],
+    () => createParticles(width, particleCount, palette),
+    [palette, particleCount, width],
   );
 
   return (
@@ -309,17 +307,48 @@ export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps
         : t(copyKey);
 
   const confettiCount = getConfettiCount(event.type);
+  const confettiPalette = [
+    tokens.colors.accent.primary,
+    tokens.colors.accent.structure,
+    tokens.colors.accent.success,
+    tokens.colors.accent.warning,
+    tokens.colors.accent.primaryDim,
+  ] as const;
+  const overlayScrim =
+    tokens.appearance === 'light'
+      ? 'rgba(26, 18, 37, 0.28)'
+      : 'rgba(10, 6, 18, 0.45)';
 
   return (
     <Modal animationType="none" transparent visible={visible}>
-      <View pointerEvents="none" style={styles.overlay}>
+      <View
+        pointerEvents="none"
+        style={{
+          ...StyleSheet.absoluteFill,
+          alignItems: 'center',
+          backgroundColor: overlayScrim,
+          justifyContent: 'center',
+        }}>
         {tokens.presentation.confettiEnabled ? (
-          <PlayfulConfetti height={height} particleCount={confettiCount} width={width} />
+          <PlayfulConfetti
+            height={height}
+            palette={confettiPalette}
+            particleCount={confettiCount}
+            width={width}
+          />
         ) : (
           <FocusPulse celebrationType={event.type} />
         )}
 
-        <Animated.View style={[contentStyle, styles.messageWrap]}>
+        <Animated.View
+          style={[
+            contentStyle,
+            {
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: tokens.spacing.space5,
+            },
+          ]}>
           <Text
             style={{
               color: tokens.colors.text.primary,
@@ -337,17 +366,3 @@ export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  messageWrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  overlay: {
-    ...StyleSheet.absoluteFill,
-    alignItems: 'center',
-    backgroundColor: 'rgba(10, 6, 18, 0.45)',
-    justifyContent: 'center',
-  },
-});

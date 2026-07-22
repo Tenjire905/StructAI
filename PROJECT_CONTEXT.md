@@ -77,6 +77,7 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 19. **Crash hardening + onboarding crop:** Orb bricht alle `withRepeat`-SharedValues beim Unmount ab (`stopAllOrbMotion`); globales `routeTransitionLock` blockiert konkurrierende AuthNav-Replaces; Profil wendet `setMode` erst nach `replace` an; Welcome-Carousel: Caption wrappt 3 Zeilen, Phone-Crop mit `maxHeight: '100%'` + Compact-Skalierung.
 20. **Fill-blank spacing both modes:** `withFillBlankJoinSpaces` in `FillBlankStepView` (Focus + Playful); Playful-Shortener erhält Prefix/Suffix-Randspaces (`fill_edge`).
 21. **Onboarding layout lock:** Welcome wartet auf Theme-`isReady` (kein Focus→Playful-Flash); Phone-Crop **height-first** füllt den Carousel-Slot (~86% Gerät, soft fade); kein `useWindowDimensions`/compact-Toggle.
+22. **Light appearance (Hellmodus):** Orthogonal zu Playful/Focus — `ThemeAppearance` + `lightColors` (kühles Lavendel `#F5F2FA`, tieferes Violett `#7C3AED`), Persistenz `structai.theme-appearance`, Onboarding-Chip links (Sun/Moon), Profil-Umschalter Hell/Dunkel, StatusBar + Stack-Hintergrund tokenisiert; Verify: `scripts/verify-light-appearance.mjs`.
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 
