@@ -6,7 +6,6 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   Text,
-  useWindowDimensions,
   View,
   type ViewToken,
 } from 'react-native';
@@ -44,29 +43,32 @@ const SLIDES: IntroSlide[] = [
  * Liftoff marketing carousel:
  * - Swipeable cropped phone reveals (not full handsets)
  * - Caption + dots sit in a reserved band — no overlaps with the device
+ * - Layout is locked after first paint (no compact/windowHeight flips on refresh)
  */
 export default function OnboardingWelcomeScreen() {
-  const { tokens, t, mode } = useThemeMode();
+  const { tokens, t, mode, isReady } = useThemeMode();
   const router = useRouter();
-  const { height: windowHeight } = useWindowDimensions();
   const listRef = useRef<FlatList<IntroSlide>>(null);
   const [index, setIndex] = useState(0);
   const [pageWidth, setPageWidth] = useState(0);
+  const lockedPageWidthRef = useRef(0);
   const soundEnabled = tokens.presentation.soundEnabled;
   const lastIndexRef = useRef(0);
   const suppressSwipeSfxRef = useRef(false);
 
-  // Short phones: always headingMd so DE captions fit without ellipsis.
-  const isCompactHeight = windowHeight < tokens.spacing.space8 * 11;
+  // Stable caption size: mode-only (never windowHeight). Same after every refresh.
   const captionSize =
-    mode === 'focus' || isCompactHeight
+    mode === 'focus'
       ? tokens.typography.fontSize.headingMd
       : tokens.typography.fontSize.headingLg;
   const captionLineHeight = captionSize * 1.3;
 
   useEffect(() => {
+    if (!isReady) {
+      return;
+    }
     playSfx('start', soundEnabled);
-  }, [soundEnabled]);
+  }, [isReady, soundEnabled]);
 
   const syncIndex = useCallback(
     (next: number, playSwipeSfx: boolean) => {
@@ -134,7 +136,7 @@ export default function OnboardingWelcomeScreen() {
         paddingHorizontal: tokens.spacing.space1,
         width: pageWidth || undefined,
       }}>
-      <OnboardingFeatureVisual compact={isCompactHeight} kind={item.kind} />
+      <OnboardingFeatureVisual kind={item.kind} />
     </View>
   );
 
@@ -156,9 +158,10 @@ export default function OnboardingWelcomeScreen() {
               fontSize: captionSize,
               lineHeight: captionLineHeight,
               minHeight: captionLineHeight * 2,
+              opacity: isReady ? 1 : 0,
               textAlign: 'center',
             }}>
-            {t(SLIDES[index].valueKey)}
+            {isReady ? t(SLIDES[index].valueKey) : ' '}
           </Text>
           <OnboardingPageDots
             count={SLIDES.length}
@@ -177,12 +180,25 @@ export default function OnboardingWelcomeScreen() {
       <View
         onLayout={(event) => {
           const nextWidth = Math.round(event.nativeEvent.layout.width);
-          if (nextWidth > 0 && nextWidth !== pageWidth) {
+          if (nextWidth <= 0) {
+            return;
+          }
+          // Lock width after first measure — ignore refresh jitter that shrinks.
+          if (lockedPageWidthRef.current > 0) {
+            if (nextWidth < lockedPageWidthRef.current) {
+              return;
+            }
+            if (Math.abs(nextWidth - lockedPageWidthRef.current) < tokens.spacing.space2) {
+              return;
+            }
+          }
+          lockedPageWidthRef.current = nextWidth;
+          if (nextWidth !== pageWidth) {
             setPageWidth(nextWidth);
           }
         }}
         style={{ flex: 1, overflow: 'hidden' }}>
-        {pageWidth > 0 ? (
+        {isReady && pageWidth > 0 ? (
           <FlatList
             ref={listRef}
             data={SLIDES}

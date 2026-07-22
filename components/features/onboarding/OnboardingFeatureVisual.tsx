@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Beaker, BookOpen, Check, Home, User } from 'lucide-react-native';
 import type { ReactNode } from 'react';
+import { useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 
 import { OrbCompanion } from '@/components/features/OrbCompanion';
@@ -10,28 +11,67 @@ export type OnboardingFeatureVisualKind = 'score' | 'path' | 'coach';
 
 type OnboardingFeatureVisualProps = {
   kind: OnboardingFeatureVisualKind;
-  /** Shrink phone crop on short viewports so caption stays visible. */
-  compact?: boolean;
 };
+
+/** Crop window aspect — shows ~top 68% of a full iPhone (Liftoff cut). */
+const CROP_ASPECT = 9 / 13.2;
+/** Full chassis aspect inside the crop. */
+const PHONE_ASPECT = 9 / 19.5;
 
 /**
  * Liftoff product reveal: iPhone chassis cropped at the bottom (not a full
  * floating handset). Glow stays behind the device; nothing overlaps the
  * caption zone below.
+ *
+ * Size is measured from the carousel slot once and locked — never flips on
+ * refresh via window-height heuristics.
  */
-export function OnboardingFeatureVisual({
-  kind,
-  compact = false,
-}: OnboardingFeatureVisualProps) {
+export function OnboardingFeatureVisual({ kind }: OnboardingFeatureVisualProps) {
   const { tokens, mode } = useThemeMode();
   const isPlayful = mode === 'playful';
+  const [phoneWidth, setPhoneWidth] = useState(0);
+  const lockedSizeRef = useRef(0);
 
   return (
     <View
+      onLayout={(event) => {
+        const { width: slotW, height: slotH } = event.nativeEvent.layout;
+        if (slotW < 1 || slotH < 1) {
+          return;
+        }
+
+        const maxW = tokens.spacing.space8 * 3.55;
+        // Fit crop inside the measured slot (width-first, then clamp by height).
+        let nextW = Math.min(slotW * 0.82, maxW);
+        let nextH = nextW / CROP_ASPECT;
+        if (nextH > slotH) {
+          nextH = slotH;
+          nextW = nextH * CROP_ASPECT;
+        }
+        const rounded = Math.round(nextW);
+        if (rounded < 1) {
+          return;
+        }
+
+        // Lock after first stable size; ignore shrink jitter from safe-area refresh.
+        if (lockedSizeRef.current > 0) {
+          if (rounded < lockedSizeRef.current) {
+            return;
+          }
+          if (Math.abs(rounded - lockedSizeRef.current) < tokens.spacing.space2) {
+            return;
+          }
+        }
+
+        lockedSizeRef.current = rounded;
+        if (rounded !== phoneWidth) {
+          setPhoneWidth(rounded);
+        }
+      }}
       style={{
         alignItems: 'center',
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         overflow: 'hidden',
         width: '100%',
       }}>
@@ -55,38 +95,29 @@ export function OnboardingFeatureVisual({
         }}
       />
 
-      {/*
-        Full phone is taller than this viewport. Top-aligned + overflow hidden
-        = Liftoff crop (bottom of the handset is intentionally cut off).
-        maxHeight: '100%' keeps the crop inside the carousel slot on short phones.
-      */}
-      <View
-        style={{
-          alignItems: 'center',
-          alignSelf: 'center',
-          // Show ~top 68% of a full iPhone — bottom hardware disappears.
-          aspectRatio: 9 / 13.2,
-          flexShrink: 1,
-          maxHeight: '100%',
-          maxWidth: compact
-            ? tokens.spacing.space8 * 3.1
-            : tokens.spacing.space8 * 3.55,
-          overflow: 'hidden',
-          width: compact ? '72%' : '82%',
-        }}>
+      {phoneWidth > 0 ? (
         <View
           style={{
-            aspectRatio: 9 / 19.5,
-            top: 0,
-            width: '100%',
+            alignItems: 'center',
+            alignSelf: 'center',
+            aspectRatio: CROP_ASPECT,
+            overflow: 'hidden',
+            width: phoneWidth,
           }}>
-          <PhoneMockFrame>
-            {kind === 'score' ? <ScoreScreenMock /> : null}
-            {kind === 'path' ? <PathScreenMock /> : null}
-            {kind === 'coach' ? <CoachScreenMock /> : null}
-          </PhoneMockFrame>
+          <View
+            style={{
+              aspectRatio: PHONE_ASPECT,
+              top: 0,
+              width: '100%',
+            }}>
+            <PhoneMockFrame>
+              {kind === 'score' ? <ScoreScreenMock /> : null}
+              {kind === 'path' ? <PathScreenMock /> : null}
+              {kind === 'coach' ? <CoachScreenMock /> : null}
+            </PhoneMockFrame>
+          </View>
         </View>
-      </View>
+      ) : null}
     </View>
   );
 }

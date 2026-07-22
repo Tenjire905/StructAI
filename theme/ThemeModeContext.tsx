@@ -30,6 +30,8 @@ type ThemeModeContextValue = {
   locale: Locale;
   tokens: ResolvedThemeTokens;
   copy: CopyCatalog;
+  /** False until AsyncStorage hydrate finishes — avoids Focus→Playful flash on refresh. */
+  isReady: boolean;
   setMode: (mode: ThemeMode) => void;
   setLocale: (locale: Locale) => void;
   t: (key: string, vars?: Record<string, string | number>) => string;
@@ -69,8 +71,9 @@ function resolveLocale(persistIfMissing: boolean): Locale {
 }
 
 export function ThemeModeProvider({ children }: PropsWithChildren) {
-  const [mode, setModeState] = useState<ThemeMode>(() => readStoredMode());
+  const [mode, setModeState] = useState<ThemeMode>(DEFAULT_MODE);
   const [locale, setLocaleState] = useState<Locale>(() => resolveLocale(false));
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -82,6 +85,7 @@ export function ThemeModeProvider({ children }: PropsWithChildren) {
 
       setModeState(readStoredMode());
       setLocaleState(resolveLocale(true));
+      setIsReady(true);
     });
 
     return () => {
@@ -108,12 +112,13 @@ export function ThemeModeProvider({ children }: PropsWithChildren) {
       locale,
       tokens,
       copy,
+      isReady,
       setMode,
       setLocale,
       t: (key: string, vars?: Record<string, string | number>) =>
         formatCopyText(key, mode, copy, vars),
     }),
-    [copy, locale, mode, setLocale, setMode, tokens],
+    [copy, isReady, locale, mode, setLocale, setMode, tokens],
   );
 
   return (
@@ -145,12 +150,13 @@ export function ThemeModeScope({ mode, children }: ThemeModeScopeProps) {
       locale: parent.locale,
       tokens,
       copy: parent.copy,
+      isReady: parent.isReady,
       setMode: parent.setMode,
       setLocale: parent.setLocale,
       t: (key: string, vars?: Record<string, string | number>) =>
         formatCopyText(key, mode, parent.copy, vars),
     }),
-    [mode, parent.copy, parent.locale, parent.setLocale, parent.setMode, tokens],
+    [mode, parent.copy, parent.isReady, parent.locale, parent.setLocale, parent.setMode, tokens],
   );
 
   return (
