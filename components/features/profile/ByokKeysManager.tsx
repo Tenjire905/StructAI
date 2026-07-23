@@ -10,6 +10,7 @@ import {
 } from '@/lib/aiScoring';
 import { trackEvent } from '@/lib/analytics';
 import { hapticByokValidated } from '@/lib/haptics';
+import { playSfx } from '@/lib/sfx';
 import {
   BYOK_PROVIDERS,
   listApiKeys,
@@ -48,6 +49,7 @@ async function validateStoredKey(key: string): Promise<ProviderKeyStatus> {
 
 export function ByokKeysManager() {
   const { tokens, t } = useThemeMode();
+  const soundEnabled = tokens.presentation.soundEnabled;
   const [entries, setEntries] = useState<ByokKeyEntry[]>([]);
   const [statusByProvider, setStatusByProvider] =
     useState<Record<ByokProvider, ProviderKeyStatus>>(EMPTY_STATUS);
@@ -137,6 +139,7 @@ export function ByokKeysManager() {
 
       await upsertApiKey({ provider, key: trimmedKey });
       trackEvent('byok_key_added_success');
+      playSfx('success', soundEnabled);
       hapticByokValidated();
       setInputByProvider((current) => ({ ...current, [provider]: '' }));
       await refreshEntries();
@@ -173,6 +176,7 @@ export function ByokKeysManager() {
     const status = await validateStoredKey(entry.key);
 
     if (status.state === 'valid') {
+      playSfx('success', soundEnabled);
       hapticByokValidated();
     }
 

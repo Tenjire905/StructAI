@@ -5,6 +5,13 @@ import { Platform } from 'react-native';
 /**
  * Short game-like UI SFX (start / tap / success) — not coach voiceover.
  * Expo Go / builds without ExpoAudio: silent no-op (never crash).
+ *
+ * Policy (Playful on / Focus off via presentation.soundEnabled):
+ * - start: session begin (onboarding entry, Daily Challenge start)
+ * - tap: primary confirmations (Weiter, start lesson, continue after check)
+ * - success: correct answers + real milestones (lesson/path done, BYOK ok, Lab score)
+ * - wrong answers: NEVER play a fail sound (haptic + coaching only)
+ * - no SFX on micro-taps (glossary, skip, scroll, counters, bubbles)
  */
 
 export type SfxId = 'start' | 'tap' | 'success';

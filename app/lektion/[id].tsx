@@ -65,6 +65,7 @@ import {
   hapticPathComplete,
   hapticWrongAnswer,
 } from '@/lib/haptics';
+import { playSfx } from '@/lib/sfx';
 import { suppressHomeCelebrations } from '@/lib/lessonCelebrationGate';
 import { leaveLesson, openLesson, returnToPath, isLessonOpenedFromPath } from '@/lib/lessonNavigation';
 import { runAfterUISettles } from '@/lib/runAfterUISettles';
@@ -166,6 +167,7 @@ function LessonSessionScreenContent({
   openedFromPath?: boolean;
 }) {
   const { tokens, t, locale, mode } = useThemeMode();
+  const soundEnabled = tokens.presentation.soundEnabled;
   const router = useRouter();
   const { dismissCelebration } = useCelebration();
   const { activeTerm, dismissTerm } = useLessonGlossary();
@@ -444,6 +446,7 @@ function LessonSessionScreenContent({
 
   const handlePrimaryAction = () => {
     if (step.type === 'info') {
+      playSfx('tap', soundEnabled);
       if (isLastStep) {
         finishLesson([]);
         return;
@@ -463,14 +466,17 @@ function LessonSessionScreenContent({
         }));
 
         if (evaluateGradedStep(gradedStep)) {
+          playSfx('success', soundEnabled);
           hapticCorrectAnswer(mode);
         } else {
+          // No fail SFX — haptic + coaching only.
           hapticWrongAnswer(mode);
         }
       }
       return;
     }
 
+    playSfx('tap', soundEnabled);
     const attempts = stepAttempts[stepIndex] ?? 1;
     const result: LessonAnswerResult = {
       stepIndex,
@@ -554,15 +560,19 @@ function LessonSessionScreenContent({
       if (newlyCompletedPathId) {
         setCompletedPathId(newlyCompletedPathId);
         setLessonOutcome('path_complete');
+        playSfx('success', soundEnabled);
         hapticPathComplete(mode);
       } else if (pathId && isPathFinalCapstone(pathId, lesson.id)) {
         setLessonOutcome('capstone_incomplete');
+        playSfx('success', soundEnabled);
         hapticLessonComplete();
       } else if (pathId && isPathMidCapstone(pathId, lesson.id)) {
         setLessonOutcome('section_milestone');
+        playSfx('success', soundEnabled);
         hapticLessonComplete();
       } else {
         setLessonOutcome('passed');
+        playSfx('success', soundEnabled);
         hapticLessonComplete();
       }
       return;
@@ -612,6 +622,7 @@ function LessonSessionScreenContent({
     if (segment?.isError) {
       setErrorFindingSelectedIndex(segmentIndex);
       setIsChecked(true);
+      playSfx('success', soundEnabled);
       hapticCorrectAnswer(mode);
       return;
     }
