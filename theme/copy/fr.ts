@@ -318,7 +318,7 @@ export const copyFr: CopyCatalog = {
     focus: 'Parcours introuvable.',
   },
   'lesson.stepLabel': {
-    playful: 'Etape {{current}} sur {{total}}',
+    playful: 'Étape {{current}} sur {{total}}',
     focus: '{{current}}/{{total}}',
   },
   'lesson.depthBadgePlayful': {
@@ -335,15 +335,15 @@ export const copyFr: CopyCatalog = {
   },
   'lesson.depthInfoBodyPlayful': {
     playful:
-      'En mode Ludique, les lecons sont plus courtes et plus simples — meme objectif, moins d\'etapes et un langage plus leger.',
+      'En mode Ludique, les leçons sont plus courtes et plus simples — même objectif, moins d\'étapes et un langage plus léger.',
     focus:
-      'En mode Ludique, les lecons sont plus courtes et plus simples — meme objectif, moins d\'etapes et un langage plus leger.',
+      'En mode Ludique, les leçons sont plus courtes et plus simples — même objectif, moins d\'étapes et un langage plus léger.',
   },
   'lesson.depthInfoBodyFocus': {
     playful:
-      'En mode Concentre, tu as plus de profondeur : textes plus longs, plus de questions et des taches plus exigeantes.',
+      'En mode Concentré, tu as plus de profondeur : textes plus longs, plus de questions et des tâches plus exigeantes.',
     focus:
-      'En mode Concentre, tu as plus de profondeur : textes plus longs, plus de questions et des taches plus exigeantes.',
+      'En mode Concentré, tu as plus de profondeur : textes plus longs, plus de questions et des tâches plus exigeantes.',
   },
   'lesson.depthInfoAgeRecommended': {
     playful:
@@ -366,12 +366,12 @@ export const copyFr: CopyCatalog = {
     focus: 'Appuyer pour une breve explication de ce terme.',
   },
   'lesson.typeChoice': {
-    playful: 'Question a choix',
+    playful: 'Question à choix',
     focus: 'Choix',
   },
   'lesson.typeFillBlank': {
-    playful: 'Texte a trous',
-    focus: 'Texte a trou',
+    playful: 'Texte à trous',
+    focus: 'Texte à trou',
   },
   'lesson.typeTrueFalse': {
     playful: 'Vrai ou faux',
@@ -554,60 +554,60 @@ export const copyFr: CopyCatalog = {
     focus: 'Astuce : termine un court bloc de pratique aujourd hui.',
   },
   'lesson.check': {
-    playful: 'Verifier la reponse !',
-    focus: 'Verifier',
+    playful: 'Vérifier la réponse !',
+    focus: 'Vérifier',
   },
   'lesson.next': {
     playful: 'On y va !',
     focus: 'Suivant',
   },
   'lesson.correctFeedback': {
-    playful: 'Top ! Ta reponse est juste.',
+    playful: 'Top ! Ta réponse est juste.',
     focus: 'Correct.',
   },
   'lesson.wrongFeedback': {
     playful: 'Pas encore — voici comment corriger.',
-    focus: 'Incorrect — pourquoi, puis le prochain schema.',
+    focus: 'Incorrect — pourquoi, puis le prochain schéma.',
   },
   'lesson.hintLabel': {
     playful: 'Conseil :',
     focus: 'Conseil :',
   },
   'lesson.coachingWhyLabel': {
-    playful: 'Pourquoi ca echoue',
-    focus: 'Pourquoi ca echoue',
+    playful: 'Pourquoi ça échoue',
+    focus: 'Pourquoi ça échoue',
   },
   'lesson.coachingNextLabel': {
     playful: 'Que faire ensuite',
-    focus: 'Prochain schema',
+    focus: 'Prochain schéma',
   },
   'lesson.coachingNextFromBeat': {
     playful: 'Au prochain essai, applique {{term}} volontairement.',
     focus: 'Ensuite : appliquez {{term}} consciemment au retry.',
   },
   'lesson.coachingNextFallback': {
-    playful: 'Relis le pourquoi, puis choisis l option qui ferme l ecart.',
-    focus: 'Relisez la cause, puis choisissez l option qui la corrige.',
+    playful: 'Relis le pourquoi, puis choisis l’option qui ferme l’écart.',
+    focus: 'Relisez la cause, puis choisissez l’option qui la corrige.',
   },
   'lesson.learningBeatLabel': {
     playful: 'Retiens',
-    focus: 'Point cle',
+    focus: 'Point clé',
   },
   'lesson.completeTitle': {
-    playful: 'Lecon terminee !',
-    focus: 'Lecon terminee.',
+    playful: 'Leçon terminée !',
+    focus: 'Leçon terminée.',
   },
   'lesson.orbsEarned': {
     playful: '+{{count}} Orbs pour toi !',
     focus: '+{{count}} Orbs',
   },
   'lesson.practiceComplete': {
-    playful: 'Entrainement termine — pas d\'Orbs en plus.',
-    focus: 'Repetee. Aucun Orbe supplementaire.',
+    playful: 'Entraînement terminé — pas d\'Orbs en plus.',
+    focus: 'Répétée. Aucun Orbe supplémentaire.',
   },
   'sessionSkill.eyebrow': {
-    playful: 'Tu peux faire ca maintenant',
-    focus: 'Competence acquise',
+    playful: 'Tu peux faire ça maintenant',
+    focus: 'Compétence acquise',
   },
   'sessionSkill.generic.name': {
     playful: 'Des prompts plus clairs',
@@ -812,27 +812,27 @@ export const copyFr: CopyCatalog = {
     focus: 'Retour au parcours',
   },
   'lesson.continueNext': {
-    playful: 'Vers la prochaine lecon !',
+    playful: 'Vers la prochaine leçon !',
     focus: 'Chapitre suivant',
   },
   'lesson.lockedTitle': {
-    playful: 'Ce chapitre est encore verrouille',
-    focus: 'Chapitre verrouille',
+    playful: 'Ce chapitre est encore verrouillé',
+    focus: 'Chapitre verrouillé',
   },
   'lesson.lockedBody': {
-    playful: 'Termine d abord les chapitres precedents pour continuer ici.',
-    focus: 'Termine d abord les chapitres precedents.',
+    playful: 'Termine d’abord les chapitres précédents pour continuer ici.',
+    focus: 'Termine d’abord les chapitres précédents.',
   },
   'lesson.notFound': {
-    playful: 'Cette lecon n existe pas encore.',
-    focus: 'Lecon introuvable.',
+    playful: 'Cette leçon n’existe pas encore.',
+    focus: 'Leçon introuvable.',
   },
   'lesson.retryTitle': {
-    playful: 'Pas encore reussi !',
+    playful: 'Pas encore réussi !',
     focus: 'Seuil non atteint.',
   },
   'lesson.retrySummary': {
-    playful: '{{correct}} sur {{total}} correct — reessaie !',
+    playful: '{{correct}} sur {{total}} correct — réessaie !',
     focus: '{{correct}}/{{total}} correct. Minimum 60 % requis.',
   },
   'lesson.retryPrimary': {
