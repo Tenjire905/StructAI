@@ -316,7 +316,7 @@ export function CelebrationOverlay({ event, onDismiss }: CelebrationOverlayProps
   ] as const;
   const overlayScrim =
     tokens.appearance === 'light'
-      ? 'rgba(26, 18, 37, 0.28)'
+      ? 'rgba(26, 18, 37, 0.40)'
       : 'rgba(10, 6, 18, 0.45)';
 
   return (

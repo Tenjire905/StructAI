@@ -21,7 +21,7 @@ export function LearningBeatStrip({ beat }: LearningBeatStripProps) {
   return (
     <View
       style={{
-        backgroundColor: tokens.colors.background.elevated,
+        backgroundColor: tokens.colors.surface.inset,
         borderColor: tokens.colors.border.subtle,
         borderRadius: isFocus ? tokens.radius.sm : tokens.radius.md,
         borderWidth: 1,

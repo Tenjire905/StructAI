@@ -93,7 +93,7 @@ export function ScoreChart({
                   fill={
                     isSelected || isLatest
                       ? tokens.colors.accent.structure
-                      : tokens.colors.background.elevated
+                      : tokens.colors.surface.inset
                   }
                   key={`${point.x}-${point.y}-${index}`}
                   r={isSelected ? 6 : isLatest ? 5 : 4}
@@ -146,7 +146,7 @@ export function ScoreChart({
               <View
                 style={{
                   alignItems: 'center',
-                  backgroundColor: tokens.colors.background.elevated,
+                  backgroundColor: tokens.colors.surface.inset,
                   borderColor: tokens.colors.border.subtle,
                   borderRadius: tokens.radius.pill,
                   borderWidth: 1,

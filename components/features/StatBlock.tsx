@@ -17,8 +17,10 @@ export function StatBlock({ copyKey, value, embedded = false }: StatBlockProps) 
         embedded ? undefined : getShadow(1, tokens.appearance),
         {
           backgroundColor: embedded
-            ? tokens.colors.background.elevated
+            ? tokens.colors.surface.inset
             : tokens.colors.surface.card,
+          borderColor: embedded ? 'transparent' : tokens.colors.border.subtle,
+          borderWidth: embedded || tokens.appearance === 'dark' ? 0 : 1,
           borderRadius: embedded ? tokens.radius.lg : tokens.presentation.preferredCardRadius,
           flex: 1,
           gap: tokens.spacing.space1,

@@ -426,7 +426,8 @@ export function OrbSvgCompanion({
   const primary = tokens.colors.accent.primary;
   const primaryDim = tokens.colors.accent.primaryDim;
   const warning = tokens.colors.accent.warning;
-  const core = tokens.colors.background.base;
+  const core =
+    tokens.appearance === 'light' ? tokens.colors.text.primary : tokens.colors.background.base;
   const onAccent = tokens.colors.text.onAccent;
 
   // Warmth (worry/low_energy) → warning only. Never accent-structure here —

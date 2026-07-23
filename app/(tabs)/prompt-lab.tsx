@@ -499,7 +499,7 @@ function ScoreResult({ score, feedbackKey, comparison, promptText }: ScoreResult
 
           <View
             style={{
-              backgroundColor: tokens.colors.background.elevated,
+              backgroundColor: tokens.colors.surface.inset,
               borderColor: tokens.colors.border.subtle,
               borderRadius: tokens.radius.md,
               borderWidth: 1,
@@ -566,7 +566,7 @@ function ScoreResult({ score, feedbackKey, comparison, promptText }: ScoreResult
           {improvementPath ? (
             <View
               style={{
-                backgroundColor: tokens.colors.background.elevated,
+                backgroundColor: tokens.colors.surface.inset,
                 borderColor: tokens.colors.border.subtle,
                 borderRadius: tokens.radius.md,
                 borderWidth: 1,

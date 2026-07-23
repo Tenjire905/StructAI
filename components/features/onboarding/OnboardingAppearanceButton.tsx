@@ -29,16 +29,19 @@ export function OnboardingAppearanceButton() {
         playSfx('tap', soundEnabled);
         toggleAppearance();
       }}
-      style={{
-        alignItems: 'center',
-        backgroundColor: tokens.colors.surface.card,
-        borderColor: tokens.colors.border.subtle,
-        borderRadius: tokens.radius.sm,
-        borderWidth: 1,
-        height: buttonSize,
-        justifyContent: 'center',
-        width: buttonSize,
-      }}>
+        style={{
+          alignItems: 'center',
+          backgroundColor: tokens.colors.surface.card,
+          borderColor:
+            tokens.appearance === 'light'
+              ? tokens.colors.border.strong
+              : tokens.colors.border.subtle,
+          borderRadius: tokens.radius.sm,
+          borderWidth: 1,
+          height: buttonSize,
+          justifyContent: 'center',
+          width: buttonSize,
+        }}>
       <Icon
         color={tokens.colors.accent.primary}
         size={iconSize}

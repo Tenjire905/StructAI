@@ -73,7 +73,9 @@ export function PathCard({
         getShadow(1, tokens.appearance),
         {
           backgroundColor: tokens.colors.surface.card,
+          borderColor: tokens.colors.border.subtle,
           borderRadius: tokens.presentation.preferredCardRadius,
+          borderWidth: tokens.appearance === 'light' ? 1 : 0,
         },
       ]}>
       <AnimatedPressable

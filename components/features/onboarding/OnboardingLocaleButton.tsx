@@ -68,7 +68,10 @@ export function OnboardingLocaleButton() {
         style={{
           alignItems: 'center',
           backgroundColor: tokens.colors.surface.card,
-          borderColor: tokens.colors.border.subtle,
+          borderColor:
+            tokens.appearance === 'light'
+              ? tokens.colors.border.strong
+              : tokens.colors.border.subtle,
           borderRadius: tokens.radius.sm,
           borderWidth: 1,
           height: buttonSize,

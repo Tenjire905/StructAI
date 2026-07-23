@@ -94,7 +94,14 @@ export function Button({
           style={[
             styles.ghost,
             {
-              borderColor: tokens.colors.border.subtle,
+              backgroundColor:
+                tokens.appearance === 'light'
+                  ? tokens.colors.surface.inset
+                  : 'transparent',
+              borderColor:
+                tokens.appearance === 'light'
+                  ? tokens.colors.border.strong
+                  : tokens.colors.border.subtle,
               borderRadius: tokens.radius.pill,
               paddingHorizontal: tokens.spacing.space5,
               paddingVertical: tokens.spacing.space3,
@@ -114,7 +121,6 @@ const styles = StyleSheet.create({
   },
   ghost: {
     alignItems: 'center',
-    backgroundColor: 'transparent',
     borderWidth: 1,
     justifyContent: 'center',
   },

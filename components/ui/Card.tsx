@@ -13,11 +13,14 @@ type CardProps = {
 
 export function Card({ children, variant = 'solid', style }: CardProps) {
   const { tokens } = useThemeMode();
+  const isLight = tokens.appearance === 'light';
 
   const cardStyle = {
     borderRadius: tokens.presentation.preferredCardRadius,
     overflow: 'hidden' as const,
     padding: tokens.presentation.preferredCardPadding,
+    borderWidth: isLight ? 1 : 0,
+    borderColor: isLight ? tokens.colors.border.subtle : 'transparent',
     ...getShadow(1, tokens.appearance),
   };
 
@@ -31,7 +34,7 @@ export function Card({ children, variant = 'solid', style }: CardProps) {
               StyleSheet.absoluteFill,
               { backgroundColor: tokens.colors.surface.glass },
             ]}
-            tint={tokens.appearance === 'light' ? 'light' : 'dark'}
+            tint={isLight ? 'light' : 'dark'}
           />
         ) : (
           <View

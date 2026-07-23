@@ -15,6 +15,7 @@ export const darkColors = {
   },
   surface: {
     card: '#1A1225',
+    inset: '#120B1E',
     cardHover: '#221831',
     glass: 'rgba(255,255,255,0.06)',
   },
@@ -25,11 +26,16 @@ export const darkColors = {
   accent: {
     primary: '#8B5CF6',
     primaryDim: '#6D28D9',
+    primarySoft: 'rgba(139,92,246,0.22)',
     structure: '#22D3EE',
     structureDim: '#0E7490',
+    structureSoft: 'rgba(34,211,238,0.18)',
     warning: '#F59E0B',
+    warningSoft: 'rgba(245,158,11,0.20)',
     danger: '#EF4444',
+    dangerSoft: 'rgba(239,68,68,0.18)',
     success: '#34D399',
+    successSoft: 'rgba(52,211,153,0.18)',
   },
   text: {
     primary: '#F5F3FA',
@@ -39,34 +45,43 @@ export const darkColors = {
   },
 } as const;
 
-/** Light appearance — cool lavender surfaces, deeper violet accents for balance. */
+/**
+ * Light appearance — recessed page, raised white cards, scarce deep violet.
+ * Inspired by Linear/Stripe light: hierarchy via inset/chrome/card, not neon fill.
+ */
 export const lightColors = {
   background: {
-    base: '#F5F2FA',
-    elevated: '#FFFFFF',
+    base: '#F3F0F8',
+    elevated: '#FAF8FC',
   },
   surface: {
     card: '#FFFFFF',
-    cardHover: '#EDE6F8',
-    glass: 'rgba(91,33,182,0.06)',
+    inset: '#F0ECF6',
+    cardHover: '#EFEAF7',
+    glass: 'rgba(255,255,255,0.78)',
   },
   border: {
-    subtle: 'rgba(26,18,37,0.08)',
-    strong: 'rgba(26,18,37,0.16)',
+    subtle: 'rgba(26,18,37,0.10)',
+    strong: 'rgba(26,18,37,0.18)',
   },
   accent: {
-    primary: '#7C3AED',
-    primaryDim: '#6D28D9',
-    structure: '#0891B2',
-    structureDim: '#0E7490',
-    warning: '#D97706',
+    primary: '#6D28D9',
+    primaryDim: '#5B21B6',
+    primarySoft: 'rgba(109,40,217,0.10)',
+    structure: '#0E7490',
+    structureDim: '#155E75',
+    structureSoft: 'rgba(14,116,144,0.12)',
+    warning: '#B45309',
+    warningSoft: 'rgba(180,83,9,0.12)',
     danger: '#DC2626',
-    success: '#059669',
+    dangerSoft: 'rgba(220,38,38,0.10)',
+    success: '#047857',
+    successSoft: 'rgba(4,120,87,0.10)',
   },
   text: {
     primary: '#1A1225',
-    secondary: '#5B5270',
-    tertiary: '#8B849C',
+    secondary: '#4F4763',
+    tertiary: '#6B6478',
     onAccent: '#FFFFFF',
   },
 } as const;
@@ -148,6 +163,8 @@ export type ColorPalette = {
   };
   surface: {
     card: string;
+    /** Nested recessed blocks inside cards (stats, chips, tracks). */
+    inset: string;
     cardHover: string;
     glass: string;
   };
@@ -158,11 +175,16 @@ export type ColorPalette = {
   accent: {
     primary: string;
     primaryDim: string;
+    primarySoft: string;
     structure: string;
     structureDim: string;
+    structureSoft: string;
     warning: string;
+    warningSoft: string;
     danger: string;
+    dangerSoft: string;
     success: string;
+    successSoft: string;
   };
   text: {
     primary: string;
@@ -198,7 +220,9 @@ export type BaseSpacing = typeof spacing;
 export type BaseRadius = typeof radius;
 export type BaseMotion = typeof motion;
 export type BaseIcons = typeof icons;
-export type BaseBlur = typeof blur;
+export type BaseBlur = {
+  glassIntensity: number;
+};
 /** @deprecated Prefer ThemeGradients from resolved tokens. */
 export type BaseGradients = ThemeGradients;
 
@@ -303,6 +327,7 @@ function resolveFocusColors(base: ColorPalette): ColorPalette {
       structure: desaturateHex(base.accent.structure, saturationReduction),
       structureDim: desaturateHex(base.accent.structureDim, saturationReduction),
       warning: desaturateHex(base.accent.warning, saturationReduction),
+      // Soft fills stay as authored — already low-chroma washes.
     },
   };
 }
@@ -331,7 +356,7 @@ function resolveGradients(
     cardOverlay: {
       colors:
         appearance === 'light'
-          ? ['transparent', 'rgba(26,18,37,0.12)']
+          ? ['transparent', 'rgba(26,18,37,0.18)']
           : ['transparent', 'rgba(0,0,0,0.4)'],
       start: { x: 0, y: 0 },
       end: { x: 0, y: 1 },
@@ -359,7 +384,9 @@ export function resolveThemeTokens(
     radius,
     motion,
     icons,
-    blur,
+    blur: {
+      glassIntensity: appearance === 'light' ? 26 : blur.glassIntensity,
+    },
     gradients: resolveGradients(resolvedColors, appearance),
     presentation: MODE_PRESENTATION[mode],
   };
@@ -377,33 +404,33 @@ export function getShadow(
       return Platform.select({
         ios: {
           shadowColor: shadowInk,
-          shadowOpacity: isLight ? 0.08 : 0.2,
-          shadowRadius: 8,
-          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: isLight ? 0.12 : 0.2,
+          shadowRadius: isLight ? 12 : 8,
+          shadowOffset: { width: 0, height: isLight ? 3 : 2 },
         },
-        android: { elevation: 3 },
+        android: { elevation: isLight ? 4 : 3 },
         default: {},
       }) as ViewStyle;
     case 2:
       return Platform.select({
         ios: {
           shadowColor: shadowInk,
-          shadowOpacity: isLight ? 0.12 : 0.3,
-          shadowRadius: 16,
-          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: isLight ? 0.16 : 0.3,
+          shadowRadius: isLight ? 20 : 16,
+          shadowOffset: { width: 0, height: isLight ? 8 : 6 },
         },
-        android: { elevation: 8 },
+        android: { elevation: isLight ? 10 : 8 },
         default: {},
       }) as ViewStyle;
     case 'glow':
       return Platform.select({
         ios: {
           shadowColor: isLight ? lightColors.accent.primary : darkColors.accent.primary,
-          shadowOpacity: isLight ? 0.28 : 0.45,
-          shadowRadius: 20,
+          shadowOpacity: isLight ? 0.14 : 0.45,
+          shadowRadius: isLight ? 16 : 20,
           shadowOffset: { width: 0, height: 0 },
         },
-        android: { elevation: 6 },
+        android: { elevation: isLight ? 4 : 6 },
         default: {},
       }) as ViewStyle;
     default:

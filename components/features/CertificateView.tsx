@@ -119,7 +119,7 @@ export const CertificateView = forwardRef<View, CertificateViewProps>(function C
           }}>
           <View
             style={{
-              backgroundColor: colors.surface.glass,
+              backgroundColor: colors.surface.inset,
               borderColor: isPlayful ? colors.accent.structure : colors.border.subtle,
               borderRadius: radius.pill,
               borderWidth: 1,

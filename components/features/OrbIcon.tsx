@@ -12,7 +12,9 @@ export function OrbIcon({ size = 24 }: OrbIconProps) {
   const primary = tokens.colors.accent.primary;
   const primaryDim = tokens.colors.accent.primaryDim;
   const structure = tokens.colors.accent.structure;
-  const core = tokens.colors.background.base;
+  // Light: near-ink core so the eclipse reads on white; dark keeps page ink.
+  const core =
+    tokens.appearance === 'light' ? tokens.colors.text.primary : tokens.colors.background.base;
   const rim = tokens.colors.text.onAccent;
 
   return (

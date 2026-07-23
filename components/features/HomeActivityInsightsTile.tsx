@@ -165,7 +165,9 @@ export function HomeActivityInsightsTile({
         getShadow(1, tokens.appearance),
         {
           backgroundColor: tokens.colors.surface.card,
+          borderColor: tokens.colors.border.subtle,
           borderRadius: tokens.presentation.preferredCardRadius,
+          borderWidth: tokens.appearance === 'light' ? 1 : 0,
           overflow: 'hidden',
           padding: tokens.spacing.space4,
         },
@@ -232,7 +234,7 @@ export function HomeActivityInsightsTile({
           <View
             style={{
               alignItems: 'center',
-              backgroundColor: tokens.colors.background.elevated,
+              backgroundColor: tokens.colors.surface.inset,
               borderRadius: tokens.radius.lg,
               gap: tokens.spacing.space1,
               paddingHorizontal: tokens.spacing.space4,
