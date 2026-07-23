@@ -43,7 +43,7 @@ export function Avatar({ name, source, size = 'md' }: AvatarProps) {
     <View
       style={{
         alignItems: 'center',
-        backgroundColor: tokens.colors.surface.cardHover,
+        backgroundColor: tokens.colors.surface.inset,
         borderColor: tokens.colors.border.subtle,
         borderRadius: dimension / 2,
         borderWidth: 1,

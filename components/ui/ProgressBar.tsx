@@ -121,7 +121,7 @@ export function ProgressBar({
         style={[
           styles.track,
           {
-            backgroundColor: tokens.colors.border.subtle,
+            backgroundColor: tokens.colors.surface.inset,
             borderRadius: tokens.radius.pill,
             height: barHeight,
           },

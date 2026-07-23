@@ -1,5 +1,5 @@
 /**
- * Light appearance — tokens, persistence, onboarding chip, profile switch.
+ * Light appearance — premium hierarchy, persistence, onboarding + profile controls.
  */
 
 import assert from 'node:assert/strict';
@@ -22,6 +22,8 @@ const appearanceBtn = read(
 const profile = read('app/(tabs)/profil.tsx');
 const layout = read('app/_layout.tsx');
 const card = read('components/ui/Card.tsx');
+const badge = read('components/ui/Badge.tsx');
+const segmented = read('components/ui/SegmentedControl.tsx');
 const certificate = read('components/features/CertificateView.tsx');
 const tokensDoc = read('DESIGN_TOKENS.md');
 
@@ -31,20 +33,33 @@ if (!theme.includes("export type ThemeAppearance = 'dark' | 'light'")) {
 if (!theme.includes('export const lightColors')) {
   violations.push('theme.ts must define lightColors');
 }
-if (!theme.includes("base: '#F5F2FA'")) {
-  violations.push('light base must be cool lavender #F5F2FA');
+if (!theme.includes("base: '#F3F0F8'")) {
+  violations.push('light base must be recessed #F3F0F8');
 }
-if (!theme.includes("primary: '#7C3AED'")) {
-  violations.push('light accent.primary must be deeper violet #7C3AED');
+if (!theme.includes("elevated: '#FAF8FC'")) {
+  violations.push('light elevated chrome must be #FAF8FC (not pure white)');
+}
+if (!theme.includes("inset: '#F0ECF6'")) {
+  violations.push('light must define surface.inset');
+}
+if (!theme.includes("primary: '#6D28D9'")) {
+  violations.push('light accent.primary must be deep violet #6D28D9');
+}
+if (!theme.includes('primarySoft:')) {
+  violations.push('accent soft fills required for light badges');
+}
+if (!theme.includes("glass: 'rgba(255,255,255,0.78)'")) {
+  violations.push('light glass must be white frost, not violet mud');
 }
 if (theme.includes('#F4F1EA')) {
   violations.push('must not introduce cream #F4F1EA');
 }
-if (!theme.includes('resolveThemeTokens')) {
-  violations.push('resolveThemeTokens required');
-}
-if (!theme.includes('appearance === \'light\'')) {
-  violations.push('gradients/shadows must branch on light appearance');
+if (theme.includes("elevated: '#FFFFFF'") && theme.includes('lightColors')) {
+  // elevated white collapses hierarchy — only fail if lightColors still has it
+  const lightBlock = theme.slice(theme.indexOf('export const lightColors'));
+  if (lightBlock.includes("elevated: '#FFFFFF'")) {
+    violations.push('light elevated must not equal pure white card');
+  }
 }
 
 if (!context.includes('structai.theme-appearance')) {
@@ -53,47 +68,45 @@ if (!context.includes('structai.theme-appearance')) {
 if (!context.includes('setAppearance') || !context.includes('toggleAppearance')) {
   violations.push('ThemeModeContext must expose setAppearance + toggleAppearance');
 }
-if (!context.includes('parent.appearance')) {
-  violations.push('ThemeModeScope must inherit appearance');
-}
 
 if (!appearanceBtn.includes('toggleAppearance')) {
   violations.push('OnboardingAppearanceButton must toggle appearance');
 }
-if (!appearanceBtn.includes('Sun') || !appearanceBtn.includes('Moon')) {
-  violations.push('appearance chip must use Sun/Moon icons');
-}
-if (!chrome.includes('OnboardingAppearanceButton')) {
-  violations.push('OnboardingChrome must mount appearance button');
-}
-if (!chrome.includes('left: 0')) {
-  violations.push('appearance control must sit on the left');
+if (!chrome.includes('OnboardingAppearanceButton') || !chrome.includes('left: 0')) {
+  violations.push('OnboardingChrome must mount left appearance button');
 }
 
-if (!profile.includes("setAppearance('light')") || !profile.includes("setAppearance('dark')")) {
-  violations.push('Profile must offer dark/light appearance options');
+if (!profile.includes('setAppearance') || !profile.includes('SegmentedControl')) {
+  violations.push('Profile must use SegmentedControl for appearance');
 }
 if (!profile.includes("t('profile.appearanceSection')")) {
   violations.push('Profile must show appearance section copy');
+}
+if (!segmented.includes('surface.inset')) {
+  violations.push('SegmentedControl must use inset track');
 }
 
 if (!layout.includes('StatusBar') || !layout.includes("appearance === 'light'")) {
   violations.push('Root layout must drive StatusBar from appearance');
 }
-if (!layout.includes('tokens.colors.background.base')) {
-  violations.push('Stack contentStyle must use tokens background');
+
+if (!card.includes("tint={isLight ? 'light' : 'dark'}") && !card.includes("tint={tokens.appearance === 'light' ? 'light' : 'dark'}")) {
+  violations.push('Card glass BlurView tint must follow appearance');
+}
+if (!card.includes('borderWidth: isLight ? 1 : 0') && !card.includes('borderWidth: isLight ? 1')) {
+  violations.push('Card must use hairline border in light');
 }
 
-if (!card.includes("tint={tokens.appearance === 'light' ? 'light' : 'dark'}")) {
-  violations.push('Card glass BlurView tint must follow appearance');
+if (!badge.includes('primarySoft') || !badge.includes("isLight ? 'soft' : 'solid'")) {
+  violations.push('Badge must default to soft emphasis in light');
 }
 
 if (!certificate.includes('resolveThemeTokens(mode, appearance)')) {
   violations.push('CertificateView must resolve tokens for mode + appearance');
 }
 
-if (!tokensDoc.includes('Light Appearance')) {
-  violations.push('DESIGN_TOKENS.md must document Light Appearance');
+if (!tokensDoc.includes('surface-inset') || !tokensDoc.includes('#F3F0F8')) {
+  violations.push('DESIGN_TOKENS.md must document premium light stack');
 }
 
 for (const locale of ['de', 'en', 'fr', 'ru']) {

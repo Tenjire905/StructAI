@@ -63,7 +63,7 @@ export function WrongAnswerCoachingBlock({ coaching }: WrongAnswerCoachingBlockP
 
       <View
         style={{
-          backgroundColor: tokens.colors.background.elevated,
+          backgroundColor: tokens.colors.surface.inset,
           borderColor: tokens.colors.border.subtle,
           borderRadius: tokens.radius.md,
           borderWidth: 1,

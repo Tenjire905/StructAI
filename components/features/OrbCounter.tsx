@@ -102,7 +102,9 @@ export function OrbCounter({
             {
               alignItems: 'center',
               backgroundColor: tokens.colors.surface.card,
+              borderColor: tokens.colors.border.subtle,
               borderRadius: tokens.radius.pill,
+              borderWidth: tokens.appearance === 'light' ? 1 : 0,
               height: tokens.spacing.space7,
               justifyContent: 'center',
               width: tokens.spacing.space7,

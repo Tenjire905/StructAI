@@ -20,35 +20,46 @@ border-strong:         rgba(255,255,255,0.16)
 
 ### Light Appearance (verbindlich — keine eigenen Hell-Werte erfinden)
 ```
-background-base:      #F5F2FA   // kühles Lavendel-Weiß (kein Cream, kein Flach-Weiß)
-background-elevated:   #FFFFFF
-surface-card:          #FFFFFF
-surface-card-hover:    #EDE6F8   // dezente Violett-Wäsche für Hover/Selected
-surface-glass:         rgba(91,33,182,0.06)
-border-subtle:         rgba(26,18,37,0.08)
-border-strong:         rgba(26,18,37,0.16)
+background-base:      #F3F0F8   // recessed page wash (kühles Lavendel-Grau, kein Cream)
+background-elevated:   #FAF8FC   // Chrome (Tabs/Header) — NICHT reines Weiß
+surface-card:          #FFFFFF   // raised cards
+surface-inset:         #F0ECF6   // nested recessed blocks inside cards
+surface-card-hover:    #EFEAF7   // quiet selection wash
+surface-glass:         rgba(255,255,255,0.78)  // white frost (nie violettes Mud)
+border-subtle:         rgba(26,18,37,0.10)
+border-strong:         rgba(26,18,37,0.18)
 ```
 
-### Akzentfarben — Dark (unverändert)
+### Akzentfarben — Dark (unverändert Kern + Soft-Fills)
 ```
 accent-primary:         #8B5CF6   // Violett – Marken-Kernfarbe
 accent-primary-dim:     #6D28D9
+accent-primary-soft:    rgba(139,92,246,0.22)
 accent-structure:       #22D3EE   // Cyan – nur Scoring/Erfolg/Struktur
 accent-structure-dim:   #0E7490
+accent-structure-soft:  rgba(34,211,238,0.18)
 accent-warning:         #F59E0B
+accent-warning-soft:    rgba(245,158,11,0.20)
 accent-danger:          #EF4444
+accent-danger-soft:     rgba(239,68,68,0.18)
 accent-success:         #34D399
+accent-success-soft:    rgba(52,211,153,0.18)
 ```
 
-### Akzentfarben — Light (Kontrast auf Hellflächen)
+### Akzentfarben — Light (tief, knapp, WCAG-tauglich auf Weiß)
 ```
-accent-primary:         #7C3AED   // etwas tieferes Violett → klar auf Weiß, ohne Neon-Biss
-accent-primary-dim:     #6D28D9
-accent-structure:       #0891B2   // tieferes Cyan für Lesbarkeit auf Hell
-accent-structure-dim:   #0E7490
-accent-warning:         #D97706
+accent-primary:         #6D28D9   // deep violet — CTA/Brand, nicht Neon
+accent-primary-dim:     #5B21B6
+accent-primary-soft:    rgba(109,40,217,0.10)  // Soft-Badges / Chips
+accent-structure:       #0E7490
+accent-structure-dim:   #155E75
+accent-structure-soft:  rgba(14,116,144,0.12)
+accent-warning:         #B45309
+accent-warning-soft:    rgba(180,83,9,0.12)
 accent-danger:          #DC2626
-accent-success:         #059669
+accent-danger-soft:     rgba(220,38,38,0.10)
+accent-success:         #047857
+accent-success-soft:    rgba(4,120,87,0.10)
 ```
 
 ### Text
@@ -61,8 +72,8 @@ text-on-accent:  #FFFFFF
 
 // Light
 text-primary:    #1A1225
-text-secondary:  #5B5270
-text-tertiary:   #8B849C
+text-secondary:  #4F4763
+text-tertiary:   #6B6478   // ≥ AA auf Weiß für Captions
 text-on-accent:  #FFFFFF
 ```
 
@@ -70,6 +81,8 @@ text-on-accent:  #FFFFFF
 > "accent-structure (Cyan) wird AUSSCHLIESSLICH für Prompt-Scoring, Erfolgs-Feedback im Prompt Lab und Fortschrittsanzeigen verwendet – niemals für generische UI-Elemente. Das ist das visuelle Signal 'hier passiert echte Bewertung', es darf nicht verwässert werden."
 >
 > "Appearance-Werte kommen ausschließlich aus dieser Datei / `theme/theme.ts`. Niemals ad-hoc Hellgrau oder Cream (#F4F1EA) einführen. Light muss überall über `tokens.colors.*` laufen — kein Screen darf Dark-Hex hardcoden."
+>
+> "Light: elevated ≠ card ≠ inset. Soft-Badges (accent-*Soft + Accent-Text) sind Default; Solid-Fill nur für hohe Betonung. Accent knapp halten — nicht als Flächenfarbe."
 ---
 
 ## 2. Typografie
@@ -181,19 +194,20 @@ gradient-primary-button:  linear-gradient(135deg, accent-primary → accent-prim
 // Dark hero
 gradient-hero-bg-dark:    linear-gradient(180deg, #1A1225 0%, #0A0612 100%)
 // Light hero
-gradient-hero-bg-light:   linear-gradient(180deg, #FFFFFF 0%, #F5F2FA 100%)
+gradient-hero-bg-light:   linear-gradient(180deg, #FAF8FC 0%, #F3F0F8 100%)
 
 gradient-orb-active:      radial-gradient(accent-structure → accent-primary)
 
 // Dark overlay
 gradient-card-overlay-dark:  linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%)
 // Light overlay
-gradient-card-overlay-light: linear-gradient(180deg, transparent 0%, rgba(26,18,37,0.12) 100%)
+gradient-card-overlay-light: linear-gradient(180deg, transparent 0%, rgba(26,18,37,0.18) 100%)
 ```
 
 ### Light Elevation
 ```
-elevation-1 light:  iOS shadowColor #1A1225, opacity 0.08, radius 8,  offset {0,2}
-elevation-2 light:  iOS shadowColor #1A1225, opacity 0.12, radius 16, offset {0,6}
-elevation-glow:     unverändert accent-primary (beide Appearances)
+elevation-1 light:  iOS shadowColor #1A1225, opacity 0.12, radius 12, offset {0,3}
+elevation-2 light:  iOS shadowColor #1A1225, opacity 0.16, radius 20, offset {0,8}
+elevation-glow light: accent-primary, opacity 0.14 (deutlich leiser als Dark)
+blur glass light: intensity 26 (Dark 40)
 ```

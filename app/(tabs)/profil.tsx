@@ -8,7 +8,7 @@ import { ByokKeysManager } from '@/components/features/profile/ByokKeysManager';
 import { ProfileCertificatesSection } from '@/components/features/profile/ProfileCertificatesSection';
 import { ProfileResetSection } from '@/components/features/profile/ProfileResetSection';
 import { SpendingLimitSettings } from '@/components/features/profile/SpendingLimitSettings';
-import { Avatar, Button, Card } from '@/components/ui';
+import { Avatar, Button, Card, SegmentedControl } from '@/components/ui';
 import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { resolveSkillRankProgress } from '@/lib/skillRank';
 import { useAuth } from '@/providers/AuthProvider';
@@ -17,8 +17,6 @@ import {
   LOCALE_LABEL_KEYS,
   LOCALES,
   useThemeMode,
-  type ThemeAppearance,
-  type ThemeMode,
 } from '@/theme';
 
 export default function ProfilScreen() {
@@ -139,20 +137,14 @@ export default function ProfilScreen() {
 
         <Card variant="solid">
           <View style={{ gap: tokens.spacing.space3 }}>
-            <View style={{ flexDirection: 'row', gap: tokens.spacing.space2 }}>
-              <ModeOption
-                isActive={mode === 'playful'}
-                label={t('profile.modePlayful')}
-                onSelect={() => setMode('playful')}
-                targetMode="playful"
-              />
-              <ModeOption
-                isActive={mode === 'focus'}
-                label={t('profile.modeFocus')}
-                onSelect={() => setMode('focus')}
-                targetMode="focus"
-              />
-            </View>
+            <SegmentedControl
+              onChange={(key) => setMode(key as 'playful' | 'focus')}
+              options={[
+                { key: 'playful', label: t('profile.modePlayful') },
+                { key: 'focus', label: t('profile.modeFocus') },
+              ]}
+              value={mode}
+            />
             <Text
               style={{
                 color: tokens.colors.text.secondary,
@@ -178,20 +170,14 @@ export default function ProfilScreen() {
 
         <Card variant="solid">
           <View style={{ gap: tokens.spacing.space3 }}>
-            <View style={{ flexDirection: 'row', gap: tokens.spacing.space2 }}>
-              <AppearanceOption
-                isActive={appearance === 'dark'}
-                label={t('profile.appearanceDark')}
-                onSelect={() => setAppearance('dark')}
-                targetAppearance="dark"
-              />
-              <AppearanceOption
-                isActive={appearance === 'light'}
-                label={t('profile.appearanceLight')}
-                onSelect={() => setAppearance('light')}
-                targetAppearance="light"
-              />
-            </View>
+            <SegmentedControl
+              onChange={(key) => setAppearance(key as 'dark' | 'light')}
+              options={[
+                { key: 'dark', label: t('profile.appearanceDark') },
+                { key: 'light', label: t('profile.appearanceLight') },
+              ]}
+              value={appearance}
+            />
             <Text
               style={{
                 color: tokens.colors.text.secondary,
@@ -217,16 +203,15 @@ export default function ProfilScreen() {
 
         <Card variant="solid">
           <View style={{ gap: tokens.spacing.space3 }}>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing.space2 }}>
-              {LOCALES.map((targetLocale) => (
-                <LocaleOption
-                  isActive={locale === targetLocale}
-                  key={targetLocale}
-                  label={t(LOCALE_LABEL_KEYS[targetLocale])}
-                  onSelect={() => setLocale(targetLocale)}
-                />
-              ))}
-            </View>
+            <SegmentedControl
+              onChange={(key) => setLocale(key as typeof locale)}
+              options={LOCALES.map((targetLocale) => ({
+                key: targetLocale,
+                label: t(LOCALE_LABEL_KEYS[targetLocale]),
+              }))}
+              value={locale}
+              wrap
+            />
             <Text
               style={{
                 color: tokens.colors.text.secondary,
@@ -301,61 +286,5 @@ export default function ProfilScreen() {
       <SpendingLimitSettings />
       <ProfileResetSection />
     </ScrollView>
-  );
-}
-
-type ModeOptionProps = {
-  label: string;
-  targetMode: ThemeMode;
-  isActive: boolean;
-  onSelect: () => void;
-};
-
-function ModeOption({ label, isActive, onSelect }: ModeOptionProps) {
-  return (
-    <View style={{ flex: 1 }}>
-      <Button
-        label={label}
-        onPress={onSelect}
-        variant={isActive ? 'primary' : 'ghost'}
-      />
-    </View>
-  );
-}
-
-type LocaleOptionProps = {
-  label: string;
-  isActive: boolean;
-  onSelect: () => void;
-};
-
-function LocaleOption({ label, isActive, onSelect }: LocaleOptionProps) {
-  return (
-    <View style={{ minWidth: '47%' }}>
-      <Button
-        label={label}
-        onPress={onSelect}
-        variant={isActive ? 'primary' : 'ghost'}
-      />
-    </View>
-  );
-}
-
-type AppearanceOptionProps = {
-  label: string;
-  targetAppearance: ThemeAppearance;
-  isActive: boolean;
-  onSelect: () => void;
-};
-
-function AppearanceOption({ label, isActive, onSelect }: AppearanceOptionProps) {
-  return (
-    <View style={{ flex: 1 }}>
-      <Button
-        label={label}
-        onPress={onSelect}
-        variant={isActive ? 'primary' : 'ghost'}
-      />
-    </View>
   );
 }
