@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Expo Go tunnel watchdog using Expo's official ngrok (*.exp.direct).
-# Auto-restarts when Metro or the public tunnel dies.
+# Auto-restarts when Metro or the public tunnel dies / flaps.
 set -euo pipefail
 cd /workspace
 
@@ -33,9 +33,39 @@ except Exception:
 " 2>/dev/null || true
 }
 
+tunnel_log_flapped() {
+  # ngrok often prints this then briefly reconnects; treat a fresh close as unhealthy.
+  if [ ! -f "$LOG" ]; then
+    return 1
+  fi
+  local stamp
+  stamp=$(stat -c %Y "$LOG" 2>/dev/null || echo 0)
+  local now
+  now=$(date +%s)
+  # Only consider recent log activity (last 3 minutes).
+  if [ $((now - stamp)) -gt 180 ]; then
+    return 1
+  fi
+  # If the last tunnel event is a close without a later "Tunnel ready", flap.
+  python3 - "$LOG" <<'PY'
+import sys
+path = sys.argv[1]
+try:
+    text = open(path, "r", errors="ignore").read().splitlines()
+except OSError:
+    sys.exit(1)
+relevant = [ln for ln in text if "Tunnel" in ln]
+if not relevant:
+    sys.exit(1)
+last = relevant[-1]
+sys.exit(0 if ("closed" in last.lower() or "disconnected" in last.lower()) else 1)
+PY
+}
+
 start_stack() {
   log "starting expo --tunnel"
   kill_pat 'node_modules/.bin/expo start'
+  kill_pat 'npm exec expo start'
   kill_pat 'ngrok-bin-linux-x64/ngrok'
   kill_pat '/tmp/cloudflared tunnel'
   sleep 2
@@ -43,11 +73,12 @@ start_stack() {
   sleep 1
   rm -f "$LOG"
 
+  # CI keeps Metro from relying on flaky inotify in this environment.
   export CI=1
   export EXPO_NO_DOTENV=1
   export EXPO_NO_TELEMETRY=1
   unset EXPO_PACKAGER_PROXY_URL || true
-  nohup npx expo start --go --tunnel --port 8081 > "$LOG" 2>&1 &
+  nohup npx expo start --go --tunnel --port 8081 --clear > "$LOG" 2>&1 &
   echo $! > /tmp/expo-main.pid
 
   local HTTPS=""
@@ -76,6 +107,11 @@ start_stack() {
 
 health_ok() {
   curl -sf -m 5 http://127.0.0.1:8081/status >/dev/null 2>&1 || return 1
+
+  if tunnel_log_flapped; then
+    return 1
+  fi
+
   local HTTPS
   HTTPS=$(cat "$HTTPS_FILE" 2>/dev/null || true)
   # Refresh URL from ngrok API if available
@@ -87,15 +123,14 @@ health_ok() {
     echo "exp://${HTTPS#https://}:80" > "$URL_FILE"
   fi
   [ -n "$HTTPS" ] || return 1
-  local ready_at now
-  ready_at=$(cat /tmp/expo-ready-at 2>/dev/null || echo 0)
-  now=$(date +%s)
-  if [ $((now - ready_at)) -lt 120 ]; then
-    return 0
-  fi
+
+  # Always probe the public tunnel — Expo Go dies when ngrok flaps even if Metro is up.
   curl -sf -m 12 "$HTTPS/status" >/dev/null 2>&1 || return 1
   return 0
 }
+
+: >> "$WATCH_LOG"
+log "watchdog boot (pid $$)"
 
 if health_ok; then
   log "adopting healthy stack $(cat "$URL_FILE" 2>/dev/null || true)"
@@ -108,14 +143,14 @@ FAILS=0
 while true; do
   if health_ok; then
     FAILS=0
-    curl -s -m 8 -o /dev/null "$(cat "$HTTPS_FILE")/status" || true
   else
     FAILS=$((FAILS + 1))
     log "health fail count=$FAILS"
-    if [ "$FAILS" -ge 3 ]; then
+    # Restart on first confirmed public-tunnel failure (ngrok flaps are not self-healing for Expo Go).
+    if [ "$FAILS" -ge 1 ]; then
       start_stack || true
       FAILS=0
     fi
   fi
-  sleep 30
+  sleep 15
 done
