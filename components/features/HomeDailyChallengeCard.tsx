@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { Button, Card } from '@/components/ui';
 import type { DailyChallenge } from '@/lib/dailyChallenge';
@@ -16,9 +16,19 @@ type HomeDailyChallengeCardProps = {
 export function HomeDailyChallengeCard({ challenge, onStart }: HomeDailyChallengeCardProps) {
   const { tokens, t } = useThemeMode();
   const isFocus = tokens.presentation.orbStyle === 'minimal';
+  const isLight = tokens.appearance === 'light';
 
   return (
     <Card variant="solid">
+      {isLight ? (
+        <View
+          pointerEvents="none"
+          style={[
+            StyleSheet.absoluteFill,
+            { backgroundColor: tokens.colors.accent.structureSoft },
+          ]}
+        />
+      ) : null}
       <View style={{ gap: isFocus ? tokens.spacing.space2 : tokens.spacing.space3 }}>
         <Text
           style={{

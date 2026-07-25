@@ -18,16 +18,16 @@ border-subtle:         rgba(255,255,255,0.08)
 border-strong:         rgba(255,255,255,0.16)
 ```
 
-### Light Appearance (verbindlich — keine eigenen Hell-Werte erfinden)
+### Light Appearance — Dirty Lilac Paper (eigenständiges Design, kein generischer Fallback)
 ```
-background-base:      #F3F0F8   // recessed page wash (kühles Lavendel-Grau, kein Cream)
-background-elevated:   #FAF8FC   // Chrome (Tabs/Header) — NICHT reines Weiß
-surface-card:          #FFFFFF   // raised cards
-surface-inset:         #F0ECF6   // nested recessed blocks inside cards
-surface-card-hover:    #EFEAF7   // quiet selection wash
-surface-glass:         rgba(255,255,255,0.78)  // white frost (nie violettes Mud)
-border-subtle:         rgba(26,18,37,0.10)
-border-strong:         rgba(26,18,37,0.18)
+background-base:      #E8E2F2   // dirty lilac page wash (kein Cream, kein Neutralgrau)
+background-elevated:   #F2EDF8   // Chrome (Tabs/Header/StatusBar) — lilac paper
+surface-card:          #F9F7FC   // raised paper (nicht reines #FFFFFF)
+surface-inset:         #DED6EC   // nested recessed lilac
+surface-card-hover:    #D5CBE8   // selection / completed-day wash
+surface-glass:         rgba(249,247,252,0.82)  // paper frost (nie violettes Mud)
+border-subtle:         rgba(45,27,78,0.10)
+border-strong:         rgba(45,27,78,0.18)
 ```
 
 ### Akzentfarben — Dark (unverändert Kern + Soft-Fills)
@@ -35,7 +35,7 @@ border-strong:         rgba(26,18,37,0.18)
 accent-primary:         #8B5CF6   // Violett – Marken-Kernfarbe
 accent-primary-dim:     #6D28D9
 accent-primary-soft:    rgba(139,92,246,0.22)
-accent-structure:       #22D3EE   // Cyan – nur Scoring/Erfolg/Struktur
+accent-structure:       #22D3EE   // Cyan – Scoring/Erfolg/Struktur + gezielte Light-Akzente
 accent-structure-dim:   #0E7490
 accent-structure-soft:  rgba(34,211,238,0.18)
 accent-warning:         #F59E0B
@@ -46,14 +46,14 @@ accent-success:         #34D399
 accent-success-soft:    rgba(52,211,153,0.18)
 ```
 
-### Akzentfarben — Light (tief, knapp, WCAG-tauglich auf Weiß)
+### Akzentfarben — Light (tief, markenstark, WCAG-tauglich auf Paper)
 ```
-accent-primary:         #6D28D9   // deep violet — CTA/Brand, nicht Neon
-accent-primary-dim:     #5B21B6
-accent-primary-soft:    rgba(109,40,217,0.10)  // Soft-Badges / Chips
+accent-primary:         #5B21B6   // deep violet — Brand überall (Nav, Badges, Progress, Icons)
+accent-primary-dim:     #4C1D95
+accent-primary-soft:    rgba(91,33,182,0.12)   // Soft-Badges / Card-Washes / active Nav
 accent-structure:       #0E7490
 accent-structure-dim:   #155E75
-accent-structure-soft:  rgba(14,116,144,0.12)
+accent-structure-soft:  rgba(14,116,144,0.10)  // dezente Card-Tints (z. B. Tagesaufgabe)
 accent-warning:         #B45309
 accent-warning-soft:    rgba(180,83,9,0.12)
 accent-danger:          #DC2626
@@ -78,11 +78,11 @@ text-on-accent:  #FFFFFF
 ```
 
 ### Regel für Cursor
-> "accent-structure (Cyan) wird AUSSCHLIESSLICH für Prompt-Scoring, Erfolgs-Feedback im Prompt Lab und Fortschrittsanzeigen verwendet – niemals für generische UI-Elemente. Das ist das visuelle Signal 'hier passiert echte Bewertung', es darf nicht verwässert werden."
+> "accent-structure (Cyan) bleibt das Signal für Scoring/Erfolg/Struktur. In Light zusätzlich erlaubt: dezente Card-Tints (`structureSoft`) und gezielte Icon-Akzente — nie als generische Flächenfarbe oder Ersatz für Primary."
 >
 > "Appearance-Werte kommen ausschließlich aus dieser Datei / `theme/theme.ts`. Niemals ad-hoc Hellgrau oder Cream (#F4F1EA) einführen. Light muss überall über `tokens.colors.*` laufen — kein Screen darf Dark-Hex hardcoden."
 >
-> "Light: elevated ≠ card ≠ inset. Soft-Badges (accent-*Soft + Accent-Text) sind Default; Solid-Fill nur für hohe Betonung. Accent knapp halten — nicht als Flächenfarbe."
+> "Light: elevated ≠ card ≠ inset. Soft-Badges (accent-*Soft + Accent-Text) sind Default; Solid-Fill nur für hohe Betonung. Purple/Cyan müssen über CTAs hinaus sichtbar sein (aktive Nav, Rang-Badge, Progress, Icon-Rims) — Light ist Dirty Lilac Paper, kein Neutral-Fallback."
 ---
 
 ## 2. Typografie
@@ -194,20 +194,20 @@ gradient-primary-button:  linear-gradient(135deg, accent-primary → accent-prim
 // Dark hero
 gradient-hero-bg-dark:    linear-gradient(180deg, #1A1225 0%, #0A0612 100%)
 // Light hero
-gradient-hero-bg-light:   linear-gradient(180deg, #FAF8FC 0%, #F3F0F8 100%)
+gradient-hero-bg-light:   linear-gradient(180deg, #F2EDF8 0%, #E8E2F2 100%)
 
 gradient-orb-active:      radial-gradient(accent-structure → accent-primary)
 
 // Dark overlay
 gradient-card-overlay-dark:  linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%)
 // Light overlay
-gradient-card-overlay-light: linear-gradient(180deg, transparent 0%, rgba(26,18,37,0.18) 100%)
+gradient-card-overlay-light: linear-gradient(180deg, transparent 0%, rgba(45,27,78,0.16) 100%)
 ```
 
-### Light Elevation
+### Light Elevation (Purple-Glow-Ersatz — warmer Violet-Unterton, kein Neutralgrau)
 ```
-elevation-1 light:  iOS shadowColor #1A1225, opacity 0.12, radius 12, offset {0,3}
-elevation-2 light:  iOS shadowColor #1A1225, opacity 0.16, radius 20, offset {0,8}
-elevation-glow light: accent-primary, opacity 0.14 (deutlich leiser als Dark)
+elevation-1 light:  iOS shadowColor #5B21B6, opacity 0.10, radius 14, offset {0,4}
+elevation-2 light:  iOS shadowColor #5B21B6, opacity 0.14, radius 22, offset {0,8}
+elevation-glow light: accent-primary, opacity 0.18 (deutlich leiser als Dark, aber markenfarben)
 blur glass light: intensity 26 (Dark 40)
 ```

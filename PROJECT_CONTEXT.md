@@ -77,7 +77,8 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 19. **Crash hardening + onboarding crop:** Orb bricht alle `withRepeat`-SharedValues beim Unmount ab (`stopAllOrbMotion`); globales `routeTransitionLock` blockiert konkurrierende AuthNav-Replaces; Profil wendet `setMode` erst nach `replace` an; Welcome-Carousel: Caption wrappt 3 Zeilen, Phone-Crop mit `maxHeight: '100%'` + Compact-Skalierung.
 20. **Fill-blank spacing both modes:** `withFillBlankJoinSpaces` in `FillBlankStepView` (Focus + Playful); Playful-Shortener erhält Prefix/Suffix-Randspaces (`fill_edge`).
 21. **Onboarding layout lock:** Welcome wartet auf Theme-`isReady` (kein Focus→Playful-Flash); Phone-Crop **height-first** füllt den Carousel-Slot (~86% Gerät, soft fade); kein `useWindowDimensions`/compact-Toggle.
-22. **Light appearance (Hellmodus):** Orthogonal zu Playful/Focus — `ThemeAppearance` + Premium-Light-Stack (recessed `#F3F0F8` / chrome `#FAF8FC` / card `#FFFFFF` / inset `#F0ECF6`, deep violet `#6D28D9`, soft badges, SegmentedControl im Profil), Persistenz `structai.theme-appearance`, Onboarding-Chip links; Verify: `scripts/verify-light-appearance.mjs`.
+22. **Light appearance (Hellmodus):** Orthogonal zu Playful/Focus — `ThemeAppearance` + Persistenz `structai.theme-appearance`, Onboarding-Chip links; Verify: `scripts/verify-light-appearance.mjs`.
+23. **Light quality — Dirty Lilac Paper:** Eigenständiges Light-Design (`#E8E2F2` / `#F2EDF8` / `#F9F7FC` / `#DED6EC`, primary `#5B21B6`), purple-tint Shadows, StatusBar/Chrome erben elevated (kein schwarzer Strip; `userInterfaceStyle: automatic`), OrbIcon unique gradient IDs + violet Rim (kein „O“-Fallback), Brand-Akzente in Bottom-Nav (Indikator), Rang-Badge, Progress, Card-Tints (SkillRank primarySoft, Tagesaufgabe structureSoft).
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 

@@ -426,9 +426,11 @@ export function OrbSvgCompanion({
   const primary = tokens.colors.accent.primary;
   const primaryDim = tokens.colors.accent.primaryDim;
   const warning = tokens.colors.accent.warning;
-  const core =
-    tokens.appearance === 'light' ? tokens.colors.text.primary : tokens.colors.background.base;
+  const isLight = tokens.appearance === 'light';
+  const core = isLight ? tokens.colors.text.primary : tokens.colors.background.base;
   const onAccent = tokens.colors.text.onAccent;
+  // Light: white rim on paper collapses the orb to a hollow "O" — brand violet rim.
+  const rimStroke = isLight ? primary : onAccent;
 
   // Warmth (worry/low_energy) → warning only. Never accent-structure here —
   // cyan is scoring-only and read as a stray “green particle” on orange orbs.
@@ -591,8 +593,8 @@ export function OrbSvgCompanion({
             cy="12"
             fill="none"
             r="7.0"
-            stroke={onAccent}
-            strokeWidth={isPlayful ? 0.6 : 0.42}
+            stroke={rimStroke}
+            strokeWidth={isPlayful ? (isLight ? 0.75 : 0.6) : isLight ? 0.55 : 0.42}
           />
           <AnimatedCircle
             animatedProps={rimProps}
@@ -601,8 +603,8 @@ export function OrbSvgCompanion({
             fill="none"
             r="7.45"
             stroke={coronaInner}
-            strokeOpacity={0.75}
-            strokeWidth={isPlayful ? 1.15 : 0.85}
+            strokeOpacity={isLight ? 0.9 : 0.75}
+            strokeWidth={isPlayful ? (isLight ? 1.3 : 1.15) : isLight ? 1.05 : 0.85}
           />
         </Svg>
       </View>

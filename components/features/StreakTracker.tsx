@@ -111,7 +111,9 @@ function StreakDay({ completed, isMilestoneDay, label }: StreakDayProps) {
           {
             alignItems: 'center',
             backgroundColor: completed
-              ? tokens.colors.surface.cardHover
+              ? tokens.appearance === 'light'
+                ? tokens.colors.accent.primarySoft
+                : tokens.colors.surface.cardHover
               : tokens.colors.surface.card,
             borderColor: completed
               ? tokens.colors.accent.primary
@@ -128,7 +130,7 @@ function StreakDay({ completed, isMilestoneDay, label }: StreakDayProps) {
             <OrbIcon size={tokens.icons.sizes.sm} />
           ) : (
             <Check
-              color={tokens.colors.accent.success}
+              color={tokens.colors.accent.primary}
               size={tokens.icons.sizes.sm}
               strokeWidth={tokens.icons.strokeWidth}
             />

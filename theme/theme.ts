@@ -46,31 +46,31 @@ export const darkColors = {
 } as const;
 
 /**
- * Light appearance — recessed page, raised white cards, scarce deep violet.
- * Inspired by Linear/Stripe light: hierarchy via inset/chrome/card, not neon fill.
+ * Light appearance — Dirty Lilac Paper (standalone brand surface, not a gray fallback).
+ * Hierarchy: lilac page → paper chrome → raised card → recessed inset.
  */
 export const lightColors = {
   background: {
-    base: '#F3F0F8',
-    elevated: '#FAF8FC',
+    base: '#E8E2F2',
+    elevated: '#F2EDF8',
   },
   surface: {
-    card: '#FFFFFF',
-    inset: '#F0ECF6',
-    cardHover: '#EFEAF7',
-    glass: 'rgba(255,255,255,0.78)',
+    card: '#F9F7FC',
+    inset: '#DED6EC',
+    cardHover: '#D5CBE8',
+    glass: 'rgba(249,247,252,0.82)',
   },
   border: {
-    subtle: 'rgba(26,18,37,0.10)',
-    strong: 'rgba(26,18,37,0.18)',
+    subtle: 'rgba(45,27,78,0.10)',
+    strong: 'rgba(45,27,78,0.18)',
   },
   accent: {
-    primary: '#6D28D9',
-    primaryDim: '#5B21B6',
-    primarySoft: 'rgba(109,40,217,0.10)',
+    primary: '#5B21B6',
+    primaryDim: '#4C1D95',
+    primarySoft: 'rgba(91,33,182,0.12)',
     structure: '#0E7490',
     structureDim: '#155E75',
-    structureSoft: 'rgba(14,116,144,0.12)',
+    structureSoft: 'rgba(14,116,144,0.10)',
     warning: '#B45309',
     warningSoft: 'rgba(180,83,9,0.12)',
     danger: '#DC2626',
@@ -356,7 +356,7 @@ function resolveGradients(
     cardOverlay: {
       colors:
         appearance === 'light'
-          ? ['transparent', 'rgba(26,18,37,0.18)']
+          ? ['transparent', 'rgba(45,27,78,0.16)']
           : ['transparent', 'rgba(0,0,0,0.4)'],
       start: { x: 0, y: 0 },
       end: { x: 0, y: 1 },
@@ -397,16 +397,17 @@ export function getShadow(
   appearance: ThemeAppearance = 'dark',
 ): ViewStyle {
   const isLight = appearance === 'light';
-  const shadowInk = isLight ? '#1A1225' : '#000000';
+  // Light: purple undertone as glow-Ersatz; dark keeps neutral ink.
+  const shadowInk = isLight ? lightColors.accent.primary : '#000000';
 
   switch (level) {
     case 1:
       return Platform.select({
         ios: {
           shadowColor: shadowInk,
-          shadowOpacity: isLight ? 0.12 : 0.2,
-          shadowRadius: isLight ? 12 : 8,
-          shadowOffset: { width: 0, height: isLight ? 3 : 2 },
+          shadowOpacity: isLight ? 0.1 : 0.2,
+          shadowRadius: isLight ? 14 : 8,
+          shadowOffset: { width: 0, height: isLight ? 4 : 2 },
         },
         android: { elevation: isLight ? 4 : 3 },
         default: {},
@@ -415,8 +416,8 @@ export function getShadow(
       return Platform.select({
         ios: {
           shadowColor: shadowInk,
-          shadowOpacity: isLight ? 0.16 : 0.3,
-          shadowRadius: isLight ? 20 : 16,
+          shadowOpacity: isLight ? 0.14 : 0.3,
+          shadowRadius: isLight ? 22 : 16,
           shadowOffset: { width: 0, height: isLight ? 8 : 6 },
         },
         android: { elevation: isLight ? 10 : 8 },
@@ -426,11 +427,11 @@ export function getShadow(
       return Platform.select({
         ios: {
           shadowColor: isLight ? lightColors.accent.primary : darkColors.accent.primary,
-          shadowOpacity: isLight ? 0.14 : 0.45,
-          shadowRadius: isLight ? 16 : 20,
+          shadowOpacity: isLight ? 0.18 : 0.45,
+          shadowRadius: isLight ? 18 : 20,
           shadowOffset: { width: 0, height: 0 },
         },
-        android: { elevation: isLight ? 4 : 6 },
+        android: { elevation: isLight ? 5 : 6 },
         default: {},
       }) as ViewStyle;
     default:

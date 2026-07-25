@@ -1,5 +1,5 @@
 /**
- * Light appearance — premium hierarchy, persistence, onboarding + profile controls.
+ * Light appearance — Dirty Lilac Paper, status bar, brand accents, orb icons.
  */
 
 import assert from 'node:assert/strict';
@@ -21,11 +21,16 @@ const appearanceBtn = read(
 );
 const profile = read('app/(tabs)/profil.tsx');
 const layout = read('app/_layout.tsx');
+const tabsLayout = read('app/(tabs)/_layout.tsx');
 const card = read('components/ui/Card.tsx');
 const badge = read('components/ui/Badge.tsx');
 const segmented = read('components/ui/SegmentedControl.tsx');
 const certificate = read('components/features/CertificateView.tsx');
+const orbIcon = read('components/features/OrbIcon.tsx');
+const skillRank = read('components/features/SkillRankStrip.tsx');
+const dailyChallenge = read('components/features/HomeDailyChallengeCard.tsx');
 const tokensDoc = read('DESIGN_TOKENS.md');
+const appJson = read('app.json');
 
 if (!theme.includes("export type ThemeAppearance = 'dark' | 'light'")) {
   violations.push('theme.ts must export ThemeAppearance');
@@ -33,33 +38,37 @@ if (!theme.includes("export type ThemeAppearance = 'dark' | 'light'")) {
 if (!theme.includes('export const lightColors')) {
   violations.push('theme.ts must define lightColors');
 }
-if (!theme.includes("base: '#F3F0F8'")) {
-  violations.push('light base must be recessed #F3F0F8');
+
+const lightBlock = theme.slice(theme.indexOf('export const lightColors'));
+if (!lightBlock.includes("base: '#E8E2F2'")) {
+  violations.push('light base must be dirty lilac #E8E2F2');
 }
-if (!theme.includes("elevated: '#FAF8FC'")) {
-  violations.push('light elevated chrome must be #FAF8FC (not pure white)');
+if (!lightBlock.includes("elevated: '#F2EDF8'")) {
+  violations.push('light elevated chrome must be #F2EDF8');
 }
-if (!theme.includes("inset: '#F0ECF6'")) {
-  violations.push('light must define surface.inset');
+if (!lightBlock.includes("card: '#F9F7FC'")) {
+  violations.push('light card must be paper #F9F7FC (not pure white)');
 }
-if (!theme.includes("primary: '#6D28D9'")) {
-  violations.push('light accent.primary must be deep violet #6D28D9');
+if (!lightBlock.includes("inset: '#DED6EC'")) {
+  violations.push('light must define surface.inset #DED6EC');
 }
-if (!theme.includes('primarySoft:')) {
+if (!lightBlock.includes("primary: '#5B21B6'")) {
+  violations.push('light accent.primary must be deep violet #5B21B6');
+}
+if (!lightBlock.includes('primarySoft:')) {
   violations.push('accent soft fills required for light badges');
 }
-if (!theme.includes("glass: 'rgba(255,255,255,0.78)'")) {
-  violations.push('light glass must be white frost, not violet mud');
+if (!lightBlock.includes("glass: 'rgba(249,247,252,0.82)'")) {
+  violations.push('light glass must be paper frost, not violet mud');
 }
 if (theme.includes('#F4F1EA')) {
   violations.push('must not introduce cream #F4F1EA');
 }
-if (theme.includes("elevated: '#FFFFFF'") && theme.includes('lightColors')) {
-  // elevated white collapses hierarchy — only fail if lightColors still has it
-  const lightBlock = theme.slice(theme.indexOf('export const lightColors'));
-  if (lightBlock.includes("elevated: '#FFFFFF'")) {
-    violations.push('light elevated must not equal pure white card');
-  }
+if (lightBlock.includes("elevated: '#FFFFFF'") || lightBlock.includes("card: '#FFFFFF'")) {
+  violations.push('light elevated/card must not be pure white');
+}
+if (!theme.includes('lightColors.accent.primary') || !theme.includes('shadowOpacity: isLight ? 0.1')) {
+  violations.push('getShadow light must use purple undertone (primary)');
 }
 
 if (!context.includes('structai.theme-appearance')) {
@@ -89,6 +98,19 @@ if (!segmented.includes('surface.inset')) {
 if (!layout.includes('StatusBar') || !layout.includes("appearance === 'light'")) {
   violations.push('Root layout must drive StatusBar from appearance');
 }
+if (!layout.includes('RNStatusBar.setBackgroundColor') && !layout.includes('setBackgroundColor(chrome')) {
+  violations.push('Android StatusBar background must be set from chrome token');
+}
+if (!layout.includes('backgroundColor: page') && !layout.includes('backgroundColor: page,')) {
+  violations.push('Root View must fill with page background (status-bar area inherit)');
+}
+
+if (!tabsLayout.includes('tabBarActiveTintColor: tokens.colors.accent.primary')) {
+  violations.push('Bottom nav active tint must use accent.primary');
+}
+if (!tabsLayout.includes('TabBarGlyph') || !tabsLayout.includes('indicatorColor')) {
+  violations.push('Bottom nav must show active purple indicator');
+}
 
 if (!card.includes("tint={isLight ? 'light' : 'dark'}") && !card.includes("tint={tokens.appearance === 'light' ? 'light' : 'dark'}")) {
   violations.push('Card glass BlurView tint must follow appearance');
@@ -105,8 +127,29 @@ if (!certificate.includes('resolveThemeTokens(mode, appearance)')) {
   violations.push('CertificateView must resolve tokens for mode + appearance');
 }
 
-if (!tokensDoc.includes('surface-inset') || !tokensDoc.includes('#F3F0F8')) {
-  violations.push('DESIGN_TOKENS.md must document premium light stack');
+if (!orbIcon.includes('useId') || orbIcon.includes('id="orbIconAura"')) {
+  violations.push('OrbIcon must use unique gradient ids (no shared orbIconAura)');
+}
+if (!orbIcon.includes('isLight ? primary : tokens.colors.text.onAccent') && !orbIcon.includes('rim = isLight ? primary')) {
+  violations.push('OrbIcon light rim must use brand primary, not white onAccent');
+}
+
+if (!skillRank.includes('<Badge') || !skillRank.includes('color="primary"')) {
+  violations.push('SkillRankStrip must use Badge + primary ProgressBar');
+}
+if (!dailyChallenge.includes('structureSoft')) {
+  violations.push('Daily challenge card must use structureSoft tint in light');
+}
+
+if (!tokensDoc.includes('Dirty Lilac') || !tokensDoc.includes('#E8E2F2')) {
+  violations.push('DESIGN_TOKENS.md must document Dirty Lilac Paper stack');
+}
+if (!tokensDoc.includes('shadowColor #5B21B6')) {
+  violations.push('DESIGN_TOKENS.md must document purple-tint light elevation');
+}
+
+if (!appJson.includes('"userInterfaceStyle": "automatic"')) {
+  violations.push('app.json userInterfaceStyle must be automatic for light chrome');
 }
 
 for (const locale of ['de', 'en', 'fr', 'ru']) {
