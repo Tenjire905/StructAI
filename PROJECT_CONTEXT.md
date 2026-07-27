@@ -81,7 +81,7 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 23. **Light quality — Dirty Lilac Paper:** Eigenständiges Light-Design (Zwischenstand), purple-tint Shadows, StatusBar/Chrome, OrbIcon unique IDs, Brand-Akzente in Bottom-Nav / Rang / Progress / Card-Tints.
 24. **Light Warm Cream + Stat mono:** Freigegebene Light-Palette (`#F5F1EA` / `#FFFFFF` / `#FBF9F5` / `#EDE4EE`, purple `#6B4E87`, cyan `#4E8B8A`, shadow `rgba(107,78,135,0.12)`); StatBlock/OrbCounter-Zahlen in SpaceMono **nur Light** (Dark bleibt Clash Display); Card-Borders einheitlich `border-subtle`. Expo Go: AsyncStorage-Pfad in `appStorage` (kein NitroModules-Crash).
 25. **Quiet tile press:** `PressableScale` / PathCard / Button — Press-Scale `0.985` + `withTiming(instant)` statt Spring `0.97` (Dark + Light).
-26. **Floating tab bar:** Solid pill-Leiste (kein Transparent-Glass) mit Abstand zu den Screen-Rändern, `radius.pill`, Shadow-2; aktive Tabs als ovale Chips (`primarySoft`) — `FloatingTabBar` in beiden Appearances.
+26. **Floating tab bar:** Solid pill-Leiste (kein Transparent-Glass) mit Abstand zu den Screen-Rändern, `radius.pill`, Shadow-2; aktiver Oval-Chip **gleitet** per Reanimated `withTiming(medium)` — `FloatingTabBar` in beiden Appearances.
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 

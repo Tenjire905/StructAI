@@ -124,6 +124,9 @@ if (!floatingTabBar.includes('radius.pill') || !floatingTabBar.includes('screenP
 if (!floatingTabBar.includes('primarySoft') || !floatingTabBar.includes('surface.card')) {
   violations.push('FloatingTabBar must use solid card + oval primarySoft active chips');
 }
+if (!floatingTabBar.includes('withTiming') || !floatingTabBar.includes('indicatorX')) {
+  violations.push('FloatingTabBar must smoothly slide active chip with Reanimated');
+}
 if (floatingTabBar.includes('BlurView') || floatingTabBar.includes('surface.glass')) {
   violations.push('FloatingTabBar must stay solid (no transparent glass)');
 }
