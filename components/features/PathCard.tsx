@@ -4,10 +4,11 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
 import { Badge, ProgressBar } from '@/components/ui';
+import { PRESS_SCALE_SUBTLE } from '@/components/ui/PressableScale';
 import type { PathProgressSegment } from '@/lib/pathProgress';
 import { getShadow, useThemeMode } from '@/theme';
 
@@ -57,13 +58,17 @@ export function PathCard({
 
   const handlePressIn = () => {
     if (isPressable) {
-      scale.value = withSpring(0.97, tokens.motion.spring.default);
+      scale.value = withTiming(PRESS_SCALE_SUBTLE, {
+        duration: tokens.motion.duration.instant,
+      });
     }
   };
 
   const handlePressOut = () => {
     if (isPressable) {
-      scale.value = withSpring(1, tokens.motion.spring.default);
+      scale.value = withTiming(1, {
+        duration: tokens.motion.duration.instant,
+      });
     }
   };
 

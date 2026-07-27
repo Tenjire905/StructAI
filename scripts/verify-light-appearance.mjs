@@ -149,8 +149,24 @@ if (!dailyChallenge.includes('structureSoft')) {
   violations.push('Daily challenge card must use structureSoft tint in light');
 }
 
-if (!statBlock.includes('fontFamily.mono')) {
-  violations.push('StatBlock numbers must use mono (Clash Display 0 reads as O)');
+if (!statBlock.includes('fontFamily.mono') || !statBlock.includes("appearance === 'light'")) {
+  violations.push('StatBlock must use mono only in light (dark keeps display)');
+}
+if (!statBlock.includes('fontFamily.display')) {
+  violations.push('StatBlock must keep Clash display for dark numbers');
+}
+
+const pressable = read('components/ui/PressableScale.tsx');
+const pathCard = read('components/features/PathCard.tsx');
+const button = read('components/ui/Button.tsx');
+if (!pressable.includes('PRESS_SCALE_SUBTLE') || !pressable.includes('0.985') || !pressable.includes('withTiming')) {
+  violations.push('PressableScale must use subtle 0.985 withTiming (no spring bounce)');
+}
+if (pressable.includes('withSpring(0.97') || pathCard.includes('withSpring(0.97') || button.includes('withSpring(0.97')) {
+  violations.push('tile/button press must not use spring 0.97');
+}
+if (!pathCard.includes('PRESS_SCALE_SUBTLE') || !button.includes('PRESS_SCALE_SUBTLE')) {
+  violations.push('PathCard and Button must share PRESS_SCALE_SUBTLE');
 }
 
 if (!appStorage.includes('isExpoGo') || !appStorage.includes('createAsyncStorageBackedStorage')) {

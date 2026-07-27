@@ -2,12 +2,15 @@ import { Pressable, type PressableProps, type StyleProp, type ViewStyle } from '
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
 import { useThemeMode } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+/** Quiet tile press — barely noticeable scale, no spring bounce. */
+export const PRESS_SCALE_SUBTLE = 0.985;
 
 type PressableScaleProps = Omit<PressableProps, 'style'> & {
   style?: StyleProp<ViewStyle>;
@@ -35,14 +38,18 @@ export function PressableScale({
 
   const handlePressIn: PressableProps['onPressIn'] = (event) => {
     if (!disabled && !pressFeedbackDisabled && onPress) {
-      scale.value = withSpring(0.97, tokens.motion.spring.default);
+      scale.value = withTiming(PRESS_SCALE_SUBTLE, {
+        duration: tokens.motion.duration.instant,
+      });
     }
     onPressIn?.(event);
   };
 
   const handlePressOut: PressableProps['onPressOut'] = (event) => {
     if (!disabled && !pressFeedbackDisabled && onPress) {
-      scale.value = withSpring(1, tokens.motion.spring.default);
+      scale.value = withTiming(1, {
+        duration: tokens.motion.duration.instant,
+      });
     }
     onPressOut?.(event);
   };
