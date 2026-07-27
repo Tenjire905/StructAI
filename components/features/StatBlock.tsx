@@ -10,6 +10,11 @@ type StatBlockProps = {
 
 export function StatBlock({ copyKey, value, embedded = false }: StatBlockProps) {
   const { tokens, t } = useThemeMode();
+  const isLight = tokens.appearance === 'light';
+  // Light: SpaceMono so "0" doesn't read as letter O. Dark keeps Clash Display.
+  const valueFont = isLight
+    ? tokens.typography.fontFamily.mono
+    : tokens.typography.fontFamily.display;
 
   return (
     <View
@@ -31,8 +36,7 @@ export function StatBlock({ copyKey, value, embedded = false }: StatBlockProps) 
       <Text
         style={{
           color: tokens.colors.text.primary,
-          // SpaceMono — Clash Display zeros read as the letter "O" at display sizes.
-          fontFamily: tokens.typography.fontFamily.mono,
+          fontFamily: valueFont,
           fontSize: tokens.typography.fontSize.displayLg,
         }}>
         {typeof value === 'number' ? String(value) : value}

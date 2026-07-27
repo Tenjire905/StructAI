@@ -79,7 +79,8 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 21. **Onboarding layout lock:** Welcome wartet auf Theme-`isReady` (kein Focus→Playful-Flash); Phone-Crop **height-first** füllt den Carousel-Slot (~86% Gerät, soft fade); kein `useWindowDimensions`/compact-Toggle.
 22. **Light appearance (Hellmodus):** Orthogonal zu Playful/Focus — `ThemeAppearance` + Persistenz `structai.theme-appearance`, Onboarding-Chip links; Verify: `scripts/verify-light-appearance.mjs`.
 23. **Light quality — Dirty Lilac Paper:** Eigenständiges Light-Design (Zwischenstand), purple-tint Shadows, StatusBar/Chrome, OrbIcon unique IDs, Brand-Akzente in Bottom-Nav / Rang / Progress / Card-Tints.
-24. **Light Warm Cream + Stat mono:** Freigegebene Light-Palette (`#F5F1EA` / `#FFFFFF` / `#FBF9F5` / `#EDE4EE`, purple `#6B4E87`, cyan `#4E8B8A`, shadow `rgba(107,78,135,0.12)`); StatBlock/OrbCounter-Zahlen in SpaceMono (Clash-`0` las als `O`); Card-Borders einheitlich `border-subtle` (kein Sonder-Akzent nur auf „Dein Rang“). Expo Go: AsyncStorage-Pfad in `appStorage` (kein NitroModules-Crash).
+24. **Light Warm Cream + Stat mono:** Freigegebene Light-Palette (`#F5F1EA` / `#FFFFFF` / `#FBF9F5` / `#EDE4EE`, purple `#6B4E87`, cyan `#4E8B8A`, shadow `rgba(107,78,135,0.12)`); StatBlock/OrbCounter-Zahlen in SpaceMono **nur Light** (Dark bleibt Clash Display); Card-Borders einheitlich `border-subtle`. Expo Go: AsyncStorage-Pfad in `appStorage` (kein NitroModules-Crash).
+25. **Quiet tile press:** `PressableScale` / PathCard / Button — Press-Scale `0.985` + `withTiming(instant)` statt Spring `0.97` (Dark + Light).
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 

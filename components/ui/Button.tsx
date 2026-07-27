@@ -3,9 +3,10 @@ import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } fro
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
+import { PRESS_SCALE_SUBTLE } from '@/components/ui/PressableScale';
 import { useThemeMode } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -35,11 +36,15 @@ export function Button({
   }));
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.97, tokens.motion.spring.default);
+    scale.value = withTiming(PRESS_SCALE_SUBTLE, {
+      duration: tokens.motion.duration.instant,
+    });
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, tokens.motion.spring.default);
+    scale.value = withTiming(1, {
+      duration: tokens.motion.duration.instant,
+    });
   };
 
   const content = (

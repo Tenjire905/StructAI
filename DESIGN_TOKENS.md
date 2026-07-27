@@ -82,7 +82,7 @@ text-on-accent:  #FFFFFF
 >
 > "Appearance-Werte kommen ausschließlich aus dieser Datei / `theme/theme.ts`. Light Warm Cream (`#F5F1EA` und die übrigen Light-Werte oben) ist die freigegebene Light-Palette — keine weiteren Cream-/Grau-Hex ad hoc. Kein Screen darf Dark-Hex hardcoden."
 >
-> "Light: elevated ≠ card ≠ inset. Soft-Badges Default; Solid-Fill nur für hohe Betonung. Card-Borders in Light einheitlich `border-subtle` (kein Sonder-Akzent nur auf einer Karte). Zahlen/Scores immer `font-mono` (SpaceMono) — Clash Display lässt `0` wie `O` wirken."
+> "Light: elevated ≠ card ≠ inset. Soft-Badges Default; Solid-Fill nur für hohe Betonung. Card-Borders in Light einheitlich `border-subtle` (kein Sonder-Akzent nur auf einer Karte). Display-Zahlen: Light → `font-mono` (SpaceMono, damit `0`≠`O`); Dark → `font-display` (Clash) unverändert."
 ---
 
 ## 2. Typografie
@@ -163,17 +163,19 @@ elevation-glow (Akzent-Elemente, z. B. aktiver Orb):
 ## 6. Motion / Animation-Timing
 
 ```
-duration-instant:   100ms   // Press-Feedback (scale down)
+duration-instant:   100ms   // Press-Feedback (scale down) — subtil, withTiming, kein Spring-Bounce
 duration-fast:      200ms   // Standard-Übergänge, Toggle-States
 duration-medium:    300ms   // Card-Expand, Screen-Transitions
 duration-celebration: 600ms // XP-Gewinn, Streak-Erfolg, Zertifikat-Unlock (einziger Ort für längere Animation)
 
 spring-default:  { damping: 15, stiffness: 150 }   // Standard-Bounce für Buttons/Cards
 spring-bouncy:   { damping: 10, stiffness: 120 }   // NUR für Celebration-Momente (Orb-Pop, Streak-Badge)
+
+press-scale-subtle: 0.985   // Kachel/Button Press (PressableScale, PathCard, Button) — dezenter als 0.97
 ```
 
 ### Regel für Cursor
-> "Jede Interaktion unter 300ms, außer explizit als Celebration markiert. Kein Bounce/Spring auf Standard-Navigationsübergängen – das wirkt unruhig, nicht hochwertig."
+> "Jede Interaktion unter 300ms, außer explizit als Celebration markiert. Kein Bounce/Spring auf Standard-Press/Navigationsübergängen – Press-Feedback nur mit `withTiming` + `press-scale-subtle`."
 
 ---
 
