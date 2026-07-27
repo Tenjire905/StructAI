@@ -113,8 +113,39 @@ if (!layout.includes('backgroundColor: page') && !layout.includes('backgroundCol
 if (!tabsLayout.includes('tabBarActiveTintColor: tokens.colors.accent.primary')) {
   violations.push('Bottom nav active tint must use accent.primary');
 }
-if (!tabsLayout.includes('TabBarGlyph') || !tabsLayout.includes('indicatorColor')) {
-  violations.push('Bottom nav must show active purple indicator');
+if (!tabsLayout.includes('FloatingTabBar') || !tabsLayout.includes('tabBar={(props)')) {
+  violations.push('Tabs must use FloatingTabBar (solid floating pill)');
+}
+
+const floatingTabBar = read('components/ui/FloatingTabBar.tsx');
+if (!floatingTabBar.includes('radius.pill') || !floatingTabBar.includes('screenPadding')) {
+  violations.push('FloatingTabBar must float inset with pill radius');
+}
+if (!floatingTabBar.includes('primarySoft') || !floatingTabBar.includes('surface.card')) {
+  violations.push('FloatingTabBar must use solid card + oval primarySoft active chips');
+}
+if (!floatingTabBar.includes('withSpring') || !floatingTabBar.includes('indicatorX')) {
+  violations.push('FloatingTabBar must use spring physics for active chip slide');
+}
+if (!floatingTabBar.includes('indicatorMorph') || !floatingTabBar.includes('position: \'absolute\'')) {
+  violations.push('FloatingTabBar must soft-morph and float absolute over content');
+}
+if (!floatingTabBar.includes('FLOATING_TAB_BAR_CLEARANCE') || !floatingTabBar.includes('PRESS_SCALE')) {
+  violations.push('FloatingTabBar must export clearance + use press scale');
+}
+if (!floatingTabBar.includes('TAB_SPRING') || !floatingTabBar.includes('MORPH_SQUASH')) {
+  violations.push('FloatingTabBar must use Apple-quiet TAB_SPRING + whisper MORPH_SQUASH');
+}
+if (floatingTabBar.includes('PRESS_SCALE = 0.94') || floatingTabBar.includes('ICON_FOCUS_SCALE = 1.08')) {
+  violations.push('FloatingTabBar must keep press/icon scales subtle (not 0.94 / 1.08)');
+}
+if (floatingTabBar.includes('BlurView') || floatingTabBar.includes('surface.glass')) {
+  violations.push('FloatingTabBar must stay solid (no transparent glass)');
+}
+
+const homeTab = read('app/(tabs)/index.tsx');
+if (!homeTab.includes('FLOATING_TAB_BAR_CLEARANCE')) {
+  violations.push('Home tab must pad for floating tab clearance');
 }
 
 if (!card.includes("tint={isLight ? 'light' : 'dark'}") && !card.includes("tint={tokens.appearance === 'light' ? 'light' : 'dark'}")) {

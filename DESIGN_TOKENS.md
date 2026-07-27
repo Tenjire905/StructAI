@@ -174,8 +174,19 @@ spring-bouncy:   { damping: 10, stiffness: 120 }   // NUR für Celebration-Momen
 press-scale-subtle: 0.985   // Kachel/Button Press (PressableScale, PathCard, Button) — dezenter als 0.97
 ```
 
+### Floating Tab Bar (beide Appearances)
+```
+container:     absolute, transparent — Content scrollt darunter (kein flat under-block)
+bar:           surface-card (solid floating card), radius-pill, border-subtle 1, elevation-2
+tab spring:    { damping: 34, stiffness: 320, mass: 0.85 }  // Apple-quiet, kein Bounce
+tab chip:      press-scale 0.97; active pill slides + whisper morph (squash 0.985) via withSpring
+icon:          focus scale 1.03; label color spring-interpolated
+clearance:     FLOATING_TAB_BAR_CLEARANCE (112) extra Scroll-Padding auf Tab-Screens
+```
+
 ### Regel für Cursor
-> "Jede Interaktion unter 300ms, außer explizit als Celebration markiert. Kein Bounce/Spring auf Standard-Press/Navigationsübergängen – Press-Feedback nur mit `withTiming` + `press-scale-subtle`."
+> "Jede Interaktion unter 300ms, außer explizit als Celebration markiert. Kachel-Cards: quiet `withTiming` + `press-scale-subtle`. Floating Tab Bar: Apple-quiet `withSpring` (hohe Dämpfung) + dezenter Press/Morph — nie rubbery Stretch."
+> "Bottom-Nav: FloatingTabBar — solid floating pill over content, nie edge-to-edge flat block und nie transparentes Glass."
 
 ---
 

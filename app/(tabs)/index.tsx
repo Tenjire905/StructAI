@@ -18,7 +18,7 @@ import {
   PATH_CARD_RETRY_PEEK_MAX_HEIGHT,
   SkillRankStrip,
 } from '@/components/features';
-import { Avatar, Button, Card } from '@/components/ui';
+import { Avatar, Button, Card, FLOATING_TAB_BAR_CLEARANCE } from '@/components/ui';
 import { hydrateAppStorage, isDailyGoalSetupCompleted } from '@/lib/appStorage';
 import { resolveDailyChallenge } from '@/lib/dailyChallenge';
 import { buildLessonHref } from '@/lib/lessonNavigation';
@@ -36,8 +36,8 @@ import { useAuth } from '@/providers/AuthProvider';
 import { useProgressStore } from '@/store/progressStore';
 import { useThemeMode } from '@/theme';
 
-/** Space reserved for tab bar + safe inset when scrolling peek into view. */
-const SCROLL_BOTTOM_INSET = 120;
+/** Space reserved for floating tab bar + safe inset when scrolling peek into view. */
+const SCROLL_BOTTOM_INSET = FLOATING_TAB_BAR_CLEARANCE + 24;
 
 export default function HomeScreen() {
   const { tokens, t } = useThemeMode();
@@ -137,7 +137,7 @@ export default function HomeScreen() {
       ref={scrollViewRef}
       contentContainerStyle={{
         gap: tokens.presentation.preferredSectionGap,
-        paddingBottom: tokens.spacing.space7,
+        paddingBottom: tokens.spacing.space7 + FLOATING_TAB_BAR_CLEARANCE,
         paddingHorizontal: tokens.spacing.screenPadding,
         paddingTop: tokens.presentation.preferredSectionGap,
       }}

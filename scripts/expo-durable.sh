@@ -127,7 +127,10 @@ start_metro() {
   fuser -k 8081/tcp >/dev/null 2>&1 || true
   sleep 1
   : > "$METRO_LOG"
-  export CI=1
+  # Cloud agents inject CI=true which disables Expo Fast Refresh.
+  # Leave CI unset (never CI= empty — getenv boolish crashes on "").
+  # Strip CI for the Metro child so Expo Go can pick up code changes.
+  unset CI || true
   export EXPO_NO_DOTENV=1
   export EXPO_NO_TELEMETRY=1
   if [ -n "$proxy" ]; then
@@ -137,7 +140,7 @@ start_metro() {
     unset EXPO_PACKAGER_PROXY_URL || true
     unset REACT_NATIVE_PACKAGER_HOSTNAME || true
   fi
-  nohup npx expo start --go --port 8081 --lan > "$METRO_LOG" 2>&1 &
+  nohup env -u CI npx expo start --go --port 8081 --lan > "$METRO_LOG" 2>&1 &
   echo $! > /tmp/expo-main.pid
   local i
   for i in $(seq 1 60); do
