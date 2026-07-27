@@ -123,7 +123,7 @@ export function OrbCounter({
           <Text
             style={{
               color: tokens.colors.text.primary,
-              fontFamily: tokens.typography.fontFamily.display,
+              fontFamily: tokens.typography.fontFamily.mono,
               fontSize: tokens.typography.fontSize.displayLg,
             }}>
             {displayCount}

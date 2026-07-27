@@ -46,31 +46,31 @@ export const darkColors = {
 } as const;
 
 /**
- * Light appearance — Dirty Lilac Paper (standalone brand surface, not a gray fallback).
- * Hierarchy: lilac page → paper chrome → raised card → recessed inset.
+ * Light appearance — Warm Cream (product-approved).
+ * Hierarchy: cream page → white chrome → cream card → purple-tint inset.
  */
 export const lightColors = {
   background: {
-    base: '#E8E2F2',
-    elevated: '#F2EDF8',
+    base: '#F5F1EA',
+    elevated: '#FFFFFF',
   },
   surface: {
-    card: '#F9F7FC',
-    inset: '#DED6EC',
-    cardHover: '#D5CBE8',
-    glass: 'rgba(249,247,252,0.82)',
+    card: '#FBF9F5',
+    inset: '#EDE4EE',
+    cardHover: '#EDE4EE',
+    glass: 'rgba(251,249,245,0.82)',
   },
   border: {
-    subtle: 'rgba(45,27,78,0.10)',
-    strong: 'rgba(45,27,78,0.18)',
+    subtle: '#E5DFD3',
+    strong: '#8B6BA8',
   },
   accent: {
-    primary: '#5B21B6',
-    primaryDim: '#4C1D95',
-    primarySoft: 'rgba(91,33,182,0.12)',
-    structure: '#0E7490',
-    structureDim: '#155E75',
-    structureSoft: 'rgba(14,116,144,0.10)',
+    primary: '#6B4E87',
+    primaryDim: '#5A3F73',
+    primarySoft: '#EDE4EE',
+    structure: '#4E8B8A',
+    structureDim: '#4E8B8A',
+    structureSoft: 'rgba(78,139,138,0.12)',
     warning: '#B45309',
     warningSoft: 'rgba(180,83,9,0.12)',
     danger: '#DC2626',
@@ -79,9 +79,9 @@ export const lightColors = {
     successSoft: 'rgba(4,120,87,0.10)',
   },
   text: {
-    primary: '#1A1225',
-    secondary: '#4F4763',
-    tertiary: '#6B6478',
+    primary: '#2E2A26',
+    secondary: '#6B655C',
+    tertiary: '#6B655C',
     onAccent: '#FFFFFF',
   },
 } as const;
@@ -356,7 +356,7 @@ function resolveGradients(
     cardOverlay: {
       colors:
         appearance === 'light'
-          ? ['transparent', 'rgba(45,27,78,0.16)']
+          ? ['transparent', 'rgba(46,42,38,0.14)']
           : ['transparent', 'rgba(0,0,0,0.4)'],
       start: { x: 0, y: 0 },
       end: { x: 0, y: 1 },
@@ -397,7 +397,7 @@ export function getShadow(
   appearance: ThemeAppearance = 'dark',
 ): ViewStyle {
   const isLight = appearance === 'light';
-  // Light: purple undertone as glow-Ersatz; dark keeps neutral ink.
+  // Light: warm purple undertone rgba(107,78,135,0.12); dark keeps neutral ink.
   const shadowInk = isLight ? lightColors.accent.primary : '#000000';
 
   switch (level) {
@@ -405,7 +405,7 @@ export function getShadow(
       return Platform.select({
         ios: {
           shadowColor: shadowInk,
-          shadowOpacity: isLight ? 0.1 : 0.2,
+          shadowOpacity: isLight ? 0.12 : 0.2,
           shadowRadius: isLight ? 14 : 8,
           shadowOffset: { width: 0, height: isLight ? 4 : 2 },
         },
@@ -416,7 +416,7 @@ export function getShadow(
       return Platform.select({
         ios: {
           shadowColor: shadowInk,
-          shadowOpacity: isLight ? 0.14 : 0.3,
+          shadowOpacity: isLight ? 0.16 : 0.3,
           shadowRadius: isLight ? 22 : 16,
           shadowOffset: { width: 0, height: isLight ? 8 : 6 },
         },

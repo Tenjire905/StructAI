@@ -26,7 +26,7 @@ export function SkillRankStrip({
     <View
       style={{
         backgroundColor: tokens.colors.surface.card,
-        borderColor: isLight ? tokens.colors.accent.primary : tokens.colors.border.subtle,
+        borderColor: tokens.colors.border.subtle,
         borderRadius: tokens.presentation.preferredCardRadius,
         borderWidth: 1,
         gap: isFocus ? tokens.spacing.space1 : tokens.spacing.space2,

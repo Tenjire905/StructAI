@@ -78,7 +78,8 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 20. **Fill-blank spacing both modes:** `withFillBlankJoinSpaces` in `FillBlankStepView` (Focus + Playful); Playful-Shortener erhält Prefix/Suffix-Randspaces (`fill_edge`).
 21. **Onboarding layout lock:** Welcome wartet auf Theme-`isReady` (kein Focus→Playful-Flash); Phone-Crop **height-first** füllt den Carousel-Slot (~86% Gerät, soft fade); kein `useWindowDimensions`/compact-Toggle.
 22. **Light appearance (Hellmodus):** Orthogonal zu Playful/Focus — `ThemeAppearance` + Persistenz `structai.theme-appearance`, Onboarding-Chip links; Verify: `scripts/verify-light-appearance.mjs`.
-23. **Light quality — Dirty Lilac Paper:** Eigenständiges Light-Design (`#E8E2F2` / `#F2EDF8` / `#F9F7FC` / `#DED6EC`, primary `#5B21B6`), purple-tint Shadows, StatusBar/Chrome erben elevated (kein schwarzer Strip; `userInterfaceStyle: automatic`), OrbIcon unique gradient IDs + violet Rim (kein „O“-Fallback), Brand-Akzente in Bottom-Nav (Indikator), Rang-Badge, Progress, Card-Tints (SkillRank primarySoft, Tagesaufgabe structureSoft).
+23. **Light quality — Dirty Lilac Paper:** Eigenständiges Light-Design (Zwischenstand), purple-tint Shadows, StatusBar/Chrome, OrbIcon unique IDs, Brand-Akzente in Bottom-Nav / Rang / Progress / Card-Tints.
+24. **Light Warm Cream + Stat mono:** Freigegebene Light-Palette (`#F5F1EA` / `#FFFFFF` / `#FBF9F5` / `#EDE4EE`, purple `#6B4E87`, cyan `#4E8B8A`, shadow `rgba(107,78,135,0.12)`); StatBlock/OrbCounter-Zahlen in SpaceMono (Clash-`0` las als `O`); Card-Borders einheitlich `border-subtle` (kein Sonder-Akzent nur auf „Dein Rang“). Expo Go: AsyncStorage-Pfad in `appStorage` (kein NitroModules-Crash).
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 
