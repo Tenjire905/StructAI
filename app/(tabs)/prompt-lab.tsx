@@ -14,7 +14,7 @@ import { ModelComparer } from '@/components/features/ModelComparer';
 import { OrbCompanion } from '@/components/features/OrbCompanion';
 import { PromptLabTextInput } from '@/components/features/PromptLabTextInput';
 import { PromptScoreHistoryList } from '@/components/features/PromptScoreHistoryList';
-import { Badge, Button, Card, PressableScale, ProgressBar } from '@/components/ui';
+import { Badge, Button, Card, FLOATING_TAB_BAR_CLEARANCE, PressableScale, ProgressBar } from '@/components/ui';
 import { useOrbCompanionState } from '@/hooks/useOrbCompanionState';
 import { usePromptDictation } from '@/hooks/usePromptDictation';
 import { trackEvent } from '@/lib/analytics';
@@ -180,7 +180,7 @@ export default function PromptLabScreen() {
     <ScrollView
       contentContainerStyle={{
         gap: tokens.spacing.space5,
-        paddingBottom: tokens.spacing.space7,
+        paddingBottom: tokens.spacing.space7 + FLOATING_TAB_BAR_CLEARANCE,
         paddingHorizontal: tokens.spacing.screenPadding,
         paddingTop: tokens.spacing.space5,
       }}

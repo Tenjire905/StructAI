@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
-import { LayoutChangeEvent, Text, View } from 'react-native';
+import { LayoutChangeEvent, Pressable, View } from 'react-native';
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
+  withSequence,
+  withSpring,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { PressableScale } from '@/components/ui/PressableScale';
 import { getShadow, useThemeMode } from '@/theme';
+
+/** Extra scroll clearance so content can pass under the absolute floating bar. */
+export const FLOATING_TAB_BAR_CLEARANCE = 112;
 
 type TabRoute = {
   key: string;
@@ -62,8 +65,11 @@ type TabChipProps = {
   gap: number;
   fontFamily: string;
   fontSize: number;
-  duration: number;
+  spring: { damping: number; stiffness: number };
 };
+
+const PRESS_SCALE = 0.94;
+const ICON_FOCUS_SCALE = 1.08;
 
 function TabChip({
   focused,
@@ -80,57 +86,85 @@ function TabChip({
   gap,
   fontFamily,
   fontSize,
-  duration,
+  spring,
 }: TabChipProps) {
-  const progress = useSharedValue(focused ? 1 : 0);
+  const focusProgress = useSharedValue(focused ? 1 : 0);
+  const pressScale = useSharedValue(1);
+  const iconScale = useSharedValue(focused ? ICON_FOCUS_SCALE : 1);
 
   useEffect(() => {
-    progress.value = withTiming(focused ? 1 : 0, { duration });
-  }, [duration, focused, progress]);
+    focusProgress.value = withSpring(focused ? 1 : 0, spring);
+    iconScale.value = withSpring(focused ? ICON_FOCUS_SCALE : 1, spring);
+  }, [focusProgress, focused, iconScale, spring]);
 
   const labelStyle = useAnimatedStyle(() => ({
-    color: interpolateColor(progress.value, [0, 1], [inactiveColor, activeColor]),
+    color: interpolateColor(focusProgress.value, [0, 1], [inactiveColor, activeColor]),
   }));
 
-  // Icon color follows focus; Lucide needs a concrete color string each render.
+  const pressStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pressScale.value }],
+  }));
+
+  const iconStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: iconScale.value }],
+  }));
+
   const iconColor = focused ? activeColor : inactiveColor;
 
   return (
-    <PressableScale
+    <Pressable
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityRole="button"
       accessibilityState={{ selected: focused }}
       onPress={onPress}
+      onPressIn={() => {
+        pressScale.value = withSpring(PRESS_SCALE, spring);
+      }}
+      onPressOut={() => {
+        pressScale.value = withSpring(1, spring);
+      }}
       style={{
         alignItems: 'center',
         borderRadius: 999,
         flex: 1,
-        gap,
         justifyContent: 'center',
         minHeight,
         paddingHorizontal,
         paddingVertical,
         zIndex: 1,
       }}>
-      {icon ? icon({ focused, color: iconColor, size: iconSize }) : null}
-      <Animated.Text
-        numberOfLines={1}
+      <Animated.View
         style={[
-          labelStyle,
+          pressStyle,
           {
-            fontFamily,
-            fontSize,
+            alignItems: 'center',
+            gap,
+            justifyContent: 'center',
           },
         ]}>
-        {label}
-      </Animated.Text>
-    </PressableScale>
+        <Animated.View style={iconStyle}>
+          {icon ? icon({ focused, color: iconColor, size: iconSize }) : null}
+        </Animated.View>
+        <Animated.Text
+          numberOfLines={1}
+          style={[
+            labelStyle,
+            {
+              fontFamily,
+              fontSize,
+            },
+          ]}>
+          {label}
+        </Animated.Text>
+      </Animated.View>
+    </Pressable>
   );
 }
 
 /**
- * Solid floating pill tab bar — liquid-glass silhouette without transparency.
- * Active oval chip slides smoothly between tabs (Reanimated timing).
+ * Premium floating card tab bar:
+ * absolute over content (no flat under-block), spring physics, press scale,
+ * soft morphing active pill, microinteractions on icon/label.
  */
 export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBarProps) {
   const { tokens } = useThemeMode();
@@ -140,10 +174,11 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
   const pad = tokens.spacing.space1;
   const gap = tokens.spacing.space1;
   const routeCount = state.routes.length;
-  const slideMs = tokens.motion.duration.medium;
+  const spring = tokens.motion.spring.default;
 
   const indicatorX = useSharedValue(pad);
   const indicatorW = useSharedValue(0);
+  const indicatorMorph = useSharedValue(1);
 
   useEffect(() => {
     if (trackWidth <= 0 || routeCount === 0) {
@@ -154,12 +189,31 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
     const chipWidth = inner / routeCount;
     const x = pad + state.index * (chipWidth + gap);
 
-    indicatorX.value = withTiming(x, { duration: slideMs });
-    indicatorW.value = withTiming(chipWidth, { duration: slideMs });
-  }, [gap, indicatorW, indicatorX, pad, routeCount, slideMs, state.index, trackWidth]);
+    indicatorX.value = withSpring(x, spring);
+    indicatorW.value = withSpring(chipWidth, spring);
+    // Soft morph: slight squash then settle when switching tabs.
+    indicatorMorph.value = withSequence(
+      withSpring(0.9, { damping: 18, stiffness: 220 }),
+      withSpring(1, spring),
+    );
+  }, [
+    gap,
+    indicatorMorph,
+    indicatorW,
+    indicatorX,
+    pad,
+    routeCount,
+    spring,
+    state.index,
+    trackWidth,
+  ]);
 
   const indicatorStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: indicatorX.value }],
+    transform: [
+      { translateX: indicatorX.value },
+      { scaleY: indicatorMorph.value },
+      { scaleX: 2 - indicatorMorph.value },
+    ],
     width: indicatorW.value,
   }));
 
@@ -172,9 +226,13 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
       pointerEvents="box-none"
       style={{
         backgroundColor: 'transparent',
+        bottom: 0,
+        left: 0,
         paddingBottom: Math.max(insets.bottom, tokens.spacing.space2),
         paddingHorizontal: tokens.spacing.screenPadding,
         paddingTop: tokens.spacing.space2,
+        position: 'absolute',
+        right: 0,
       }}>
       <View
         style={[
@@ -198,66 +256,66 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
             paddingHorizontal: pad,
             paddingVertical: pad,
           }}>
-        {trackWidth > 0 ? (
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              indicatorStyle,
-              {
-                backgroundColor: tokens.colors.accent.primarySoft,
-                borderRadius: tokens.radius.pill,
-                bottom: pad,
-                position: 'absolute',
-                top: pad,
-              },
-            ]}
-          />
-        ) : null}
-
-        {state.routes.map((route, index) => {
-          const focused = state.index === index;
-          const { options } = descriptors[route.key];
-
-          const label =
-            typeof options.tabBarLabel === 'string'
-              ? options.tabBarLabel
-              : typeof options.title === 'string'
-                ? options.title
-                : route.name;
-
-          const onPress = () => {
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (!focused && !event.defaultPrevented) {
-              navigation.navigate(route.name, route.params);
-            }
-          };
-
-          return (
-            <TabChip
-              accessibilityLabel={options.tabBarAccessibilityLabel}
-              activeColor={tokens.colors.accent.primary}
-              duration={slideMs}
-              focused={focused}
-              fontFamily={tokens.typography.fontFamily.bodyMedium}
-              fontSize={tokens.typography.fontSize.bodySm}
-              gap={tokens.spacing.space1}
-              icon={options.tabBarIcon}
-              iconSize={tokens.icons.sizes.md}
-              inactiveColor={tokens.colors.text.tertiary}
-              key={route.key}
-              label={label}
-              minHeight={tokens.spacing.space7}
-              onPress={onPress}
-              paddingHorizontal={tokens.spacing.space1}
-              paddingVertical={tokens.spacing.space2}
+          {trackWidth > 0 ? (
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                indicatorStyle,
+                {
+                  backgroundColor: tokens.colors.accent.primarySoft,
+                  borderRadius: tokens.radius.pill,
+                  bottom: pad,
+                  position: 'absolute',
+                  top: pad,
+                },
+              ]}
             />
-          );
-        })}
+          ) : null}
+
+          {state.routes.map((route, index) => {
+            const focused = state.index === index;
+            const { options } = descriptors[route.key];
+
+            const label =
+              typeof options.tabBarLabel === 'string'
+                ? options.tabBarLabel
+                : typeof options.title === 'string'
+                  ? options.title
+                  : route.name;
+
+            const onPress = () => {
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
+              });
+
+              if (!focused && !event.defaultPrevented) {
+                navigation.navigate(route.name, route.params);
+              }
+            };
+
+            return (
+              <TabChip
+                accessibilityLabel={options.tabBarAccessibilityLabel}
+                activeColor={tokens.colors.accent.primary}
+                focused={focused}
+                fontFamily={tokens.typography.fontFamily.bodyMedium}
+                fontSize={tokens.typography.fontSize.bodySm}
+                gap={tokens.spacing.space1}
+                icon={options.tabBarIcon}
+                iconSize={tokens.icons.sizes.md}
+                inactiveColor={tokens.colors.text.tertiary}
+                key={route.key}
+                label={label}
+                minHeight={tokens.spacing.space7}
+                onPress={onPress}
+                paddingHorizontal={tokens.spacing.space1}
+                paddingVertical={tokens.spacing.space2}
+                spring={spring}
+              />
+            );
+          })}
         </View>
       </View>
     </View>

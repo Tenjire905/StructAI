@@ -124,11 +124,22 @@ if (!floatingTabBar.includes('radius.pill') || !floatingTabBar.includes('screenP
 if (!floatingTabBar.includes('primarySoft') || !floatingTabBar.includes('surface.card')) {
   violations.push('FloatingTabBar must use solid card + oval primarySoft active chips');
 }
-if (!floatingTabBar.includes('withTiming') || !floatingTabBar.includes('indicatorX')) {
-  violations.push('FloatingTabBar must smoothly slide active chip with Reanimated');
+if (!floatingTabBar.includes('withSpring') || !floatingTabBar.includes('indicatorX')) {
+  violations.push('FloatingTabBar must use spring physics for active chip slide');
+}
+if (!floatingTabBar.includes('indicatorMorph') || !floatingTabBar.includes('position: \'absolute\'')) {
+  violations.push('FloatingTabBar must soft-morph and float absolute over content');
+}
+if (!floatingTabBar.includes('FLOATING_TAB_BAR_CLEARANCE') || !floatingTabBar.includes('PRESS_SCALE')) {
+  violations.push('FloatingTabBar must export clearance + use press scale');
 }
 if (floatingTabBar.includes('BlurView') || floatingTabBar.includes('surface.glass')) {
   violations.push('FloatingTabBar must stay solid (no transparent glass)');
+}
+
+const homeTab = read('app/(tabs)/index.tsx');
+if (!homeTab.includes('FLOATING_TAB_BAR_CLEARANCE')) {
+  violations.push('Home tab must pad for floating tab clearance');
 }
 
 if (!card.includes("tint={isLight ? 'light' : 'dark'}") && !card.includes("tint={tokens.appearance === 'light' ? 'light' : 'dark'}")) {

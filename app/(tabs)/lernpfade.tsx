@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 
 import { PathCard } from '@/components/features';
+import { FLOATING_TAB_BAR_CLEARANCE } from '@/components/ui';
 import { computePathProgressBarModel, getMergedPaths, pathTitleKey } from '@/lib/pathProgress';
 import { isPathUnlocked } from '@/lib/pathUnlock';
 import { useProgressStore } from '@/store/progressStore';
@@ -24,7 +25,7 @@ export default function LernpfadeScreen() {
     <ScrollView
       contentContainerStyle={{
         gap: tokens.spacing.space5,
-        paddingBottom: tokens.spacing.space7,
+        paddingBottom: tokens.spacing.space7 + FLOATING_TAB_BAR_CLEARANCE,
         paddingHorizontal: tokens.spacing.screenPadding,
         paddingTop: tokens.spacing.space5,
       }}

@@ -8,7 +8,7 @@ import { ByokKeysManager } from '@/components/features/profile/ByokKeysManager';
 import { ProfileCertificatesSection } from '@/components/features/profile/ProfileCertificatesSection';
 import { ProfileResetSection } from '@/components/features/profile/ProfileResetSection';
 import { SpendingLimitSettings } from '@/components/features/profile/SpendingLimitSettings';
-import { Avatar, Button, Card, SegmentedControl } from '@/components/ui';
+import { Avatar, Button, Card, FLOATING_TAB_BAR_CLEARANCE, SegmentedControl } from '@/components/ui';
 import { resolveGuestDisplayName, resolveProfileDisplayName } from '@/lib/profileDisplayName';
 import { resolveSkillRankProgress } from '@/lib/skillRank';
 import { useAuth } from '@/providers/AuthProvider';
@@ -58,7 +58,7 @@ export default function ProfilScreen() {
     <ScrollView
       contentContainerStyle={{
         gap: tokens.spacing.space5,
-        paddingBottom: tokens.spacing.space7,
+        paddingBottom: tokens.spacing.space7 + FLOATING_TAB_BAR_CLEARANCE,
         paddingHorizontal: tokens.spacing.screenPadding,
         paddingTop: tokens.spacing.space5,
       }}
