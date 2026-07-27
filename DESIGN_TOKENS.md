@@ -174,8 +174,16 @@ spring-bouncy:   { damping: 10, stiffness: 120 }   // NUR für Celebration-Momen
 press-scale-subtle: 0.985   // Kachel/Button Press (PressableScale, PathCard, Button) — dezenter als 0.97
 ```
 
+### Floating Tab Bar (beide Appearances)
+```
+container:     transparent, paddingHorizontal = screenPadding, paddingBottom = max(safe-bottom, space-2)
+bar:           surface-card (solid, kein Blur/Glass), radius-pill, border-subtle 1, elevation-2
+tab chip:      radius-pill; active = accent-primary-soft + accent-primary ink; inactive = transparent + text-tertiary
+```
+
 ### Regel für Cursor
 > "Jede Interaktion unter 300ms, außer explizit als Celebration markiert. Kein Bounce/Spring auf Standard-Press/Navigationsübergängen – Press-Feedback nur mit `withTiming` + `press-scale-subtle`."
+> "Bottom-Nav: FloatingTabBar — solid floating pill, nie edge-to-edge und nie transparentes Glass."
 
 ---
 

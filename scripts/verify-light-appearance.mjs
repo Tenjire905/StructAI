@@ -113,8 +113,19 @@ if (!layout.includes('backgroundColor: page') && !layout.includes('backgroundCol
 if (!tabsLayout.includes('tabBarActiveTintColor: tokens.colors.accent.primary')) {
   violations.push('Bottom nav active tint must use accent.primary');
 }
-if (!tabsLayout.includes('TabBarGlyph') || !tabsLayout.includes('indicatorColor')) {
-  violations.push('Bottom nav must show active purple indicator');
+if (!tabsLayout.includes('FloatingTabBar') || !tabsLayout.includes('tabBar={(props)')) {
+  violations.push('Tabs must use FloatingTabBar (solid floating pill)');
+}
+
+const floatingTabBar = read('components/ui/FloatingTabBar.tsx');
+if (!floatingTabBar.includes('radius.pill') || !floatingTabBar.includes('screenPadding')) {
+  violations.push('FloatingTabBar must float inset with pill radius');
+}
+if (!floatingTabBar.includes('primarySoft') || !floatingTabBar.includes('surface.card')) {
+  violations.push('FloatingTabBar must use solid card + oval primarySoft active chips');
+}
+if (floatingTabBar.includes('BlurView') || floatingTabBar.includes('surface.glass')) {
+  violations.push('FloatingTabBar must stay solid (no transparent glass)');
 }
 
 if (!card.includes("tint={isLight ? 'light' : 'dark'}") && !card.includes("tint={tokens.appearance === 'light' ? 'light' : 'dark'}")) {
