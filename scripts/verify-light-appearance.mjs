@@ -133,6 +133,12 @@ if (!floatingTabBar.includes('indicatorMorph') || !floatingTabBar.includes('posi
 if (!floatingTabBar.includes('FLOATING_TAB_BAR_CLEARANCE') || !floatingTabBar.includes('PRESS_SCALE')) {
   violations.push('FloatingTabBar must export clearance + use press scale');
 }
+if (!floatingTabBar.includes('TAB_SPRING') || !floatingTabBar.includes('MORPH_SQUASH')) {
+  violations.push('FloatingTabBar must use Apple-quiet TAB_SPRING + whisper MORPH_SQUASH');
+}
+if (floatingTabBar.includes('PRESS_SCALE = 0.94') || floatingTabBar.includes('ICON_FOCUS_SCALE = 1.08')) {
+  violations.push('FloatingTabBar must keep press/icon scales subtle (not 0.94 / 1.08)');
+}
 if (floatingTabBar.includes('BlurView') || floatingTabBar.includes('surface.glass')) {
   violations.push('FloatingTabBar must stay solid (no transparent glass)');
 }

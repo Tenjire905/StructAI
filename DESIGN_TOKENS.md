@@ -178,13 +178,14 @@ press-scale-subtle: 0.985   // Kachel/Button Press (PressableScale, PathCard, Bu
 ```
 container:     absolute, transparent — Content scrollt darunter (kein flat under-block)
 bar:           surface-card (solid floating card), radius-pill, border-subtle 1, elevation-2
-tab chip:      press-scale 0.94 (spring); active pill slides + soft morph (scaleY squash) via withSpring
-icon:          focus scale 1.08 spring; label color spring-interpolated
+tab spring:    { damping: 34, stiffness: 320, mass: 0.85 }  // Apple-quiet, kein Bounce
+tab chip:      press-scale 0.97; active pill slides + whisper morph (squash 0.985) via withSpring
+icon:          focus scale 1.03; label color spring-interpolated
 clearance:     FLOATING_TAB_BAR_CLEARANCE (112) extra Scroll-Padding auf Tab-Screens
 ```
 
 ### Regel für Cursor
-> "Jede Interaktion unter 300ms, außer explizit als Celebration markiert. Kachel-Cards: quiet `withTiming` + `press-scale-subtle`. Floating Tab Bar: physics `withSpring` + press-scale + soft morph."
+> "Jede Interaktion unter 300ms, außer explizit als Celebration markiert. Kachel-Cards: quiet `withTiming` + `press-scale-subtle`. Floating Tab Bar: Apple-quiet `withSpring` (hohe Dämpfung) + dezenter Press/Morph — nie rubbery Stretch."
 > "Bottom-Nav: FloatingTabBar — solid floating pill over content, nie edge-to-edge flat block und nie transparentes Glass."
 
 ---

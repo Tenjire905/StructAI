@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LayoutChangeEvent, Pressable, View } from 'react-native';
 import Animated, {
   interpolateColor,
@@ -13,6 +13,21 @@ import { getShadow, useThemeMode } from '@/theme';
 
 /** Extra scroll clearance so content can pass under the absolute floating bar. */
 export const FLOATING_TAB_BAR_CLEARANCE = 112;
+
+/**
+ * Apple-quiet spring: critically damped feel — settles cleanly, no bounce,
+ * no rubber stretch. Stiffer than tokens.spring.default, much higher damping.
+ */
+const TAB_SPRING = { damping: 34, stiffness: 320, mass: 0.85 };
+
+/** Barely-there press (closer to iOS highlight than a pop). */
+const PRESS_SCALE = 0.97;
+
+/** Soft focus pulse — readable, not celebratory. */
+const ICON_FOCUS_SCALE = 1.03;
+
+/** Soft morph squash — almost invisible, just a hint of mass. */
+const MORPH_SQUASH = 0.985;
 
 type TabRoute = {
   key: string;
@@ -65,11 +80,7 @@ type TabChipProps = {
   gap: number;
   fontFamily: string;
   fontSize: number;
-  spring: { damping: number; stiffness: number };
 };
-
-const PRESS_SCALE = 0.94;
-const ICON_FOCUS_SCALE = 1.08;
 
 function TabChip({
   focused,
@@ -86,16 +97,15 @@ function TabChip({
   gap,
   fontFamily,
   fontSize,
-  spring,
 }: TabChipProps) {
   const focusProgress = useSharedValue(focused ? 1 : 0);
   const pressScale = useSharedValue(1);
   const iconScale = useSharedValue(focused ? ICON_FOCUS_SCALE : 1);
 
   useEffect(() => {
-    focusProgress.value = withSpring(focused ? 1 : 0, spring);
-    iconScale.value = withSpring(focused ? ICON_FOCUS_SCALE : 1, spring);
-  }, [focusProgress, focused, iconScale, spring]);
+    focusProgress.value = withSpring(focused ? 1 : 0, TAB_SPRING);
+    iconScale.value = withSpring(focused ? ICON_FOCUS_SCALE : 1, TAB_SPRING);
+  }, [focusProgress, focused, iconScale]);
 
   const labelStyle = useAnimatedStyle(() => ({
     color: interpolateColor(focusProgress.value, [0, 1], [inactiveColor, activeColor]),
@@ -118,10 +128,10 @@ function TabChip({
       accessibilityState={{ selected: focused }}
       onPress={onPress}
       onPressIn={() => {
-        pressScale.value = withSpring(PRESS_SCALE, spring);
+        pressScale.value = withSpring(PRESS_SCALE, TAB_SPRING);
       }}
       onPressOut={() => {
-        pressScale.value = withSpring(1, spring);
+        pressScale.value = withSpring(1, TAB_SPRING);
       }}
       style={{
         alignItems: 'center',
@@ -162,19 +172,19 @@ function TabChip({
 }
 
 /**
- * Premium floating card tab bar:
- * absolute over content (no flat under-block), spring physics, press scale,
- * soft morphing active pill, microinteractions on icon/label.
+ * Premium floating card tab bar — Apple-quiet physics:
+ * absolute over content, critically damped spring slide, whisper-soft morph,
+ * subtle press + icon focus. No bounce, no rubber stretch.
  */
 export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBarProps) {
   const { tokens } = useThemeMode();
   const insets = useSafeAreaInsets();
   const [trackWidth, setTrackWidth] = useState(0);
+  const prevIndexRef = useRef(state.index);
 
   const pad = tokens.spacing.space1;
   const gap = tokens.spacing.space1;
   const routeCount = state.routes.length;
-  const spring = tokens.motion.spring.default;
 
   const indicatorX = useSharedValue(pad);
   const indicatorW = useSharedValue(0);
@@ -188,14 +198,19 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
     const inner = trackWidth - pad * 2 - gap * Math.max(0, routeCount - 1);
     const chipWidth = inner / routeCount;
     const x = pad + state.index * (chipWidth + gap);
+    const indexChanged = prevIndexRef.current !== state.index;
+    prevIndexRef.current = state.index;
 
-    indicatorX.value = withSpring(x, spring);
-    indicatorW.value = withSpring(chipWidth, spring);
-    // Soft morph: slight squash then settle when switching tabs.
-    indicatorMorph.value = withSequence(
-      withSpring(0.9, { damping: 18, stiffness: 220 }),
-      withSpring(1, spring),
-    );
+    indicatorX.value = withSpring(x, TAB_SPRING);
+    indicatorW.value = withSpring(chipWidth, TAB_SPRING);
+
+    // Soft morph only on real tab changes — whisper squash, then settle.
+    if (indexChanged) {
+      indicatorMorph.value = withSequence(
+        withSpring(MORPH_SQUASH, TAB_SPRING),
+        withSpring(1, TAB_SPRING),
+      );
+    }
   }, [
     gap,
     indicatorMorph,
@@ -203,7 +218,6 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
     indicatorX,
     pad,
     routeCount,
-    spring,
     state.index,
     trackWidth,
   ]);
@@ -211,6 +225,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
   const indicatorStyle = useAnimatedStyle(() => ({
     transform: [
       { translateX: indicatorX.value },
+      // Complementary scale stays near 1 when morph is 0.985 → ~1.015 stretch max.
       { scaleY: indicatorMorph.value },
       { scaleX: 2 - indicatorMorph.value },
     ],
@@ -312,7 +327,6 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
                 onPress={onPress}
                 paddingHorizontal={tokens.spacing.space1}
                 paddingVertical={tokens.spacing.space2}
-                spring={spring}
               />
             );
           })}
