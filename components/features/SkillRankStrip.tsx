@@ -1,6 +1,6 @@
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-import { ProgressBar } from '@/components/ui';
+import { Badge, ProgressBar } from '@/components/ui';
 import type { SkillRankProgress } from '@/lib/skillRank';
 import { useThemeMode } from '@/theme';
 
@@ -20,6 +20,7 @@ export function SkillRankStrip({
   const { tokens, t } = useThemeMode();
   const isDetailed = variant === 'detailed';
   const isFocus = tokens.presentation.orbStyle === 'minimal';
+  const isLight = tokens.appearance === 'light';
 
   return (
     <View
@@ -29,8 +30,19 @@ export function SkillRankStrip({
         borderRadius: tokens.presentation.preferredCardRadius,
         borderWidth: 1,
         gap: isFocus ? tokens.spacing.space1 : tokens.spacing.space2,
+        overflow: 'hidden',
         padding: tokens.presentation.preferredCardPadding,
       }}>
+      {isLight ? (
+        <View
+          pointerEvents="none"
+          style={[
+            StyleSheet.absoluteFill,
+            { backgroundColor: tokens.colors.accent.primarySoft },
+          ]}
+        />
+      ) : null}
+
       <View
         style={{
           alignItems: 'center',
@@ -59,17 +71,10 @@ export function SkillRankStrip({
             {t(progress.rankCopyKey)}
           </Text>
         </View>
-        <Text
-          style={{
-            color: tokens.colors.accent.structure,
-            fontFamily: tokens.typography.fontFamily.mono,
-            fontSize: tokens.typography.fontSize.headingMd,
-          }}>
-          {t('skillRank.level', { level: progress.level })}
-        </Text>
+        <Badge label={t('skillRank.level', { level: progress.level })} tone="primary" />
       </View>
 
-      <ProgressBar color="structure" progress={progress.progress} />
+      <ProgressBar color="primary" progress={progress.progress} />
 
       <Text
         style={{

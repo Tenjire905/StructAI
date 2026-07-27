@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { Platform, StatusBar as RNStatusBar, View } from 'react-native';
 import 'react-native-reanimated';
 
 import { AuthNavigationController } from '@/components/AuthNavigationController';
@@ -60,14 +61,26 @@ export default function RootLayout() {
 
 function ThemedRootNavigation() {
   const { tokens, appearance } = useThemeMode();
+  const chrome = tokens.colors.background.elevated;
+  const page = tokens.colors.background.base;
+
+  useEffect(() => {
+    if (Platform.OS !== 'android') {
+      return;
+    }
+
+    RNStatusBar.setBackgroundColor(chrome, true);
+    RNStatusBar.setBarStyle(appearance === 'light' ? 'dark-content' : 'light-content', true);
+    RNStatusBar.setTranslucent(false);
+  }, [appearance, chrome]);
 
   return (
-    <>
+    <View style={{ backgroundColor: page, flex: 1 }}>
       <StatusBar style={appearance === 'light' ? 'dark' : 'light'} />
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: tokens.colors.background.base },
+          contentStyle: { backgroundColor: page },
         }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="auth/index" />
@@ -77,6 +90,6 @@ function ThemedRootNavigation() {
         <Stack.Screen name="paywall" options={{ presentation: 'modal' }} />
         {__DEV__ ? <Stack.Screen name="(dev)" options={{ headerShown: false }} /> : null}
       </Stack>
-    </>
+    </View>
   );
 }

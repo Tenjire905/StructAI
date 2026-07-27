@@ -101,8 +101,14 @@ export function OrbCounter({
             isPlayful ? getShadow('glow', tokens.appearance) : undefined,
             {
               alignItems: 'center',
-              backgroundColor: tokens.colors.surface.card,
-              borderColor: tokens.colors.border.subtle,
+              backgroundColor:
+                tokens.appearance === 'light'
+                  ? tokens.colors.accent.primarySoft
+                  : tokens.colors.surface.card,
+              borderColor:
+                tokens.appearance === 'light'
+                  ? tokens.colors.accent.primary
+                  : tokens.colors.border.subtle,
               borderRadius: tokens.radius.pill,
               borderWidth: tokens.appearance === 'light' ? 1 : 0,
               height: tokens.spacing.space7,
@@ -117,7 +123,7 @@ export function OrbCounter({
           <Text
             style={{
               color: tokens.colors.text.primary,
-              fontFamily: tokens.typography.fontFamily.display,
+              fontFamily: tokens.typography.fontFamily.mono,
               fontSize: tokens.typography.fontSize.displayLg,
             }}>
             {displayCount}

@@ -77,7 +77,9 @@ scripts/                  → verify-*.mjs (Logik-Verifikation ohne UI) + captur
 19. **Crash hardening + onboarding crop:** Orb bricht alle `withRepeat`-SharedValues beim Unmount ab (`stopAllOrbMotion`); globales `routeTransitionLock` blockiert konkurrierende AuthNav-Replaces; Profil wendet `setMode` erst nach `replace` an; Welcome-Carousel: Caption wrappt 3 Zeilen, Phone-Crop mit `maxHeight: '100%'` + Compact-Skalierung.
 20. **Fill-blank spacing both modes:** `withFillBlankJoinSpaces` in `FillBlankStepView` (Focus + Playful); Playful-Shortener erhält Prefix/Suffix-Randspaces (`fill_edge`).
 21. **Onboarding layout lock:** Welcome wartet auf Theme-`isReady` (kein Focus→Playful-Flash); Phone-Crop **height-first** füllt den Carousel-Slot (~86% Gerät, soft fade); kein `useWindowDimensions`/compact-Toggle.
-22. **Light appearance (Hellmodus):** Orthogonal zu Playful/Focus — `ThemeAppearance` + Premium-Light-Stack (recessed `#F3F0F8` / chrome `#FAF8FC` / card `#FFFFFF` / inset `#F0ECF6`, deep violet `#6D28D9`, soft badges, SegmentedControl im Profil), Persistenz `structai.theme-appearance`, Onboarding-Chip links; Verify: `scripts/verify-light-appearance.mjs`.
+22. **Light appearance (Hellmodus):** Orthogonal zu Playful/Focus — `ThemeAppearance` + Persistenz `structai.theme-appearance`, Onboarding-Chip links; Verify: `scripts/verify-light-appearance.mjs`.
+23. **Light quality — Dirty Lilac Paper:** Eigenständiges Light-Design (Zwischenstand), purple-tint Shadows, StatusBar/Chrome, OrbIcon unique IDs, Brand-Akzente in Bottom-Nav / Rang / Progress / Card-Tints.
+24. **Light Warm Cream + Stat mono:** Freigegebene Light-Palette (`#F5F1EA` / `#FFFFFF` / `#FBF9F5` / `#EDE4EE`, purple `#6B4E87`, cyan `#4E8B8A`, shadow `rgba(107,78,135,0.12)`); StatBlock/OrbCounter-Zahlen in SpaceMono (Clash-`0` las als `O`); Card-Borders einheitlich `border-subtle` (kein Sonder-Akzent nur auf „Dein Rang“). Expo Go: AsyncStorage-Pfad in `appStorage` (kein NitroModules-Crash).
 
 ## 6. Nächste geplante Schritte (Stand dieser Analyse, aus Claude/Perplexity-Sparring)
 

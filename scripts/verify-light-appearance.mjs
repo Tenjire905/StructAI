@@ -1,5 +1,5 @@
 /**
- * Light appearance — premium hierarchy, persistence, onboarding + profile controls.
+ * Light appearance — Warm Cream palette, status bar, brand accents, mono stats.
  */
 
 import assert from 'node:assert/strict';
@@ -21,11 +21,18 @@ const appearanceBtn = read(
 );
 const profile = read('app/(tabs)/profil.tsx');
 const layout = read('app/_layout.tsx');
+const tabsLayout = read('app/(tabs)/_layout.tsx');
 const card = read('components/ui/Card.tsx');
 const badge = read('components/ui/Badge.tsx');
 const segmented = read('components/ui/SegmentedControl.tsx');
 const certificate = read('components/features/CertificateView.tsx');
+const orbIcon = read('components/features/OrbIcon.tsx');
+const skillRank = read('components/features/SkillRankStrip.tsx');
+const dailyChallenge = read('components/features/HomeDailyChallengeCard.tsx');
+const statBlock = read('components/features/StatBlock.tsx');
+const appStorage = read('lib/appStorage.ts');
 const tokensDoc = read('DESIGN_TOKENS.md');
+const appJson = read('app.json');
 
 if (!theme.includes("export type ThemeAppearance = 'dark' | 'light'")) {
   violations.push('theme.ts must export ThemeAppearance');
@@ -33,33 +40,40 @@ if (!theme.includes("export type ThemeAppearance = 'dark' | 'light'")) {
 if (!theme.includes('export const lightColors')) {
   violations.push('theme.ts must define lightColors');
 }
-if (!theme.includes("base: '#F3F0F8'")) {
-  violations.push('light base must be recessed #F3F0F8');
+
+const lightBlock = theme.slice(theme.indexOf('export const lightColors'));
+if (!lightBlock.includes("base: '#F5F1EA'")) {
+  violations.push('light base must be warm cream #F5F1EA');
 }
-if (!theme.includes("elevated: '#FAF8FC'")) {
-  violations.push('light elevated chrome must be #FAF8FC (not pure white)');
+if (!lightBlock.includes("elevated: '#FFFFFF'")) {
+  violations.push('light elevated chrome must be #FFFFFF');
 }
-if (!theme.includes("inset: '#F0ECF6'")) {
-  violations.push('light must define surface.inset');
+if (!lightBlock.includes("card: '#FBF9F5'")) {
+  violations.push('light card must be #FBF9F5');
 }
-if (!theme.includes("primary: '#6D28D9'")) {
-  violations.push('light accent.primary must be deep violet #6D28D9');
+if (!lightBlock.includes("inset: '#EDE4EE'")) {
+  violations.push('light inset must be purple-tint #EDE4EE');
 }
-if (!theme.includes('primarySoft:')) {
-  violations.push('accent soft fills required for light badges');
+if (!lightBlock.includes("primary: '#6B4E87'")) {
+  violations.push('light accent.primary must be #6B4E87');
 }
-if (!theme.includes("glass: 'rgba(255,255,255,0.78)'")) {
-  violations.push('light glass must be white frost, not violet mud');
+if (!lightBlock.includes("primarySoft: '#EDE4EE'")) {
+  violations.push('light primarySoft must be solid purple-tint #EDE4EE');
 }
-if (theme.includes('#F4F1EA')) {
-  violations.push('must not introduce cream #F4F1EA');
+if (!lightBlock.includes("structure: '#4E8B8A'")) {
+  violations.push('light structure must be cyan #4E8B8A');
 }
-if (theme.includes("elevated: '#FFFFFF'") && theme.includes('lightColors')) {
-  // elevated white collapses hierarchy — only fail if lightColors still has it
-  const lightBlock = theme.slice(theme.indexOf('export const lightColors'));
-  if (lightBlock.includes("elevated: '#FFFFFF'")) {
-    violations.push('light elevated must not equal pure white card');
-  }
+if (!lightBlock.includes("subtle: '#E5DFD3'") || !lightBlock.includes("strong: '#8B6BA8'")) {
+  violations.push('light borders must be #E5DFD3 / #8B6BA8');
+}
+if (!lightBlock.includes("primary: '#2E2A26'") || !lightBlock.includes("secondary: '#6B655C'")) {
+  violations.push('light text must use warm ink tokens');
+}
+if (!lightBlock.includes("glass: 'rgba(251,249,245,0.82)'")) {
+  violations.push('light glass must be cream frost');
+}
+if (!theme.includes('shadowOpacity: isLight ? 0.12')) {
+  violations.push('getShadow light L1 must use opacity 0.12 (rgba purple shadow)');
 }
 
 if (!context.includes('structai.theme-appearance')) {
@@ -89,6 +103,19 @@ if (!segmented.includes('surface.inset')) {
 if (!layout.includes('StatusBar') || !layout.includes("appearance === 'light'")) {
   violations.push('Root layout must drive StatusBar from appearance');
 }
+if (!layout.includes('RNStatusBar.setBackgroundColor') && !layout.includes('setBackgroundColor(chrome')) {
+  violations.push('Android StatusBar background must be set from chrome token');
+}
+if (!layout.includes('backgroundColor: page') && !layout.includes('backgroundColor: page,')) {
+  violations.push('Root View must fill with page background (status-bar area inherit)');
+}
+
+if (!tabsLayout.includes('tabBarActiveTintColor: tokens.colors.accent.primary')) {
+  violations.push('Bottom nav active tint must use accent.primary');
+}
+if (!tabsLayout.includes('TabBarGlyph') || !tabsLayout.includes('indicatorColor')) {
+  violations.push('Bottom nav must show active purple indicator');
+}
 
 if (!card.includes("tint={isLight ? 'light' : 'dark'}") && !card.includes("tint={tokens.appearance === 'light' ? 'light' : 'dark'}")) {
   violations.push('Card glass BlurView tint must follow appearance');
@@ -105,8 +132,43 @@ if (!certificate.includes('resolveThemeTokens(mode, appearance)')) {
   violations.push('CertificateView must resolve tokens for mode + appearance');
 }
 
-if (!tokensDoc.includes('surface-inset') || !tokensDoc.includes('#F3F0F8')) {
-  violations.push('DESIGN_TOKENS.md must document premium light stack');
+if (!orbIcon.includes('useId') || orbIcon.includes('id="orbIconAura"')) {
+  violations.push('OrbIcon must use unique gradient ids (no shared orbIconAura)');
+}
+
+if (!skillRank.includes('<Badge') || !skillRank.includes('color="primary"')) {
+  violations.push('SkillRankStrip must use Badge + primary ProgressBar');
+}
+if (skillRank.includes('accent.primary') && skillRank.includes('borderColor: isLight')) {
+  violations.push('SkillRankStrip must not use special accent border in light (unify with cards)');
+}
+if (!skillRank.includes('borderColor: tokens.colors.border.subtle')) {
+  violations.push('SkillRankStrip border must match Card border.subtle');
+}
+if (!dailyChallenge.includes('structureSoft')) {
+  violations.push('Daily challenge card must use structureSoft tint in light');
+}
+
+if (!statBlock.includes('fontFamily.mono')) {
+  violations.push('StatBlock numbers must use mono (Clash Display 0 reads as O)');
+}
+
+if (!appStorage.includes('isExpoGo') || !appStorage.includes('createAsyncStorageBackedStorage')) {
+  violations.push('appStorage must AsyncStorage-fallback in Expo Go (no Nitro crash)');
+}
+if (appStorage.includes("import { createMMKV")) {
+  violations.push('appStorage must not eagerly import createMMKV (NitroModules crash)');
+}
+
+if (!tokensDoc.includes('Warm Cream') || !tokensDoc.includes('#F5F1EA')) {
+  violations.push('DESIGN_TOKENS.md must document Warm Cream light stack');
+}
+if (!tokensDoc.includes('shadowColor #6B4E87') || !tokensDoc.includes('0.12')) {
+  violations.push('DESIGN_TOKENS.md must document warm purple light elevation');
+}
+
+if (!appJson.includes('"userInterfaceStyle": "automatic"')) {
+  violations.push('app.json userInterfaceStyle must be automatic for light chrome');
 }
 
 for (const locale of ['de', 'en', 'fr', 'ru']) {

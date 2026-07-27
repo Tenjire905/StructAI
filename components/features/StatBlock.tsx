@@ -31,10 +31,11 @@ export function StatBlock({ copyKey, value, embedded = false }: StatBlockProps) 
       <Text
         style={{
           color: tokens.colors.text.primary,
-          fontFamily: tokens.typography.fontFamily.display,
+          // SpaceMono — Clash Display zeros read as the letter "O" at display sizes.
+          fontFamily: tokens.typography.fontFamily.mono,
           fontSize: tokens.typography.fontSize.displayLg,
         }}>
-        {value}
+        {typeof value === 'number' ? String(value) : value}
       </Text>
       <Text
         style={{
