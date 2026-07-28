@@ -47,14 +47,17 @@ const LOCALE_LESSON_MAP: Record<Locale, Record<string, string>> = {
   },
 };
 
+/** True only when the key exists in that locale's own map (no cross-locale fallback). */
+export function hasOwnLessonText(key: string, locale: Locale): boolean {
+  return Object.prototype.hasOwnProperty.call(LOCALE_LESSON_MAP[locale], key);
+}
+
+/**
+ * Lesson copy for one locale. Never returns another language's string —
+ * missing keys stay as the key so mixed-language UI cannot happen.
+ */
 export function getLocalizedLessonText(key: string, locale: Locale): string {
-  const localized = LOCALE_LESSON_MAP[locale][key];
-
-  if (localized) {
-    return localized;
-  }
-
-  return LOCALE_LESSON_MAP.de[key] ?? key;
+  return LOCALE_LESSON_MAP[locale][key] ?? key;
 }
 
 export { lessonDe };
