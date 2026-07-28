@@ -1510,10 +1510,6 @@ export const copyDe: CopyCatalog = {
     playful: "Los geht's!",
     focus: "Los geht's",
   },
-  'onboarding.skip': {
-    playful: 'Überspringen',
-    focus: 'Überspringen',
-  },
   'onboarding.introNext': {
     playful: 'Weiter',
     focus: 'Weiter',

@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { hapticUIPress } from '@/lib/haptics';
 import { getShadow, useThemeMode } from '@/theme';
 
 /** Extra scroll clearance so content can pass under the absolute floating bar. */
@@ -128,6 +129,7 @@ function TabChip({
       accessibilityState={{ selected: focused }}
       onPress={onPress}
       onPressIn={() => {
+        hapticUIPress();
         pressScale.value = withSpring(PRESS_SCALE, TAB_SPRING);
       }}
       onPressOut={() => {

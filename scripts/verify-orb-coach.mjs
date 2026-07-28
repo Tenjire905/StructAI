@@ -62,7 +62,7 @@ if (!featureVisual.includes('DynamicIsland') || !featureVisual.includes('Hardwar
 if (!featureVisual.includes('overflow: \'hidden\'') && !featureVisual.includes('overflow: "hidden"')) {
   violations.push('Phone mocks must crop with overflow hidden (Liftoff crop)');
 }
-if (!intro.includes('numberOfLines={2}') || !intro.includes('OnboardingPageDots')) {
+if (!intro.includes('numberOfLines={3}') || !intro.includes('OnboardingPageDots')) {
   violations.push('Intro caption + dots must sit in a reserved non-overlapping band');
 }
 if (!meet.includes('showSpeech') || !meet.includes('orb.speech.onboarding.welcome')) {
@@ -77,8 +77,18 @@ if (!modus.includes('modePlayful') || !modus.includes('modeFocus')) {
 if (!loop.includes('orb.speech.onboarding.loop') || !loop.includes('showSpeech')) {
   violations.push('Loop must show Orb coach bubble');
 }
-if (!chrome.includes('OnboardingSegmentProgress') || !chrome.includes('skipLabel')) {
-  violations.push('OnboardingChrome must provide segment progress + skip');
+if (!chrome.includes('OnboardingSegmentProgress') || chrome.includes('skipLabel') || chrome.includes('onSkip')) {
+  violations.push('OnboardingChrome must provide segment progress and must not expose skip');
+}
+if (
+  meet.includes('skipLabel') ||
+  meet.includes('onSkip') ||
+  modus.includes('skipLabel') ||
+  modus.includes('onSkip') ||
+  loop.includes('skipLabel') ||
+  loop.includes('onSkip')
+) {
+  violations.push('Onboarding screens must not wire a skip button');
 }
 if (!sfx.includes('playSfx') || !sfx.includes('ExpoAudio') || !sfx.includes('isRunningInExpoGo')) {
   violations.push('lib/sfx.ts must probe ExpoAudio and stay Expo-Go safe');

@@ -1509,10 +1509,6 @@ export const copyFr: CopyCatalog = {
     playful: "C'est parti !",
     focus: "C'est parti",
   },
-  'onboarding.skip': {
-    playful: 'Passer',
-    focus: 'Passer',
-  },
   'onboarding.introNext': {
     playful: 'Continuer',
     focus: 'Continuer',

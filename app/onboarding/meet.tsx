@@ -36,12 +36,7 @@ export default function OnboardingMeetScreen() {
         }
         router.push('/onboarding/modus');
       }}
-      onSkip={() => {
-        playSfx('tap', soundEnabled);
-        router.push('/onboarding/modus');
-      }}
-      progressStep={1}
-      skipLabel={t('onboarding.skip')}>
+      progressStep={1}>
       <View
         style={{
           alignItems: 'center',

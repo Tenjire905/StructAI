@@ -56,7 +56,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "verify:lessons": "node scripts/verify-all-lesson-content.mjs",
-    "audit:playful": "node scripts/audit-playful-coverage.mjs"
+    "audit:playful": "node scripts/audit-playful-coverage.mjs",
+    "beta:android": "npx eas-cli build --profile preview --platform android",
+    "beta:ios": "npx eas-cli build --profile preview --platform ios"
   },
   "private": true
 }

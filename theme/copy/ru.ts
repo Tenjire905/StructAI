@@ -1509,10 +1509,6 @@ export const copyRu: CopyCatalog = {
     playful: 'Поехали!',
     focus: 'Поехали',
   },
-  'onboarding.skip': {
-    playful: 'Пропустить',
-    focus: 'Пропустить',
-  },
   'onboarding.introNext': {
     playful: 'Далее',
     focus: 'Далее',

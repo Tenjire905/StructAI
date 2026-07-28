@@ -1508,10 +1508,6 @@ export const copyEn: CopyCatalog = {
     playful: "Let's go!",
     focus: "Let's go",
   },
-  'onboarding.skip': {
-    playful: 'Skip',
-    focus: 'Skip',
-  },
   'onboarding.introNext': {
     playful: 'Next',
     focus: 'Next',
