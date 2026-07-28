@@ -5,6 +5,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { hapticUIPress } from '@/lib/haptics';
 import { useThemeMode } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -38,6 +39,7 @@ export function PressableScale({
 
   const handlePressIn: PressableProps['onPressIn'] = (event) => {
     if (!disabled && !pressFeedbackDisabled && onPress) {
+      hapticUIPress();
       scale.value = withTiming(PRESS_SCALE_SUBTLE, {
         duration: tokens.motion.duration.instant,
       });

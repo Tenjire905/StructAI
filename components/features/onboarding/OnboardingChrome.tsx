@@ -30,8 +30,6 @@ type OnboardingChromeProps = {
   ctaLabel: string;
   onCta: () => void;
   ctaDisabled?: boolean;
-  skipLabel?: string;
-  onSkip?: () => void;
   secondaryLabel?: string;
   onSecondary?: () => void;
   footerExtra?: ReactNode;
@@ -39,7 +37,7 @@ type OnboardingChromeProps = {
 
 /**
  * Shared Liftoff onboarding chrome: hero gradient, optional segments,
- * bottom skip + full-width primary CTA + optional secondary text link.
+ * full-width primary CTA + optional secondary text link (no skip).
  *
  * Design: brand/progress stay above the fold; CTA stack is sticky at the bottom
  * so swipe content never fights the primary action (Liftoff pattern).
@@ -56,8 +54,6 @@ export function OnboardingChrome({
   ctaLabel,
   onCta,
   ctaDisabled = false,
-  skipLabel,
-  onSkip,
   secondaryLabel,
   onSecondary,
   footerExtra,
@@ -134,22 +130,6 @@ export function OnboardingChrome({
 
       <View style={{ gap: footerGap }}>
         {footerExtra}
-        {skipLabel && onSkip ? (
-          <Pressable
-            accessibilityRole="button"
-            hitSlop={tokens.spacing.space3}
-            onPress={onSkip}
-            style={{ alignItems: 'center', paddingVertical: tokens.spacing.space1 }}>
-            <Text
-              style={{
-                color: tokens.colors.text.tertiary,
-                fontFamily: tokens.typography.fontFamily.bodyMedium,
-                fontSize: tokens.typography.fontSize.bodyMd,
-              }}>
-              {skipLabel}
-            </Text>
-          </Pressable>
-        ) : null}
         <Button
           disabled={ctaDisabled}
           label={ctaLabel}

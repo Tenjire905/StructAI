@@ -55,17 +55,8 @@ export default function OnboardingLoopScreen() {
           router.replace(resolveHomeRoute(completedLessons));
         });
       }}
-      onSkip={() => {
-        playSfx('tap', soundEnabled);
-        void finishOnboarding().then(() => {
-          if (firstLessonId) {
-            openLesson(router, firstLessonId);
-          }
-        });
-      }}
       progressStep={3}
-      secondaryLabel={t('onboarding.loopHomeCta')}
-      skipLabel={t('onboarding.skip')}>
+      secondaryLabel={t('onboarding.loopHomeCta')}>
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,

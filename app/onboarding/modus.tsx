@@ -40,13 +40,7 @@ export default function OnboardingModusScreen() {
       ctaDisabled={selectedMode === null}
       ctaLabel={t('onboarding.modeCta')}
       onCta={handleConfirm}
-      onSkip={() => {
-        playSfx('tap', soundEnabled);
-        setMode('playful');
-        router.push('/onboarding/loop');
-      }}
-      progressStep={2}
-      skipLabel={t('onboarding.skip')}>
+      progressStep={2}>
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,

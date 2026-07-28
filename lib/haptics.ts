@@ -4,18 +4,22 @@ import { Platform } from 'react-native';
 import type { ThemeMode } from '@/theme';
 
 /**
- * Semantic haptics per HAPTICS.md ("Haptics Map v1.2" — device-calibrated).
+ * Semantic haptics per HAPTICS.md ("Haptics Map v1.3 — 5× felt intensity").
  * Components must call ONLY these named functions, never `Haptics.*` directly.
  *
- * Device finding (Expo Go): Impact-only pulses were imperceptible. The first
- * clearly felt pattern was Success/Warning Notification + Medium/Heavy Impact
- * (lesson/path complete). Answer feedback now uses that same notification+impact
- * unit so checks are actually tangible; path stays the peak.
+ * Device finding: single Impact/Notification pulses feel soft on many phones.
+ * v1.3 amplifies every semantic event with a Heavy-impact burst (default ×5)
+ * so feedback is unmistakably physical in a standalone beta build.
  *
  * Fire-and-forget only — never await from UI handlers.
  */
 
 type PromptLabFailureCause = 'user' | 'network';
+
+/** Felt intensity multiplier vs. a single Heavy impact. */
+export const HAPTIC_INTENSITY_MULTIPLIER = 5;
+
+const BURST_GAP_MS = 38;
 
 function fire(action: () => Promise<void> | void): void {
   if (Platform.OS === 'web') {
@@ -29,6 +33,12 @@ function fire(action: () => Promise<void> | void): void {
   }
 }
 
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 async function impact(style: Haptics.ImpactFeedbackStyle): Promise<void> {
   await Haptics.impactAsync(style);
 }
@@ -39,74 +49,106 @@ async function notify(
   await Haptics.notificationAsync(type);
 }
 
-/** Felt unit on target devices: notification + body impact. */
-function fireNotifyWithImpact(
+/** Rapid Heavy train — the primary 5× amplifier (API max is Heavy). */
+async function heavyBurst(
+  count: number = HAPTIC_INTENSITY_MULTIPLIER,
+): Promise<void> {
+  for (let i = 0; i < count; i += 1) {
+    await impact(Haptics.ImpactFeedbackStyle.Heavy);
+    if (i < count - 1) {
+      await delay(BURST_GAP_MS);
+    }
+  }
+}
+
+/** Notification + 5× Heavy body — default semantic unit. */
+function fireNotifyWithBurst(
   type: Haptics.NotificationFeedbackType,
-  style: Haptics.ImpactFeedbackStyle,
+  burstCount: number = HAPTIC_INTENSITY_MULTIPLIER,
 ): void {
   fire(async () => {
     await notify(type);
-    await impact(style);
+    await heavyBurst(burstCount);
   });
 }
 
-function fireSuccessWithImpact(style: Haptics.ImpactFeedbackStyle): void {
-  fireNotifyWithImpact(Haptics.NotificationFeedbackType.Success, style);
+function fireSuccessBurst(
+  burstCount: number = HAPTIC_INTENSITY_MULTIPLIER,
+): void {
+  fireNotifyWithBurst(Haptics.NotificationFeedbackType.Success, burstCount);
 }
 
-/** Richtige Antwort — notification+impact (Impact alone was invisible on device). */
+/** Primary / card / tab press — strong selection feel (no notification spam). */
+export function hapticUIPress(): void {
+  fire(async () => {
+    await heavyBurst(HAPTIC_INTENSITY_MULTIPLIER);
+  });
+}
+
+/** Richtige Antwort — Success + 5× Heavy. */
 export function hapticCorrectAnswer(_mode: ThemeMode): void {
-  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
+  fireSuccessBurst();
 }
 
 /** Falsche Antwort – nur bei echter Nutzerursache. */
 export function hapticWrongAnswer(_mode: ThemeMode): void {
-  fireNotifyWithImpact(
-    Haptics.NotificationFeedbackType.Warning,
-    Haptics.ImpactFeedbackStyle.Medium,
-  );
+  fireNotifyWithBurst(Haptics.NotificationFeedbackType.Warning);
 }
 
-/** Lektion abgeschlossen — slightly stronger than a single answer check. */
+/** Lektion abgeschlossen — 5× Heavy, then a second full burst (clearer peak). */
 export function hapticLessonComplete(): void {
-  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Heavy);
+  fire(async () => {
+    await notify(Haptics.NotificationFeedbackType.Success);
+    await heavyBurst();
+    await delay(70);
+    await heavyBurst();
+  });
 }
 
-/** Pfadabschluss — Peak: success + heavy, then a second medium bump. */
+/** Pfadabschluss — Peak: double Success + stacked 5× bursts. */
 export function hapticPathComplete(mode: ThemeMode): void {
   fire(async () => {
     await notify(Haptics.NotificationFeedbackType.Success);
-    await impact(Haptics.ImpactFeedbackStyle.Heavy);
+    await heavyBurst();
+    await delay(60);
+    await notify(Haptics.NotificationFeedbackType.Success);
+    await heavyBurst();
 
     if (mode === 'playful') {
-      await impact(Haptics.ImpactFeedbackStyle.Medium);
+      await delay(60);
+      await heavyBurst();
     }
   });
 }
 
 /** Orb-Gewinn. */
 export function hapticOrbGained(_mode: ThemeMode): void {
-  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
+  fireSuccessBurst();
 }
 
 /** BYOK-Key erfolgreich validiert. */
 export function hapticByokValidated(): void {
-  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
+  fireSuccessBurst();
 }
 
 /** Matching: finales korrektes Paar. */
 export function hapticMatchSuccess(_mode: ThemeMode): void {
-  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
+  fireSuccessBurst();
 }
 
 /** Categorize: pro korrekt zugeordnetem Item. */
 export function hapticCategorizeItemCorrect(_mode: ThemeMode): void {
-  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
+  fireSuccessBurst();
 }
 
 /** Categorize: Set abgeschlossen. */
 export function hapticCategorizeSetComplete(): void {
-  fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Heavy);
+  fire(async () => {
+    await notify(Haptics.NotificationFeedbackType.Success);
+    await heavyBurst();
+    await delay(70);
+    await heavyBurst();
+  });
 }
 
 /** Prompt-Lab-Vergleich. */
@@ -115,20 +157,14 @@ export function hapticPromptLabResult(
   cause?: PromptLabFailureCause,
 ): void {
   if (outcome === 'success') {
-    fireSuccessWithImpact(Haptics.ImpactFeedbackStyle.Medium);
+    fireSuccessBurst();
     return;
   }
 
   if (cause === 'network') {
-    fireNotifyWithImpact(
-      Haptics.NotificationFeedbackType.Warning,
-      Haptics.ImpactFeedbackStyle.Medium,
-    );
+    fireNotifyWithBurst(Haptics.NotificationFeedbackType.Warning);
     return;
   }
 
-  fireNotifyWithImpact(
-    Haptics.NotificationFeedbackType.Error,
-    Haptics.ImpactFeedbackStyle.Medium,
-  );
+  fireNotifyWithBurst(Haptics.NotificationFeedbackType.Error);
 }
